@@ -1,0 +1,47 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()         // Required for org.jetbrains.trove4j:trove4j library
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    google()
+  }
+
+  dependencies {
+    classpath "com.android.tools.build:gradle:$andriodGradlePluginVersion"
+    classpath "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    classpath "de.richsource.gradle.plugins:gwt-gradle-plugin:$gwtPluginVersion"
+  }
+}
+
+allprojects {
+  apply plugin: 'eclipse'
+  apply plugin: 'idea'
+}
+
+configure(subprojects) {
+  apply plugin: 'java'
+  sourceCompatibility = 1.6
+}
+
+repositories {
+  google()
+}
+
+subprojects {
+  version = '0.0.1-SNAPSHOT'
+  ext.appName = 'yokel-towers-mvc'
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+  }
+}
+
+// Clearing Eclipse project data in root folder:
+tasks.eclipse.doLast {
+  delete '.project'
+  delete '.classpath'
+  delete '.settings/'
+}

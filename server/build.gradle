@@ -1,0 +1,16 @@
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+mainClassName = 'net.asg.games.server.ServerLauncher'
+eclipse.project.name = appName + '-server'
+
+dependencies {
+  compile "com.github.czyzby:gdx-websocket-serialization:$websocketSerializationVersion"
+}
+
+jar {
+  from { configurations.compile.collect { zipTree(it) } }
+  manifest {
+    attributes 'Main-Class': project.mainClassName
+  }
+}
