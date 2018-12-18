@@ -28,10 +28,10 @@ public class Util {
     }
 
     /**
-     * @param numMonth
-     * @return
+     * @param numMonth Number value of Month requested
+     * @return String with three letter consideration
      */
-    public static String getThreeLetterMonth(int numMonth)  throws GdxRuntimeException {
+    public static String getThreeLetterMonth(int numMonth) throws GdxRuntimeException {
         String ret;
         switch (numMonth) {
             case 0:
