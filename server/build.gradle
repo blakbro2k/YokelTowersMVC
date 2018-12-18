@@ -5,8 +5,13 @@ mainClassName = 'net.asg.games.server.ServerLauncher'
 eclipse.project.name = appName + '-server'
 
 dependencies {
-  compile project(path: ':core')
-
+    compile project(path: ':core')
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.github.czyzby:gdx-websocket-serialization:$websocketSerializationVersion"
+    implementation "com.github.czyzby:gdx-websocket-common:$websocketVersion"
+    implementation "com.github.czyzby:gdx-websocket:$websocketVersion"
+    implementation "com.github.czyzby:gdx-kiwi:$kiwiVersion"
+    implementation "io.vertx:vertx-core:$vertxVersion"
 }
 
 jar {

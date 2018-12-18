@@ -1,15 +1,21 @@
 package net.asg.games.server;
 
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerService;
+
+import com.badlogic.gdx.utils.Array;
+
+import com.github.czyzby.kiwi.util.common.Comparables;
+import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
 import com.github.czyzby.websocket.serialization.impl.JsonSerializer;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
-
-import com.google.gwt.thirdparty.guava.common.collect.ImmutableList;
 
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
 
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
@@ -20,6 +26,9 @@ import io.vertx.core.http.WebSocketFrame;
 
 /** Launches the server application. */
 public class ServerLauncher {
+    //protected final Logger logger = LoggerService.forClass(ServerLauncher.class);
+    private final AtomicInteger idCounter = new AtomicInteger();
+
     private final static String PORT_ATTR = "-port";
     private final static String PORT2_ATTR = "-p";
     private final static String TIMEOUT_ATTR = "-t";
@@ -28,7 +37,7 @@ public class ServerLauncher {
     private final static String TICK_RATE_ATTR = "-tickrate";
     private final static String SERVER_BUILD = "0.0.1";
 
-    private final static ImmutableList<String> SERVER_ARGS = ImmutableList.of(PORT2_ATTR, PORT_ATTR, ROOM_ATTR, TIMEOUT_ATTR, TICK_RATE_ATTR, LOG_LEVEL_ATTR);
+    private final static Array<String> SERVER_ARGS = ImmutableArray.of(PORT2_ATTR, PORT_ATTR, ROOM_ATTR, TIMEOUT_ATTR, TICK_RATE_ATTR, LOG_LEVEL_ATTR);
 
     private final Vertx vertx = Vertx.vertx();
     private final ManualSerializer serializer;
@@ -54,8 +63,21 @@ public class ServerLauncher {
     }
 
     private void launch(String... args) throws Exception {
+        //logger.info("Launching YokelTowers-server build" + SERVER_BUILD);
+        System.out.println("Launching YokelTowers-server build: " + SERVER_BUILD);
         initialize(args);
-        System.out.println("Launching web socket server...");
+
+        final HttpServer server = vertx.createHttpServer();
+        server.websocketHandler(webSocket -> {
+            // Printing received packets to console, sending response:
+            webSocket.frameHandler(frame -> handleStringFrame(webSocket, frame));
+            // Closing the socket in 5 seconds:
+            System.out.println("Closing the socket in 5 seconds:");
+            vertx.setTimer(5000L, id -> webSocket.close());
+            //System.exit(-1);
+        }).listen(8000);
+
+        /*
         HttpServer server = vertx.createHttpServer();
         server.websocketHandler(webSocket -> {
             // String test:
@@ -70,14 +92,28 @@ public class ServerLauncher {
         server.websocketHandler(webSocket -> {
             // Serialization test:
             webSocket.frameHandler(frame -> handleSerializationFrame(webSocket, frame));
-        }).listen(8002);
+        }).listen(8002);*/
     }
 
     private void initialize(String... args) throws Exception{
-        //Logger.info("initializing input parameters");
+        initializeParams(args);
+        initializeGameRooms();
+        generateTestPlayers();
+    }
 
+    private void generateTestPlayers(){
+        System.out.println("Generating Debugable Players...");
+    }
+
+    private void initializeGameRooms(){
+        System.out.println("Initializing Game Rooms...");
+    }
+
+    private void initializeParams(String... args) throws Exception {
+        //logger.info("initializing input parameters");
+        System.out.println("Evaluating input parameters...");
         if(args == null){
-            //Logger.error("Cannot Launch Server, no arguments found.");
+            //logger.error("Cannot Launch Server, no arguments found.");
             throw new Exception("Cannot Launch Server, no arguments found.");
         }
 
@@ -110,15 +146,13 @@ public class ServerLauncher {
                 }
             }
         }
-       // initializeVariables();
-        //setUpRooms();
     }
-
     //validate that the next value is not a parameter string
     //if it is something else, it will fail when we try to set it.
     private boolean validateArumentParameterValue(int i, String... args){
-        //Logger.debug("validating index {} in parameter={}",i,args[i]);
-        return i != args.length - 1 && !SERVER_ARGS.contains(args[i + 1]);
+        //logger.debug("validating index {} in parameter={}",i,args[i]);
+        System.out.println("validating index {} in parameter={}");
+        return i != args.length - 1 && !SERVER_ARGS.contains(args[i + 1], false);
     }
 
     private void setPort(int port){

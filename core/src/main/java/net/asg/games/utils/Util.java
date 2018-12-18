@@ -1,11 +1,10 @@
 package net.asg.games.utils;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Util {
@@ -16,9 +15,9 @@ public class Util {
             return StringUtils.replace(UUID.randomUUID() + "", "-","") ;
         }
 
-        public static List<String> getGroupOfIDs(int num) throws IllegalArgumentException{
+        public static Array<String> getGroupOfIDs(int num) throws IllegalArgumentException{
             if(num > 0) {
-                List<String> ids = new ArrayList<String>();
+                Array<String> ids = new Array<String>();
                 for(int i = 0; i < num; i++){
                     ids.add(getID());
                 }
@@ -76,5 +75,20 @@ public class Util {
                 break;
         }
         return ret;
+    }
+
+    public static boolean containsAny(Array<Object> c1, Array<Object> c2, boolean identity){
+        boolean containsAny = false;
+        if(null != c1 && null != c2){
+            Array.ArrayIterable<Object> c3 = new Array.ArrayIterable<Object>(c2);
+            for(Object o : c3){
+                if (!c1.contains(o, identity)) {
+                    continue;
+                }
+                containsAny = true;
+                break;
+            }
+        }
+        return containsAny;
     }
 }

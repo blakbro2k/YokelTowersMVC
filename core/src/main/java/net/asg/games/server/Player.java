@@ -13,6 +13,7 @@ public class Player implements Json.Serializable{
     private String name;
     private String playerId;
     private int rating;
+    private String logo;
 
     public Player(String name){
         this.name = name;
