@@ -1,4 +1,4 @@
-package net.asg.games.controller.action;
+package net.asg.games.views.action;
 
     import com.github.czyzby.autumn.mvc.stereotype.ViewActionContainer;
     import com.github.czyzby.lml.annotation.LmlAction;

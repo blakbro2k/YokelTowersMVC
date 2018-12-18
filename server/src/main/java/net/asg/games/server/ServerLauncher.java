@@ -43,17 +43,18 @@ public class ServerLauncher {
     private int timeOut;
     private HttpServer listen;
 
-    public ServerLauncher() {
+    private ServerLauncher() {
         serializer = new ManualSerializer();
         Packets.register(serializer);
         jsonSerializer = new JsonSerializer();
     }
 
     public static void main(final String... args) throws Exception {
-        new ServerLauncher().launch();
+        new ServerLauncher().launch(args);
     }
 
-    private void launch() {
+    private void launch(String... args) throws Exception {
+        initialize(args);
         System.out.println("Launching web socket server...");
         HttpServer server = vertx.createHttpServer();
         server.websocketHandler(webSocket -> {
@@ -70,6 +71,81 @@ public class ServerLauncher {
             // Serialization test:
             webSocket.frameHandler(frame -> handleSerializationFrame(webSocket, frame));
         }).listen(8002);
+    }
+
+    private void initialize(String... args) throws Exception{
+        //Logger.info("initializing input parameters");
+
+        if(args == null){
+            //Logger.error("Cannot Launch Server, no arguments found.");
+            throw new Exception("Cannot Launch Server, no arguments found.");
+        }
+
+        for(int i = 0; i < args.length; i++){
+            if(i < args.length - 1){
+                if(PORT_ATTR.equalsIgnoreCase(args[i])){
+                    if(validateArumentParameterValue(i, args)){
+                        setPort(Integer.parseInt(args[i + 1]));
+                    }
+                } else if(PORT2_ATTR.equalsIgnoreCase(args[i])){
+                    if(validateArumentParameterValue(i, args)){
+                        setPort(Integer.parseInt(args[i + 1]));
+                    }
+                } else if(ROOM_ATTR.equalsIgnoreCase(args[i])){
+                    if(validateArumentParameterValue(i, args)){
+                        maxNumberOfRooms = Integer.parseInt(args[i + 1]);
+                    }
+                } else if(TIMEOUT_ATTR.equalsIgnoreCase(args[i])){
+                    if(validateArumentParameterValue(i, args)){
+                        setTickRate(Integer.parseInt(args[i + 1]));
+                    }
+                } else if(TICK_RATE_ATTR.equalsIgnoreCase(args[i])){
+                    if(validateArumentParameterValue(i, args)){
+                        setTickRate(Integer.parseInt(args[i + 1]));
+                    }
+                } else if(LOG_LEVEL_ATTR.equalsIgnoreCase(args[i])){
+                    if(validateArumentParameterValue(i, args)){
+                        //setLogLevel(args[i + 1]);
+                    }
+                }
+            }
+        }
+       // initializeVariables();
+        //setUpRooms();
+    }
+
+    //validate that the next value is not a parameter string
+    //if it is something else, it will fail when we try to set it.
+    private boolean validateArumentParameterValue(int i, String... args){
+        //Logger.debug("validating index {} in parameter={}",i,args[i]);
+        return i != args.length - 1 && !SERVER_ARGS.contains(args[i + 1]);
+    }
+
+    private void setPort(int port){
+        //Logger.debug("calling setPort()");
+        this.port = port;
+    }
+
+    private int getPort(){
+        //Logger.debug("calling getPort()");
+        return port;
+    }
+    private int getLogLevel(){
+        return logLevel;
+    }
+
+    private void setTickRate(int tickRate){
+        this.tickRate = tickRate;
+    }
+
+    private int getTickRate(){
+        return logLevel;
+    }
+
+    private void setUpRooms(){ }
+
+    private int getServerId(){
+        return 1;
     }
 
     private static void handleStringFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) {

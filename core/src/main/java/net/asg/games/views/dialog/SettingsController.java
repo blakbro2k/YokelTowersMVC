@@ -1,4 +1,4 @@
-package net.asg.games.controller.dialog;
+package net.asg.games.views.dialog;
 
     import com.badlogic.gdx.scenes.scene2d.Actor;
     import com.github.czyzby.autumn.annotation.Inject;
@@ -6,9 +6,9 @@ package net.asg.games.controller.dialog;
     import com.github.czyzby.lml.annotation.LmlAction;
     import com.github.czyzby.lml.parser.action.ActionContainer;
     import com.kotcrab.vis.ui.VisUI.SkinScale;
-    import net.asg.games.service.ScaleService;
+    import net.asg.games.services.ScaleService;
 
-    /** This is a settings dialog, which can be shown in any view by using "show:settings" LML action or - in Java code -
+    /** This is a settings dialog, which can be shown in any views by using "show:settings" LML action or - in Java code -
      * through InterfaceService.showDialog(Class) method. Thanks to the fact that it implements ActionContainer, its methods
      * will be available in the LML template. */
     @ViewDialog(id = "settings", value = "ui/templates/dialogs/settings.lml")
