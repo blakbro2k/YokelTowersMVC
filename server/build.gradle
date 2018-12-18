@@ -5,7 +5,8 @@ mainClassName = 'net.asg.games.server.ServerLauncher'
 eclipse.project.name = appName + '-server'
 
 dependencies {
-  compile "com.github.czyzby:gdx-websocket-serialization:$websocketSerializationVersion"
+  compile project(path: ':core')
+
 }
 
 jar {

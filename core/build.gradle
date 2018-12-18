@@ -2,14 +2,20 @@
 eclipse.project.name = appName + '-core'
 
 dependencies {
-  implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-  implementation "com.github.czyzby:gdx-autumn:$autumnVersion"
-  implementation "com.github.czyzby:gdx-kiwi:$kiwiVersion"
-  implementation "com.github.czyzby:gdx-autumn-mvc:$autumnMvcVersion"
-  implementation "com.github.czyzby:gdx-lml:$lmlVersion"
-  implementation "com.github.czyzby:gdx-websocket:$websocketVersion"
-  implementation "com.github.czyzby:gdx-websocket-serialization:$websocketSerializationVersion"
-  implementation "com.github.czyzby:gdx-lml-vis:$lmlVisVersion"
-  implementation "com.kotcrab.vis:vis-ui:$visUiVersion"
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.github.czyzby:gdx-autumn:$autumnVersion"
+    implementation "com.github.czyzby:gdx-autumn-mvc:$autumnMvcVersion"
+    implementation "com.github.czyzby:gdx-lml:$lmlVersion"
+    implementation "com.github.czyzby:gdx-kiwi:$kiwiVersion"
+    implementation "com.github.czyzby:gdx-websocket-serialization:$websocketSerializationVersion"
+    implementation "com.github.czyzby:gdx-websocket-common:$websocketVersion"
+    implementation "com.github.czyzby:gdx-websocket:$websocketVersion"
+    implementation "com.github.czyzby:gdx-lml-vis:$lmlVisVersion"
+    implementation "com.kotcrab.vis:vis-ui:$visUiVersion"
+    implementation "commons-lang:commons-lang:$apacheCommonsLangVer"
+
+    implementation "com.google.gwt:gwt-servlet:$gwtServletVersion"
+    implementation "javax.servlet:javax.servlet-api:$javaServletVersion"
+    implementation "io.vertx:vertx-core:$vertxVersion"
 }
         
