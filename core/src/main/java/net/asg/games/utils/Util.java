@@ -11,6 +11,7 @@ public class Util {
 
     public static class IDGenerator {
         private IDGenerator(){}
+
         public static String getID(){
             return StringUtils.replace(UUID.randomUUID() + "", "-","") ;
         }
@@ -90,5 +91,22 @@ public class Util {
             }
         }
         return containsAny;
+    }
+
+    /**
+     * @param title
+     * @return
+     */
+    public static String cleanTitle(String title) throws GdxRuntimeException{
+        String ret = "";
+        if (title != null) {
+            ret = title.replace("#8211", "-")
+                    .replace("#8217", "'")
+                    .replace("#8220", "\"")
+                    .replace("#8221", "\"")
+                    .replace("#8230", "...")
+                    .replace("#038", "&");
+        }
+        return ret;
     }
 }
