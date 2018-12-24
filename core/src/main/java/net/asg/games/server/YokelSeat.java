@@ -4,11 +4,11 @@ package net.asg.games.server;
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class Seat {
+public class YokelSeat {
     private int seatNumber;
     private Player seatedPlayer;
 
-    public Seat(int serverId, int roomId, int seatNumber){
+    public YokelSeat(int serverId, int roomId, int seatNumber){
         this.seatNumber = seatNumber;
     }
 

@@ -8,14 +8,14 @@ import net.asg.games.utils.Util;
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class Player implements Json.Serializable{
+public class YokelPlayer implements Json.Serializable{
     private final static int DEFAULT_RATING_NUMBER = 1500;
     private String name;
     private String playerId;
     private int rating;
     private String logo;
 
-    public Player(String name){
+    public YokelPlayer(String name){
         this.name = name;
         playerId = Util.IDGenerator.getID();
         rating = DEFAULT_RATING_NUMBER;

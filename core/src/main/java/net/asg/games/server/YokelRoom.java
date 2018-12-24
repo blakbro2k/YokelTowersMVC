@@ -9,21 +9,28 @@ import net.asg.games.utils.Util;
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class Room implements Json.Serializable{
+public class YokelRoom implements Json.Serializable{
+    public static final String SOCIAL_GROUP = "Social";
+    public static final String BEGINNER_GROUP = "Begginer";
+    public static final String INTERMEDIATE_GROUP = "Intermediate";
+    public static final String ADVANCED_GROUP = "Advanced";
+
     private String name;
     private String roomId;
+    private String group;
     //private Chat chatRoom;
-    private Queue<Player> players;
-    //private Queue<YokelTable> tables;
+    private Queue<YokelPlayer> players;
+    private Queue<YokelTable> tables;
 
-    public Room(String name){
-        this(name, 8);
+    public YokelRoom(String name){
+        this.name = name;
+        initialize();
     }
 
-    public Room(String name, int numTables){
-        this.name = name;
-        //initialize();
-        //createTables(numTables);
+    private void initialize(){
+        roomId = Util.IDGenerator.getID();
+        tables = new Queue<YokelTable>();
+        players = new Queue<YokelPlayer>();
     }
 
     @Override
@@ -35,22 +42,6 @@ public class Room implements Json.Serializable{
     public void read(Json json, JsonValue jsonData) {
 
     }
-/*
-    private void createTables(int numTables) {
-        if(numTables < 0){
-            numTables = 0;
-        }
-
-        for(int i = 0; i < numTables; i ++){
-            tables.addFirst(new YokelTable());
-        }
-    }
-
-    private void initialize(){
-        roomId = Util.IDGenerator.getID();
-        tables = new Queue<YokelTable>();
-        players = new Queue<Player>();
-    }
 
     public String getRoomId() {
         return roomId;
@@ -60,7 +51,7 @@ public class Room implements Json.Serializable{
         return tables;
     }
 
-    public boolean joinRoom(Player player){
+    public boolean joinRoom(YokelPlayer player){
         if(player != null){
             players.addFirst(player);
             return true;
@@ -68,7 +59,7 @@ public class Room implements Json.Serializable{
         return false;
     }
 
-    public boolean leaveRoom(Player player){
+    public boolean leaveRoom(YokelPlayer player){
             return players.removeValue(player, false);
     }
 
@@ -100,5 +91,5 @@ public class Room implements Json.Serializable{
 
         ret.append("Player List = ").append(players.toString());
         return ret.toString();
-    }*/
+    }
 }
