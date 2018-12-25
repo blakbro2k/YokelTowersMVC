@@ -14,6 +14,8 @@ public class YokelPlayer implements Json.Serializable{
     private String playerId;
     private int rating;
     private String logo;
+    private String sessionId;
+
 
     public YokelPlayer(String name){
         this.name = name;
@@ -27,6 +29,14 @@ public class YokelPlayer implements Json.Serializable{
 
     public int getRating(){
         return rating;
+    }
+
+    public void setSessionId(String sessionId){
+        this.sessionId = sessionId;
+    }
+
+    public String getSessionId() {
+        return sessionId;
     }
 
     public void increaseRating(int inc){

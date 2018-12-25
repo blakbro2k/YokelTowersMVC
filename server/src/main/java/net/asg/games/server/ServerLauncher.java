@@ -1,17 +1,14 @@
 package net.asg.games.server;
 
-import com.github.czyzby.kiwi.log.Logger;
-import com.github.czyzby.kiwi.log.LoggerService;
-
 import com.badlogic.gdx.utils.Array;
-
-import com.github.czyzby.kiwi.util.common.Comparables;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
 import com.github.czyzby.websocket.serialization.impl.JsonSerializer;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
+import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
+import net.asg.games.utils.Util;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -26,7 +23,6 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
-import jdk.nashorn.internal.runtime.ECMAException;
 
 
 /** Launches the server application. */
@@ -40,27 +36,32 @@ public class ServerLauncher {
     private final static String ROOM_ATTR = "-r";
     private final static String LOG_LEVEL_ATTR = "-log";
     private final static String TICK_RATE_ATTR = "-tickrate";
+    private final static String DEBUG_ATTR = "-debug";
     private final static String SERVER_BUILD = "0.0.1";
 
     private final static Array<String> SERVER_ARGS = ImmutableArray.of(PORT2_ATTR, PORT_ATTR, ROOM_ATTR, TIMEOUT_ATTR, TICK_RATE_ATTR, LOG_LEVEL_ATTR);
+    private final static Array<String> PLAYER_NAMES = ImmutableArray.of("Hector","Lenny","Cullen","Kinsley","Tylor","Doug","Spring","Danica","Bekki",
+            "Spirit","Harmony","Shelton","Philip","Liana","Joyce","Tucker","Jo","Cora","Philadelphia","Leyton");
 
     private final Vertx vertx = Vertx.vertx();
     private final ManualSerializer serializer;
     private final JsonSerializer jsonSerializer;
 
-    private int port;
+    private int port = 8000;
     private Map<String, Collection<YokelRoom>> rooms;
-    private Map<String, Boolean> players;
+    private Map<String, YokelPlayer> registeredPlayers;
+    private Map<String, YokelPlayer> testPlayers;
     private int maxNumberOfRooms;
     private int logLevel;
     private int tickRate;
     private int timeOut;
     private HttpServer listen;
+    private boolean isDebug = false;
 
     private ServerLauncher() {
         serializer = new ManualSerializer();
-        Packets.register(serializer);
         jsonSerializer = new JsonSerializer();
+        Packets.register(serializer);
     }
 
     public static void main(final String... args) throws Exception {
@@ -80,10 +81,10 @@ public class ServerLauncher {
             final HttpServer server = vertx.createHttpServer();
             server.websocketHandler(webSocket -> {
                 // Printing received packets to console, sending response:
-                webSocket.frameHandler(frame -> handleStringFrame(webSocket, frame));
+                webSocket.frameHandler(frame -> handleFrame(webSocket, frame));
                 // Closing the socket in 5 seconds:
-                System.out.println("Closing the socket in 5 seconds:");
-                vertx.setTimer(5000L, id -> webSocket.close());
+                //System.out.println("Closing the socket in 5 seconds:");
+                //vertx.setTimer(5000L, id -> webSocket.close());
                 //System.exit(-1);
             }).listen(getPort());
 
@@ -103,6 +104,9 @@ public class ServerLauncher {
             // Serialization test:
             webSocket.frameHandler(frame -> handleSerializationFrame(webSocket, frame));
         }).listen(8002);*/
+
+        //shutDownServer(-1);
+
         } catch (Exception e) {
             throw new Exception("Error Launching Server: ", e);
         }
@@ -112,7 +116,12 @@ public class ServerLauncher {
         try {
             initializeParams(args);
             initializeGameRooms();
-            generateTestPlayers();
+            if(registeredPlayers == null){
+                registeredPlayers = new HashMap<>();
+            }
+            if(isDebug){
+                generateTestPlayers();
+            }
         } catch (Exception e) {
             throw new Exception("Error during initialization: ", e);
         }
@@ -121,6 +130,16 @@ public class ServerLauncher {
     private void generateTestPlayers() throws Exception{
         try {
             System.out.println("Generating Debugable Players...");
+            if(testPlayers == null){
+                testPlayers = new HashMap<>();
+            }
+            int numPlayers = 8;
+            while(numPlayers > 0){
+                YokelPlayer player = new YokelPlayer(getRandomName());
+                System.out.println("Creating " + player.getName());
+                testPlayers.put(player.getName(), player);
+                numPlayers--;
+            }
         } catch (Exception e) {
             throw new Exception("Error generating test players: ", e);
         }
@@ -143,7 +162,7 @@ public class ServerLauncher {
 
     private void addRoom(String group, YokelRoom room) throws Exception {
         try {
-            if(!StringUtils.isEmpty(group)){
+            if(StringUtils.isEmpty(group)){
                 throw new Exception("Group cannot be null.");
             }
             if(room == null){
@@ -153,7 +172,7 @@ public class ServerLauncher {
             Collection<YokelRoom> roomList = rooms.get(group);
 
             if(roomList == null){
-               roomList = new ArrayList<YokelRoom>();
+               roomList = new ArrayList<>();
             }
 
             System.out.println("adding '" + room.getName() + "' to Group:" + group);
@@ -168,37 +187,33 @@ public class ServerLauncher {
         try {
             //logger.info("initializing input parameters");
             System.out.println("Evaluating input parameters...");
-            if(args == null){
+            if(Util.isArrayEmpty(args)){
                 //logger.error("Cannot Launch Server, no arguments found.");
                 throw new Exception("Cannot Launch Server, no arguments found.");
             }
 
+            //System.out.println("argument size=" + args.length);
             for(int i = 0; i < args.length; i++){
-                if(i < args.length - 1){
-                    if(PORT_ATTR.equalsIgnoreCase(args[i])){
-                        if(validateArumentParameterValue(i, args)){
-                            setPort(Integer.parseInt(args[i + 1]));
-                        }
-                    } else if(PORT2_ATTR.equalsIgnoreCase(args[i])){
-                        if(validateArumentParameterValue(i, args)){
-                            setPort(Integer.parseInt(args[i + 1]));
-                        }
-                    } else if(ROOM_ATTR.equalsIgnoreCase(args[i])){
-                        if(validateArumentParameterValue(i, args)){
-                            maxNumberOfRooms = Integer.parseInt(args[i + 1]);
-                        }
-                    } else if(TIMEOUT_ATTR.equalsIgnoreCase(args[i])){
-                        if(validateArumentParameterValue(i, args)){
-                            setTickRate(Integer.parseInt(args[i + 1]));
-                        }
-                    } else if(TICK_RATE_ATTR.equalsIgnoreCase(args[i])){
-                        if(validateArumentParameterValue(i, args)){
-                            setTickRate(Integer.parseInt(args[i + 1]));
-                        }
-                    } else if(LOG_LEVEL_ATTR.equalsIgnoreCase(args[i])){
-                        if(validateArumentParameterValue(i, args)){
-                            //setLogLevel(args[i + 1]);
-                        }
+                //System.out.println("Param: " + args[i]);
+                String param = args[i];
+                String paramValue = validateArumentParameterValue(i, args) ? args[i + 1] : null;
+
+                if(StringUtils.equalsIgnoreCase(DEBUG_ATTR,args[i])){
+                    this.isDebug = true;
+                    break;
+                }
+
+                if(paramValue != null){
+                    if (StringUtils.equalsIgnoreCase(PORT_ATTR, param)) {
+                        setPort(Integer.parseInt(paramValue));
+                    } else if (StringUtils.equalsIgnoreCase(PORT2_ATTR, param)) {
+                        setPort(Integer.parseInt(paramValue));
+                    } else if (StringUtils.equalsIgnoreCase(ROOM_ATTR, param)) {
+                        maxNumberOfRooms = Integer.parseInt(paramValue);
+                    } else if (StringUtils.equalsIgnoreCase(TIMEOUT_ATTR, param)) {
+                        setTickRate(Integer.parseInt(paramValue));
+                    } else if (StringUtils.equalsIgnoreCase(TICK_RATE_ATTR, args[i])) {
+                        setTickRate(Integer.parseInt(paramValue));
                     }
                 }
             }
@@ -209,11 +224,11 @@ public class ServerLauncher {
     //validate that the next value is not a parameter string
     //if it is something else, it will fail when we try to set it.
     private boolean validateArumentParameterValue(int i, String... args) throws Exception {
-        if(args == null){
-            throw new Exception("Arguments cannot be null.");
+        if(Util.isArrayEmpty(args)){
+            throw new Exception("Arguments cannot be null or empty.");
         }
         //logger.debug("validating index {} in parameter={}",i,args[i]);
-        System.out.println("validating index {} in parameter={}");
+        System.out.println("validating index " + i + " in parameter= " + args[i]);
         return i != args.length - 1 && !SERVER_ARGS.contains(args[i + 1], false);
     }
 
@@ -231,62 +246,81 @@ public class ServerLauncher {
         return logLevel;
     }
 
-    private void shutDownServer(){
-
+    private Map getRooms(){
+        return rooms;
     }
+
+    private void shutDownServer(int errorCode){
+        if(vertx != null){
+            vertx.close();
+        }
+
+        if(listen != null){
+            listen.close();
+        }
+
+        if(rooms != null){
+            rooms.clear();
+            rooms = null;
+        }
+
+        if(registeredPlayers != null){
+            registeredPlayers.clear();
+            registeredPlayers = null;
+        }
+
+        if(testPlayers != null){
+            testPlayers.clear();
+            testPlayers = null;
+        }
+        System.exit(errorCode);
+    }
+
+    private String getRandomName(){
+        return PLAYER_NAMES.random();
+    }
+
     private void setTickRate(int tickRate){
         this.tickRate = tickRate;
     }
 
     private int getTickRate(){
-        return logLevel;
+        return this.tickRate;
     }
 
     private int getServerId(){
         return idCounter.get();
     }
 
-    private static void handleStringFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) {
-        final String response = "Packet had " + frame.binaryData().length()
-                + " bytes. Cannot deserialize packet class.";
-        System.out.println(response);
-        webSocket.writeFinalTextFrame(response);
-    }
-
-    private void handleJsonFrame(final ServerWebSocket webSocket, final WebSocketFrame frame){
-        try {
-
-        } catch (Exception e) {
-
-        }
-        final byte[] packet = frame.binaryData().getBytes();
-        final long start = System.nanoTime();
-        final Object deserialized = jsonSerializer.deserialize(packet);
-        final long time = System.nanoTime() - start;
-
-        final net.asg.games.server.json.ServerResponse response = new net.asg.games.server.json.ServerResponse();
-        response.message = "Packet had " + packet.length + " bytes. Class: " + deserialized.getClass().getSimpleName()
-                + ", took " + time + " nanos to deserialize.";
-        System.out.println(response.message);
-        final byte[] serialized = jsonSerializer.serialize(response);
-        webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
-    }
-
-    private void handleSerializationFrame(final ServerWebSocket webSocket, final WebSocketFrame frame){
-        try {
-
-        } catch (Exception e) {
-
-        }
+    private void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) {
         final byte[] packet = frame.binaryData().getBytes();
         final long start = System.nanoTime();
         final Object deserialized = serializer.deserialize(packet);
         final long time = System.nanoTime() - start;
 
-        final net.asg.games.server.serialization.ServerResponse response = new ServerResponse("Packet had " + packet.length + " bytes. Class: "
-                + deserialized.getClass().getSimpleName() + ", took " + time + " nanos to deserialize.");
-        System.out.println(response.getMessage());
-        final byte[] serialized = serializer.serialize(response);
-        webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
+        if(deserialized instanceof ClientRequest){
+            System.out.println("deserialized: " + deserialized);
+            ClientRequest request = (ClientRequest) deserialized;
+
+            ServerResponse serverResponse = handleClientRequest(request);
+            System.out.println("serverResponse: " + serverResponse);
+
+            final byte[] serialized = serializer.serialize(serverResponse);
+            webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
+        }
+    }
+
+    private ServerResponse handleClientRequest(ClientRequest request) {
+        String sessionId = null;
+        String message = null;
+        int requestSequence = -1;
+
+        if(request != null){
+            System.out.println("request: " + request.getMessage());
+            message = request.getMessage();
+            sessionId = request.getSessionId();
+            requestSequence = request.getRequestSequence();
+        }
+        return new ServerResponse(requestSequence, sessionId, message, getServerId());
     }
 }

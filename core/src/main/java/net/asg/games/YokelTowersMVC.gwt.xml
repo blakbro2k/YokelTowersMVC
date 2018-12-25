@@ -6,4 +6,5 @@
     <extend-configuration-property name="gdx.reflect.include" value="net.asg.games.configuration" />
     <extend-configuration-property name="gdx.reflect.include" value="net.asg.games.controller" />
     <extend-configuration-property name="gdx.reflect.include" value="net.asg.games.service" />
+    <extend-configuration-property name="gdx.reflect.include" value="net.asg.games.game" />
 </module>

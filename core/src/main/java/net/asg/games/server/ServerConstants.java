@@ -5,4 +5,6 @@ package net.asg.games.server;
  */
 
 public class ServerConstants {
+    public static final int SV_MAX_COLS = 6;
+    public static final int SV_MAX_ROWS = 14;
 }

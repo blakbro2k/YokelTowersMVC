@@ -1,4 +1,4 @@
-package net.asg.games.views;
+package net.asg.games.controller;
 
     import com.badlogic.gdx.scenes.scene2d.Stage;
     import com.github.czyzby.autumn.annotation.Inject;
@@ -13,7 +13,7 @@ package net.asg.games.views;
      * This is the first application's views, shown right after the application starts. It will hide after all assests are
      * loaded. */
     @View(value = "ui/templates/loading.lml", first = true)
-    public class LoadingView implements ViewRenderer {
+    public class LoadingController implements ViewRenderer {
         /** Will be injected automatically. Manages assets. Used to display loading progress. */
         @Inject private AssetService assetService;
         /** This is a widget injected from the loading.lml template. "loadingBar" is its ID. */

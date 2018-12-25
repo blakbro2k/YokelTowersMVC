@@ -1,6 +1,7 @@
-package net.asg.games.views.action;
+package net.asg.games.controller.action;
 
     import com.github.czyzby.autumn.mvc.stereotype.ViewActionContainer;
+    import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
     import com.github.czyzby.lml.annotation.LmlAction;
     import com.github.czyzby.lml.parser.action.ActionContainer;
 
@@ -13,5 +14,10 @@ package net.asg.games.views.action;
          * argument) and "noOp" (method name) IDs. */
         @LmlAction("close")
         public void noOp() {
+        }
+
+        @LmlAction("isDebug")
+        public boolean isDebug() {
+            return true;
         }
     }

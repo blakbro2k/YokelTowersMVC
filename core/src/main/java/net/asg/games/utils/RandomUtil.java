@@ -64,14 +64,14 @@ public class RandomUtil {
         }
 
          /**
-         * @return a random value for the given enum
+         * @return a random value for the given enums
          */
         public E random() {
             return values[RND.nextInt(values.length)];
         }
 
         /**
-         * @return a random value for the given enum and a min and max range
+         * @return a random value for the given enums and a min and max range
          */
         public E random(int min) {
             return values[min + RND.nextInt(SECTION_GROUP_NUM)];

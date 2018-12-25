@@ -10,9 +10,7 @@ public class Packets {
         // Note that the packets use simple, primitive data, but nothing stops you from using more complex types like
         // strings, arrays or even other transferables. Both Serializer and Deserializer APIs are well documented: make
         // sure to check them out.
-        serializer.register(new ClientMessage(null));
-        serializer.register(new ClientArrayMessage(null));
-        serializer.register(new ClientListMessage(null));
-        serializer.register(new ServerResponse(null));
+        serializer.register(new ClientRequest(-1, null,null));
+        serializer.register(new ServerResponse(-1, null, null, -1));
     }
 }

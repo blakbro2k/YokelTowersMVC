@@ -6,13 +6,13 @@ package net.asg.games.server;
 
 public class YokelSeat {
     private int seatNumber;
-    private Player seatedPlayer;
+    private YokelPlayer seatedPlayer;
 
     public YokelSeat(int serverId, int roomId, int seatNumber){
         this.seatNumber = seatNumber;
     }
 
-    public boolean sitDown(Player player){
+    public boolean sitDown(YokelPlayer player){
         if(!isOccupied()){
             seatedPlayer = player;
             return true;
@@ -28,7 +28,7 @@ public class YokelSeat {
         return seatedPlayer != null;
     }
 
-    public Player getSeatedPlayer(){
+    public YokelPlayer getSeatedPlayer(){
         return seatedPlayer;
     }
 

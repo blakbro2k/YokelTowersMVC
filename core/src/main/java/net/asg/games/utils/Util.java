@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public class Util {
@@ -108,5 +109,13 @@ public class Util {
                     .replace("#038", "&");
         }
         return ret;
+    }
+
+    public static boolean isCollectionEmpty(Collection collection){
+        return collection != null && collection.size() > 0;
+    }
+
+    public static boolean isArrayEmpty(Object[] array){
+        return array == null || array.length < 1;
     }
 }

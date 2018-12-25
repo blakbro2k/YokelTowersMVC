@@ -11,7 +11,7 @@ import net.asg.games.utils.Util;
 
 public class YokelRoom implements Json.Serializable{
     public static final String SOCIAL_GROUP = "Social";
-    public static final String BEGINNER_GROUP = "Begginer";
+    public static final String BEGINNER_GROUP = "Beginner";
     public static final String INTERMEDIATE_GROUP = "Intermediate";
     public static final String ADVANCED_GROUP = "Advanced";
 

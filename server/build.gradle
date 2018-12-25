@@ -12,6 +12,7 @@ dependencies {
     implementation "com.github.czyzby:gdx-websocket:$websocketVersion"
     implementation "com.github.czyzby:gdx-kiwi:$kiwiVersion"
     implementation "io.vertx:vertx-core:$vertxVersion"
+    implementation "commons-lang:commons-lang:$apacheCommonsLangVer"
 }
 
 jar {

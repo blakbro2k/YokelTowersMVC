@@ -1,4 +1,4 @@
-package net.asg.games.services;
+package net.asg.games.service;
 
     import com.github.czyzby.autumn.annotation.Component;
     import com.github.czyzby.autumn.annotation.Inject;

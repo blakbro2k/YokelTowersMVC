@@ -22,7 +22,7 @@ package net.asg.games.configuration;
     import com.github.czyzby.lml.vis.parser.impl.VisLmlSyntax;
     import com.kotcrab.vis.ui.VisUI;
     import net.asg.games.YokelTowersMVC;
-    import net.asg.games.services.ScaleService;
+    import net.asg.games.service.ScaleService;
 
     /** Thanks to the Component annotation, this class will be automatically found and processed.
      *

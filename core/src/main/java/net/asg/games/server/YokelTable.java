@@ -10,7 +10,7 @@ public class YokelTable {
     private final int MAX_SEATS = 8;
     private String tableId;
 
-    private Queue<Seat> seats;
+    private Queue<YokelSeat> seats;
     private ACCESS_TYPE accessType;
     private boolean isStarted;
     public YokelTable(){
@@ -19,7 +19,7 @@ public class YokelTable {
 
     private void initialize(){
         tableId = Util.IDGenerator.getID();
-        seats = new Queue<Seat>();
+        seats = new Queue<YokelSeat>();
         setAccessType(ACCESS_TYPE.PUBLIC);
         setUpSeats();
         retartTable();
@@ -80,15 +80,15 @@ public class YokelTable {
 
     public void setUpSeats(){
         for(int i = 0; i < MAX_SEATS; i++){
-            seats.addLast(new Seat(1, 1, i));
+            seats.addLast(new YokelSeat(1, 1, i));
         }
     }
 
-    public Queue<Seat> getSeats(){
+    public Queue<YokelSeat> getSeats(){
         return seats;
     }
 
-    public Seat getSeat(int seatNum){
+    public YokelSeat getSeat(int seatNum){
         return seats.get(seatNum);
     }
 
@@ -99,8 +99,8 @@ public class YokelTable {
         StringBuilder middle2 = new StringBuilder("|");
         StringBuilder bottom = new StringBuilder("+");
 
-        Seat seat1;
-        Seat seat2;
+        YokelSeat seat1;
+        YokelSeat seat2;
         for(int a = 0; a < seats.size; a += 2){
             seat1 = getSeat(a);
             seat2 = getSeat(a);

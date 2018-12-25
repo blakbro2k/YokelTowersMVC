@@ -1,4 +1,4 @@
-package net.asg.games.views;
+package net.asg.games.controller;
 
     import com.badlogic.gdx.graphics.Texture;
     import com.badlogic.gdx.graphics.g2d.Batch;
@@ -11,7 +11,7 @@ package net.asg.games.views;
      *
      * This is application's main views, displaying a menu with several options. */
     @View(id = "menu", value = "ui/templates/menu.lml", themes = "music/theme.ogg")
-    public class MenuView implements ViewRenderer {
+    public class MenuController implements ViewRenderer {
         /** Asset-annotated files will be found and automatically loaded by the AssetsService. */
         @Asset("images/libgdx.png") private Texture logo;
 
