@@ -1,7 +1,9 @@
 <table oneColumn="true" defaultPad="2" tableAlign="center" fillParent="true" defaultFillX="true">
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
-    <textButton onChange="getPlayerList">@playerChoose</textButton>
-
+    <label>@playerChoose</label>
+    <:for value="$getPlayerList">
+        <textButton>{value}</textButton>
+    </:for>
     <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
     <textButton onChange="app:exit">@exit</textButton>
 </table>

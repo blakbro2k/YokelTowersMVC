@@ -13,10 +13,14 @@ import com.badlogic.gdx.Net.HttpResponseListener;
  */
 
 public class NetworkUtil {
+    private static NetworkUtil myInstance = new NetworkUtil();
     private static final String NO_NETWORK_CONNECTIVITY = "failed";
     private NetworkUtil(){}
     private static String status;
 
+    public static NetworkUtil getInstance(){
+        return myInstance;
+    }
 
     public static boolean isInternetAvailable() {
         try{

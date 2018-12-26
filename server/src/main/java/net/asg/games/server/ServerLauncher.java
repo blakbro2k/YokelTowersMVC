@@ -1,6 +1,7 @@
 package net.asg.games.server;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
 import com.github.czyzby.websocket.serialization.impl.JsonSerializer;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
@@ -9,6 +10,7 @@ import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.utils.Util;
+import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -81,32 +83,16 @@ public class ServerLauncher {
             final HttpServer server = vertx.createHttpServer();
             server.websocketHandler(webSocket -> {
                 // Printing received packets to console, sending response:
-                webSocket.frameHandler(frame -> handleFrame(webSocket, frame));
-                // Closing the socket in 5 seconds:
-                //System.out.println("Closing the socket in 5 seconds:");
+                webSocket.frameHandler(frame -> {
+                    try {
+                        handleFrame(webSocket, frame);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
                 //vertx.setTimer(5000L, id -> webSocket.close());
                 //System.exit(-1);
             }).listen(getPort());
-
-        /*
-        HttpServer server = vertx.createHttpServer();
-        server.websocketHandler(webSocket -> {
-            // String test:
-            webSocket.frameHandler(frame -> handleStringFrame(webSocket, frame));
-        }).listen(8000);
-        server = vertx.createHttpServer();
-        server.websocketHandler(webSocket -> {
-            // JSON test:
-            webSocket.frameHandler(frame -> handleJsonFrame(webSocket, frame));
-        }).listen(8001);
-        server = vertx.createHttpServer();
-        server.websocketHandler(webSocket -> {
-            // Serialization test:
-            webSocket.frameHandler(frame -> handleSerializationFrame(webSocket, frame));
-        }).listen(8002);*/
-
-        //shutDownServer(-1);
-
         } catch (Exception e) {
             throw new Exception("Error Launching Server: ", e);
         }
@@ -203,7 +189,7 @@ public class ServerLauncher {
                     break;
                 }
 
-                if(paramValue != null){
+                if(!StringUtils.isEmpty(paramValue)){
                     if (StringUtils.equalsIgnoreCase(PORT_ATTR, param)) {
                         setPort(Integer.parseInt(paramValue));
                     } else if (StringUtils.equalsIgnoreCase(PORT2_ATTR, param)) {
@@ -212,7 +198,7 @@ public class ServerLauncher {
                         maxNumberOfRooms = Integer.parseInt(paramValue);
                     } else if (StringUtils.equalsIgnoreCase(TIMEOUT_ATTR, param)) {
                         setTickRate(Integer.parseInt(paramValue));
-                    } else if (StringUtils.equalsIgnoreCase(TICK_RATE_ATTR, args[i])) {
+                    } else if (StringUtils.equalsIgnoreCase(TICK_RATE_ATTR, param)) {
                         setTickRate(Integer.parseInt(paramValue));
                     }
                 }
@@ -292,7 +278,7 @@ public class ServerLauncher {
         return idCounter.get();
     }
 
-    private void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) {
+    private void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
         final byte[] packet = frame.binaryData().getBytes();
         final long start = System.nanoTime();
         final Object deserialized = serializer.deserialize(packet);
@@ -310,17 +296,48 @@ public class ServerLauncher {
         }
     }
 
-    private ServerResponse handleClientRequest(ClientRequest request) {
+    private ServerResponse handleClientRequest(ClientRequest request) throws Exception {
         String sessionId = null;
         String message = null;
         int requestSequence = -1;
+        String[] payload = null;
 
         if(request != null){
             System.out.println("request: " + request.getMessage());
             message = request.getMessage();
             sessionId = request.getSessionId();
             requestSequence = request.getRequestSequence();
+            payload = buildPayload(message);
         }
-        return new ServerResponse(requestSequence, sessionId, message, getServerId());
+        return new ServerResponse(requestSequence, sessionId, message, getServerId(), payload);
+    }
+
+    private Array<String> testPlayersToJSON(){
+        Array<String> jsonPlayers = new Array<>();
+        Json json  = new Json();;
+        for(String playerName : testPlayers.keySet()){
+            if(!StringUtils.isEmpty(playerName)){
+                YokelPlayer player = testPlayers.get(playerName);
+                if(player != null){
+                    jsonPlayers.add(json.toJson(player));
+                }
+            }
+        }
+        return jsonPlayers;
+    }
+
+    private String[] buildPayload(String message) throws Exception {
+        String[] load = null;
+        if(!StringUtils.isEmpty(message)){
+            ServerRequest value = ServerRequest.valueOf(message);
+            switch (value) {
+                case GET_PLAYER_LIST :
+                    load = Util.fromCollectionToArray(testPlayersToJSON());
+                    break;
+                default:
+                    throw new Exception("Unknown Server Request: " + value);
+            }
+        }
+        return load;
     }
 }

@@ -5,6 +5,8 @@ import com.github.czyzby.websocket.serialization.Transferable;
 import com.github.czyzby.websocket.serialization.impl.Deserializer;
 import com.github.czyzby.websocket.serialization.impl.Serializer;
 
+import java.util.Arrays;
+
 /** Server response packet using gdx-websocket-serialization.
  *
  * @author MJ */
@@ -13,12 +15,14 @@ public class ServerResponse implements Transferable<ServerResponse> {
     private final String sessionId;
     private final int requestSequence;
     private final int serverId;
+    private final String[] payload;
 
-    public ServerResponse(final int requestSequence, final String sessionId, final String message, final int serverId) {
+    public ServerResponse(final int requestSequence, final String sessionId, final String message, final int serverId, String[] payload){
         this.requestSequence = requestSequence;
         this.sessionId = sessionId;
         this.message = message;
         this.serverId = serverId;
+        this.payload = payload;
     }
 
     @Override
@@ -27,6 +31,7 @@ public class ServerResponse implements Transferable<ServerResponse> {
         serializer.serializeString(sessionId);
         serializer.serializeString(message);
         serializer.serializeInt(serverId);
+        serializer.serializeStringArray(payload);
     }
 
     @Override
@@ -34,7 +39,8 @@ public class ServerResponse implements Transferable<ServerResponse> {
         return new ServerResponse(deserializer.deserializeInt(),
                 deserializer.deserializeString(),
                 deserializer.deserializeString(),
-                deserializer.deserializeInt());
+                deserializer.deserializeInt(),
+                deserializer.deserializeStringArray());
     }
 
     public String getMessage() {
@@ -53,8 +59,17 @@ public class ServerResponse implements Transferable<ServerResponse> {
         return requestSequence;
     }
 
+    public String[] getPayload() {
+        return payload;
+    }
+
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "[" + getRequestSequence() + ":" + getSessionId() + ":message:" + getMessage() + "]{" + getServerId() + "}";
+        return this.getClass().getSimpleName() + "[" +
+                getRequestSequence() + ":" +
+                getSessionId() + ":message:" +
+                getMessage() + "]{" +
+                getServerId() + "}" +
+                Arrays.toString(getPayload()) + "}";
     }
 }

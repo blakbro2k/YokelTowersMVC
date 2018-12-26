@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.Collection;
 import java.util.UUID;
 
 public class Util {
@@ -111,11 +110,35 @@ public class Util {
         return ret;
     }
 
-    public static boolean isCollectionEmpty(Collection collection){
-        return collection != null && collection.size() > 0;
+    public static <T> boolean isCollectionEmpty(Array<T> collection){
+        return collection == null || collection.size == 0;
     }
 
     public static boolean isArrayEmpty(Object[] array){
         return array == null || array.length < 1;
+    }
+
+    public static <T> String[] fromCollectionToArray(Array<T> playerNames) {
+        if(playerNames != null){
+            int size = playerNames.size;
+            String[] c2 = new String[size];
+            Array.ArrayIterable<T> c3 = toIterable(playerNames);
+            int c = 0;
+            for(Object o : c3){
+                if(o != null){
+                    c2[c] = o.toString();
+                    c++;
+                }
+            }
+            return c2;
+        }
+        return null;
+    }
+
+    public static <T> Array.ArrayIterable<T> toIterable(Array<T> array){
+        if(!isCollectionEmpty(array)){
+            return new Array.ArrayIterable<T>(array);
+        }
+        return new Array.ArrayIterable<T>(new Array<T>());
     }
 }
