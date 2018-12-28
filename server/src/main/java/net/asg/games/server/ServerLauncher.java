@@ -3,7 +3,6 @@ package net.asg.games.server;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
-import com.github.czyzby.websocket.serialization.impl.JsonSerializer;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
 import net.asg.games.server.serialization.ClientRequest;
@@ -47,11 +46,13 @@ public class ServerLauncher {
 
     private final Vertx vertx = Vertx.vertx();
     private final ManualSerializer serializer;
-    private final JsonSerializer jsonSerializer;
 
     private int port = 8000;
+    //<"room id", room object>
     private Map<String, Collection<YokelRoom>> rooms;
+    //<"player id", player object>
     private Map<String, YokelPlayer> registeredPlayers;
+    //<"player id", player object>
     private Map<String, YokelPlayer> testPlayers;
     private int maxNumberOfRooms;
     private int logLevel;
@@ -62,7 +63,6 @@ public class ServerLauncher {
 
     private ServerLauncher() {
         serializer = new ManualSerializer();
-        jsonSerializer = new JsonSerializer();
         Packets.register(serializer);
     }
 
@@ -90,8 +90,6 @@ public class ServerLauncher {
                         e.printStackTrace();
                     }
                 });
-                //vertx.setTimer(5000L, id -> webSocket.close());
-                //System.exit(-1);
             }).listen(getPort());
         } catch (Exception e) {
             throw new Exception("Error Launching Server: ", e);
@@ -331,8 +329,8 @@ public class ServerLauncher {
         if(!StringUtils.isEmpty(message)){
             ServerRequest value = ServerRequest.valueOf(message);
             switch (value) {
-                case GET_PLAYER_LIST :
-                    load = Util.fromCollectionToArray(testPlayersToJSON());
+                case REQUEST_TEST_PLAYER_LIST:
+                    load = Util.fromCollectionToStringArray(testPlayersToJSON());
                     break;
                 default:
                     throw new Exception("Unknown Server Request: " + value);

@@ -30,7 +30,7 @@ public class Global implements ActionContainer {
     private WebSocket socket;
     private String message = "Connecting...";
     private boolean isConnected = false;
-    private Array<String> players = new Array<String>();
+    private Array<YokelPlayer> players = new Array<YokelPlayer>();
 
     /**
      * This is a mock-up method that does nothing. It will be available in LML templates through "close" (annotation
@@ -86,23 +86,36 @@ public class Global implements ActionContainer {
         if(!isAlive()){
             initializeSockets();
         }
-        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.GET_PLAYER_LIST + "", null);
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_TEST_PLAYER_LIST + "", null);
         socket.send(request);
         //getPlayerList();
     }
 
+    @LmlAction("requestPlayerRegistration")
+    public void requestPlayerRegistration(final Object player) {
+        System.out.println("Starting requestPlayerList");
+        if(!isAlive()){
+            initializeSockets();
+        }
+       // Json json  = new Json();
+        System.out.println("player=" + player);
+        System.out.println("player=" + player.getClass());
+        //System.out.println("pleyr=" + json.toJson(player));
+        //final ClientRequest request = new ClientRequest(-1, "state:" + socket.getState().getId(), ServerRequest.REQUEST_LOGIN + "", null);
+        //socket.send(request);
+        //getPlayerList();
+    }
+
     @LmlAction("getPlayerList")
-    public Array<String> getPlayerList() {
+    public Array<YokelPlayer> getPlayerList() {
         System.out.println("getPlayerList");
 
         if(players == null){
             requestPlayerList();
         }
         System.out.println("players" + players);
-
         return players;
     }
-
 
     private WebSocketListener getListener() {
         final WebSocketHandler handler = new WebSocketHandler();
@@ -138,8 +151,8 @@ public class Global implements ActionContainer {
         if(!StringUtils.isEmpty(message)){
             ServerRequest value = ServerRequest.valueOf(message);
             switch (value) {
-                case GET_PLAYER_LIST :
-                    this.players = getTestPlayersJSON(payload);
+                case REQUEST_TEST_PLAYER_LIST:
+                    buildTestPlayersJSON(payload);
                     System.out.println("players: " + this.players);
                     break;
                 default:
@@ -147,20 +160,18 @@ public class Global implements ActionContainer {
         }
     }
 
-    private Array<String> getTestPlayersJSON(String[] jsonPlayers){
+    private void buildTestPlayersJSON(String[] jsonPlayers){
         Json json  = new Json();
-        Array<String> arrayNames = new Array<String>();
         for(String jsonPlayer : jsonPlayers){
             if(!StringUtils.isEmpty(jsonPlayer)){
                 //System.out.println("jsonPlayer" + jsonPlayer);
                 YokelPlayer player = json.fromJson(YokelPlayer.class, jsonPlayer);
 
                 if(player != null){
-                    arrayNames.add(player.getName());
+                    players.add(player);
                 }
             }
         }
-        System.out.println("arrayNames: " + arrayNames);
-        return arrayNames;
+        System.out.println("players: " + players);
     }
 }

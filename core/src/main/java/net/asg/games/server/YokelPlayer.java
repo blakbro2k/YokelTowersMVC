@@ -16,13 +16,12 @@ public class YokelPlayer implements Json.Serializable{
     private String logo;
     private String sessionId;
 
-
     public YokelPlayer(String name){
         this.name = name;
         playerId = Util.IDGenerator.getID();
         rating = DEFAULT_RATING_NUMBER;
     }
-
+    //Empty Contructor required for Json.Serializable
     public YokelPlayer(){}
 
     public String getName(){
@@ -73,6 +72,6 @@ public class YokelPlayer implements Json.Serializable{
 
     @Override
     public String toString(){
-        return name;
+        return name + ":" + getPlayerId();
     }
 }

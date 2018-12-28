@@ -118,11 +118,11 @@ public class Util {
         return array == null || array.length < 1;
     }
 
-    public static <T> String[] fromCollectionToArray(Array<T> playerNames) {
+    public static <T> String[] fromCollectionToStringArray(Array<T> playerNames) {
         if(playerNames != null){
             int size = playerNames.size;
             String[] c2 = new String[size];
-            Array.ArrayIterable<T> c3 = toIterable(playerNames);
+            Array.ArrayIterable<T> c3 = getNewIterable(playerNames);
             int c = 0;
             for(Object o : c3){
                 if(o != null){
@@ -135,7 +135,7 @@ public class Util {
         return null;
     }
 
-    public static <T> Array.ArrayIterable<T> toIterable(Array<T> array){
+    public static <T> Array.ArrayIterable<T> getNewIterable(Array<T> array){
         if(!isCollectionEmpty(array)){
             return new Array.ArrayIterable<T>(array);
         }

@@ -3,7 +3,6 @@
 <window title="@loadingTitle" titleAlign="center">
     <:evaluate method="initConnection" id="connectionResults"/>
     <:evaluate method="requestPlayerList"/>
-    <label id="connectionResults"></label>
     <!-- Thanks to "goto:menu" action, menu.lml will be shown after this bar is fully loaded. -->
     <progressBar id="loadingBar" animateDuration="0.4" onComplete="goto:debug"/>
 
