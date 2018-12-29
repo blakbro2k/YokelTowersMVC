@@ -8,6 +8,9 @@ public class YokelSeat {
     private int seatNumber;
     private YokelPlayer seatedPlayer;
 
+    //Empty Contructor required for Json.Serializable
+    public YokelSeat(){}
+
     public YokelSeat(int serverId, int roomId, int seatNumber){
         this.seatNumber = seatNumber;
     }

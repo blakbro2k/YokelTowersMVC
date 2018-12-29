@@ -13,6 +13,7 @@ public class YokelTable {
     private Queue<YokelSeat> seats;
     private ACCESS_TYPE accessType;
     private boolean isStarted;
+
     public YokelTable(){
         initialize();
     }

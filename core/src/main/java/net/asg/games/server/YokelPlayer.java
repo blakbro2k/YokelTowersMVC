@@ -1,14 +1,12 @@
 package net.asg.games.server;
 
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
 import net.asg.games.utils.Util;
 
 /**
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class YokelPlayer implements Json.Serializable{
+public class YokelPlayer{
     private final static int DEFAULT_RATING_NUMBER = 1500;
     private String name;
     private String playerId;
@@ -50,24 +48,6 @@ public class YokelPlayer implements Json.Serializable{
 
     public String getPlayerId() {
         return playerId;
-    }
-
-    @Override
-    public void write(Json json) {
-        json.writeValue("name", name);
-        json.writeValue("playerId", playerId);
-        json.writeValue("rating", rating);
-        json.writeValue("logo", logo);
-        json.writeValue("sessionId", sessionId);
-    }
-
-    @Override
-    public void read(Json json, JsonValue jsonData) {
-        name = json.readValue("name", String.class, jsonData);
-        playerId = json.readValue("playerId", String.class, jsonData);
-        rating = json.readValue("rating", Integer.class, jsonData);
-        logo = json.readValue("logo", String.class, jsonData);
-        setSessionId(json.readValue("sessionId", String.class, jsonData));
     }
 
     @Override

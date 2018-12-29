@@ -1,15 +1,14 @@
 package net.asg.games.server;
 
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.Queue;
+import com.badlogic.gdx.utils.Array;
+
 import net.asg.games.utils.Util;
 
 /**
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class YokelRoom implements Json.Serializable{
+public class YokelRoom{
     public static final String SOCIAL_GROUP = "Social";
     public static final String BEGINNER_GROUP = "Beginner";
     public static final String INTERMEDIATE_GROUP = "Intermediate";
@@ -19,8 +18,12 @@ public class YokelRoom implements Json.Serializable{
     private String roomId;
     private String group;
     //private Chat chatRoom;
-    private Queue<YokelPlayer> players;
-    private Queue<YokelTable> tables;
+    private Array<YokelPlayer> players;
+    private Array<YokelTable> tables;
+
+    //Empty Contructor required for Json.Serializable
+    public YokelRoom(){        initialize();
+    }
 
     public YokelRoom(String name){
         this.name = name;
@@ -29,31 +32,21 @@ public class YokelRoom implements Json.Serializable{
 
     private void initialize(){
         roomId = Util.IDGenerator.getID();
-        tables = new Queue<YokelTable>();
-        players = new Queue<YokelPlayer>();
-    }
-
-    @Override
-    public void write(Json json) {
-
-    }
-
-    @Override
-    public void read(Json json, JsonValue jsonData) {
-
+        tables = new Array<YokelTable>();
+        players = new Array<YokelPlayer>();
     }
 
     public String getRoomId() {
         return roomId;
     }
 
-    public Queue<YokelTable> getTables(){
+    public Array<YokelTable> getTables(){
         return tables;
     }
 
     public boolean joinRoom(YokelPlayer player){
         if(player != null){
-            players.addFirst(player);
+            //players.addFirst(player);
             return true;
         }
         return false;
@@ -64,7 +57,7 @@ public class YokelRoom implements Json.Serializable{
     }
 
     public boolean addTable(){
-        tables.addFirst(new YokelTable());
+        //tables.addFirst(new YokelTable());
         return true;
     }
 
@@ -85,11 +78,11 @@ public class YokelRoom implements Json.Serializable{
         StringBuilder ret = new StringBuilder();
 
         ret.append("Room : ").append(name).append("\n");
-        for(YokelTable yokelTable : tables){
+        for(YokelTable yokelTable : Util.toIterable(tables)){
             ret.append(yokelTable.toString()).append("\n");
         }
 
-        ret.append("Player List = ").append(players.toString());
+        //ret.append("Player List = ").append(players.toString());
         return ret.toString();
     }
 }

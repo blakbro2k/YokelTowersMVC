@@ -4,6 +4,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -32,6 +34,7 @@ public class Util {
      * @param numMonth Number value of Month requested
      * @return String with three letter consideration
      */
+    @Contract(pure = true)
     public static String getThreeLetterMonth(int numMonth) throws GdxRuntimeException {
         String ret;
         switch (numMonth) {
@@ -110,21 +113,23 @@ public class Util {
         return ret;
     }
 
+    @Contract(value = "null -> true", pure = true)
     public static <T> boolean isCollectionEmpty(Array<T> collection){
-        return collection == null || collection.size == 0;
+        return collection == null || collection.size < 1;
     }
 
-    public static boolean isArrayEmpty(Object[] array){
+    @Contract(value = "null -> true", pure = true)
+    public static boolean isStaticArrayEmpty(Object[] array){
         return array == null || array.length < 1;
     }
 
+    @Contract("null -> null")
     public static <T> String[] fromCollectionToStringArray(Array<T> playerNames) {
         if(playerNames != null){
             int size = playerNames.size;
             String[] c2 = new String[size];
-            Array.ArrayIterable<T> c3 = getNewIterable(playerNames);
             int c = 0;
-            for(Object o : c3){
+            for(Object o : toIterable(playerNames)){
                 if(o != null){
                     c2[c] = o.toString();
                     c++;
@@ -135,7 +140,14 @@ public class Util {
         return null;
     }
 
-    public static <T> Array.ArrayIterable<T> getNewIterable(Array<T> array){
+    /**
+     * Creates a new Iterable Array object.
+     * @param array
+     * @param <T>
+     * @return
+     */
+    @NotNull
+    public static <T> Array.ArrayIterable<T> toIterable(Array<T> array){
         if(!isCollectionEmpty(array)){
             return new Array.ArrayIterable<T>(array);
         }

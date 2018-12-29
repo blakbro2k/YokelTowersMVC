@@ -13,8 +13,6 @@ import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,7 +47,7 @@ public class ServerLauncher {
 
     private int port = 8000;
     //<"room id", room object>
-    private Map<String, Collection<YokelRoom>> rooms;
+    private Array<YokelLounge> rooms;
     //<"player id", player object>
     private Map<String, YokelPlayer> registeredPlayers;
     //<"player id", player object>
@@ -100,6 +98,8 @@ public class ServerLauncher {
         try {
             initializeParams(args);
             initializeGameRooms();
+            //System.out.println(rooms);
+
             if(registeredPlayers == null){
                 registeredPlayers = new HashMap<>();
             }
@@ -132,38 +132,35 @@ public class ServerLauncher {
     private void initializeGameRooms() throws Exception {
         try {
             System.out.println("Initializing Game Rooms...");
-            rooms = new HashMap<>();
+            if(rooms == null){
+                rooms = new Array<>();
+            }
 
             System.out.println("Creating Social: Eiffel Tower");
+            YokelLounge socialLounge = new YokelLounge(YokelRoom.SOCIAL_GROUP);
             YokelRoom room1 = new YokelRoom("Eiffel Tower");
-            addRoom(YokelRoom.SOCIAL_GROUP, room1);
+            socialLounge.addRoom(room1);
+            System.out.println("Creating Social: Leaning Tower of Pisa");
+            YokelRoom room3 = new YokelRoom("Leaning Tower of Pisa");
+            socialLounge.addRoom(room3);
+
+            System.out.println("Creating Beginning: Chang Tower");
+            YokelLounge beginningLounge = new YokelLounge(YokelRoom.BEGINNER_GROUP);
             YokelRoom room2 = new YokelRoom("Chang Tower");
-            addRoom(YokelRoom.BEGINNER_GROUP, room2);
+            beginningLounge.addRoom(room2);
+
+            rooms.add(socialLounge);
+            rooms.add(beginningLounge);
+
+            Json json = new Json();
+            String text = json.toJson(socialLounge);
+            YokelLounge person2 = json.fromJson(YokelLounge.class, text);
+
+            System.out.println("New: " + text);
+            System.out.println("socialLounge: " + socialLounge);
+            System.out.println("person2: " + person2);
         } catch (Exception e) {
             throw new Exception("Error initializing game rooms: ", e);
-        }
-    }
-
-    private void addRoom(String group, YokelRoom room) throws Exception {
-        try {
-            if(StringUtils.isEmpty(group)){
-                throw new Exception("Group cannot be null.");
-            }
-            if(room == null){
-                throw new Exception("Room cannot be null.");
-            }
-
-            Collection<YokelRoom> roomList = rooms.get(group);
-
-            if(roomList == null){
-               roomList = new ArrayList<>();
-            }
-
-            System.out.println("adding '" + room.getName() + "' to Group:" + group);
-            roomList.add(room);
-            rooms.put(group, roomList);
-        } catch (Exception e) {
-            throw new Exception("Error adding game room: ", e);
         }
     }
 
@@ -171,7 +168,7 @@ public class ServerLauncher {
         try {
             //logger.info("initializing input parameters");
             System.out.println("Evaluating input parameters...");
-            if(Util.isArrayEmpty(args)){
+            if(Util.isStaticArrayEmpty(args)){
                 //logger.error("Cannot Launch Server, no arguments found.");
                 throw new Exception("Cannot Launch Server, no arguments found.");
             }
@@ -208,7 +205,7 @@ public class ServerLauncher {
     //validate that the next value is not a parameter string
     //if it is something else, it will fail when we try to set it.
     private boolean validateArumentParameterValue(int i, String... args) throws Exception {
-        if(Util.isArrayEmpty(args)){
+        if(Util.isStaticArrayEmpty(args)){
             throw new Exception("Arguments cannot be null or empty.");
         }
         //logger.debug("validating index {} in parameter={}",i,args[i]);
@@ -230,7 +227,7 @@ public class ServerLauncher {
         return logLevel;
     }
 
-    private Map getRooms(){
+    private Array<YokelLounge> getRooms(){
         return rooms;
     }
 
