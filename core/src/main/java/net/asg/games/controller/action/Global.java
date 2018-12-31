@@ -2,6 +2,8 @@ package net.asg.games.controller.action;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.autumn.mvc.stereotype.ViewActionContainer;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
@@ -12,6 +14,7 @@ import com.github.czyzby.websocket.data.WebSocketException;
 import com.github.czyzby.websocket.net.ExtendedNet;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
+import net.asg.games.server.YokelLounge;
 import net.asg.games.server.YokelPlayer;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
@@ -30,7 +33,8 @@ public class Global implements ActionContainer {
     private WebSocket socket;
     private String message = "Connecting...";
     private boolean isConnected = false;
-    private Array<YokelPlayer> players = new Array<YokelPlayer>();
+    private OrderedMap<String, YokelPlayer> players = new OrderedMap<String, YokelPlayer>();
+    private OrderedMap<String, YokelLounge> lounges = new OrderedMap<String, YokelLounge>();
 
     /**
      * This is a mock-up method that does nothing. It will be available in LML templates through "close" (annotation
@@ -80,20 +84,29 @@ public class Global implements ActionContainer {
         return isConnected;
     }
 
-    @LmlAction("requestPlayerList")
-    public void requestPlayerList() {
-        System.out.println("Starting requestPlayerList");
+    @LmlAction("requestPlayers")
+    public void requestPlayers() {
+        System.out.println("Starting requestPlayers");
         if(!isAlive()){
             initializeSockets();
         }
         final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_TEST_PLAYER_LIST + "", null);
         socket.send(request);
-        //getPlayerList();
+    }
+
+    @LmlAction("requestLounges")
+    public void requestLounges() {
+        System.out.println("Starting requestLounges");
+        if(!isAlive()){
+            initializeSockets();
+        }
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_GAME_LOUNGE + "", null);
+        socket.send(request);
     }
 
     @LmlAction("requestPlayerRegistration")
     public void requestPlayerRegistration(final Object player) {
-        System.out.println("Starting requestPlayerList");
+        System.out.println("Starting requestPlayers");
         if(!isAlive()){
             initializeSockets();
         }
@@ -103,18 +116,40 @@ public class Global implements ActionContainer {
         //System.out.println("pleyr=" + json.toJson(player));
         //final ClientRequest request = new ClientRequest(-1, "state:" + socket.getState().getId(), ServerRequest.REQUEST_LOGIN + "", null);
         //socket.send(request);
-        //getPlayerList();
+        //getPlayers();
     }
 
-    @LmlAction("getPlayerList")
-    public Array<YokelPlayer> getPlayerList() {
-        System.out.println("getPlayerList");
+    @LmlAction("getPlayers")
+    public Array<String> getPlayers() {
+        System.out.println("getPlayers");
 
         if(players == null){
-            requestPlayerList();
+            requestPlayers();
         }
         System.out.println("players" + players);
-        return players;
+        return players.orderedKeys();
+    }
+
+    @LmlAction("getLoungeTitles")
+    public ObjectMap.Values<YokelLounge> getLoungeTitles() {
+        System.out.println("getLoungeTitles");
+
+        if(lounges == null){
+            requestLounges();
+        }
+        System.out.println("lounges=" + lounges);
+        return lounges.values();
+    }
+
+    @LmlAction("getRooms")
+    public Array<String> getRooms(String loungeName) {
+        System.out.println("getRooms");
+
+        if(lounges == null){
+            requestLounges();
+        }
+        System.out.println("lounges" + lounges);
+        return lounges.get(loungeName).getAllRooms().orderedKeys();
     }
 
     private WebSocketListener getListener() {
@@ -123,14 +158,18 @@ public class Global implements ActionContainer {
         handler.registerHandler(ServerResponse.class, new WebSocketHandler.Handler<ServerResponse>() {
             @Override
             public boolean handle(final WebSocket webSocket, final ServerResponse packet) {
-                handleServerResponse(packet);
+                try {
+                    handleServerResponse(packet);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
         });
         return handler;
     }
 
-    private void handleServerResponse(ServerResponse request){
+    private void handleServerResponse(ServerResponse request) throws Exception {
         String sessionId = null;
         String message = null;
         int requestSequence = -1;
@@ -146,21 +185,24 @@ public class Global implements ActionContainer {
         }
     }
 
-    private void decodePayload(String message, String[] payload){
+    private void decodePayload(String message, String[] payload) throws Exception {
         String[] load = null;
         if(!StringUtils.isEmpty(message)){
             ServerRequest value = ServerRequest.valueOf(message);
             switch (value) {
                 case REQUEST_TEST_PLAYER_LIST:
-                    buildTestPlayersJSON(payload);
-                    System.out.println("players: " + this.players);
+                    buildTestPlayersFromJSON(payload);
+                    break;
+                case REQUEST_GAME_LOUNGE:
+                    buildLoungeFromJSON(payload);
                     break;
                 default:
+                    throw new Exception("Unknown Server Response: " + value);
             }
         }
     }
 
-    private void buildTestPlayersJSON(String[] jsonPlayers){
+    private void buildTestPlayersFromJSON(String[] jsonPlayers){
         Json json  = new Json();
         for(String jsonPlayer : jsonPlayers){
             if(!StringUtils.isEmpty(jsonPlayer)){
@@ -168,10 +210,25 @@ public class Global implements ActionContainer {
                 YokelPlayer player = json.fromJson(YokelPlayer.class, jsonPlayer);
 
                 if(player != null){
-                    players.add(player);
+                    players.put(player.getName(), player);
                 }
             }
         }
         System.out.println("players: " + players);
+    }
+
+    private void buildLoungeFromJSON(String[] jsonLounges){
+        Json json  = new Json();
+        for(String jsonLounge : jsonLounges){
+            if(!StringUtils.isEmpty(jsonLounge)){
+                //System.out.println("jsonPlayer" + jsonPlayer);
+                YokelLounge lounge = json.fromJson(YokelLounge.class, jsonLounge);
+
+                if(lounges != null){
+                    lounges.put(lounge.getName(), lounge);
+                }
+            }
+        }
+        System.out.println("lounges: " + lounges);
     }
 }

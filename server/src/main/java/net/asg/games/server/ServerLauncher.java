@@ -2,6 +2,7 @@ package net.asg.games.server;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
@@ -13,8 +14,6 @@ import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.vertx.core.Vertx;
@@ -49,9 +48,9 @@ public class ServerLauncher {
     //<"room id", room object>
     private Array<YokelLounge> rooms;
     //<"player id", player object>
-    private Map<String, YokelPlayer> registeredPlayers;
+    private OrderedMap<String, YokelPlayer> registeredPlayers;
     //<"player id", player object>
-    private Map<String, YokelPlayer> testPlayers;
+    private OrderedMap<String, YokelPlayer> testPlayers;
     private int maxNumberOfRooms;
     private int logLevel;
     private int tickRate;
@@ -101,7 +100,7 @@ public class ServerLauncher {
             //System.out.println(rooms);
 
             if(registeredPlayers == null){
-                registeredPlayers = new HashMap<>();
+                registeredPlayers = new OrderedMap<>();
             }
             if(isDebug){
                 generateTestPlayers();
@@ -115,7 +114,7 @@ public class ServerLauncher {
         try {
             System.out.println("Generating Debugable Players...");
             if(testPlayers == null){
-                testPlayers = new HashMap<>();
+                testPlayers = new OrderedMap<>();
             }
             int numPlayers = 8;
             while(numPlayers > 0){
@@ -151,14 +150,6 @@ public class ServerLauncher {
 
             rooms.add(socialLounge);
             rooms.add(beginningLounge);
-
-            Json json = new Json();
-            String text = json.toJson(socialLounge);
-            YokelLounge person2 = json.fromJson(YokelLounge.class, text);
-
-            System.out.println("New: " + text);
-            System.out.println("socialLounge: " + socialLounge);
-            System.out.println("person2: " + person2);
         } catch (Exception e) {
             throw new Exception("Error initializing game rooms: ", e);
         }
@@ -309,8 +300,8 @@ public class ServerLauncher {
 
     private Array<String> testPlayersToJSON(){
         Array<String> jsonPlayers = new Array<>();
-        Json json  = new Json();;
-        for(String playerName : testPlayers.keySet()){
+        Json json  = new Json();
+        for(String playerName : Util.toIterable(testPlayers.orderedKeys())){
             if(!StringUtils.isEmpty(playerName)){
                 YokelPlayer player = testPlayers.get(playerName);
                 if(player != null){
@@ -321,6 +312,17 @@ public class ServerLauncher {
         return jsonPlayers;
     }
 
+    private Array<String> loungesToJSON(){
+        Array<String> jsonRooms = new Array<>();
+        Json json  = new Json();
+        for(YokelLounge room : Util.toIterable(rooms)){
+            if(room != null){
+                jsonRooms.add(json.toJson(room));
+            }
+        }
+        return jsonRooms;
+    }
+
     private String[] buildPayload(String message) throws Exception {
         String[] load = null;
         if(!StringUtils.isEmpty(message)){
@@ -328,6 +330,9 @@ public class ServerLauncher {
             switch (value) {
                 case REQUEST_TEST_PLAYER_LIST:
                     load = Util.fromCollectionToStringArray(testPlayersToJSON());
+                    break;
+                case REQUEST_GAME_LOUNGE:
+                    load = Util.fromCollectionToStringArray(loungesToJSON());
                     break;
                 default:
                     throw new Exception("Unknown Server Request: " + value);

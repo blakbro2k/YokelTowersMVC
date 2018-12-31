@@ -84,8 +84,7 @@ public class Util {
     public static boolean containsAny(Array<Object> c1, Array<Object> c2, boolean identity){
         boolean containsAny = false;
         if(null != c1 && null != c2){
-            Array.ArrayIterable<Object> c3 = new Array.ArrayIterable<Object>(c2);
-            for(Object o : c3){
+            for(Object o : toIterable(c2)){
                 if (!c1.contains(o, identity)) {
                     continue;
                 }
@@ -114,7 +113,7 @@ public class Util {
     }
 
     @Contract(value = "null -> true", pure = true)
-    public static <T> boolean isCollectionEmpty(Array<T> collection){
+    public static <T> boolean isArrayEmpty(Array<T> collection){
         return collection == null || collection.size < 1;
     }
 
@@ -148,7 +147,7 @@ public class Util {
      */
     @NotNull
     public static <T> Array.ArrayIterable<T> toIterable(Array<T> array){
-        if(!isCollectionEmpty(array)){
+        if(!isArrayEmpty(array)){
             return new Array.ArrayIterable<T>(array);
         }
         return new Array.ArrayIterable<T>(new Array<T>());

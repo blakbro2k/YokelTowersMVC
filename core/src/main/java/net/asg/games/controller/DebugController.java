@@ -13,4 +13,8 @@ public class DebugController extends ApplicationAdapter implements ViewRenderer,
         stage.act(delta);
         stage.draw();
     }
+
+    public void changeScreens(){
+        //setView
+    }
 }

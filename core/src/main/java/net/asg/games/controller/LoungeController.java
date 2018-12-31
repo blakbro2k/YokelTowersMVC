@@ -8,6 +8,7 @@ import com.github.czyzby.autumn.mvc.stereotype.View;
 public class LoungeController implements ViewRenderer {
     @Override
     public void render(Stage stage, float delta) {
-
+        stage.act(delta);
+        stage.draw();
     }
 }

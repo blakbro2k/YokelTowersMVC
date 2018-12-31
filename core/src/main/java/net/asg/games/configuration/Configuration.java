@@ -1,28 +1,30 @@
 package net.asg.games.configuration;
 
-    import com.badlogic.gdx.utils.viewport.FitViewport;
-    import com.badlogic.gdx.utils.viewport.Viewport;
-    import com.github.czyzby.autumn.annotation.Component;
-    import com.github.czyzby.autumn.annotation.Initiate;
-    import com.github.czyzby.autumn.mvc.component.ui.SkinService;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.AvailableLocales;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.I18nBundle;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.I18nLocale;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.LmlMacro;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.LmlParserSyntax;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.Preference;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.StageViewport;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.MusicEnabled;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.MusicVolume;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundEnabled;
-    import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundVolume;
-    import com.github.czyzby.kiwi.util.gdx.asset.lazy.provider.ObjectProvider;
-    import com.github.czyzby.lml.parser.LmlSyntax;
-    import com.github.czyzby.lml.util.Lml;
-    import com.github.czyzby.lml.vis.parser.impl.VisLmlSyntax;
-    import com.kotcrab.vis.ui.VisUI;
-    import net.asg.games.YokelTowersMVC;
-    import net.asg.games.service.ScaleService;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.czyzby.autumn.annotation.Component;
+import com.github.czyzby.autumn.annotation.Initiate;
+import com.github.czyzby.autumn.mvc.component.ui.SkinService;
+import com.github.czyzby.autumn.mvc.stereotype.preference.AvailableLocales;
+import com.github.czyzby.autumn.mvc.stereotype.preference.I18nBundle;
+import com.github.czyzby.autumn.mvc.stereotype.preference.I18nLocale;
+import com.github.czyzby.autumn.mvc.stereotype.preference.LmlMacro;
+import com.github.czyzby.autumn.mvc.stereotype.preference.LmlParserSyntax;
+import com.github.czyzby.autumn.mvc.stereotype.preference.Preference;
+import com.github.czyzby.autumn.mvc.stereotype.preference.StageViewport;
+import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.MusicEnabled;
+import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.MusicVolume;
+import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundEnabled;
+import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundVolume;
+import com.github.czyzby.kiwi.util.gdx.asset.lazy.provider.ObjectProvider;
+import com.github.czyzby.lml.parser.LmlSyntax;
+import com.github.czyzby.lml.util.Lml;
+import com.github.czyzby.lml.vis.parser.impl.VisLmlSyntax;
+import com.kotcrab.vis.ui.VisUI;
+
+import net.asg.games.YokelTowersMVC;
+import net.asg.games.provider.LoungeLmlTagProvider;
+import net.asg.games.service.ScaleService;
 
     /** Thanks to the Component annotation, this class will be automatically found and processed.
      *
@@ -77,5 +79,7 @@ package net.asg.games.configuration;
             // Thanks to this setting, only methods annotated with @LmlAction will be available in views, significantly
             // speeding up method look-up:
             Lml.EXTRACT_UNANNOTATED_METHODS = false;
+
+            syntax.addTagProvider(new LoungeLmlTagProvider(), "lounge");
         }
     }

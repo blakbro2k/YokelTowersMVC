@@ -1,6 +1,15 @@
 <table oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true">
-    <table oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true">
-
-
+    <:evaluate method="requestLounges"/>
+    <label>This is the lounge screen</label>
+    <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
+    <table>
+        <:for lounge="$getLoungeTitles">
+            <lounge row="true" oneColumn="true">{lounge}</lounge>
+            <!--<:for room="$getRooms" id="{lounge}">
+                <label>{room}</label>
+            </:for>-->
+        </:for>
     </table>
+    <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
+    <textButton onChange="app:exit">@exit</textButton>
 </table>
