@@ -5,8 +5,6 @@ import com.badlogic.gdx.utils.OrderedMap;
 
 import net.asg.games.utils.Util;
 
-import org.apache.commons.lang.StringUtils;
-
 public class YokelLounge implements Disposable {
     private String name;
     private OrderedMap<String, YokelRoom> rooms;
@@ -56,15 +54,6 @@ public class YokelLounge implements Disposable {
 
     @Override
     public String toString(){
-        StringBuilder loungeString = new StringBuilder();
-        loungeString.append("[").append(getName()).append("]").append("\n");
-
-        for(String roomName : Util.toIterable(rooms.orderedKeys())){
-            if(roomName != null){
-                loungeString.append("-").append(roomName).append("\n");
-            }
-        }
-        String loungeStr = loungeString.toString();
-        return StringUtils.substring(loungeStr, 0, loungeStr.length() - 1);
+        return Util.convertJsonString(Util.getJsonString(this));
     }
 }

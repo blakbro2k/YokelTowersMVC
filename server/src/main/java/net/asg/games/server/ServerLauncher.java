@@ -1,7 +1,6 @@
 package net.asg.games.server;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
@@ -300,12 +299,11 @@ public class ServerLauncher {
 
     private Array<String> testPlayersToJSON(){
         Array<String> jsonPlayers = new Array<>();
-        Json json  = new Json();
         for(String playerName : Util.toIterable(testPlayers.orderedKeys())){
             if(!StringUtils.isEmpty(playerName)){
                 YokelPlayer player = testPlayers.get(playerName);
                 if(player != null){
-                    jsonPlayers.add(json.toJson(player));
+                    jsonPlayers.add(Util.getJsonString(player));
                 }
             }
         }
@@ -314,10 +312,9 @@ public class ServerLauncher {
 
     private Array<String> loungesToJSON(){
         Array<String> jsonRooms = new Array<>();
-        Json json  = new Json();
         for(YokelLounge room : Util.toIterable(rooms)){
             if(room != null){
-                jsonRooms.add(json.toJson(room));
+                jsonRooms.add(Util.getJsonString(room));
             }
         }
         return jsonRooms;

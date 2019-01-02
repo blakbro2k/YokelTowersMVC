@@ -4,7 +4,7 @@
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
     <table>
         <:for lounge="$getLoungeTitles">
-            <lounge row="true" oneColumn="true">{lounge}</lounge>
+            <lounge row="true">{lounge}</lounge>
             <!--<:for room="$getRooms" id="{lounge}">
                 <label>{room}</label>
             </:for>-->

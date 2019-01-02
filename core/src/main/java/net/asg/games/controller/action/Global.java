@@ -137,7 +137,7 @@ public class Global implements ActionContainer {
         if(lounges == null){
             requestLounges();
         }
-        System.out.println("lounges=" + lounges);
+        //System.out.println("lounges=" + lounges);
         return lounges.values();
     }
 
@@ -214,7 +214,7 @@ public class Global implements ActionContainer {
                 }
             }
         }
-        System.out.println("players: " + players);
+        //System.out.println("players: " + players);
     }
 
     private void buildLoungeFromJSON(String[] jsonLounges){
@@ -229,6 +229,6 @@ public class Global implements ActionContainer {
                 }
             }
         }
-        System.out.println("lounges: " + lounges);
+        //System.out.println("lounges: " + lounges);
     }
 }

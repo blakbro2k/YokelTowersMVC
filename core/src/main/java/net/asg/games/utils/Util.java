@@ -2,6 +2,8 @@ package net.asg.games.utils;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.Json;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Contract;
@@ -10,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class Util {
+    private final static Json json = new Json();
 
     public static class IDGenerator {
         private IDGenerator(){}
@@ -150,6 +153,22 @@ public class Util {
         if(!isArrayEmpty(array)){
             return new Array.ArrayIterable<T>(array);
         }
-        return new Array.ArrayIterable<T>(new Array<T>());
+        return new Array.ArrayIterable<T>(GdxArrays.<T>newArray());
+    }
+
+    public static String getJsonString(Object o){
+        return json.toJson(o);
+    }
+
+    public static <T> T getObjectFromJsonString(Class<T> type, String jsonStr){
+        return json.fromJson(type, jsonStr);
+    }
+
+    public static String convertJsonString(String str){
+        return StringUtils.replace(StringUtils.replace(str, "{","["),"}","]");
+    }
+
+    public static String revertJsonString(String str){
+        return StringUtils.replace(StringUtils.replace(str, "[","{"),"]","}");
     }
 }
