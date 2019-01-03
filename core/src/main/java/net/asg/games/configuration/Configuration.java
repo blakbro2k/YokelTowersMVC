@@ -3,6 +3,7 @@ package net.asg.games.configuration;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.autumn.annotation.Component;
+import com.github.czyzby.autumn.annotation.Destroy;
 import com.github.czyzby.autumn.annotation.Initiate;
 import com.github.czyzby.autumn.mvc.component.ui.SkinService;
 import com.github.czyzby.autumn.mvc.stereotype.preference.AvailableLocales;
@@ -20,6 +21,7 @@ import com.github.czyzby.kiwi.util.gdx.asset.lazy.provider.ObjectProvider;
 import com.github.czyzby.lml.parser.LmlSyntax;
 import com.github.czyzby.lml.util.Lml;
 import com.github.czyzby.lml.vis.parser.impl.VisLmlSyntax;
+import com.github.czyzby.lml.vis.util.ColorPickerContainer;
 import com.kotcrab.vis.ui.VisUI;
 
 import net.asg.games.YokelTowersMVC;
@@ -76,10 +78,20 @@ import net.asg.games.service.ScaleService;
             VisUI.load(scaleService.getScale());
             // Registering VisUI skin with "default" name - this skin will be the default one for all LML widgets:
             skinService.addSkin("default", VisUI.getSkin());
+
+            //VisUI.load("ui/vis/skin/x1/uiskin.json");
+            // Registering VisUI skin with "default" name - this skin will be the default one for all LML widgets:
+            //skinService.addSkin("sgx", VisUI.getSkin());
+
             // Thanks to this setting, only methods annotated with @LmlAction will be available in views, significantly
             // speeding up method look-up:
             Lml.EXTRACT_UNANNOTATED_METHODS = false;
 
             syntax.addTagProvider(new LoungeLmlTagProvider(), "lounge");
+        }
+
+        @Destroy
+        public static void destroyColorPicker() {
+            ColorPickerContainer.dispose();
         }
     }
