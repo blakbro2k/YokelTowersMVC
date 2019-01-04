@@ -170,7 +170,7 @@ public class ServerLauncher {
                 String paramValue = validateArumentParameterValue(i, args) ? args[i + 1] : null;
 
                 if(StringUtils.equalsIgnoreCase(DEBUG_ATTR,args[i])){
-                    this.isDebug = true;
+                    setDebug(true);
                     break;
                 }
 
@@ -180,7 +180,7 @@ public class ServerLauncher {
                     } else if (StringUtils.equalsIgnoreCase(PORT2_ATTR, param)) {
                         setPort(Integer.parseInt(paramValue));
                     } else if (StringUtils.equalsIgnoreCase(ROOM_ATTR, param)) {
-                        maxNumberOfRooms = Integer.parseInt(paramValue);
+                        setMaxRooms(Integer.parseInt(paramValue));
                     } else if (StringUtils.equalsIgnoreCase(TIMEOUT_ATTR, param)) {
                         setTickRate(Integer.parseInt(paramValue));
                     } else if (StringUtils.equalsIgnoreCase(TICK_RATE_ATTR, param)) {
@@ -209,10 +209,21 @@ public class ServerLauncher {
         this.port = port;
     }
 
+    private void setDebug(boolean b){
+        System.out.println("setting debug to: " + b);
+        this.isDebug = b;
+    }
+
     private int getPort(){
         //Logger.debug("calling getPort()");
         return port;
     }
+
+    private void setMaxRooms(int rooms){
+        System.out.println("setting max rooms to: " + rooms);
+        this.maxNumberOfRooms = rooms;
+    }
+
     private int getLogLevel(){
         return logLevel;
     }
@@ -320,20 +331,24 @@ public class ServerLauncher {
         return jsonRooms;
     }
 
-    private String[] buildPayload(String message) throws Exception {
+    private String[] buildPayload(String message) {
         String[] load = null;
-        if(!StringUtils.isEmpty(message)){
-            ServerRequest value = ServerRequest.valueOf(message);
-            switch (value) {
-                case REQUEST_TEST_PLAYER_LIST:
-                    load = Util.fromCollectionToStringArray(testPlayersToJSON());
-                    break;
-                case REQUEST_GAME_LOUNGE:
-                    load = Util.fromCollectionToStringArray(loungesToJSON());
-                    break;
-                default:
-                    throw new Exception("Unknown Server Request: " + value);
+        try {
+            if (!StringUtils.isEmpty(message)) {
+                ServerRequest value = ServerRequest.valueOf(message);
+                switch (value) {
+                    case REQUEST_TEST_PLAYER_LIST:
+                        load = Util.fromCollectionToStringArray(testPlayersToJSON());
+                        break;
+                    case REQUEST_GAME_LOUNGE:
+                        load = Util.fromCollectionToStringArray(loungesToJSON());
+                        break;
+                    default:
+                        throw new Exception("Unknown Server Request: " + value);
+                }
             }
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return load;
     }

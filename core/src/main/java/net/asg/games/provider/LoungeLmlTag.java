@@ -6,6 +6,7 @@ import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.tag.actor.TableLmlTag;
 import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
 import com.github.czyzby.lml.parser.tag.LmlTag;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import net.asg.games.server.YokelLounge;
 import net.asg.games.server.YokelRoom;
@@ -23,7 +24,7 @@ public class LoungeLmlTag extends TableLmlTag {
 
     @Override
     protected void handlePlainTextLine(final String plainTextLine) {
-        final Lounge lounge = getLounge();
+        final Lounge lounge = getLounge();lounge.setDebug(true);
         //table.add(getParser().parseString(plainTextLine, getActor()));
 
         YokelLounge obj = Util.getObjectFromJsonString(YokelLounge.class, Util.revertJsonString(plainTextLine));
@@ -31,10 +32,12 @@ public class LoungeLmlTag extends TableLmlTag {
         lounge.add(obj.getName()).row();
 
         OrderedMap<String, YokelRoom> iter = obj.getAllRooms();
-        for(String roomName : iter.orderedKeys()){
-            //lounge.setBackground("Background");
-            lounge.add(iter.get(roomName).getName());
-            lounge.row();
+        if(iter != null){
+            for(String roomName : Util.toIterable(iter.orderedKeys())){
+                //lounge.setBackground("Background");
+                lounge.add(buildRoomButton(iter.get(roomName))).fillX();
+                lounge.row();
+            }
         }
 
         /*if (LmlUtilities.isOneColumn(lounge)) {
@@ -45,5 +48,17 @@ public class LoungeLmlTag extends TableLmlTag {
     /** @return casted actor. */
     private Lounge getLounge() {
         return (Lounge) getActor();
+    }
+
+    private String getRoomName(YokelRoom room){
+        String roomName = "NotFound";
+        if(room != null){
+            roomName = room.getName();
+        }
+        return roomName;
+    }
+
+    private VisTextButton buildRoomButton(YokelRoom room){
+        return new VisTextButton(getRoomName(room));
     }
 }

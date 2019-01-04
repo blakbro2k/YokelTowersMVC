@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.Json;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -37,7 +36,6 @@ public class Util {
      * @param numMonth Number value of Month requested
      * @return String with three letter consideration
      */
-    @Contract(pure = true)
     public static String getThreeLetterMonth(int numMonth) throws GdxRuntimeException {
         String ret;
         switch (numMonth) {
@@ -115,17 +113,14 @@ public class Util {
         return ret;
     }
 
-    @Contract(value = "null -> true", pure = true)
     public static <T> boolean isArrayEmpty(Array<T> collection){
         return collection == null || collection.size < 1;
     }
 
-    @Contract(value = "null -> true", pure = true)
     public static boolean isStaticArrayEmpty(Object[] array){
         return array == null || array.length < 1;
     }
 
-    @Contract("null -> null")
     public static <T> String[] fromCollectionToStringArray(Array<T> playerNames) {
         if(playerNames != null){
             int size = playerNames.size;

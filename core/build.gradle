@@ -13,15 +13,14 @@ dependencies {
     implementation "com.github.czyzby:gdx-lml-vis:$lmlVisVersion"
     implementation "com.kotcrab.vis:vis-ui:$visUiVersion"
     implementation "commons-lang:commons-lang:$apacheCommonsLangVer"
-
     implementation "com.google.gwt:gwt-servlet:$gwtServletVersion"
     implementation "javax.servlet:javax.servlet-api:$javaServletVersion"
     implementation "io.vertx:vertx-core:$vertxVersion"
     implementation 'org.jetbrains:annotations-java5:15.0'
-
     // Test dependencies :
     implementation "junit:junit:$junitVersion"
     implementation "org.assertj:assertj-core:$assertjVersion"
     implementation "org.mockito:mockito-core:$mockitoVersion"
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }
         
