@@ -1,0 +1,49 @@
+/* 190 - Decompiled by JODE
+ * Visit http://jode.sourceforge.net/
+ */
+package towers;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+public final class RandomNumber implements IDataIO
+{
+    private long seed;
+    //private boolean c = false;
+    //private static final long f = (1L << 48) - 1L;
+    
+    public RandomNumber() {
+    	this(System.currentTimeMillis());
+    }
+    
+    public RandomNumber(long l) {
+    	generateSeedByKey(l);
+    }
+    
+    public synchronized void generateSeedByKey(long l) {
+		seed = (l ^ 0x5deece66dL) & (1L << 48) - 1L;
+		//c = false;
+    }
+    
+    protected synchronized int moveSeed(int i) {
+		long l = seed * 25214903917L + 11L & (1L << 48) - 1L;
+		seed = l;
+		return (int) (l >>> 48 - i);
+    }
+    
+    public int generateCappedNumber() {
+    	return moveSeed(32);
+    }
+    
+    public int next(int i) {
+    	return (generateCappedNumber() & 0x7fffffff) % i;
+    }
+    
+    public void printOut(DataOutputStream dataoutputstream) throws IOException {
+    	dataoutputstream.writeLong(seed);
+    }
+    
+    public void readIn(DataInputStream datainputstream) throws IOException {
+    	seed = datainputstream.readLong();
+    }
+}

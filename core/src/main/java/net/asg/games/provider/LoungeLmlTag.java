@@ -59,6 +59,9 @@ public class LoungeLmlTag extends TableLmlTag {
     }
 
     private VisTextButton buildRoomButton(YokelRoom room){
-        return new VisTextButton(getRoomName(room));
+        VisTextButton button = new VisTextButton(getRoomName(room));
+        //button.addListener();
+
+        return button;
     }
 }
