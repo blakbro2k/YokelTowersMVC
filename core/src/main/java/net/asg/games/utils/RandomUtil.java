@@ -4,6 +4,9 @@ import com.badlogic.gdx.utils.Queue;
 
 //import net.asg.games.yokel.core.enums.YokelBlockType;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -75,6 +78,65 @@ public class RandomUtil {
          */
         public E random(int min) {
             return values[min + RND.nextInt(SECTION_GROUP_NUM)];
+        }
+    }
+
+    public final class RandomNumber {
+        private long seed;
+        //private boolean c = false;
+        //private static final long f = (1L << 48) - 1L;
+
+        public RandomNumber() {
+            this(System.currentTimeMillis());
+        }
+
+        public RandomNumber(long l) {
+            generateSeedByKey(l);
+        }
+
+        public synchronized void generateSeedByKey(long l) {
+            seed = (l ^ 0x5deece66dL) & (1L << 48) - 1L;
+            //c = false;
+        }
+
+        protected synchronized int moveSeed(int i) {
+            long l = seed * 25214903917L + 11L & (1L << 48) - 1L;
+            seed = l;
+            return (int) (l >>> 48 - i);
+        }
+
+        public int generateCappedNumber() {
+            return moveSeed(32);
+        }
+
+        public int next(int i) {
+            return (generateCappedNumber() & 0x7fffffff) % i;
+        }
+
+        public void printOut(DataOutputStream dataoutputstream) throws IOException {
+            dataoutputstream.writeLong(seed);
+        }
+
+        public void readIn(DataInputStream datainputstream) throws IOException {
+            seed = datainputstream.readLong();
+        }
+    }
+
+    public class RandomNumberArray
+    {
+        int[] randomNumbers;
+
+        public RandomNumberArray(int byteLength, long seed, int maxValue) {
+            randomNumbers = new int[byteLength];
+            RandomNumber numberGenerator = new RandomNumber(seed);
+            for (int i = 0; i < byteLength; i++)
+                randomNumbers[i] = numberGenerator.next(maxValue);
+        }
+
+        public int getRandomNumberAt(int index) {
+            if (index < 0)
+                System.out.println("Assertion failure: invalid random index " + index);
+            return randomNumbers[index % randomNumbers.length];
         }
     }
 }
