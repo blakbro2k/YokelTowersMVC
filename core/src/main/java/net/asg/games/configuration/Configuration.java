@@ -12,6 +12,7 @@ import com.github.czyzby.autumn.mvc.stereotype.preference.I18nLocale;
 import com.github.czyzby.autumn.mvc.stereotype.preference.LmlMacro;
 import com.github.czyzby.autumn.mvc.stereotype.preference.LmlParserSyntax;
 import com.github.czyzby.autumn.mvc.stereotype.preference.Preference;
+import com.github.czyzby.autumn.mvc.stereotype.preference.Skin;
 import com.github.czyzby.autumn.mvc.stereotype.preference.StageViewport;
 import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.MusicEnabled;
 import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.MusicVolume;
@@ -66,6 +67,8 @@ import net.asg.games.service.ScaleService;
 
         /** Setting the default Preferences object path. */
         @Preference private final String preferencesPath = PREFERENCES;
+        @Skin(fonts = { "ui/neutralizer/skin/font-export.fnt"}, fontNames = { "neutralizer"}, value = "neutralizer")
+            private final String skinPath = "ui/neutralizer/skin/neutralizer-ui";
 
         /** Thanks to the Initiate annotation, this method will be automatically invoked during context building. All
          * method's parameters will be injected with values from the context.
@@ -78,7 +81,9 @@ import net.asg.games.service.ScaleService;
             VisUI.load(scaleService.getScale());
             // Registering VisUI skin with "default" name - this skin will be the default one for all LML widgets:
             skinService.addSkin("default", VisUI.getSkin());
-
+            System.out.println("test: " + skinService.getSkin("neutralizer"));
+            //skinService.addSkin("neutralizer", skinService.getSkin("neutralizer-ui"));
+            //skinService.
             //VisUI.load("ui/vis/skin/x1/uiskin.json");
             // Registering VisUI skin with "default" name - this skin will be the default one for all LML widgets:
             //skinService.addSkin("sgx", VisUI.getSkin());

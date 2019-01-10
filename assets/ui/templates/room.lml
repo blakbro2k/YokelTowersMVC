@@ -1,9 +1,22 @@
-<table oneColumn="true" defaultPad="2" tableAlign="center" fillParent="true" defaultFillX="true">
+<table defaultPad="2" tableAlign="center" fillParent="true" defaultFillX="true" debug="true">
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
-    <label>@playerChoose</label>
-    <:for player="$getPlayerList">
-        <textButton onChange="requestPlayerRegistration" id="{player}">{player}</textButton>
-    </:for>
-    <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
-    <textButton onChange="app:exit">@exit</textButton>
+    <label row="true" colspan="3">Header</label>
+    <table>
+        <textButton row="true">Play Now</textButton>
+        <textButton row="true">Create Table</textButton>
+        <label row="true">Ratings</label>
+        <textButton row="true">Options</textButton>
+        <textButton row="true" onChange="app:exit">Exit Games</textButton>
+    </table>
+    <table>
+        <table row="true">
+            <label>Table</label>
+        </table>
+        <table>
+            <label>Chat</label>
+        </table>
+    </table>
+    <table>
+        <label>User Status</label>
+    </table>
 </table>

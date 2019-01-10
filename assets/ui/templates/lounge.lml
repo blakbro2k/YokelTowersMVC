@@ -1,4 +1,4 @@
-<table oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true">
+<table oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true" debug="true">
     <:evaluate method="requestLounges"/>
     <label>This is the lounge screen</label>
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->

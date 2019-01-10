@@ -27,7 +27,7 @@ public class LoungeLmlTag extends TableLmlTag {
 
     @Override
     protected void handlePlainTextLine(final String plainTextLine) {
-        final Lounge lounge = getLounge();lounge.setDebug(true);
+        final Lounge lounge = getLounge();
         YokelLounge obj = Util.getObjectFromJsonString(YokelLounge.class, Util.revertJsonString(plainTextLine));
 
         lounge.add(obj.getName()).row();
@@ -60,7 +60,7 @@ public class LoungeLmlTag extends TableLmlTag {
 
     private VisTextButton buildRoomButton(YokelRoom room){
         VisTextButton button = new VisTextButton(getRoomName(room));
-        onChange.process(getParser(), this, button, "goto:menu");
+        onChange.process(getParser(), this, button, "goto:room");
         return button;
     }
 }
