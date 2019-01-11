@@ -40,7 +40,7 @@ public class NetworkService {
 
         // Note: you can also use WebSockets.newSocket() and WebSocket.toWebSocketUrl() methods.
         if(socket == null){
-            socket = ExtendedNet.getNet().newWebSocket("localhost", 8000);
+            socket = ExtendedNet.getNet().newWebSocket(getServerHost(), getServerPort());
         }
 
         socket.addListener(getListener());
@@ -62,6 +62,15 @@ public class NetworkService {
         System.out.println("socket=" + socket);
         Packets.register(serializer);
         return isConnected;
+    }
+
+    public int getServerPort(){
+        return 8000;
+    }
+
+
+    public String getServerHost(){
+        return "localHost";
     }
 
     private WebSocketListener getListener() {

@@ -2,15 +2,32 @@
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
     <label row="true" colspan="3">Header</label>
     <table>
-        <textButton row="true">Play Now</textButton>
-        <textButton row="true">Create Table</textButton>
+        <textButton row="true" onChange="show:settings">Play Now</textButton>
+        <textButton row="true" onChange="show:create">Create Table</textButton>
         <label row="true">Ratings</label>
         <textButton row="true">Options</textButton>
         <textButton row="true" onChange="app:exit">Exit Games</textButton>
     </table>
     <table>
         <table row="true">
-            <label>Table</label>
+            <table>
+                <label>Table No.</label>
+                <label>Seat 1-2</label>
+                <label>Seat 3-4</label>
+                <label>Seat 5-6</label>
+                <label>Seat 7-8</label>
+                <label row="true">Who is Watching</label>
+                <label>"#1"</label>
+                <imageButton>JOIN</imageButton>
+                <button>JOIN</button>
+                <button>JOIN</button>
+                <button row="true">JOIN</button>
+                <label></label>
+                <imageButton>JOIN</imageButton>
+                <button>JOIN</button>
+                <button>JOIN</button>
+                <button row="true">JOIN</button>
+            </table>
         </table>
         <table>
             <label>Chat</label>
