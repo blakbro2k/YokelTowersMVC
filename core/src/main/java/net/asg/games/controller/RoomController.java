@@ -11,7 +11,6 @@ public class RoomController implements ViewRenderer {
 
     @LmlActor("location") public Image locationImage;
 
-
     @Override
     public void render(Stage stage, float delta) {
         stage.act(delta);

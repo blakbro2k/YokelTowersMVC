@@ -1,11 +1,11 @@
-<table defaultPad="2" tableAlign="center" fillParent="true" defaultFillX="true" debug="true">
+<table defaultPad="2" tableAlign="center" fillParent="true" defaultFillX="true">
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
-    <label row="true" colspan="3">Header</label>
+    <image id="banner" style="banner" row="true" colSpan="3"/>
     <table>
-        <textButton row="true" onChange="show:settings">Play Now</textButton>
-        <textButton row="true" onChange="show:create">Create Table</textButton>
+        <textButton row="true">Play Now</textButton>
+        <textButton row="true" onClick="show:create">Create Table</textButton>
         <label row="true">Ratings</label>
-        <textButton row="true">Options</textButton>
+        <textButton row="true" onClick="show:settings">Options</textButton>
         <textButton row="true" onChange="app:exit">Exit Games</textButton>
     </table>
     <table>

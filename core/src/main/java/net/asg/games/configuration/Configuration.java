@@ -12,7 +12,6 @@ import com.github.czyzby.autumn.mvc.stereotype.preference.I18nLocale;
 import com.github.czyzby.autumn.mvc.stereotype.preference.LmlMacro;
 import com.github.czyzby.autumn.mvc.stereotype.preference.LmlParserSyntax;
 import com.github.czyzby.autumn.mvc.stereotype.preference.Preference;
-import com.github.czyzby.autumn.mvc.stereotype.preference.Skin;
 import com.github.czyzby.autumn.mvc.stereotype.preference.StageViewport;
 import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.MusicEnabled;
 import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.MusicVolume;
@@ -29,7 +28,7 @@ import net.asg.games.YokelTowersMVC;
 import net.asg.games.provider.LoungeLmlTagProvider;
 import net.asg.games.service.ScaleService;
 
-    /** Thanks to the Component annotation, this class will be automatically found and processed.
+/** Thanks to the Component annotation, this class will be automatically found and processed.
      *
      * This is a utility class that configures application settings. */
     @Component
@@ -82,13 +81,6 @@ import net.asg.games.service.ScaleService;
             // Registering VisUI skin with "default" name - this skin will be the default one for all LML widgets:
             skinService.addSkin("default", VisUI.getSkin());
 
-            //System.out.println("test: " + skinService.getSkin("neutralizer"));
-            //skinService.addSkin("neutralizer", skinService.getSkin("neutralizer-ui"));
-            //skinService.
-            //VisUI.load("ui/vis/skin/x1/uiskin.json");
-            // Registering VisUI skin with "default" name - this skin will be the default one for all LML widgets:
-            //skinService.addSkin("sgx", VisUI.getSkin());
-
             // Thanks to this setting, only methods annotated with @LmlAction will be available in views, significantly
             // speeding up method look-up:
             Lml.EXTRACT_UNANNOTATED_METHODS = false;
@@ -101,3 +93,4 @@ import net.asg.games.service.ScaleService;
             ColorPickerContainer.dispose();
         }
     }
+
