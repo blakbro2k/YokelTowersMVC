@@ -48,7 +48,7 @@ public class DesktopLauncher {
         configuration.width = YokelTowersMVC.WIDTH;
         configuration.height = YokelTowersMVC.HEIGHT;
         for (int size : new int[] { 128, 64, 32, 16 }) {
-            configuration.addIcon("images/icons/libgdx" + size + ".png", FileType.Internal);
+            configuration.addIcon("ui/icons/libgdx" + size + ".png", FileType.Internal);
         }
         // Initiating web sockets module:
         CommonWebSockets.initiate();
