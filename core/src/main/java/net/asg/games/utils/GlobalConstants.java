@@ -33,8 +33,8 @@ public class GlobalConstants {
     public static final String SHADE_ATLAS_PATH = "shade/imageAssets.atlas";
 
     public static final String GAME_TITLE = "RodKast Alpha";
-    public static final String SOURCE_ASSETS_FOLDER_PATH = "desktop/";
-    public static final String TARGET_ASSETS_FOLDER_PATH = "android/assets/data";
+    public static final String SOURCE_ASSETS_FOLDER_PATH = "../raw/game";
+    public static final String TARGET_ASSETS_FOLDER_PATH = "ui/game";
     public static final String IMAGES_FOLDER_NAME = "images";
     public static final String GAME_ATLAS_NAME = "game";
 

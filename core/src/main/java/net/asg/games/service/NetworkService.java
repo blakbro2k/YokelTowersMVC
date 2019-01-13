@@ -1,22 +1,23 @@
 package net.asg.games.service;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.autumn.annotation.Component;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
-import com.github.czyzby.autumn.mvc.component.ui.SkinService;
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketHandler;
 import com.github.czyzby.websocket.WebSocketListener;
 import com.github.czyzby.websocket.data.WebSocketException;
 import com.github.czyzby.websocket.net.ExtendedNet;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
-import com.kotcrab.vis.ui.VisUI;
 
-import net.asg.games.configuration.preferences.ScalePreference;
 import net.asg.games.server.YokelLounge;
 import net.asg.games.server.YokelPlayer;
+import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.utils.enums.ServerRequest;
@@ -25,25 +26,29 @@ import org.apache.commons.lang.StringUtils;
 
 @Component
 public class NetworkService {
+    private static final Logger LOGGER = LoggerService.forClass(NetworkService.class);
+
     // @Inject-annotated fields will be automatically filled by the context initializer.
     @Inject private InterfaceService interfaceService;
+    @Inject private DTDService dtdService;
 
-    private WebSocket socket;
+    private WebSocket socket = null;
     private String message = "Connecting...";
-    private boolean isConnected = false;
-    private OrderedMap<String, YokelPlayer> players = new OrderedMap<String, YokelPlayer>();
-    private OrderedMap<String, YokelLounge> lounges = new OrderedMap<String, YokelLounge>();
+    private OrderedMap<String, Object> serverResponse = new OrderedMap<String, Object>();
+
     //TODO: Implement send and receive queue of message objects.
 
     public boolean initializeSockets() throws WebSocketException {
-        System.out.println("initializeSockets called");
+        LOGGER.debug("Enter initializeSockets()");
+        dtdService.saveDtdSchema(Gdx.files.local("lml.dtd"));
 
+        LOGGER.info("Listening for server on //" + getServerHost() + ":" + getServerPort());
         // Note: you can also use WebSockets.newSocket() and WebSocket.toWebSocketUrl() methods.
         if(socket == null){
             socket = ExtendedNet.getNet().newWebSocket(getServerHost(), getServerPort());
         }
 
-        socket.addListener(getListener());
+        socket.addListener(getClientListener());
 
         // Creating a new ManualSerializer - this replaces the default JsonSerializer and allows to use the
         // serialization mechanism from gdx-websocket-serialization library.
@@ -54,14 +59,13 @@ public class NetworkService {
 
         try{
             socket.connect();
-            isConnected = true;
         } catch(Exception e){
             e.printStackTrace();
         }
 
-        System.out.println("socket=" + socket);
         Packets.register(serializer);
-        return isConnected;
+        LOGGER.debug("Exit initializeSockets()");
+        return isConnected();
     }
 
     public int getServerPort(){
@@ -73,10 +77,10 @@ public class NetworkService {
         return "localHost";
     }
 
-    private WebSocketListener getListener() {
+    private WebSocketListener getClientListener() {
         final WebSocketHandler handler = new WebSocketHandler();
         // Registering ServerResponse handler:
-        handler.registerHandler(ServerResponse.class, new WebSocketHandler.Handler<ServerResponse>() {
+        /*handler.registerHandler(ServerResponse.class, new WebSocketHandler.Handler<ServerResponse>() {
             @Override
             public boolean handle(final WebSocket webSocket, final ServerResponse packet) {
                 try {
@@ -86,7 +90,10 @@ public class NetworkService {
                 }
                 return true;
             }
-        });
+        });*/
+
+        handler.registerHandler(ServerResponse.class, new ServerResponseHandler());
+
         return handler;
     }
 
@@ -113,6 +120,7 @@ public class NetworkService {
             switch (value) {
                 case REQUEST_TEST_PLAYER_LIST:
                     buildTestPlayersFromJSON(payload);
+                    //push <UpdatePlayerTable, playerList>
                     break;
                 case REQUEST_GAME_LOUNGE:
                     buildLoungeFromJSON(payload);
@@ -130,9 +138,9 @@ public class NetworkService {
                 //System.out.println("jsonPlayer" + jsonPlayer);
                 YokelPlayer player = json.fromJson(YokelPlayer.class, jsonPlayer);
 
-                if(player != null){
-                    players.put(player.getName(), player);
-                }
+                //if(players != null){
+                    //players.put(player.getName(), player);
+                //}
             }
         }
         //System.out.println("players: " + players);
@@ -144,12 +152,51 @@ public class NetworkService {
             if(!StringUtils.isEmpty(jsonLounge)){
                 //System.out.println("jsonPlayer" + jsonPlayer);
                 YokelLounge lounge = json.fromJson(YokelLounge.class, jsonLounge);
-
-                if(lounges != null){
-                    lounges.put(lounge.getName(), lounge);
-                }
+                //TODO: implement a way for handled responsed be queued for processing.
+                //if(lounges != null){
+                    //lounges.put(lounge.getName(), lounge);
+               // }
             }
         }
         //System.out.println("lounges: " + lounges);
+    }
+
+    public void requestPlayersFromServer() {
+        System.out.println("Starting requestPlayers");
+        sendClientRequest(new ClientRequest(-1, "new", ServerRequest.REQUEST_TEST_PLAYER_LIST + "", null));
+    }
+
+    private void sendClientRequest(ClientRequest request){
+        LOGGER.debug("Enter sendClientRequest()");
+
+        if(request != null){
+            if(!isConnected()){
+                initializeSockets();
+            }
+            LOGGER.info("Sending client request to server");
+            socket.send(request);
+        }
+        LOGGER.debug("Enter sendClientRequest()");
+    }
+
+    public boolean isConnected() {
+        return socket == null;
+    }
+
+    private class ServerResponseHandler implements WebSocketHandler.Handler<ServerResponse>{
+        @Override
+        public boolean handle(final WebSocket webSocket, final ServerResponse packet) {
+            LOGGER.info("Handling a response from server");
+
+            try {
+                handleServerResponse(packet);
+                LOGGER.info("Response fully handled");
+                return WebSocketHandler.FULLY_HANDLED;
+            } catch (Exception e) {
+                LOGGER.error(e, "Error handling server response");
+                LOGGER.info("Response not fully handled");
+                return WebSocketHandler.NOT_HANDLED;
+            }
+        }
     }
 }

@@ -1,9 +1,35 @@
-<dialog closable="true">
-    <table oneColumn="true" defaultPad="2" tableAlign="bottomRight" fillParent="true" defaultFillX="true">
-            <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
-            <textButton onChange="show:settings">@settings</textButton>
-            <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
-            <textButton onChange="app:exit">@exit</textButton>
+<dialog style="dialog" closebutton="true">
+    <table defaultPad="2" tableAlign="bottomRight" fillParent="true" defaultFillX="true">
+        <image id="banner" style="banner" row="true" colSpan="3"/>
+        <table onecolumn="true"  tableAlign="left">
+            <table onecolumn="true" defaultFillX="true">
+                <textButton>Start Game</textButton>
+                <textButton>Change Keys</textButton>
+                <textButton>Demo</textButton>
+                <textButton>Stand</textButton>
+                <label row="true">Table Type</label>
+                <textButton>Invite</textButton>
+                <textButton>Boot</textButton>
+                <selectBox selected="1">
+                    <label>@PrivateSelBx</label>
+                    <label>@PublicSelBx</label>
+                    <label>@ProtectedSelBx</label>
+                </selectBox>
+            </table>
+            <table onecolumn="true" defaultFillX="true">
+                <checkBox tableAlign="left">@RatedChkBx</checkBox>
+                <checkBox tableAlign="left">Sound</checkBox>
+            </table>
+            <table  onecolumn="true" defaultFillX="true">
+                <textButton>Help</textButton>
+                <!-- "close" action is defined in Global class. -->
+                <textButton onChange="close">Quit</textButton>
+            </table>
+        </table>
+        <table>
+            <label>Game Area</label>
+        </table>
+        <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
+        <textButton onChange="show:settings">thsi is a game</textButton>
     </table>
 </dialog>
-
