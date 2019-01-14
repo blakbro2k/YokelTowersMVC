@@ -20,10 +20,10 @@
                 <checkBox tableAlign="left">@RatedChkBx</checkBox>
                 <checkBox tableAlign="left">Sound</checkBox>
             </table>
-            <table  onecolumn="true" defaultFillX="true">
+            <table onecolumn="true" defaultFillX="true">
                 <textButton>Help</textButton>
                 <!-- "close" action is defined in Global class. -->
-                <textButton onChange="close">Quit</textButton>
+                <textButton onResult="close">Quit</textButton>
             </table>
         </table>
         <table>

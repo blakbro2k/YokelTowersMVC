@@ -12,7 +12,11 @@ import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.pmw.tinylog.Configurator;
+import org.pmw.tinylog.Level;
+import org.pmw.tinylog.Logger;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.vertx.core.Vertx;
@@ -21,10 +25,8 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 
-
 /** Launches the server application. */
 public class ServerLauncher {
-    //protected final Logger logger = LoggerService.forClass(ServerLauncher.class);
     private final AtomicInteger idCounter = new AtomicInteger();
 
     private final static String PORT_ATTR = "-port";
@@ -33,7 +35,7 @@ public class ServerLauncher {
     private final static String ROOM_ATTR = "-r";
     private final static String LOG_LEVEL_ATTR = "-log";
     private final static String TICK_RATE_ATTR = "-tickrate";
-    private final static String DEBUG_ATTR = "-debug";
+    private final static String DEBUG_ATTR = "-test";
     private final static String SERVER_BUILD = "0.0.1";
 
     private final static Array<String> SERVER_ARGS = ImmutableArray.of(PORT2_ATTR, PORT_ATTR, ROOM_ATTR, TIMEOUT_ATTR, TICK_RATE_ATTR, LOG_LEVEL_ATTR);
@@ -45,7 +47,7 @@ public class ServerLauncher {
 
     private int port = 8000;
     //<"room id", room object>
-    private Array<YokelLounge> rooms;
+    private OrderedMap<String, YokelLounge> lounges;
     //<"player id", player object>
     private OrderedMap<String, YokelPlayer> registeredPlayers;
     //<"player id", player object>
@@ -66,37 +68,42 @@ public class ServerLauncher {
         try{
             new ServerLauncher().launch(args);
         } catch (Exception e) {
+            Logger.error(e,"Error in main: ");
             throw new Exception("Error in main: ", e);
         }
     }
 
     private void launch(String... args) throws Exception {
         try {
-            //logger.info("Launching YokelTowers-server build" + SERVER_BUILD);
-            System.out.println("Launching YokelTowers-server build: " + SERVER_BUILD);
+            Logger.info("Launching YokelTowers-server build: {}", SERVER_BUILD);
             initialize(args);
 
             final HttpServer server = vertx.createHttpServer();
             server.websocketHandler(webSocket -> {
+
                 // Printing received packets to console, sending response:
                 webSocket.frameHandler(frame -> {
                     try {
                         handleFrame(webSocket, frame);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Logger.error("There was an error handling client request");
+                        Logger.error(e);
                     }
                 });
             }).listen(getPort());
         } catch (Exception e) {
+            Logger.error(e,"Error Launching Server: ");
             throw new Exception("Error Launching Server: ", e);
         }
     }
 
     private void initialize(String... args) throws Exception{
         try {
+            Logger.trace("Enter initialize()");
+            Logger.info("Initializing server arguments: ");
             initializeParams(args);
             initializeGameRooms();
-            //System.out.println(rooms);
+            //System.out.println(lounges);
 
             if(registeredPlayers == null){
                 registeredPlayers = new OrderedMap<>();
@@ -104,132 +111,171 @@ public class ServerLauncher {
             if(isDebug){
                 generateTestPlayers();
             }
+            Logger.trace("Exit initialize()");
         } catch (Exception e) {
+            Logger.error(e,"Error during initialization: ");
             throw new Exception("Error during initialization: ", e);
         }
     }
 
     private void generateTestPlayers() throws Exception{
         try {
-            System.out.println("Generating Debugable Players...");
+            Logger.trace("Exit generateTestPlayers()");
+            Logger.debug("Generating Debugable Players...");
             if(testPlayers == null){
                 testPlayers = new OrderedMap<>();
             }
             int numPlayers = 8;
             while(numPlayers > 0){
                 YokelPlayer player = new YokelPlayer(getRandomName());
-                System.out.println("Creating " + player.getName());
+                Logger.debug("Creating " + player.getName());
                 testPlayers.put(player.getName(), player);
                 numPlayers--;
             }
+            Logger.trace("Exit generateTestPlayers()");
         } catch (Exception e) {
+            Logger.error(e,"Error generating test players: ");
             throw new Exception("Error generating test players: ", e);
         }
     }
 
     private void initializeGameRooms() throws Exception {
         try {
-            System.out.println("Initializing Game Rooms...");
-            if(rooms == null){
-                rooms = new Array<>();
+            Logger.trace("Enter initializeGameRooms()");
+            Logger.info("Initializing Game Rooms...");
+            if(lounges == null){
+                lounges = new OrderedMap<>();
             }
 
-            System.out.println("Creating Social: Eiffel Tower");
-            YokelLounge socialLounge = new YokelLounge(YokelRoom.SOCIAL_GROUP);
+            Logger.info("Creating Social: Eiffel Tower");
+            YokelLounge socialLounge = new YokelLounge(YokelLounge.SOCIAL_GROUP);
             YokelRoom room1 = new YokelRoom("Eiffel Tower");
             socialLounge.addRoom(room1);
-            System.out.println("Creating Social: Leaning Tower of Pisa");
+            Logger.info("Creating Social: Leaning Tower of Pisa");
             YokelRoom room3 = new YokelRoom("Leaning Tower of Pisa");
             socialLounge.addRoom(room3);
 
-            System.out.println("Creating Beginning: Chang Tower");
-            YokelLounge beginningLounge = new YokelLounge(YokelRoom.BEGINNER_GROUP);
+            Logger.info("Creating Beginning: Chang Tower");
+            YokelLounge beginningLounge = new YokelLounge(YokelLounge.BEGINNER_GROUP);
             YokelRoom room2 = new YokelRoom("Chang Tower");
             beginningLounge.addRoom(room2);
 
-            rooms.add(socialLounge);
-            rooms.add(beginningLounge);
+            lounges.put(YokelLounge.SOCIAL_GROUP, socialLounge);
+            lounges.put(YokelLounge.BEGINNER_GROUP, beginningLounge);
+            Logger.trace("Exit initializeGameRooms()");
         } catch (Exception e) {
-            throw new Exception("Error initializing game rooms: ", e);
+            Logger.error(e, "Error initializing game lounges: ");
+            throw new Exception("Error initializing game lounges: ", e);
         }
     }
 
     private void initializeParams(String... args) throws Exception {
         try {
-            //logger.info("initializing input parameters");
-            System.out.println("Evaluating input parameters...");
-            if(Util.isStaticArrayEmpty(args)){
-                //logger.error("Cannot Launch Server, no arguments found.");
-                throw new Exception("Cannot Launch Server, no arguments found.");
-            }
+            Logger.trace("Enter initializeParams()");
+            Logger.info("Evaluating input parameters...");
+            if(!Util.isStaticArrayEmpty(args)){
+                for(int i = 0; i < args.length; i++){
+                    //System.out.println("Param: " + args[i]);
+                    String param = args[i];
+                    String paramValue = validateArumentParameterValue(i, args) ? args[i + 1] : null;
 
-            //System.out.println("argument size=" + args.length);
-            for(int i = 0; i < args.length; i++){
-                //System.out.println("Param: " + args[i]);
-                String param = args[i];
-                String paramValue = validateArumentParameterValue(i, args) ? args[i + 1] : null;
+                    if(StringUtils.equalsIgnoreCase(DEBUG_ATTR,args[i])){
+                        setDebug(true);
+                    }
 
-                if(StringUtils.equalsIgnoreCase(DEBUG_ATTR,args[i])){
-                    setDebug(true);
-                    break;
-                }
-
-                if(!StringUtils.isEmpty(paramValue)){
-                    if (StringUtils.equalsIgnoreCase(PORT_ATTR, param)) {
-                        setPort(Integer.parseInt(paramValue));
-                    } else if (StringUtils.equalsIgnoreCase(PORT2_ATTR, param)) {
-                        setPort(Integer.parseInt(paramValue));
-                    } else if (StringUtils.equalsIgnoreCase(ROOM_ATTR, param)) {
-                        setMaxRooms(Integer.parseInt(paramValue));
-                    } else if (StringUtils.equalsIgnoreCase(TIMEOUT_ATTR, param)) {
-                        setTickRate(Integer.parseInt(paramValue));
-                    } else if (StringUtils.equalsIgnoreCase(TICK_RATE_ATTR, param)) {
-                        setTickRate(Integer.parseInt(paramValue));
+                    if(!StringUtils.isEmpty(paramValue)){
+                        if (StringUtils.equalsIgnoreCase(PORT_ATTR, param)) {
+                            setPort(Integer.parseInt(paramValue));
+                        } else if (StringUtils.equalsIgnoreCase(PORT2_ATTR, param)) {
+                            setPort(Integer.parseInt(paramValue));
+                        } else if (StringUtils.equalsIgnoreCase(ROOM_ATTR, param)) {
+                            setMaxRooms(Integer.parseInt(paramValue));
+                        } else if (StringUtils.equalsIgnoreCase(TIMEOUT_ATTR, param)) {
+                            setTickRate(Integer.parseInt(paramValue));
+                        } else if (StringUtils.equalsIgnoreCase(TICK_RATE_ATTR, param)) {
+                            setTickRate(Integer.parseInt(paramValue));
+                        } else if (StringUtils.equalsIgnoreCase(LOG_LEVEL_ATTR, param)) {
+                            setLogLevel(paramValue);
+                        }
                     }
                 }
             }
+            Logger.trace("Exit initializeParams()");
         } catch (Exception e) {
+            Logger.error(e, "Error initializing input parameters: ");
             throw new Exception("Error initializing input parameters: ", e);
         }
     }
     //validate that the next value is not a parameter string
     //if it is something else, it will fail when we try to set it.
     private boolean validateArumentParameterValue(int i, String... args) throws Exception {
+        Logger.trace("Enter validateArumentParameterValue()");
         if(Util.isStaticArrayEmpty(args)){
+            Logger.error("Arguments cannot be null or empty.");
             throw new Exception("Arguments cannot be null or empty.");
         }
-        //logger.debug("validating index {} in parameter={}",i,args[i]);
-        System.out.println("validating index " + i + " in parameter= " + args[i]);
+        Logger.debug("validating index " + i + " in parameter= {}", args[i]);
+        Logger.trace("Exit validateArumentParameterValue()");
         return i != args.length - 1 && !SERVER_ARGS.contains(args[i + 1], false);
     }
 
     private void setPort(int port){
-        //Logger.debug("calling setPort()");
-        System.out.println("setting port to: " + port);
+        Logger.info("setting port to: {}", port);
         this.port = port;
     }
 
     private void setDebug(boolean b){
-        System.out.println("setting debug to: " + b);
+        Logger.info("setting debug to: {}", b);
         this.isDebug = b;
     }
 
+    private void setLogLevel(String logLevel){
+        Logger.info("setting log level to: {}", logLevel);
+        Configurator.defaultConfig().level(getTinyLogLevel(logLevel)).activate();
+    }
+
+    private Level getTinyLogLevel(String logLevel){
+        if(StringUtils.equalsIgnoreCase("trace", logLevel)){
+            return Level.TRACE;
+        } else if(StringUtils.equalsIgnoreCase("debug", logLevel)){
+            return Level.DEBUG;
+        } else if(StringUtils.equalsIgnoreCase("warn", logLevel)){
+            return Level.WARNING;
+        } else if(StringUtils.equalsIgnoreCase("error", logLevel)){
+            return Level.ERROR;
+        } else {
+            return Level.INFO;
+        }
+    }
+
     private int getPort(){
-        //Logger.debug("calling getPort()");
+        Logger.info("setting port to: {}", port);
         return port;
     }
 
     private void setMaxRooms(int rooms){
-        System.out.println("setting max rooms to: " + rooms);
+        Logger.info("setting max lounges to: {}", rooms);
         this.maxNumberOfRooms = rooms;
     }
 
     private int getLogLevel(){
+        Logger.info("getting log level");
         return logLevel;
     }
 
-    private Array<YokelLounge> getRooms(){
-        return rooms;
+    private YokelLounge getLounge(String key){
+        if(lounges != null){
+            String loungeName = Util.getLoungeName(key);
+            YokelLounge lounge = lounges.get(loungeName);
+            Logger.info("Lounge Name={}", loungeName);
+            Logger.info("Lounge Object={}",lounge);
+            return lounge;
+        }
+        return null;
+    }
+
+    private Array<YokelLounge> getAllLounges(){
+        return Util.getValuesArray(lounges.values());
     }
 
     private void shutDownServer(int errorCode){
@@ -241,9 +287,9 @@ public class ServerLauncher {
             listen.close();
         }
 
-        if(rooms != null){
-            rooms.clear();
-            rooms = null;
+        if(lounges != null){
+            lounges.clear();
+            lounges = null;
         }
 
         if(registeredPlayers != null){
@@ -263,6 +309,7 @@ public class ServerLauncher {
     }
 
     private void setTickRate(int tickRate){
+        Logger.info("setting tick rate to: {}", tickRate);
         this.tickRate = tickRate;
     }
 
@@ -281,11 +328,12 @@ public class ServerLauncher {
         final long time = System.nanoTime() - start;
 
         if(deserialized instanceof ClientRequest){
-            System.out.println("deserialized: " + deserialized);
+            Logger.debug("Deserializing packet recieved");
+            Logger.debug("deserialized: {}", deserialized);
             ClientRequest request = (ClientRequest) deserialized;
 
             ServerResponse serverResponse = handleClientRequest(request);
-            System.out.println("serverResponse: " + serverResponse);
+            Logger.debug("serverResponse: {}", serverResponse);
 
             final byte[] serialized = serializer.serialize(serverResponse);
             webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
@@ -296,16 +344,17 @@ public class ServerLauncher {
         String sessionId = null;
         String message = null;
         int requestSequence = -1;
-        String[] payload = null;
+        String[] serverPayload = null;
 
         if(request != null){
-            System.out.println("request: " + request.getMessage());
+            Logger.debug("request: {}", request.getMessage());
+
             message = request.getMessage();
             sessionId = request.getSessionId();
             requestSequence = request.getRequestSequence();
-            payload = buildPayload(message);
+            serverPayload = buildPayload(message, request.getPayload());
         }
-        return new ServerResponse(requestSequence, sessionId, message, getServerId(), payload);
+        return new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
     }
 
     private Array<String> testPlayersToJSON(){
@@ -322,16 +371,65 @@ public class ServerLauncher {
     }
 
     private Array<String> loungesToJSON(){
-        Array<String> jsonRooms = new Array<>();
-        for(YokelLounge room : Util.toIterable(rooms)){
-            if(room != null){
-                jsonRooms.add(Util.getJsonString(room));
+        Array<String> jsonLounge = new Array<>();
+        for(YokelLounge lounge : Util.toIterable(getAllLounges())){
+            if(lounge != null){
+                jsonLounge.add(Util.getJsonString(lounge));
             }
         }
-        return jsonRooms;
+        return jsonLounge;
     }
 
-    private String[] buildPayload(String message) {
+    private void addNewTable(String[] clientPayload){
+        if(clientPayload != null){
+            Logger.info(Arrays.asList(clientPayload));
+
+            String loungeName = Util.getStringValue(clientPayload, 0);
+            String roomName = Util.getStringValue(clientPayload, 1);
+            String type = Util.getStringValue(clientPayload, 2);
+            boolean rated = Util.getBooleanValue(clientPayload, 3);
+
+            OrderedMap<String, Object> arguments = new OrderedMap<>();
+            arguments.put("type", type);
+            arguments.put("rated", rated);
+
+            YokelLounge lounge = getLounge(loungeName);
+
+            Logger.debug("loungeName={}", loungeName);
+            Logger.debug("roomName={}", roomName);
+            Logger.debug("type={}", type);
+            Logger.debug("rated={}", rated);
+            Logger.debug("arguments={}", arguments);
+            Logger.debug("lounge={}", lounge);
+
+            if(lounge != null){
+                YokelRoom room = lounge.getRoom(roomName);
+                Logger.debug("room={}", room);
+
+                if(room != null){
+                    room.addTable(1, arguments);
+                }
+            }
+        }
+    }
+
+    private void printLounges(){
+        Logger.info("Start Printing lounges:");
+
+        if(lounges != null){
+            for(String key : lounges.keys()){
+                Logger.info(lounges.get(key).toString());
+            }
+        }
+        Logger.info("End Printing lounges:");
+    }
+
+    private String[] buildPayload(String message, String[] clientPayload) {
+        Logger.debug("Enter ");
+        if(clientPayload != null){
+            Logger.info(Arrays.asList(clientPayload));
+        }
+
         String[] load = null;
         try {
             if (!StringUtils.isEmpty(message)) {
@@ -343,12 +441,21 @@ public class ServerLauncher {
                     case REQUEST_GAME_LOUNGE:
                         load = Util.fromCollectionToStringArray(loungesToJSON());
                         break;
+                    case REQUEST_GAME_CREATE:
+                        addNewTable(clientPayload);
+                        break;
+                    case REQUEST_PRINT_LOUNGES:
+                        printLounges();
+                        break;
                     default:
-                        throw new Exception("Unknown Server Request: " + value);
+                        throw new Exception("Unknown Client Request: " + value);
                 }
             }
         } catch (Exception e){
-            e.printStackTrace();
+            Logger.error(e);
+            if(clientPayload != null){
+                Logger.info(Arrays.asList(clientPayload));
+            }
         }
         return load;
     }

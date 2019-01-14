@@ -3,7 +3,10 @@ package net.asg.games.utils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
+
+import net.asg.games.server.YokelLounge;
 
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +15,7 @@ import java.util.UUID;
 
 public class Util {
     private final static Json json = new Json();
+
 
     public static class IDGenerator {
         private IDGenerator(){}
@@ -165,5 +169,67 @@ public class Util {
 
     public static String revertJsonString(String str){
         return StringUtils.replace(StringUtils.replace(str, "[","{"),"]","}");
+    }
+
+    public static String getStringValue(String[] objects, int index) {
+        if(objects != null && index < objects.length){
+            return objects[index];
+        }
+        return null;
+    }
+
+    public static boolean getBooleanValue(String[] objects, int index) {
+        if(objects != null && index < objects.length){
+            return otob(objects[index]);
+        }
+        return false;
+    }
+
+    public static<T> Array<T> getValuesArray(ObjectMap.Values<T> values) {
+        if(values != null){
+            return values.toArray();
+        }
+        return GdxArrays.newArray();
+    }
+
+    public static String getLoungeName(String key) {
+        if(StringUtils.equalsIgnoreCase(key, "Beginner")){
+            return YokelLounge.BEGINNER_GROUP;
+        } else if(StringUtils.equalsIgnoreCase(key, "Intermediate")){
+            return YokelLounge.INTERMEDIATE_GROUP;
+        } else if(StringUtils.equalsIgnoreCase(key, "Advanced")){
+            return YokelLounge.ADVANCED_GROUP;
+        } else {
+            return YokelLounge.SOCIAL_GROUP;
+        }
+    }
+
+
+    public static boolean otob(Object o){
+        if(o != null){
+            return Boolean.valueOf(otos(o));
+        }
+        return false;
+    }
+
+    public static String otos(Object o){
+        if(o != null){
+            return o.toString();
+        }
+        return "";
+    }
+
+    public static int otoi(Object o){
+        if(o != null){
+            return Integer.valueOf(otos(o));
+        }
+        return -1;
+    }
+
+    public static long otol(Object o){
+        if(o != null){
+            return Long.valueOf(otos(o));
+        }
+        return -1;
     }
 }

@@ -1,29 +1,68 @@
 package net.asg.games.server;
 
+import com.badlogic.gdx.utils.OrderedMap;
 import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.utils.Util;
+
+import org.apache.commons.lang.StringUtils;
 
 public class YokelTable {
     public enum ACCESS_TYPE {PRIVATE, PUBLIC, PROTECTED}
 
     private final int MAX_SEATS = 8;
     private String tableId;
+    private int tableNumber;
 
     private Queue<YokelSeat> seats;
     private ACCESS_TYPE accessType;
     private boolean isStarted;
+    private boolean isRated;
+    private boolean isSoundOn;
 
-    public YokelTable(){
-        initialize();
+    //Empty Contructor required for Json.Serializable
+    public YokelTable(){}
+
+    public YokelTable(int tableNumber){
+        initialize(tableNumber, null);
     }
 
-    private void initialize(){
+    public YokelTable(int tableNumber, OrderedMap<String, Object> arguments){
+        initialize(tableNumber, arguments);
+    }
+
+    private void initialize(int tableNumber, OrderedMap<String, Object> arguments){
         tableId = Util.IDGenerator.getID();
         seats = new Queue<YokelSeat>();
+        this.tableNumber = tableNumber;
+
         setAccessType(ACCESS_TYPE.PUBLIC);
+        setUpArguments(arguments);
         setUpSeats();
+        setRated(false);
+        setSound(true);
         retartTable();
+    }
+
+    private void setUpArguments(OrderedMap<String, Object> arguments){
+        if(arguments != null){
+            for(String key : arguments.keys()){
+                if(key != null){
+                    Object o = arguments.get(key);
+                    processArg(key, o);
+                }
+            }
+        }
+    }
+
+    private void processArg(String arg, Object value){
+        if(arg != null && value != null){
+            if(StringUtils.equalsIgnoreCase("type", arg)){
+                setAccessType(Util.otos(value));
+            } else if(StringUtils.equalsIgnoreCase("rated", arg)){
+                setRated(Util.otob(value));
+            }
+        }
     }
 
     public String getTableId() {
@@ -38,6 +77,16 @@ public class YokelTable {
         this.accessType = accessType;
     }
 
+    public void setAccessType(String accessType){
+        if(StringUtils.equalsIgnoreCase("private", accessType)){
+            setAccessType(ACCESS_TYPE.PRIVATE);
+        } else if(StringUtils.equalsIgnoreCase("public", accessType)){
+            setRated(Util.otob(ACCESS_TYPE.PUBLIC));
+        } else if(StringUtils.equalsIgnoreCase("protected", accessType)){
+            setRated(Util.otob(ACCESS_TYPE.PROTECTED));
+        }
+    }
+
     public ACCESS_TYPE getAccessType(){
         return accessType;
     }
@@ -50,6 +99,22 @@ public class YokelTable {
 
     public void stopGame(){
         isStarted = false;
+    }
+
+    public void setRated(boolean rated){
+        this.isRated = rated;
+    }
+
+    public void setSound(boolean sound){
+        this.isSoundOn = sound;
+    }
+
+    public boolean isRated() {
+        return isRated;
+    }
+
+    public boolean isSoundOn() {
+        return isSoundOn;
     }
 
     public boolean isGameRunning(){
@@ -126,6 +191,6 @@ public class YokelTable {
         for(int j = 0; j < i; j++){
             ret.append("-");
         }
-        return ret.toString();
+        return "table: " + tableNumber + "\n" + ret.toString();
     }
 }

@@ -13,6 +13,7 @@ dependencies {
     implementation "com.github.czyzby:gdx-kiwi:$kiwiVersion"
     implementation "io.vertx:vertx-core:$vertxVersion"
     implementation "commons-lang:commons-lang:$apacheCommonsLangVer"
+    implementation "org.tinylog:tinylog:$tinyLogVersion"
 }
 
 jar {

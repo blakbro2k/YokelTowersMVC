@@ -1,6 +1,7 @@
 package net.asg.games.server;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.OrderedMap;
 
 import net.asg.games.utils.Util;
 
@@ -9,11 +10,6 @@ import net.asg.games.utils.Util;
  */
 
 public class YokelRoom{
-    public static final String SOCIAL_GROUP = "Social";
-    public static final String BEGINNER_GROUP = "Beginner";
-    public static final String INTERMEDIATE_GROUP = "Intermediate";
-    public static final String ADVANCED_GROUP = "Advanced";
-
     private String name;
     private String roomId;
     private String group;
@@ -22,8 +18,7 @@ public class YokelRoom{
     private Array<YokelTable> tables;
 
     //Empty Contructor required for Json.Serializable
-    public YokelRoom(){        initialize();
-    }
+    public YokelRoom(){}
 
     public YokelRoom(String name){
         this.name = name;
@@ -46,7 +41,7 @@ public class YokelRoom{
 
     public boolean joinRoom(YokelPlayer player){
         if(player != null){
-            //players.addFirst(player);
+            players.add(player);
             return true;
         }
         return false;
@@ -56,8 +51,13 @@ public class YokelRoom{
             return players.removeValue(player, false);
     }
 
-    public boolean addTable(){
-        //tables.addFirst(new YokelTable());
+    public boolean addTable(int num){
+        tables.add(new YokelTable(num));
+        return true;
+    }
+
+    public boolean addTable(int i, OrderedMap<String, Object> attributes){
+        tables.add(new YokelTable(i, attributes));
         return true;
     }
 

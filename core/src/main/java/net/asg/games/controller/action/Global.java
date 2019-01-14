@@ -2,7 +2,6 @@ package net.asg.games.controller.action;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.autumn.mvc.stereotype.ViewActionContainer;
 import com.github.czyzby.lml.annotation.LmlAction;
@@ -19,6 +18,7 @@ import net.asg.games.server.YokelPlayer;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
+import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +35,7 @@ public class Global implements ActionContainer {
     private boolean isConnected = false;
     private OrderedMap<String, YokelPlayer> players = new OrderedMap<String, YokelPlayer>();
     private OrderedMap<String, YokelLounge> lounges = new OrderedMap<String, YokelLounge>();
+
 
     /**
      * This is a mock-up method that does nothing. It will be available in LML templates through "close" (annotation
@@ -104,6 +105,34 @@ public class Global implements ActionContainer {
         socket.send(request);
     }
 
+    @LmlAction("requestGameCreate")
+    public void requestGameCreate() {
+        System.out.println("Starting requestLounges");
+        if(!isAlive()){
+            initializeSockets();
+        }
+        Array<String> gameOptions = new Array<String>();
+        //loungName
+        gameOptions.add("loungeName:" + YokelLounge.BEGINNER_GROUP);
+        gameOptions.add("roomName:" + "Eiffel Tower");
+        gameOptions.add("type:" + "private");
+        gameOptions.add("rated:" + "true");
+
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_GAME_CREATE + "", Util.fromCollectionToStringArray(gameOptions));
+        socket.send(request);
+    }
+
+    @LmlAction("requestPrintLounges")
+    public void requestPrintLounges() {
+        System.out.println("Starting requestPrintLounges");
+        if(!isAlive()){
+            initializeSockets();
+        }
+
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_PRINT_LOUNGES + "", null);
+        socket.send(request);
+    }
+
     @LmlAction("requestPlayerRegistration")
     public void requestPlayerRegistration(final Object player) {
         System.out.println("Starting requestPlayers");
@@ -131,14 +160,14 @@ public class Global implements ActionContainer {
     }
 
     @LmlAction("getLoungeTitles")
-    public ObjectMap.Values<YokelLounge> getLoungeTitles() {
+    public Array<YokelLounge> getLoungeTitles() {
         System.out.println("getLoungeTitles");
 
         if(lounges == null){
             requestLounges();
         }
         //System.out.println("lounges=" + lounges);
-        return lounges.values();
+        return lounges.values().toArray();
     }
 
     @LmlAction("getRooms")
@@ -195,6 +224,9 @@ public class Global implements ActionContainer {
                     break;
                 case REQUEST_GAME_LOUNGE:
                     buildLoungeFromJSON(payload);
+                    break;
+                case REQUEST_GAME_CREATE:
+                    //createNewGame
                     break;
                 default:
                     throw new Exception("Unknown Server Response: " + value);

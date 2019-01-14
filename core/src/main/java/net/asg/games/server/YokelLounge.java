@@ -6,6 +6,11 @@ import com.badlogic.gdx.utils.OrderedMap;
 import net.asg.games.utils.Util;
 
 public class YokelLounge implements Disposable {
+    public static final String SOCIAL_GROUP = "Social";
+    public static final String BEGINNER_GROUP = "Beginner";
+    public static final String INTERMEDIATE_GROUP = "Intermediate";
+    public static final String ADVANCED_GROUP = "Advanced";
+
     private String name;
     private OrderedMap<String, YokelRoom> rooms;
 
@@ -36,6 +41,7 @@ public class YokelLounge implements Disposable {
 
     public YokelRoom getRoom(String roomName){
         if(roomName == null) return null;
+        System.out.println("{}{}rooms=" + rooms);
         return rooms.get(roomName);
     }
 

@@ -1,9 +1,9 @@
-<dialog id="dialog" title="@createGameTitle" style="dialog" onecolumn="true" closebutton="true">
+<dialog id="dialog" title="@createGameTitle" style="dialog" onecolumn="true" closeButton="true">
     <selectBox selected="1">
         <label>@PrivateSelBx</label>
         <label>@PublicSelBx</label>
         <label>@ProtectedSelBx</label>
     </selectBox>
     <checkBox>@RatedChkBx</checkBox>
-    <textButton onResult="close" onClick="show:game">@createGameBtnLbl</textButton>
+    <textButton onResult="requestGameCreate" onClick="show:game">@createGameBtnLbl</textButton>
 </dialog>
