@@ -42,7 +42,8 @@ public class YokelLounge implements Disposable {
     public YokelRoom getRoom(String roomName){
         if(roomName == null) return null;
         System.out.println("{}{}rooms=" + rooms);
-        return rooms.get(roomName);
+        System.out.println("{}{}roomName=" + roomName);
+       return rooms.get(roomName);
     }
 
     public void removeRoom(String roomName){

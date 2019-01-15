@@ -113,10 +113,10 @@ public class Global implements ActionContainer {
         }
         Array<String> gameOptions = new Array<String>();
         //loungName
-        gameOptions.add("loungeName:" + YokelLounge.BEGINNER_GROUP);
-        gameOptions.add("roomName:" + "Eiffel Tower");
-        gameOptions.add("type:" + "private");
-        gameOptions.add("rated:" + "true");
+        gameOptions.add(YokelLounge.SOCIAL_GROUP);
+        gameOptions.add("Eiffel Tower");
+        gameOptions.add("private");
+        gameOptions.add("true");
 
         final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_GAME_CREATE + "", Util.fromCollectionToStringArray(gameOptions));
         socket.send(request);

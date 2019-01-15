@@ -330,6 +330,7 @@ public class ServerLauncher {
         if(deserialized instanceof ClientRequest){
             Logger.debug("Deserializing packet recieved");
             Logger.debug("deserialized: {}", deserialized);
+            //TODO: ClientRequestHandler.handle()
             ClientRequest request = (ClientRequest) deserialized;
 
             ServerResponse serverResponse = handleClientRequest(request);
@@ -381,6 +382,8 @@ public class ServerLauncher {
     }
 
     private void addNewTable(String[] clientPayload){
+        Logger.trace("Enter addNewTable={}");
+
         if(clientPayload != null){
             Logger.info(Arrays.asList(clientPayload));
 
@@ -411,6 +414,7 @@ public class ServerLauncher {
                 }
             }
         }
+        Logger.trace("Exit addNewTable={}");
     }
 
     private void printLounges(){
@@ -425,9 +429,9 @@ public class ServerLauncher {
     }
 
     private String[] buildPayload(String message, String[] clientPayload) {
-        Logger.debug("Enter ");
+        Logger.trace("Enter buildPayload()");
         if(clientPayload != null){
-            Logger.info(Arrays.asList(clientPayload));
+            Logger.debug(Arrays.asList(clientPayload));
         }
 
         String[] load = null;
@@ -454,9 +458,10 @@ public class ServerLauncher {
         } catch (Exception e){
             Logger.error(e);
             if(clientPayload != null){
-                Logger.info(Arrays.asList(clientPayload));
+                Logger.debug(Arrays.asList(clientPayload));
             }
         }
+        Logger.trace("Exit buildPayload()");
         return load;
     }
 }
