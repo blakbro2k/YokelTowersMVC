@@ -23,6 +23,8 @@ import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Arrays;
+
 /**
  * Since this class implements ActionContainer and is annotated with ViewActionContainer, its methods will be reflected
  * and available in all LML templates. Note that this class is a component like any other, so it can inject any fields,
@@ -58,7 +60,6 @@ public class Global implements ActionContainer {
         if(socket == null){
             socket = ExtendedNet.getNet().newWebSocket("localhost", 8000);
         }
-
         socket.addListener(getListener());
 
         // Creating a new ManualSerializer - this replaces the default JsonSerializer and allows to use the
@@ -184,17 +185,17 @@ public class Global implements ActionContainer {
     private WebSocketListener getListener() {
         final WebSocketHandler handler = new WebSocketHandler();
         // Registering ServerResponse handler:
-        handler.registerHandler(ServerResponse.class, new WebSocketHandler.Handler<ServerResponse>() {
-            @Override
-            public boolean handle(final WebSocket webSocket, final ServerResponse packet) {
-                try {
-                    handleServerResponse(packet);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return true;
+        handler.registerHandler(ServerResponse.class, (WebSocketHandler.Handler<ServerResponse>) (webSocket, packet) -> {
+            try {
+                handleServerResponse(packet);
+            } catch (Exception e) {
+                System.out.println("3packet=" + packet);
+                e.printStackTrace();
             }
+            return true;
         });
+        System.out.println("handler=" + handler);
+
         return handler;
     }
 
@@ -205,11 +206,14 @@ public class Global implements ActionContainer {
         String[] payload = null;
 
         if(request != null){
-            System.out.println("Received: " + request);
+            System.out.println("request=" + request);
+
             message = request.getMessage();
             sessionId = request.getSessionId();
             requestSequence = request.getRequestSequence();
             payload = request.getPayload();
+            System.out.println("2payload=" + Arrays.asList(payload));
+
             decodePayload(message, payload);
         }
     }
@@ -217,6 +221,9 @@ public class Global implements ActionContainer {
     private void decodePayload(String message, String[] payload) throws Exception {
         String[] load = null;
         if(!StringUtils.isEmpty(message)){
+            System.out.println("(decodePayload)message=" + message);
+            System.out.println("(decodePayload)payload=" + payload);
+
             ServerRequest value = ServerRequest.valueOf(message);
             switch (value) {
                 case REQUEST_TEST_PLAYER_LIST:
@@ -236,6 +243,8 @@ public class Global implements ActionContainer {
 
     private void buildTestPlayersFromJSON(String[] jsonPlayers){
         Json json  = new Json();
+        System.out.println("jsonPlayer" + Arrays.asList(jsonPlayers));
+
         for(String jsonPlayer : jsonPlayers){
             if(!StringUtils.isEmpty(jsonPlayer)){
                 //System.out.println("jsonPlayer" + jsonPlayer);
@@ -252,8 +261,9 @@ public class Global implements ActionContainer {
     private void buildLoungeFromJSON(String[] jsonLounges){
         Json json  = new Json();
         for(String jsonLounge : jsonLounges){
+            System.out.println("jsonPlayer" + Arrays.asList(jsonLounges));
+
             if(!StringUtils.isEmpty(jsonLounge)){
-                //System.out.println("jsonPlayer" + jsonPlayer);
                 YokelLounge lounge = json.fromJson(YokelLounge.class, jsonLounge);
 
                 if(lounges != null){

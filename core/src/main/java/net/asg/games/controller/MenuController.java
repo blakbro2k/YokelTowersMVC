@@ -13,7 +13,7 @@ package net.asg.games.controller;
     @View(id = "menu", value = "ui/templates/menu.lml", themes = "music/theme.ogg")
     public class MenuController implements ViewRenderer {
         /** Asset-annotated files will be found and automatically loaded by the AssetsService. */
-        @Asset("images/libgdx.png") private Texture logo;
+        @Asset("ui/icons/libgdx.png") private Texture logo;
 
         @Override
         public void render(final Stage stage, final float delta) {
