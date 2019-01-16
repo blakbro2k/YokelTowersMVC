@@ -418,14 +418,13 @@ public class ServerLauncher {
     }
 
     private void printLounges(){
-        Logger.info("Start Printing lounges:");
-
+        Logger.trace("Enter printLounges()");
         if(lounges != null){
             for(String key : lounges.keys()){
                 Logger.info(lounges.get(key).toString());
             }
         }
-        Logger.info("End Printing lounges:");
+        Logger.trace("Exit printLounges()");
     }
 
     private String[] buildPayload(String message, String[] clientPayload) {
