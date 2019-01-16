@@ -45,7 +45,6 @@ public class ServerManager implements Runnable{
 
     private final ManualSerializer serializer = new ManualSerializer();
 
-    private int port = 8000;
     //<"room id", room object>
     private OrderedMap<String, YokelLounge> lounges;
     //<"player id", player object>
@@ -53,10 +52,11 @@ public class ServerManager implements Runnable{
     //<"player id", player object>
     private OrderedMap<String, YokelPlayer> testPlayers;
     private int maxNumberOfRooms;
-    private int logLevel;
-    private int tickRate;
     private int timeOut;
-    private boolean isDebug = false;
+    private int port = 8000;
+    private float tickRate = 1000;
+    private boolean isDebug = true;
+    private Level logLevel = Level.INFO;
 
     public ServerManager(String... args){
         try {
@@ -212,7 +212,8 @@ public class ServerManager implements Runnable{
 
     private void setLogLevel(String logLevel){
         Logger.info("setting log level to: {}", logLevel);
-        Configurator.defaultConfig().level(getTinyLogLevel(logLevel)).activate();
+        this.logLevel = getTinyLogLevel(logLevel);
+        Configurator.defaultConfig().level(this.logLevel).activate();
     }
 
     private Level getTinyLogLevel(String logLevel){
@@ -239,7 +240,7 @@ public class ServerManager implements Runnable{
         this.maxNumberOfRooms = rooms;
     }
 
-    public int getLogLevel(){
+    public Level getLogLevel(){
         Logger.info("getting log level");
         return logLevel;
     }
@@ -271,7 +272,7 @@ public class ServerManager implements Runnable{
         this.tickRate = tickRate;
     }
 
-    private int getTickRate(){
+    private float getTickRate(){
         return this.tickRate;
     }
 
@@ -368,7 +369,7 @@ public class ServerManager implements Runnable{
         Logger.trace("Enter addNewTable={}");
 
         if(clientPayload != null){
-            Logger.info(Arrays.asList(clientPayload));
+            //Logger.info(Arrays.asList(clientPayload));
 
             String loungeName = Util.getStringValue(clientPayload, 0);
             String roomName = Util.getStringValue(clientPayload, 1);
@@ -413,9 +414,9 @@ public class ServerManager implements Runnable{
     private String[] buildPayload(String message, String[] clientPayload) {
         Logger.trace("Enter buildPayload()");
         Logger.trace("Enter buildPayload()=" + clientPayload);
-        if(clientPayload != null){
-            Logger.debug(Arrays.asList(clientPayload));
-        }
+        //if(clientPayload != null){
+            //Logger.debug(Arrays.asList(clientPayload));
+        //}
 
         String[] load = null;
         try {
@@ -440,9 +441,9 @@ public class ServerManager implements Runnable{
             }
         } catch (Exception e){
             Logger.error(e);
-            if(clientPayload != null){
-                Logger.debug(Arrays.asList(clientPayload));
-            }
+            //if(clientPayload != null){
+                //Logger.debug(Arrays.asList(clientPayload));
+            //}
         }
         Logger.trace("Exit buildPayload()");
         return load;

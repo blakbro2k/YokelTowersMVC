@@ -71,6 +71,7 @@ public class ServerLauncher {
             Logger.trace("Enter initialize()");
             Logger.info("Initializing server arguments: ");
             serverDaemon = new ServerManager(args);
+            Logger.info("Server daemon started..");
             Logger.trace("Exit initialize()");
         } catch (Exception e) {
             Logger.error(e,"Error during initialization: ");

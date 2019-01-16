@@ -212,7 +212,7 @@ public class Global implements ActionContainer {
             sessionId = request.getSessionId();
             requestSequence = request.getRequestSequence();
             payload = request.getPayload();
-            System.out.println("2payload=" + Arrays.asList(payload));
+            //System.out.println("2payload=" + Arrays.asList(payload));
 
             decodePayload(message, payload);
         }
@@ -243,15 +243,17 @@ public class Global implements ActionContainer {
 
     private void buildTestPlayersFromJSON(String[] jsonPlayers){
         Json json  = new Json();
-        System.out.println("jsonPlayer" + Arrays.asList(jsonPlayers));
+        //System.out.println("jsonPlayer" + Arrays.asList(jsonPlayers));
 
-        for(String jsonPlayer : jsonPlayers){
-            if(!StringUtils.isEmpty(jsonPlayer)){
-                //System.out.println("jsonPlayer" + jsonPlayer);
-                YokelPlayer player = json.fromJson(YokelPlayer.class, jsonPlayer);
+        if(jsonPlayers != null){
+            for(String jsonPlayer : jsonPlayers){
+                if(!StringUtils.isEmpty(jsonPlayer)){
+                    //System.out.println("jsonPlayer" + jsonPlayer);
+                    YokelPlayer player = json.fromJson(YokelPlayer.class, jsonPlayer);
 
-                if(player != null){
-                    players.put(player.getName(), player);
+                    if(player != null){
+                        players.put(player.getName(), player);
+                    }
                 }
             }
         }
@@ -261,7 +263,7 @@ public class Global implements ActionContainer {
     private void buildLoungeFromJSON(String[] jsonLounges){
         Json json  = new Json();
         for(String jsonLounge : jsonLounges){
-            System.out.println("jsonPlayer" + Arrays.asList(jsonLounges));
+            //System.out.println("jsonPlayer" + Arrays.asList(jsonLounges));
 
             if(!StringUtils.isEmpty(jsonLounge)){
                 YokelLounge lounge = json.fromJson(YokelLounge.class, jsonLounge);
