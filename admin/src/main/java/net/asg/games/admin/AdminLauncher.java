@@ -1,4 +1,4 @@
-package net.asg.games.server;
+package net.asg.games.admin;
 
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
@@ -17,20 +17,20 @@ import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 
 /** Launches the server application. */
-public class ServerLauncher {
+public class AdminLauncher {
     private final static String SERVER_BUILD = "0.0.1";
 
     private ServerManager serverDaemon;
     private final Vertx vertx = Vertx.vertx();
     private final ManualSerializer serializer = new ManualSerializer();
 
-    private ServerLauncher() {
+    private AdminLauncher() {
         registerSerializer();
     }
 
     public static void main(final String... args) throws Exception {
         try{
-            new ServerLauncher().launch(args);
+            new AdminLauncher().launch(args);
         } catch (Exception e) {
             Logger.error(e,"Error in main: ");
             throw new Exception("Error in main: ", e);

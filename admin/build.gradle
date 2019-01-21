@@ -1,0 +1,38 @@
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+mainClassName = 'net.asg.games.server.AdminLauncher'
+eclipse.project.name = appName + '-admin'
+
+dependencies {
+    compile project(path: ':core')
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.github.czyzby:gdx-websocket-serialization:$websocketSerializationVersion"
+    implementation "com.github.czyzby:gdx-websocket-common:$websocketVersion"
+    implementation "com.github.czyzby:gdx-websocket:$websocketVersion"
+    implementation "com.github.czyzby:gdx-kiwi:$kiwiVersion"
+    implementation "io.vertx:vertx-core:$vertxVersion"
+    implementation "commons-lang:commons-lang:$apacheCommonsLangVer"
+    implementation "org.tinylog:tinylog:$tinyLogVersion"
+    implementation "org.mockito:mockito-core:$mockitoVersion"
+    implementation "junit:junit:$junitVersion"
+    implementation "org.assertj:assertj-core:$assertjVersion"
+    implementation "org.mockito:mockito-core:$mockitoVersion"
+    implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+
+
+    // Test dependencies :
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.assertj:assertj-core:$assertjVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile 'org.jetbrains:annotations-java5:15.0'
+}
+
+jar {
+  from { configurations.compile.collect { zipTree(it) } }
+  manifest {
+    attributes 'Main-Class': project.mainClassName
+  }
+}
+
