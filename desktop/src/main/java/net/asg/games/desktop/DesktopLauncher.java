@@ -16,9 +16,9 @@ public class DesktopLauncher {
     public static void main(String[] args) {
 
         if(args != null){
-            for(int i = 0; i < args.length; i++){
+            for (String arg : args) {
                 //if (StringUtils.equalsIgnoreCase("texturepacker", (args[i]))) {
-                if ("texturepacker".equalsIgnoreCase((args[i]))) {
+                if ("texturepacker".equalsIgnoreCase((arg))) {
                     // Create two run configurations
                     // 1. For texture packing. Pass 'texturepacker' as argument and use desktop/src
                     //    as working directory

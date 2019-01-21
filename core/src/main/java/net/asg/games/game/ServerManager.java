@@ -1,32 +1,23 @@
 package net.asg.games.game;
 
-import org.apache.commons.lang.StringUtils;
-import org.pmw.tinylog.Configurator;
-import org.pmw.tinylog.Level;
-import org.pmw.tinylog.Logger;
-
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
-import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
 import net.asg.games.server.YokelLounge;
 import net.asg.games.server.YokelPlayer;
 import net.asg.games.server.YokelRoom;
 import net.asg.games.server.serialization.ClientRequest;
-import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
 
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.commons.lang.StringUtils;
+import org.pmw.tinylog.Configurator;
+import org.pmw.tinylog.Level;
+import org.pmw.tinylog.Logger;
 
-import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.ServerWebSocket;
-import io.vertx.core.http.WebSocketFrame;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerManager {
     private final AtomicInteger idCounter = new AtomicInteger();
@@ -42,8 +33,6 @@ public class ServerManager {
     private final static Array<String> SERVER_ARGS = ImmutableArray.of(PORT2_ATTR, PORT_ATTR, ROOM_ATTR, TIMEOUT_ATTR, TICK_RATE_ATTR, LOG_LEVEL_ATTR);
     private final static Array<String> PLAYER_NAMES = ImmutableArray.of("Hector","Lenny","Cullen","Kinsley","Tylor","Doug","Spring","Danica","Bekki",
             "Spirit","Harmony","Shelton","Philip","Liana","Joyce","Tucker","Jo","Cora","Philadelphia","Leyton");
-
-    private final ManualSerializer serializer = new ManualSerializer();
 
     //<"room id", room object>
     private OrderedMap<String, YokelLounge> lounges;
@@ -77,7 +66,6 @@ public class ServerManager {
         try {
             Logger.trace("Enter initialize()");
             Logger.info("Initializing server arguments: ");
-            registerSerializer();
             initializeParams(args);
             initializeGameRooms();
             //System.out.println(lounges);
@@ -93,10 +81,6 @@ public class ServerManager {
             Logger.error(e,"Error during initialization: ");
             throw new Exception("Error during initialization: ", e);
         }
-    }
-
-    private void registerSerializer(){
-        Packets.register(serializer);
     }
 
     private void generateTestPlayers() throws Exception{
@@ -292,7 +276,7 @@ public class ServerManager {
         return this.tickRate;
     }
 
-    private int getServerId(){
+    public int getServerId(){
         return idCounter.get();
     }
 
@@ -320,34 +304,7 @@ public class ServerManager {
         }
     }
 
-    public void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
-        try {
-            Logger.trace("Enter handleFrame()");
-            final byte[] packet = frame.binaryData().getBytes();
-            final long start = System.nanoTime();
-            final Object deserialized = serializer.deserialize(packet);
-            final long time = System.nanoTime() - start;
-
-            if(deserialized instanceof ClientRequest){
-                Logger.debug("Deserializing packet recieved");
-                Logger.debug("deserialized: {}", deserialized);
-                //TODO: ClientRequestHandler.handle()
-                ClientRequest request = (ClientRequest) deserialized;
-
-                ServerResponse serverResponse = handleClientRequest(request);
-                Logger.debug("serverResponse: {}", serverResponse);
-
-                final byte[] serialized = serializer.serialize(serverResponse);
-                webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
-                Logger.trace("Exit handleFrame()");
-            }
-        } catch (Exception e){
-            Logger.error("Error handling websocket frame.");
-            throw new Exception("Error handling websocket frame.");
-        }
-    }
-
-    private ServerResponse handleClientRequest(ClientRequest request) throws Exception {
+    public ServerResponse handleClientRequest(ClientRequest request) throws Exception {
         String sessionId = null;
         String message = null;
         int requestSequence = -1;
@@ -437,7 +394,6 @@ public class ServerManager {
 
     private String[] buildPayload(String message, String[] clientPayload) {
         Logger.trace("Enter buildPayload()");
-        Logger.trace("Enter buildPayload()=" + clientPayload);
         //if(clientPayload != null){
             //Logger.debug(Arrays.asList(clientPayload));
         //}
