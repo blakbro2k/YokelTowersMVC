@@ -28,7 +28,7 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 
-public class ServerManager implements Runnable{
+public class ServerManager {
     private final AtomicInteger idCounter = new AtomicInteger();
 
     private final static String PORT_ATTR = "-port";
@@ -129,7 +129,7 @@ public class ServerManager implements Runnable{
             }
 
             Logger.info("Creating Social: Eiffel Tower");
-            YokelLounge socialLounge = new YokelLounge(YokelLounge.SOCIAL_GROUP);
+            YokelLounge socialLounge = createLounge(YokelLounge.SOCIAL_GROUP);
             YokelRoom room1 = new YokelRoom("Eiffel Tower");
             socialLounge.addRoom(room1);
             Logger.info("Creating Social: Leaning Tower of Pisa");
@@ -141,12 +141,28 @@ public class ServerManager implements Runnable{
             YokelRoom room2 = new YokelRoom("Chang Tower");
             beginningLounge.addRoom(room2);
 
-            lounges.put(YokelLounge.SOCIAL_GROUP, socialLounge);
-            lounges.put(YokelLounge.BEGINNER_GROUP, beginningLounge);
+            addLounge(socialLounge);
+            addLounge(beginningLounge);
             Logger.trace("Exit initializeGameRooms()");
         } catch (Exception e) {
             Logger.error(e, "Error initializing game lounges: ");
             throw new Exception("Error initializing game lounges: ", e);
+        }
+    }
+
+    private YokelLounge createLounge(String loungeName){
+        if(!StringUtils.isEmpty(loungeName)) {
+            return new YokelLounge(loungeName);
+        }
+        return null;
+    }
+
+    private void addLounge(YokelLounge lounge){
+        if(lounge != null){
+            if(lounges == null){
+                lounges = new OrderedMap<>();
+            }
+            lounges.put(lounge.getName(), lounge);
         }
     }
 
@@ -280,21 +296,28 @@ public class ServerManager implements Runnable{
         return idCounter.get();
     }
 
-    @Override
-    public void run() {
-        /**
-         * while(true)
-         *     check for and handle new player connections
-         *     check for client commands
-         *     sanity check client commands
-         *     run AI
-         *     move all entities
-         *     resolve collisions
-         *     sanity check world data
-         *     send updates about the game to the clients
-         *     handle client disconnects
-         * end while
-         */
+    private class GameRunner implements Runnable{
+        ServerManager manager;
+
+        public GameRunner(ServerManager manager){
+            this.manager = manager;
+        }
+
+        public void run() {
+            /**
+             * while(true)
+             *     check for and handle new player connections
+             *     check for client commands
+             *     sanity check client commands
+             *     run AI
+             *     move all entities
+             *     resolve collisions
+             *     sanity check world data
+             *     send updates about the game to the clients
+             *     handle client disconnects
+             * end while
+             */
+        }
     }
 
     public void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
@@ -344,6 +367,7 @@ public class ServerManager implements Runnable{
     private Array<String> testPlayersToJSON(){
         Array<String> jsonPlayers = new Array<>();
         System.out.println("testPlayers=" + testPlayers);
+
         for(String playerName : Util.toIterable(testPlayers.orderedKeys())){
             if(!StringUtils.isEmpty(playerName)){
                 YokelPlayer player = testPlayers.get(playerName);

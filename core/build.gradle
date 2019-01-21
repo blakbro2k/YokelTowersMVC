@@ -2,6 +2,7 @@ targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 eclipse.project.name = appName + '-core'
+sourceSets.test.java.srcDirs = ["/test"]
 
 dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"

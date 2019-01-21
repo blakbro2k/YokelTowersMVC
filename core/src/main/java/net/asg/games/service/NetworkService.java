@@ -61,6 +61,8 @@ public class NetworkService {
             socket.connect();
         } catch(Exception e){
             e.printStackTrace();
+        } finally {
+            socket.close();
         }
 
         Packets.register(serializer);
