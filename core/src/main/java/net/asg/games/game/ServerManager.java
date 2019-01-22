@@ -22,15 +22,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ServerManager {
     private final AtomicInteger idCounter = new AtomicInteger();
 
-    private final static String PORT_ATTR = "-port";
-    private final static String PORT2_ATTR = "-p";
+    public final static String PORT_ATTR = "-port";
+    public final static String PORT2_ATTR = "-p";
     private final static String TIMEOUT_ATTR = "-t";
+    public final static String HOST_ATTR = "-host";
     private final static String ROOM_ATTR = "-r";
     private final static String LOG_LEVEL_ATTR = "-log";
     private final static String TICK_RATE_ATTR = "-tickrate";
     private final static String DEBUG_ATTR = "-test";
 
-    private final static Array<String> SERVER_ARGS = ImmutableArray.of(PORT2_ATTR, PORT_ATTR, ROOM_ATTR, TIMEOUT_ATTR, TICK_RATE_ATTR, LOG_LEVEL_ATTR);
+    public final static Array<String> SERVER_ARGS = ImmutableArray.of(HOST_ATTR, PORT2_ATTR, PORT_ATTR, ROOM_ATTR, TIMEOUT_ATTR, TICK_RATE_ATTR, LOG_LEVEL_ATTR);
     private final static Array<String> PLAYER_NAMES = ImmutableArray.of("Hector","Lenny","Cullen","Kinsley","Tylor","Doug","Spring","Danica","Bekki",
             "Spirit","Harmony","Shelton","Philip","Liana","Joyce","Tucker","Jo","Cora","Philadelphia","Leyton");
 
@@ -138,7 +139,16 @@ public class ServerManager {
         if(!StringUtils.isEmpty(loungeName)) {
             return new YokelLounge(loungeName);
         }
-        return null;
+        return getDefaultLounge();
+    }
+
+    private YokelLounge getDefaultLounge(){
+        YokelLounge lounge = getLounge(YokelLounge.DEFAULT_LOUNGE);
+        if(lounge == null){
+            lounge = new YokelLounge(YokelLounge.DEFAULT_LOUNGE);
+            addLounge(lounge);
+        }
+        return lounge;
     }
 
     private void addLounge(YokelLounge lounge){

@@ -1,4 +1,4 @@
-targetCompatibility = '1.8'
+targetCompatibility = '1.7'
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 eclipse.project.name = appName + '-core'
@@ -21,8 +21,6 @@ dependencies {
     implementation "io.vertx:vertx-core:$vertxVersion"
     implementation 'org.jetbrains:annotations-java5:15.0'
     implementation "org.tinylog:tinylog:$tinyLogVersion"
-
-
     // Test dependencies :
     testCompile "junit:junit:$junitVersion"
     testCompile "org.assertj:assertj-core:$assertjVersion"

@@ -60,6 +60,7 @@ public class NetworkService {
         try{
             socket.connect();
         } catch(Exception e){
+            LOGGER.error(e,"Error initializeSockets");
             e.printStackTrace();
         } finally {
             socket.close();

@@ -4,10 +4,11 @@ import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
 import net.asg.games.game.ServerManager;
 import net.asg.games.server.serialization.AdminClientRequest;
-import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
+import net.asg.games.utils.Util;
 
+import org.apache.commons.lang.StringUtils;
 import org.pmw.tinylog.Logger;
 
 import io.vertx.core.Vertx;
@@ -18,11 +19,14 @@ import io.vertx.core.http.WebSocketFrame;
 
 /** Launches the server application. */
 public class AdminLauncher {
-    private final static String SERVER_BUILD = "0.0.1";
+    private final static int LOCAL_PORT = 8000;
+    private final static String LOCAL_HOST = "localhost";
 
-    private ServerManager serverDaemon;
     private final Vertx vertx = Vertx.vertx();
     private final ManualSerializer serializer = new ManualSerializer();
+
+    private int port = LOCAL_PORT;
+    private String host = LOCAL_HOST;
 
     private AdminLauncher() {
         registerSerializer();
@@ -44,14 +48,13 @@ public class AdminLauncher {
     private void launch(String... args) throws Exception {
         try {
             Logger.trace("Enter launch()");
-            Logger.info("Launching YokelTowers-server build: {}", SERVER_BUILD);
+            Logger.info("Launching Admin client");
             initialize(args);
             initializeNetwork();
-            //serverDaemon.run();
+
             Logger.trace("Exit launch()");
         } catch (Exception e) {
             Logger.error(e,"Error Launching Server: ");
-            serverDaemon.shutDownServer(1);
             throw new Exception("Error Launching Server: ", e);
         }
     }
@@ -60,7 +63,6 @@ public class AdminLauncher {
         try{
             Logger.trace("Enter initializeNetwork()");
             Logger.info("Initializing Network Listener.");
-            if(serverDaemon == null) throw new Exception("Server daemon was not started!");
 
             final HttpServer server = vertx.createHttpServer();
             server.websocketHandler(webSocket -> {
@@ -74,7 +76,7 @@ public class AdminLauncher {
                         Logger.error(e);
                     }
                 });
-            }).listen(serverDaemon.getPort());
+            }).listen(getPort());
             Logger.trace("Exit initializeNetwork()");
         } catch(Exception e) {
             Logger.error(e,"Error Setting up Network Listener: ");
@@ -86,13 +88,70 @@ public class AdminLauncher {
         try {
             Logger.trace("Enter initialize()");
             Logger.info("Initializing server arguments: ");
-            serverDaemon = new ServerManager(args);
+            initializeParams(args);
+
             Logger.info("Server daemon started..");
             Logger.trace("Exit initialize()");
         } catch (Exception e) {
             Logger.error(e,"Error during initialization: ");
             throw new Exception("Error during initialization: ", e);
         }
+    }
+
+    private void initializeParams(String... args) throws Exception {
+        try {
+            Logger.trace("Enter initializeParams()");
+            Logger.info("Evaluating input parameters...");
+            if(!Util.isStaticArrayEmpty(args)){
+                for(int i = 0; i < args.length; i++){
+                    //System.out.println("Param: " + args[i]);
+                    String param = args[i];
+                    String paramValue = validateArumentParameterValue(i, args) ? args[i + 1] : null;
+
+                    if(!StringUtils.isEmpty(paramValue)){
+                        if (StringUtils.equalsIgnoreCase(ServerManager.PORT_ATTR, param)) {
+                            setPort(Integer.parseInt(paramValue));
+                        } else if (StringUtils.equalsIgnoreCase(ServerManager.PORT2_ATTR, param)) {
+                            setPort(Integer.parseInt(paramValue));
+                        } else if (StringUtils.equalsIgnoreCase(ServerManager.HOST_ATTR, param)) {
+                            setHost(paramValue);
+                        }
+                    }
+                }
+            }
+            Logger.trace("Exit initializeParams()");
+        } catch (Exception e) {
+            Logger.error(e, "Error initializing input parameters: ");
+            throw new Exception("Error initializing input parameters: ", e);
+        }
+    }
+    //validate that the next value is not a parameter string
+    //if it is something else, it will fail when we try to set it.
+    private boolean validateArumentParameterValue(int i, String... args) throws Exception {
+        Logger.trace("Enter validateArumentParameterValue()");
+        if(Util.isStaticArrayEmpty(args)){
+            Logger.error("Arguments cannot be null or empty.");
+            throw new Exception("Arguments cannot be null or empty.");
+        }
+        Logger.debug("validating index " + i + " in parameter= {}", args[i]);
+        Logger.trace("Exit validateArumentParameterValue()");
+        return i != args.length - 1 && !ServerManager.SERVER_ARGS.contains(args[i + 1], false);
+    }
+
+    private void setPort(int port){
+        this.port = port;
+    }
+
+    private int getPort(){
+        return this.port;
+    }
+
+    private void setHost(String host){
+        this.host = host;
+    }
+
+    private String getHost(){
+        return this.host;
     }
 
     public void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
@@ -102,18 +161,6 @@ public class AdminLauncher {
             final long start = System.nanoTime();
             final Object deserialized = serializer.deserialize(packet);
             final long time = System.nanoTime() - start;
-
-            if(deserialized instanceof ClientRequest){
-                Logger.trace("Deserializing packet recieved");
-                Logger.trace("deserialized: {}", deserialized);
-                //TODO: ClientRequestHandler.handle()
-                ClientRequest request = (ClientRequest) deserialized;
-
-                if(serverDaemon != null){
-                    serverDaemon.handleClientRequest(request);
-                }
-                Logger.trace("Exit handleFrame()");
-            }
 
             if(deserialized instanceof AdminClientRequest){
                 Logger.trace("Deserializing packet recieved");
@@ -133,7 +180,7 @@ public class AdminLauncher {
                 requestSequence = request.getRequestSequence();
                 //serverPayload = null; //buildPayload(message, request.getPayload());
 
-                ServerResponse serverResponse = new ServerResponse(requestSequence, sessionId, message, serverDaemon.getServerId(), serverPayload);
+                ServerResponse serverResponse = new ServerResponse(requestSequence, sessionId, message, -1, serverPayload);
                 Logger.debug("serverResponse: {}", serverResponse);
 
                 final byte[] serialized = serializer.serialize(serverResponse);

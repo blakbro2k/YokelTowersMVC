@@ -10,6 +10,7 @@ public class YokelLounge implements Disposable {
     public static final String BEGINNER_GROUP = "Beginner";
     public static final String INTERMEDIATE_GROUP = "Intermediate";
     public static final String ADVANCED_GROUP = "Advanced";
+    public static final String DEFAULT_LOUNGE = "Default";
 
     private String name;
     private OrderedMap<String, YokelRoom> rooms;

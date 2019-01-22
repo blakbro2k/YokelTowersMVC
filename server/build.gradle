@@ -5,7 +5,7 @@ mainClassName = 'net.asg.games.server.ServerLauncher'
 eclipse.project.name = appName + '-server'
 
 dependencies {
-    compile project(path: ':core')
+    implementation project(path: ':core')
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.github.czyzby:gdx-websocket-serialization:$websocketSerializationVersion"
     implementation "com.github.czyzby:gdx-websocket-common:$websocketVersion"
@@ -20,8 +20,6 @@ dependencies {
     implementation "org.mockito:mockito-core:$mockitoVersion"
     implementation 'org.jetbrains:annotations-java5:15.0'
     implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-
-
     // Test dependencies :
     testCompile "junit:junit:$junitVersion"
     testCompile "org.assertj:assertj-core:$assertjVersion"
