@@ -1,4 +1,4 @@
-package net.asg.games.server;
+package net.asg.games.game.objects;
 
 /**
  * Created by Blakbro2k on 1/28/2018.

@@ -4,9 +4,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
 
-import net.asg.games.server.YokelLounge;
-import net.asg.games.server.YokelPlayer;
-import net.asg.games.server.YokelRoom;
+import net.asg.games.game.objects.YokelLounge;
+import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.utils.Util;

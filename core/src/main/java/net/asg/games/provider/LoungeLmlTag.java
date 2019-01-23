@@ -9,8 +9,8 @@ import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
-import net.asg.games.server.YokelLounge;
-import net.asg.games.server.YokelRoom;
+import net.asg.games.game.objects.YokelLounge;
+import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.utils.Util;
 
 public class LoungeLmlTag extends TableLmlTag {

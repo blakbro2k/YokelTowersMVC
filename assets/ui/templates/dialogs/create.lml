@@ -5,5 +5,5 @@
         <label>@ProtectedSelBx</label>
     </selectBox>
     <checkBox>@RatedChkBx</checkBox>
-    <textButton onResult="requestGameCreate" onClick="show:game">@createGameBtnLbl</textButton>
+    <textButton onChange="close" onClick="show:game">@createGameBtnLbl</textButton>
 </dialog>

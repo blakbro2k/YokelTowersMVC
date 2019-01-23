@@ -1,4 +1,4 @@
-package net.asg.games.server;
+package net.asg.games.game.objects;
 
 import net.asg.games.utils.Util;
 

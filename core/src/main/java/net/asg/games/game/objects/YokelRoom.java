@@ -1,4 +1,4 @@
-package net.asg.games.server;
+package net.asg.games.game.objects;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;

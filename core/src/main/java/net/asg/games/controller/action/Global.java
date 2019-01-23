@@ -13,8 +13,8 @@ import com.github.czyzby.websocket.data.WebSocketException;
 import com.github.czyzby.websocket.net.ExtendedNet;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
-import net.asg.games.server.YokelLounge;
-import net.asg.games.server.YokelPlayer;
+import net.asg.games.game.objects.YokelLounge;
+import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
@@ -22,8 +22,6 @@ import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
-
-import java.util.Arrays;
 
 /**
  * Since this class implements ActionContainer and is annotated with ViewActionContainer, its methods will be reflected

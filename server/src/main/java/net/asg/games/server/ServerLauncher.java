@@ -47,7 +47,6 @@ public class ServerLauncher {
             Logger.info("Launching YokelTowers-server build: {}", SERVER_BUILD);
             initialize(args);
             initializeNetwork();
-            //serverDaemon.run();
             Logger.trace("Exit launch()");
         } catch (Exception e) {
             Logger.error(e,"Error Launching Server: ");
@@ -95,6 +94,15 @@ public class ServerLauncher {
         }
     }
 
+    private void sendServerResponse(ServerWebSocket webSocket, ServerResponse response){
+        Logger.trace("Enter sendServerResponse()");
+        if(response != null && webSocket != null){
+            final byte[] serialized = serializer.serialize(response);
+            webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
+        }
+        Logger.trace("Exit sendServerResponse()");
+    }
+
     public void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
         try {
             Logger.trace("Enter handleFrame()");
@@ -110,7 +118,7 @@ public class ServerLauncher {
                 ClientRequest request = (ClientRequest) deserialized;
 
                 if(serverDaemon != null){
-                    serverDaemon.handleClientRequest(request);
+                    sendServerResponse(webSocket, serverDaemon.handleClientRequest(request));
                 }
                 Logger.trace("Exit handleFrame()");
             }
@@ -135,9 +143,7 @@ public class ServerLauncher {
 
                 ServerResponse serverResponse = new ServerResponse(requestSequence, sessionId, message, serverDaemon.getServerId(), serverPayload);
                 Logger.debug("serverResponse: {}", serverResponse);
-
-                final byte[] serialized = serializer.serialize(serverResponse);
-                webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
+                sendServerResponse(webSocket, serverResponse);
                 Logger.trace("Exit handleFrame()");
             }
         } catch (Exception e){

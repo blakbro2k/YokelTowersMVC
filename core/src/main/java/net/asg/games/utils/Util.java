@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
-import net.asg.games.server.YokelLounge;
+import net.asg.games.game.objects.YokelLounge;
 
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;

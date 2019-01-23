@@ -2,6 +2,7 @@
     <table defaultPad="2" tableAlign="bottomRight" fillParent="true" defaultFillX="true">
         <image id="banner" style="banner" row="true" colSpan="3"/>
         <table onecolumn="true"  tableAlign="left">
+            <!-- Side Panel -->
             <table onecolumn="true" defaultFillX="true">
                 <textButton>Start Game</textButton>
                 <textButton>Change Keys</textButton>
@@ -26,8 +27,32 @@
                 <textButton onResult="close">Quit</textButton>
             </table>
         </table>
+        <!-- End Side Panel -->
         <table>
-            <label>Game Area</label>
+            <table>
+                <label row="true">Left\t:Left Arrow</label>
+                <label row="true">Right\t:Right Arrow</label>
+                <label row="true">Drop\t:Down Arrow</label>
+                <label row="true">Cycle Colors\t:R</label>
+                <label row="true">Use Item\t:Space Bar</label>
+                <label row="true">Clock</label>
+            </table>
+            <table>
+                <label>1</label>
+                <label>2</label>
+             </table>
+            <table row="true">
+                <label>5</label>
+                <label>6</label>
+            </table>
+            <table row="true">
+                <label>3</label>
+                <label>4</label>
+            </table>
+            <table>
+                <label>7</label>
+                <label>8</label>
+            </table>
         </table>
         <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
         <textButton onChange="show:settings">thsi is a game</textButton>

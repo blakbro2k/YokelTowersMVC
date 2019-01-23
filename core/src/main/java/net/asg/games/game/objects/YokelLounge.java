@@ -1,4 +1,4 @@
-package net.asg.games.server;
+package net.asg.games.game.objects;
 
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.OrderedMap;
@@ -19,7 +19,7 @@ public class YokelLounge implements Disposable {
 
     public YokelLounge(String name) {
         setName(name);
-        this.rooms = new OrderedMap<String, YokelRoom>();
+        this.rooms = new OrderedMap<>();
     }
 
     public void setName(String name){
@@ -42,9 +42,7 @@ public class YokelLounge implements Disposable {
 
     public YokelRoom getRoom(String roomName){
         if(roomName == null) return null;
-        System.out.println("{}{}rooms=" + rooms);
-        System.out.println("{}{}roomName=" + roomName);
-       return rooms.get(roomName);
+        return rooms.get(roomName);
     }
 
     public void removeRoom(String roomName){
