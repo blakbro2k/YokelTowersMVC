@@ -10,6 +10,7 @@ import net.asg.games.game.objects.YokelLounge;
 
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.pmw.tinylog.Level;
 
 import java.util.UUID;
 
@@ -231,5 +232,20 @@ public class Util {
             return Long.valueOf(otos(o));
         }
         return -1;
+    }
+
+
+    public static Level getTinyLogLevel(String logLevel){
+        if(StringUtils.equalsIgnoreCase("trace", logLevel)){
+            return Level.TRACE;
+        } else if(StringUtils.equalsIgnoreCase("debug", logLevel)){
+            return Level.DEBUG;
+        } else if(StringUtils.equalsIgnoreCase("warn", logLevel)){
+            return Level.WARNING;
+        } else if(StringUtils.equalsIgnoreCase("error", logLevel)){
+            return Level.ERROR;
+        } else {
+            return Level.INFO;
+        }
     }
 }

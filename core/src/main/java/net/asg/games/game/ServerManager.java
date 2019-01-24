@@ -53,7 +53,6 @@ public class ServerManager {
             initialize(args);
         } catch (Exception e) {
             Logger.error(e,"Error during ServerManager initialization: ");
-            e.printStackTrace();
         }
     }
 
@@ -63,17 +62,30 @@ public class ServerManager {
 
     public void processServerResponses(){}
 
+    private void validateLounges(){
+        if(lounges == null){
+            lounges = new OrderedMap<>();
+        }
+    }
+
+    private void validateRegisteredPlayers(){
+        if(registeredPlayers == null){
+            registeredPlayers = new OrderedMap<>();
+        }
+    }
+
     private void initialize(String... args) throws Exception{
         try {
             Logger.trace("Enter initialize()");
             Logger.info("Initializing server arguments: ");
+
+
+            validateLounges();
+            validateRegisteredPlayers();
+
             initializeParams(args);
             initializeGameRooms();
-            //System.out.println(lounges);
 
-            if(registeredPlayers == null){
-                registeredPlayers = new OrderedMap<>();
-            }
             if(isDebug){
                 generateTestPlayers();
             }
@@ -88,13 +100,12 @@ public class ServerManager {
         try {
             Logger.trace("Exit generateTestPlayers()");
             Logger.debug("Generating Debugable Players...");
-            if(testPlayers == null){
-                testPlayers = new OrderedMap<>();
-            }
+            validateRegisteredPlayers();
+
             int numPlayers = 8;
             while(numPlayers > 0){
                 YokelPlayer player = new YokelPlayer(getRandomName());
-                Logger.debug("Creating " + player.getName());
+                Logger.debug("Creating {}", player.getName());
                 testPlayers.put(player.getName(), player);
                 numPlayers--;
             }
@@ -109,25 +120,9 @@ public class ServerManager {
         try {
             Logger.trace("Enter initializeGameRooms()");
             Logger.info("Initializing Game Rooms...");
-            if(lounges == null){
-                lounges = new OrderedMap<>();
-            }
 
-            Logger.info("Creating Social: Eiffel Tower");
-            YokelLounge socialLounge = createLounge(YokelLounge.SOCIAL_GROUP);
-            YokelRoom room1 = new YokelRoom("Eiffel Tower");
-            socialLounge.addRoom(room1);
-            Logger.info("Creating Social: Leaning Tower of Pisa");
-            YokelRoom room3 = new YokelRoom("Leaning Tower of Pisa");
-            socialLounge.addRoom(room3);
+            generateDefaultLounges();
 
-            Logger.info("Creating Beginning: Chang Tower");
-            YokelLounge beginningLounge = new YokelLounge(YokelLounge.BEGINNER_GROUP);
-            YokelRoom room2 = new YokelRoom("Chang Tower");
-            beginningLounge.addRoom(room2);
-
-            addLounge(socialLounge);
-            addLounge(beginningLounge);
             Logger.trace("Exit initializeGameRooms()");
         } catch (Exception e) {
             Logger.error(e, "Error initializing game lounges: ");
@@ -135,30 +130,67 @@ public class ServerManager {
         }
     }
 
-    private YokelLounge createLounge(String loungeName){
-        if(!StringUtils.isEmpty(loungeName)) {
-            return new YokelLounge(loungeName);
+    private void generateDefaultLounges() throws Exception {
+        try{
+            Logger.trace("Enter generateDefaultLounges()");
+
+            Logger.info("Creating Social: Eiffel Tower");
+            YokelLounge socialLounge = createLounge(YokelLounge.SOCIAL_GROUP);
+            YokelRoom room1 = new YokelRoom("Eiffel Tower");
+            socialLounge.addRoom(room1);
+
+            Logger.info("Creating Social: Leaning Tower of Pisa");
+            YokelRoom room3 = new YokelRoom("Leaning Tower of Pisa");
+            socialLounge.addRoom(room3);
+
+            Logger.info("Creating Beginning: Chang Tower");
+            YokelLounge beginningLounge = createLounge(YokelLounge.BEGINNER_GROUP);
+            YokelRoom room2 = new YokelRoom("Chang Tower");
+            beginningLounge.addRoom(room2);
+
+            addLounge(socialLounge);
+            addLounge(beginningLounge);
+            Logger.trace("Exit generateDefaultLounges()");
+        } catch (Exception e){
+            Logger.error(e, "Error generating default game lounges: ");
+            throw new Exception("Error generating default game lounges: ", e);
         }
-        return getDefaultLounge();
     }
 
-    private YokelLounge getDefaultLounge(){
-        YokelLounge lounge = getLounge(YokelLounge.DEFAULT_LOUNGE);
-        if(lounge == null){
-            lounge = new YokelLounge(YokelLounge.DEFAULT_LOUNGE);
-            addLounge(lounge);
+    private YokelLounge createLounge(String loungeName) throws Exception{
+        try{
+            Logger.trace("Enter createLounge()");
+            YokelLounge yl = null;
+            if(!StringUtils.isEmpty(loungeName)) {
+                yl = new YokelLounge(loungeName);
+            }
+            Logger.trace("Exit createLounge()");
+            return yl == null ? getDefaultLounge() : yl;
+        } catch (Exception e){
+            throw new Exception("Error creating lounges", e);
         }
-        return lounge;
+    }
+
+    private YokelLounge getDefaultLounge() throws Exception {
+        try{
+            YokelLounge lounge = getLounge(YokelLounge.DEFAULT_LOUNGE);
+            if(lounge == null){
+                lounge = new YokelLounge(YokelLounge.DEFAULT_LOUNGE);
+                addLounge(lounge);
+            }
+            return lounge;
+        } catch(Exception e){
+            Logger.error("Error creating default lounge.", e);
+            throw new Exception("Error creating default lounge.", e);
+        }
     }
 
     private void addLounge(YokelLounge lounge){
-        if(lounge != null){
-            if(lounges == null){
-                lounges = new OrderedMap<>();
-            }
-            lounges.put(lounge.getName(), lounge);
-        }
+        validateLounges();
+        lounges.put(lounge.getName(), lounge);
     }
+
+
 
     private void initializeParams(String... args) throws Exception {
         try {
@@ -205,7 +237,7 @@ public class ServerManager {
             Logger.error("Arguments cannot be null or empty.");
             throw new Exception("Arguments cannot be null or empty.");
         }
-        Logger.debug("validating index " + i + " in parameter= {}", args[i]);
+        Logger.debug("validating index {} in parameter= {}",i,args[i]);
         Logger.trace("Exit validateArumentParameterValue()");
         return i != args.length - 1 && !SERVER_ARGS.contains(args[i + 1], false);
     }
@@ -222,22 +254,8 @@ public class ServerManager {
 
     private void setLogLevel(String logLevel){
         Logger.info("setting log level to: {}", logLevel);
-        this.logLevel = getTinyLogLevel(logLevel);
+        this.logLevel = Util.getTinyLogLevel(logLevel);
         Configurator.defaultConfig().level(this.logLevel).activate();
-    }
-
-    private Level getTinyLogLevel(String logLevel){
-        if(StringUtils.equalsIgnoreCase("trace", logLevel)){
-            return Level.TRACE;
-        } else if(StringUtils.equalsIgnoreCase("debug", logLevel)){
-            return Level.DEBUG;
-        } else if(StringUtils.equalsIgnoreCase("warn", logLevel)){
-            return Level.WARNING;
-        } else if(StringUtils.equalsIgnoreCase("error", logLevel)){
-            return Level.ERROR;
-        } else {
-            return Level.INFO;
-        }
     }
 
     public int getPort(){
@@ -256,6 +274,7 @@ public class ServerManager {
     }
 
     public void shutDownServer(int errorCode){
+        Logger.trace("Enter shutDownServer()");
         if(lounges != null){
             lounges.clear();
             lounges = null;
@@ -270,6 +289,7 @@ public class ServerManager {
             testPlayers.clear();
             testPlayers = null;
         }
+        Logger.trace("Exit shutDownServer()");
         System.exit(errorCode);
     }
 
@@ -300,10 +320,8 @@ public class ServerManager {
         public void run() {
             /**
              * while(true)
-             *     check for and handle new player connections
              *     check for client commands
              *     sanity check client commands
-             *     run AI
              *     move all entities
              *     resolve collisions
              *     sanity check world data
@@ -315,6 +333,8 @@ public class ServerManager {
     }
 
     public ServerResponse handleClientRequest(ClientRequest request) throws Exception {
+        Logger.trace("Enter handleClientRequest()");
+
         String sessionId = null;
         String message = null;
         int requestSequence = -1;
@@ -328,12 +348,12 @@ public class ServerManager {
             requestSequence = request.getRequestSequence();
             serverPayload = buildPayload(message, request.getPayload());
         }
+        Logger.trace("Exit handleClientRequest()");
         return new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
     }
 
     private Array<String> testPlayersToJSON(){
         Array<String> jsonPlayers = new Array<>();
-        System.out.println("testPlayers=" + testPlayers);
 
         for(String playerName : Util.toIterable(testPlayers.orderedKeys())){
             if(!StringUtils.isEmpty(playerName)){
@@ -356,40 +376,43 @@ public class ServerManager {
         return jsonLounge;
     }
 
-    private void addNewTable(String[] clientPayload){
-        Logger.trace("Enter addNewTable={}");
+    private void addNewTable(String[] clientPayload) throws Exception {
+        try{
+            Logger.trace("Enter addNewTable()");
 
-        if(clientPayload != null){
-            //Logger.info(Arrays.asList(clientPayload));
+            if(clientPayload != null){
+                String loungeName = Util.getStringValue(clientPayload, 0);
+                String roomName = Util.getStringValue(clientPayload, 1);
+                String type = Util.getStringValue(clientPayload, 2);
+                boolean rated = Util.getBooleanValue(clientPayload, 3);
 
-            String loungeName = Util.getStringValue(clientPayload, 0);
-            String roomName = Util.getStringValue(clientPayload, 1);
-            String type = Util.getStringValue(clientPayload, 2);
-            boolean rated = Util.getBooleanValue(clientPayload, 3);
+                OrderedMap<String, Object> arguments = new OrderedMap<>();
+                arguments.put("type", type);
+                arguments.put("rated", rated);
 
-            OrderedMap<String, Object> arguments = new OrderedMap<>();
-            arguments.put("type", type);
-            arguments.put("rated", rated);
+                YokelLounge lounge = getLounge(loungeName);
 
-            YokelLounge lounge = getLounge(loungeName);
+                Logger.debug("loungeName={}", loungeName);
+                Logger.debug("roomName={}", roomName);
+                Logger.debug("type={}", type);
+                Logger.debug("rated={}", rated);
+                Logger.debug("arguments={}", arguments);
+                Logger.debug("lounge={}", lounge);
 
-            Logger.debug("loungeName={}", loungeName);
-            Logger.debug("roomName={}", roomName);
-            Logger.debug("type={}", type);
-            Logger.debug("rated={}", rated);
-            Logger.debug("arguments={}", arguments);
-            Logger.debug("lounge={}", lounge);
+                if(lounge != null){
+                    YokelRoom room = lounge.getRoom(roomName);
+                    Logger.debug("room={}", room);
 
-            if(lounge != null){
-                YokelRoom room = lounge.getRoom(roomName);
-                Logger.debug("room={}", room);
-
-                if(room != null){
-                    room.addTable(1, arguments);
+                    if(room != null){
+                        room.addTable(1, arguments);
+                    }
                 }
             }
+            Logger.trace("Exit addNewTable()");
+        } catch (Exception e) {
+            Logger.error("Error adding new table.", e);
+            throw new Exception("Error adding new table.", e);
         }
-        Logger.trace("Exit addNewTable={}");
     }
 
     private void printLounges(){
@@ -404,9 +427,6 @@ public class ServerManager {
 
     private String[] buildPayload(String message, String[] clientPayload) {
         Logger.trace("Enter buildPayload()");
-        //if(clientPayload != null){
-            //Logger.debug(Arrays.asList(clientPayload));
-        //}
 
         String[] load = null;
         try {
@@ -431,27 +451,31 @@ public class ServerManager {
             }
         } catch (Exception e){
             Logger.error(e);
-            //if(clientPayload != null){
-                //Logger.debug(Arrays.asList(clientPayload));
-            //}
+
         }
         Logger.trace("Exit buildPayload()");
         return load;
     }
 
-    private YokelLounge getLounge(String key){
-        if(lounges != null){
-            String loungeName = Util.getLoungeName(key);
-            YokelLounge lounge = lounges.get(loungeName);
-            Logger.info("Lounge Name={}", loungeName);
-            Logger.info("Lounge Object={}",lounge);
-            return lounge;
+    private YokelLounge getLounge(String key) throws Exception {
+        try{
+            Logger.trace("Enter getLounge()");
+            validateLounges();
+
+                String loungeName = Util.getLoungeName(key);
+                YokelLounge lounge = lounges.get(loungeName);
+                Logger.debug("Lounge Name={}", loungeName);
+                Logger.debug("Lounge Object={}",lounge);
+                Logger.trace("Exit getLounge()");
+                return lounge;
+
+        } catch (Exception e){
+            Logger.error("Error getting Lounge.", e);
+            throw new Exception(e);
         }
-        return null;
     }
 
     private Array<YokelLounge> getAllLounges(){
         return Util.getValuesArray(lounges.values());
     }
-
 }
