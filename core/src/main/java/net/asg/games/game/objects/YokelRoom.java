@@ -15,7 +15,7 @@ public class YokelRoom{
     private String group;
     //private Chat chatRoom;
     private Array<YokelPlayer> players;
-    private Array<YokelTable> tables;
+    private OrderedMap<Integer, YokelTable> tables;
 
     //Empty Contructor required for Json.Serializable
     public YokelRoom(){}
@@ -27,46 +27,46 @@ public class YokelRoom{
 
     private void initialize(){
         roomId = Util.IDGenerator.getID();
-        tables = new Array<YokelTable>();
-        players = new Array<YokelPlayer>();
+        tables = new OrderedMap<>();
+        players = new Array<>();
     }
 
     public String getRoomId() {
         return roomId;
     }
 
-    public Array<YokelTable> getTables(){
+    public OrderedMap<Integer, YokelTable> getAllTables(){
         return tables;
     }
 
-    public boolean joinRoom(YokelPlayer player){
-        if(player != null){
+    public Array<YokelPlayer> getAllPlayers(){
+        return players;
+    }
+
+    public void joinRoom(YokelPlayer player){
+        if(player != null && !players.contains(player, false)){
             players.add(player);
-            return true;
         }
-        return false;
     }
 
-    public boolean leaveRoom(YokelPlayer player){
-            return players.removeValue(player, false);
+    public void leaveRoom(YokelPlayer player){
+            players.removeValue(player, false);
     }
 
-    public boolean addTable(int num){
-        tables.add(new YokelTable(num));
-        return true;
+    public void addTable(int num){
+        tables.put(num, new YokelTable(num));
     }
 
-    public boolean addTable(int i, OrderedMap<String, Object> attributes){
-        tables.add(new YokelTable(i, attributes));
-        return true;
+    public void addTable(int num, OrderedMap<String, Object> attributes){
+        tables.put(num, new YokelTable(num, attributes));
     }
 
     public YokelTable getTable(int t){
         return tables.get(t);
     }
 
-    public boolean removeTable(int index){
-        return false;
+    public void removeTable(int index){
+        tables.remove(index);
     }
 
     public String getName() {
@@ -75,14 +75,6 @@ public class YokelRoom{
 
     @Override
     public String toString(){
-        StringBuilder ret = new StringBuilder();
-
-        ret.append("Room : ").append(name).append("\n");
-        for(YokelTable yokelTable : Util.toIterable(tables)){
-            ret.append(yokelTable.toString()).append("\n");
-        }
-
-        //ret.append("Player List = ").append(players.toString());
-        return ret.toString();
+        return Util.convertJsonString(Util.getJsonString(this));
     }
 }

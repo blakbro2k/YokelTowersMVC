@@ -18,6 +18,7 @@ public class YokelLounge implements Disposable {
     public YokelLounge(){}
 
     public YokelLounge(String name) {
+        if(name == null) throw new IllegalArgumentException("Lounge name cannot be null.");
         setName(name);
         this.rooms = new OrderedMap<>();
     }
@@ -32,7 +33,7 @@ public class YokelLounge implements Disposable {
     }
 
     public void addRoom(YokelRoom room){
-        if(room == null) throw new NullPointerException("Cannot add room. Room is null");
+        if(room == null) throw new IllegalArgumentException("Cannot add room. Room is null");
         rooms.put(room.getName(), room);
     }
 

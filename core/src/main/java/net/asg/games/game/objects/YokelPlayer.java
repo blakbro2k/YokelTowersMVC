@@ -14,13 +14,14 @@ public class YokelPlayer{
     private String logo;
     private String sessionId;
 
+    //Empty Contructor required for Json.Serializable
+    public YokelPlayer(){}
+
     public YokelPlayer(String name){
         this.name = name;
         playerId = Util.IDGenerator.getID();
         rating = DEFAULT_RATING_NUMBER;
     }
-    //Empty Contructor required for Json.Serializable
-    public YokelPlayer(){}
 
     public String getName(){
         return name;
@@ -52,6 +53,6 @@ public class YokelPlayer{
 
     @Override
     public String toString(){
-        return name + ":" + getPlayerId();
+        return Util.convertJsonString(Util.getJsonString(this));
     }
 }

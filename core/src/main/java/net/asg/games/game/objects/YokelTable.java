@@ -1,7 +1,7 @@
 package net.asg.games.game.objects;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;
-import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.utils.Util;
 
@@ -14,7 +14,7 @@ public class YokelTable {
     private String tableId;
     private int tableNumber;
 
-    private Queue<YokelSeat> seats;
+    private Array<YokelSeat> seats;
     private ACCESS_TYPE accessType;
     private boolean isStarted;
     private boolean isRated;
@@ -24,7 +24,7 @@ public class YokelTable {
     public YokelTable(){}
 
     public YokelTable(int tableNumber){
-        initialize(tableNumber, null);
+        this(tableNumber, null);
     }
 
     public YokelTable(int tableNumber, OrderedMap<String, Object> arguments){
@@ -32,15 +32,16 @@ public class YokelTable {
     }
 
     private void initialize(int tableNumber, OrderedMap<String, Object> arguments){
+        if(tableNumber < 1) throw new IllegalArgumentException("Table number cannot be less than 1.");
         tableId = Util.IDGenerator.getID();
-        seats = new Queue<YokelSeat>();
+        seats = new Array<>();
         this.tableNumber = tableNumber;
 
-        setAccessType(ACCESS_TYPE.PUBLIC);
-        setUpArguments(arguments);
         setUpSeats();
+        setAccessType(ACCESS_TYPE.PUBLIC);
         setRated(false);
         setSound(true);
+        setUpArguments(arguments);
         retartTable();
     }
 
@@ -80,10 +81,10 @@ public class YokelTable {
     public void setAccessType(String accessType){
         if(StringUtils.equalsIgnoreCase("private", accessType)){
             setAccessType(ACCESS_TYPE.PRIVATE);
-        } else if(StringUtils.equalsIgnoreCase("public", accessType)){
-            setRated(Util.otob(ACCESS_TYPE.PUBLIC));
         } else if(StringUtils.equalsIgnoreCase("protected", accessType)){
-            setRated(Util.otob(ACCESS_TYPE.PROTECTED));
+            setAccessType(ACCESS_TYPE.PROTECTED);
+        } else {
+            setAccessType(ACCESS_TYPE.PUBLIC);
         }
     }
 
@@ -144,13 +145,13 @@ public class YokelTable {
         return false;
     }
 
-    public void setUpSeats(){
-        for(int i = 0; i < MAX_SEATS; i++){
-            seats.addLast(new YokelSeat(1, 1, i));
+    private void setUpSeats(){
+        for(int i = 1; i <= MAX_SEATS; i++){
+            seats.add(new YokelSeat(i));
         }
     }
 
-    public Queue<YokelSeat> getSeats(){
+    public Array<YokelSeat> getSeats(){
         return seats;
     }
 
@@ -160,37 +161,6 @@ public class YokelTable {
 
     @Override
     public String toString(){
-        StringBuilder top = new StringBuilder("+");
-        StringBuilder middle1 = new StringBuilder("|");
-        StringBuilder middle2 = new StringBuilder("|");
-        StringBuilder bottom = new StringBuilder("+");
-
-        YokelSeat seat1;
-        YokelSeat seat2;
-        for(int a = 0; a < seats.size; a += 2){
-            seat1 = getSeat(a);
-            seat2 = getSeat(a);
-            if(a < seats.size){
-                seat2 = getSeat(a+1);
-            }
-
-            top.append(getDashes(seat1.toString().length()));
-            middle1.append(seat1.toString());
-            middle2.append(seat2.toString());
-            bottom.append(getDashes(seat1.toString().length()));
-        }
-
-        return top.toString()  + "+\n"
-                + middle1.toString() + "|\n"
-                + middle2.toString() + "|\n"
-                + bottom.toString() + "+";
-    }
-
-    private String getDashes(int i){
-        StringBuilder ret = new StringBuilder();
-        for(int j = 0; j < i; j++){
-            ret.append("-");
-        }
-        return "table: " + tableNumber + "\n" + ret.toString();
+        return Util.convertJsonString(Util.getJsonString(this));
     }
 }

@@ -125,15 +125,15 @@ public class Util {
         return array == null || array.length < 1;
     }
 
-    public static <T> String[] fromCollectionToStringArray(Array<T> playerNames) {
-        if(playerNames != null){
-            int size = playerNames.size;
+    public static <T> String[] fromCollectionToStringArray(Array<T> collection) {
+        if(collection != null){
+            int size = collection.size;
             String[] c2 = new String[size];
-            int c = 0;
-            for(Object o : toIterable(playerNames)){
+
+            for(int c = 0; c < size; c++){
+                Object o = collection.get(c);
                 if(o != null){
                     c2[c] = o.toString();
-                    c++;
                 }
             }
             return c2;
