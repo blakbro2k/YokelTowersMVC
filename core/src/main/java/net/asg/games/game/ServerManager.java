@@ -9,6 +9,8 @@ import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.ServerResponse;
+import net.asg.games.storage.MemoryStorage;
+import net.asg.games.storage.StorageInterface;
 import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
 
@@ -462,13 +464,12 @@ public class ServerManager {
             Logger.trace("Enter getLounge()");
             validateLounges();
 
-                String loungeName = Util.getLoungeName(key);
-                YokelLounge lounge = lounges.get(loungeName);
-                Logger.debug("Lounge Name={}", loungeName);
-                Logger.debug("Lounge Object={}",lounge);
-                Logger.trace("Exit getLounge()");
-                return lounge;
-
+            String loungeName = Util.getLoungeName(key);
+            YokelLounge lounge = lounges.get(loungeName);
+            Logger.debug("Lounge Name={}", loungeName);
+            Logger.debug("Lounge Object={}",lounge);
+            Logger.trace("Exit getLounge()");
+            return lounge;
         } catch (Exception e){
             Logger.error("Error getting Lounge.", e);
             throw new Exception(e);
