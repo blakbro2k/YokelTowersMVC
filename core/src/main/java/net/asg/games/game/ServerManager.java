@@ -101,7 +101,9 @@ public class ServerManager {
             Logger.trace("Exit generateTestPlayers()");
             Logger.debug("Generating Debugable Players...");
             validateRegisteredPlayers();
-
+            if(testPlayers == null){
+                testPlayers = new OrderedMap<>();
+            }
             int numPlayers = 8;
             while(numPlayers > 0){
                 YokelPlayer player = new YokelPlayer(getRandomName());
@@ -290,7 +292,7 @@ public class ServerManager {
             testPlayers = null;
         }
         Logger.trace("Exit shutDownServer()");
-        System.exit(errorCode);
+        //System.exit(errorCode);
     }
 
     private String getRandomName(){

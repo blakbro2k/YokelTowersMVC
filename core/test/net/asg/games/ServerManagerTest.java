@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class ServerManagerTest {
     private WebSocket socket;
     private ServerManager daemon;
@@ -25,18 +27,40 @@ public class ServerManagerTest {
 
     @Test
     public void createLoungeTest() throws Exception {
+        startDaemon();
+        String testingMethod = "createLounge";
         Class<?>[] args = new Class<?>[1];
         args[0] = String.class;
         Object[] params = new Object[1];
         params[0] = "TestCreated";
-        System.out.println("Object=" + TestingUtils.invokeStaticMethod(daemon.getClass(),
-                "createLounge", args,params,daemon));
+        printInvokeResult("Lounge",daemonClass(),testingMethod,args,params,daemon);
 
         Object[] params2 = new Object[1];
         params[0] = "";
-        System.out.println("Object=" + TestingUtils.invokeStaticMethod(daemon.getClass(),
-                "createLounge", args,params2,daemon));
-        //private YokelLounge createLounge(String loungeName)
-        throw new Exception("Test Case not Set");
+        printInvokeResult("Lounge",daemonClass(),testingMethod,args,params2,daemon);
+    }
+
+    @Test
+    public void printLoungeTest() throws Exception {
+        String testingMethod = "printLounges";
+        Class<?>[] args = new Class<?>[0];
+        //args[0] = String.class;
+        printInvokeResult("Lounges",daemonClass(),testingMethod,args,null,daemon);
+        stopDaemon();
+    }
+
+    private Class<?> daemonClass(){
+        if(daemon != null){
+            return daemon.getClass();
+        }
+        return null;
+    }
+
+    private Object attemptInvoke(Class<?> clazz, String method, Class<?>[] types, Object[] params, Object o) throws InvocationTargetException {
+        return TestingUtils.invokeStaticMethod(clazz,method,types,params,o);
+    }
+
+    private void printInvokeResult(String printName, Class<?> clazz, String method, Class<?>[] types, Object[] params, Object o) throws InvocationTargetException {
+        System.out.println(printName + "=" + attemptInvoke(clazz,method,types,params,o));
     }
 }
