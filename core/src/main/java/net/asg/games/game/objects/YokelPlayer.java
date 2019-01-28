@@ -6,7 +6,7 @@ import net.asg.games.utils.Util;
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class YokelPlayer{
+public class YokelPlayer extends YokelObject {
     private final static int DEFAULT_RATING_NUMBER = 1500;
     private String name;
     private String playerId;
@@ -52,7 +52,7 @@ public class YokelPlayer{
     }
 
     @Override
-    public String toString(){
-        return Util.convertJsonString(Util.getJsonString(this));
+    public void dispose() {
+
     }
 }

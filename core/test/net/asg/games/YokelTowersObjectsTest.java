@@ -46,7 +46,7 @@ public class YokelTowersObjectsTest {
         Assert.assertEquals(1, lounge.getAllRooms().size);
         lounge.removeRoom(roomName);
         Assert.assertEquals(0, lounge.getAllRooms().size);
-        Assert.assertEquals(convertJSON(lounge), lounge.toString());
+        Assert.assertEquals(getJSON(lounge), lounge.toString());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class YokelTowersObjectsTest {
         Assert.assertNotNull(player.getPlayerId());
         player.setSessionId("212");
         Assert.assertEquals("212", player.getSessionId());
-        Assert.assertEquals(convertJSON(player), player.toString());
+        Assert.assertEquals(getJSON(player), player.toString());
     }
 
     @Test
@@ -100,7 +100,7 @@ public class YokelTowersObjectsTest {
         Assert.assertTrue(seat.isOccupied());
         Assert.assertEquals(player1, seat.getSeatedPlayer());
         Assert.assertEquals(1, seat.getSeatNumber());
-        Assert.assertEquals(convertJSON(seat), seat.toString());
+        Assert.assertEquals(getJSON(seat), seat.toString());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class YokelTowersObjectsTest {
         Assert.assertEquals(1, room.getAllPlayers().size);
         room.leaveRoom(player3);
         Assert.assertEquals(1, room.getAllPlayers().size);
-        Assert.assertEquals(convertJSON(room), room.toString());
+        Assert.assertEquals(getJSON(room), room.toString());
     }
 
 
@@ -298,11 +298,11 @@ public class YokelTowersObjectsTest {
         table1.getSeat(4).standUp();
         table1.getSeat(2).standUp();
 
-        Assert.assertEquals(convertJSON(table1), table1.toString());
+        Assert.assertEquals(getJSON(table1), table1.toString());
     }
 
-    private String convertJSON(Object o){
-        return Util.convertJsonString(Util.getJsonString(o));
+    private String getJSON(Object o){
+        return Util.getJsonString(o);
     }
 
     @Test

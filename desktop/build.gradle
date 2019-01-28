@@ -14,6 +14,7 @@ dependencies {
     implementation "com.github.czyzby:gdx-autumn-fcs:$autumnVersion"
     implementation "com.github.czyzby:gdx-websocket-common:$websocketVersion"
     implementation "org.jetbrains:annotations-java5:$jetbrainsVersion"
+
 }
 
 jar {

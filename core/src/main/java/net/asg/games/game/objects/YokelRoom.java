@@ -9,7 +9,7 @@ import net.asg.games.utils.Util;
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class YokelRoom{
+public class YokelRoom extends YokelObject {
     private String name;
     private String roomId;
     private String group;
@@ -74,7 +74,13 @@ public class YokelRoom{
     }
 
     @Override
-    public String toString(){
-        return Util.convertJsonString(Util.getJsonString(this));
+    public void dispose() {
+        if(players != null){
+            players.clear();
+        }
+
+        if(tables != null){
+            tables.clear();
+        }
     }
 }

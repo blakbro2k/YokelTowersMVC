@@ -19,6 +19,9 @@ dependencies {
     implementation "org.assertj:assertj-core:$assertjVersion"
     implementation "org.jetbrains:annotations-java5:$jetbrainsVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
     // Test dependencies :
     testCompile "junit:junit:$junitVersion"
     testCompile "org.assertj:assertj-core:$assertjVersion"

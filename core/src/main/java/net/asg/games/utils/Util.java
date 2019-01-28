@@ -256,7 +256,7 @@ public class Util {
     }
 
     public static List<String> getFiles(File folder){
-        List<String> retFileNames = new ArrayList<String>();
+        List<String> retFileNames = new ArrayList<>();
         if(folder != null){
             File[] fileNames = folder.listFiles();
 
@@ -276,7 +276,7 @@ public class Util {
     }
 
     public static List<String> getFiles(String path){
-        List<String> fileNames = new ArrayList<String>();
+        List<String> fileNames = new ArrayList<>();
         if(path != null){
             fileNames.addAll(getFiles(new File(path)));
         }

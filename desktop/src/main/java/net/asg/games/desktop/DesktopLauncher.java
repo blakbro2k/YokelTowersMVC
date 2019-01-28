@@ -34,7 +34,8 @@ public class DesktopLauncher {
             }
         }
 
-        createApplication();
+        LwjglApplication app = createApplication();
+        //app.exit();
     }
 
     private static LwjglApplication createApplication() {
@@ -53,5 +54,9 @@ public class DesktopLauncher {
         // Initiating web sockets module:
         CommonWebSockets.initiate();
         return configuration;
+    }
+
+    private static void YokelTowersUITest(){
+
     }
 }

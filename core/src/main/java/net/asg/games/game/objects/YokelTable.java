@@ -7,10 +7,11 @@ import net.asg.games.utils.Util;
 
 import org.apache.commons.lang.StringUtils;
 
-public class YokelTable {
+public class YokelTable extends YokelObject {
     public enum ACCESS_TYPE {PRIVATE, PUBLIC, PROTECTED}
 
-    private final int MAX_SEATS = 8;
+    static final int MAX_SEATS = 8;
+
     private String tableId;
     private int tableNumber;
 
@@ -126,7 +127,14 @@ public class YokelTable {
         if(g < 0 || g > 3){
             return false;
         }
-        return seats.get(g * 2).isOccupied() || seats.get((g * 2) + 1).isOccupied();
+        return isSeatOccupied(seats.get(g * 2)) || isSeatOccupied(seats.get((g * 2) + 1));
+    }
+
+    private boolean isSeatOccupied(YokelSeat seat){
+        if(seat != null){
+            return seat.isOccupied();
+        }
+        return false;
     }
 
     public boolean isTableStartReady(){
@@ -160,7 +168,9 @@ public class YokelTable {
     }
 
     @Override
-    public String toString(){
-        return Util.convertJsonString(Util.getJsonString(this));
+    public void dispose() {
+        if(seats != null){
+            seats.clear();
+        }
     }
 }

@@ -55,7 +55,7 @@ public class ServerLauncher {
         }
     }
 
-    private void initializeNetwork()throws Exception{
+    private void initializeNetwork() throws Exception{
         try{
             Logger.trace("Enter initializeNetwork()");
             Logger.info("Initializing Network Listener.");

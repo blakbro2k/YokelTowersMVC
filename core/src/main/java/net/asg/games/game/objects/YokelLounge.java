@@ -1,11 +1,10 @@
 package net.asg.games.game.objects;
 
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.OrderedMap;
 
 import net.asg.games.utils.Util;
 
-public class YokelLounge implements Disposable {
+public class YokelLounge extends YokelObject {
     public static final String SOCIAL_GROUP = "Social";
     public static final String BEGINNER_GROUP = "Beginner";
     public static final String INTERMEDIATE_GROUP = "Intermediate";
@@ -60,6 +59,6 @@ public class YokelLounge implements Disposable {
 
     @Override
     public String toString(){
-        return Util.convertJsonString(Util.getJsonString(this));
+        return Util.getJsonString(this);
     }
 }

@@ -11,13 +11,15 @@ import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
+
 public class ServerManagerTest {
     private WebSocket socket;
     private ServerManager daemon;
 
     @Before
     public void startDaemon() {
-        this.daemon = new ServerManager();
+        String[] args = {ServerManager.LOG_LEVEL_ATTR, "trace", ServerManager.DEBUG_ATTR};
+        this.daemon = new ServerManager(args);
     }
 
     @After
@@ -46,7 +48,6 @@ public class ServerManagerTest {
         Class<?>[] args = new Class<?>[0];
         //args[0] = String.class;
         printInvokeResult("Lounges",daemonClass(),testingMethod,args,null,daemon);
-        stopDaemon();
     }
 
     private Class<?> daemonClass(){

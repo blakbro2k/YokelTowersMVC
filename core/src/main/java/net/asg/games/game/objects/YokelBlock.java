@@ -12,7 +12,7 @@ import net.asg.games.utils.enums.YokelBlockType;
  * Created by Blakbro2k on 12/29/2017.
  */
 
-public class YokelBlock implements Json.Serializable {
+public class YokelBlock extends YokelObject implements Json.Serializable {
     public enum INIT_TYPE {DEFENSE, POWER, ANY, NORMAL}
 
     private YokelBlockType blockType;
@@ -88,7 +88,7 @@ public class YokelBlock implements Json.Serializable {
     public void read(Json json, JsonValue jsonData) {
         int val = json.readValue("blockType", Integer.class, jsonData);
         blockType = YokelBlockType.fromValue(val);
-        isBroken = json.readValue("blockType", Boolean.class, jsonData);
+        isBroken = json.readValue("isBroken", Boolean.class, jsonData);
     }
 
     public YokelBlockType getType() {
@@ -174,9 +174,7 @@ public class YokelBlock implements Json.Serializable {
     }
 
     @Override
-    public String toString(){
-        return "" + blockType;
-    }
+    public void dispose() {}
 
     public YokelBlock copy() {
         return new YokelBlock(blockType);

@@ -29,9 +29,9 @@ public class ServerManager {
     private final static String TIMEOUT_ATTR = "-t";
     public final static String HOST_ATTR = "-host";
     private final static String ROOM_ATTR = "-r";
-    private final static String LOG_LEVEL_ATTR = "-log";
+    public final static String LOG_LEVEL_ATTR = "-log";
     private final static String TICK_RATE_ATTR = "-tickrate";
-    private final static String DEBUG_ATTR = "-test";
+    public final static String DEBUG_ATTR = "-test";
 
     public final static Array<String> SERVER_ARGS = ImmutableArray.of(HOST_ATTR, PORT2_ATTR, PORT_ATTR, ROOM_ATTR, TIMEOUT_ATTR, TICK_RATE_ATTR, LOG_LEVEL_ATTR);
     private final static Array<String> PLAYER_NAMES = ImmutableArray.of("Hector","Lenny","Cullen","Kinsley","Tylor","Doug","Spring","Danica","Bekki",
@@ -124,9 +124,7 @@ public class ServerManager {
         try {
             Logger.trace("Enter initializeGameRooms()");
             Logger.info("Initializing Game Rooms...");
-
             generateDefaultLounges();
-
             Logger.trace("Exit initializeGameRooms()");
         } catch (Exception e) {
             Logger.error(e, "Error initializing game lounges: ");
@@ -164,24 +162,28 @@ public class ServerManager {
     private YokelLounge createLounge(String loungeName) throws Exception{
         try{
             Logger.trace("Enter createLounge()");
+            Logger.debug("loungeName={}",loungeName);
             YokelLounge yl = null;
             if(!StringUtils.isEmpty(loungeName)) {
                 yl = new YokelLounge(loungeName);
             }
-            Logger.trace("Exit createLounge()");
-            return yl == null ? getDefaultLounge() : yl;
+            Logger.trace("Exit createLounge()={}",yl);
+            return yl;
         } catch (Exception e){
+            Logger.error(e, "Error creating Lounge: ");
             throw new Exception("Error creating lounges", e);
         }
     }
 
     private YokelLounge getDefaultLounge() throws Exception {
         try{
+            Logger.trace("Enter createLounge()");
             YokelLounge lounge = getLounge(YokelLounge.DEFAULT_LOUNGE);
             if(lounge == null){
                 lounge = new YokelLounge(YokelLounge.DEFAULT_LOUNGE);
                 addLounge(lounge);
             }
+            Logger.trace("Exit createLounge()");
             return lounge;
         } catch(Exception e){
             Logger.error("Error creating default lounge.", e);
@@ -363,7 +365,7 @@ public class ServerManager {
             if(!StringUtils.isEmpty(playerName)){
                 YokelPlayer player = testPlayers.get(playerName);
                 if(player != null){
-                    jsonPlayers.add(Util.getJsonString(player));
+                    jsonPlayers.add(player.toString());
                 }
             }
         }
@@ -374,7 +376,7 @@ public class ServerManager {
         Array<String> jsonLounge = new Array<>();
         for(YokelLounge lounge : Util.toIterable(getAllLounges())){
             if(lounge != null){
-                jsonLounge.add(Util.getJsonString(lounge));
+                jsonLounge.add(lounge.toString());
             }
         }
         return jsonLounge;
@@ -455,7 +457,6 @@ public class ServerManager {
             }
         } catch (Exception e){
             Logger.error(e);
-
         }
         Logger.trace("Exit buildPayload()");
         return load;

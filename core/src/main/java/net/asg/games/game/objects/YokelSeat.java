@@ -6,7 +6,7 @@ import net.asg.games.utils.Util;
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class YokelSeat {
+public class YokelSeat extends YokelObject {
     private int seatNumber;
     private YokelPlayer seatedPlayer;
 
@@ -41,7 +41,7 @@ public class YokelSeat {
     }
 
     @Override
-    public String toString(){
-        return Util.convertJsonString(Util.getJsonString(this));
+    public void dispose() {
+        seatedPlayer.dispose();
     }
 }
