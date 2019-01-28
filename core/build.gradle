@@ -19,13 +19,13 @@ dependencies {
     implementation "com.google.gwt:gwt-servlet:$gwtServletVersion"
     implementation "javax.servlet:javax.servlet-api:$javaServletVersion"
     implementation "io.vertx:vertx-core:$vertxVersion"
-    implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation "org.jetbrains:annotations-java5:$jetbrainsVersion"
     implementation "org.tinylog:tinylog:$tinyLogVersion"
     // Test dependencies :
     testCompile "junit:junit:$junitVersion"
     testCompile "org.assertj:assertj-core:$assertjVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
-    testCompile 'org.jetbrains:annotations-java5:15.0'
+    testCompile "org.jetbrains:annotations-java5:$jetbrainsVersion"
     testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
 }
         

@@ -93,6 +93,6 @@ public enum YokelAction {
                 return GetSeats;
             case GlobalConstants.REGISTER_PLAYER:
                 return RegisterPlayer;        }
-        throw new ArrayIndexOutOfBoundsException("invalid value in YokelBlockType class: value=" + value);
+        throw new ArrayIndexOutOfBoundsException("invalid value in YokelAction class: value=" + value);
     }
 }

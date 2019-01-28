@@ -18,13 +18,13 @@ dependencies {
     implementation "junit:junit:$junitVersion"
     implementation "org.assertj:assertj-core:$assertjVersion"
     implementation "org.mockito:mockito-core:$mockitoVersion"
-    implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation "org.jetbrains:annotations-java5:$jetbrainsVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
     // Test dependencies :
     testCompile "junit:junit:$junitVersion"
     testCompile "org.assertj:assertj-core:$assertjVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
-    testCompile 'org.jetbrains:annotations-java5:15.0'
+    testCompile "org.jetbrains:annotations-java5:$jetbrainsVersion"
 }
 
 jar {

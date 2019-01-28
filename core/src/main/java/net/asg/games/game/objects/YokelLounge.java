@@ -27,7 +27,6 @@ public class YokelLounge implements Disposable {
         this.name = name;
     }
 
-    //Empty Contructor required for Json.Serializable
     public String getName(){
         return name;
     }

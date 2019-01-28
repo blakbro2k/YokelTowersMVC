@@ -4,6 +4,8 @@ import com.badlogic.gdx.utils.Queue;
 
 //import net.asg.games.yokel.core.enums.YokelBlockType;
 
+import net.asg.games.utils.enums.YokelBlockType;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -21,7 +23,7 @@ public class RandomUtil {
     /**
      * @return a random {@link YokelBlockType}
      */
-    /*
+
     public static YokelBlockType getRandomYokelBlockType() {
         RandomEnum<YokelBlockType> randomEnum = new RandomEnum<YokelBlockType>(YokelBlockType.class);
         return randomEnum.random();
@@ -52,7 +54,7 @@ public class RandomUtil {
             ret.addFirst(getRandomNormalYokelBlockType());
         }
         return ret;
-    }*/
+    }
 
     /**
      * @see <a href="http://stackoverflow.com/a/1973018">Stack Overflow</a>

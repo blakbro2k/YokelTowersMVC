@@ -1,13 +1,16 @@
 package net.asg.games;
 
+import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 
+import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.utils.Util;
+import net.asg.games.utils.enums.YokelBlockType;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -300,5 +303,287 @@ public class YokelTowersObjectsTest {
 
     private String convertJSON(Object o){
         return Util.convertJsonString(Util.getJsonString(o));
+    }
+
+    @Test
+    public void getType() throws Exception {
+        YokelBlock exp1 = new YokelBlock();
+        System.out.println("Testing getType():" + exp1);
+        Assert.assertEquals(YokelBlockType.class, exp1.getType().getClass());
+        System.out.println("End getType() test:");
+    }
+
+    @Test
+    public void setBroken() throws Exception {
+        YokelBlock exp1 = new YokelBlock();
+        System.out.println("Testing setBroken():" + exp1);
+        exp1.setBroken(true);
+        Assert.assertTrue(exp1.isBroken());
+        exp1.setBroken(false);
+        Assert.assertFalse(exp1.isBroken());
+        System.out.println("End setBroken() test:");
+    }
+
+    @Test
+    public void isBroken() throws Exception {
+        YokelBlock exp1 = new YokelBlock();
+        System.out.println("Testing getType():" + exp1);
+        Assert.assertFalse(exp1.isBroken());
+        System.out.println("End getType() test:");
+    }
+
+    @Test
+    public void matchesType() throws Exception {
+        System.out.println("Testing matchesType():");
+        YokelBlock exp1 = new YokelBlock(YokelBlockType.AttackY);
+        YokelBlock exp2 = new YokelBlock(YokelBlockType.AttackO);
+        YokelBlock exp3 = new YokelBlock(YokelBlockType.AttackY);
+
+        System.out.println(exp1.matchesType(exp3.getType()));
+        Assert.assertTrue(exp1.matchesType(exp3.getType()));
+        Assert.assertTrue(exp3.matchesType(exp1.getType()));
+        Assert.assertFalse(exp2.matchesType(exp1.getType()));
+        Assert.assertFalse(exp2.matchesType(exp3.getType()));
+
+        System.out.println("End matchesType() test:");
+    }
+
+    @Test
+    public void matchesGenericType() throws Exception {
+        System.out.println("Testing matchesGenericType():");
+        YokelBlock exp1 = new YokelBlock(YokelBlockType.NormalY);
+        YokelBlock exp2 = new YokelBlock(YokelBlockType.AttackY);
+        YokelBlock exp3 = new YokelBlock(YokelBlockType.DefenseY);
+        YokelBlock exp4 = new YokelBlock(YokelBlockType.BrokenY);
+
+        YokelBlock exp5 = new YokelBlock(YokelBlockType.NormalO);
+        YokelBlock exp6 = new YokelBlock(YokelBlockType.AttackO);
+        YokelBlock exp7 = new YokelBlock(YokelBlockType.DefenseO);
+        YokelBlock exp8 = new YokelBlock(YokelBlockType.BrokenO);
+
+        YokelBlock exp9 = new YokelBlock(YokelBlockType.NormalK);
+        YokelBlock exp10 = new YokelBlock(YokelBlockType.AttackK);
+        YokelBlock exp11 = new YokelBlock(YokelBlockType.DefenseK);
+        YokelBlock exp12 = new YokelBlock(YokelBlockType.BrokenK);
+
+        YokelBlock exp13 = new YokelBlock(YokelBlockType.NormalE);
+        YokelBlock exp14 = new YokelBlock(YokelBlockType.AttackE);
+        YokelBlock exp15 = new YokelBlock(YokelBlockType.DefenseE);
+        YokelBlock exp16 = new YokelBlock(YokelBlockType.BrokenE);
+
+        YokelBlock exp17 = new YokelBlock(YokelBlockType.NormalL);
+        YokelBlock exp18 = new YokelBlock(YokelBlockType.AttackL);
+        YokelBlock exp19 = new YokelBlock(YokelBlockType.DefenseL);
+        YokelBlock exp20 = new YokelBlock(YokelBlockType.BrokenL);
+
+        YokelBlock exp21 = new YokelBlock(YokelBlockType.NormalEx);
+        YokelBlock exp22 = new YokelBlock(YokelBlockType.AttackEx);
+        YokelBlock exp23 = new YokelBlock(YokelBlockType.DefenseEx);
+        YokelBlock exp24 = new YokelBlock(YokelBlockType.BrokenEx);
+
+        Assert.assertTrue(exp1.matchesGenericType(exp1));
+        Assert.assertTrue(exp1.matchesGenericType(exp2));
+        Assert.assertTrue(exp1.matchesGenericType(exp3));
+        Assert.assertTrue(exp1.matchesGenericType(exp4));
+        Assert.assertFalse(exp1.matchesGenericType(exp5));
+
+        Assert.assertTrue(exp5.matchesGenericType(exp5));
+        Assert.assertTrue(exp5.matchesGenericType(exp6));
+        Assert.assertTrue(exp5.matchesGenericType(exp7));
+        Assert.assertTrue(exp5.matchesGenericType(exp8));
+        Assert.assertFalse(exp5.matchesGenericType(exp1));
+
+        Assert.assertTrue(exp9.matchesGenericType(exp9));
+        Assert.assertTrue(exp9.matchesGenericType(exp10));
+        Assert.assertTrue(exp9.matchesGenericType(exp11));
+        Assert.assertTrue(exp9.matchesGenericType(exp12));
+        Assert.assertFalse(exp9.matchesGenericType(exp5));
+
+        Assert.assertTrue(exp13.matchesGenericType(exp13));
+        Assert.assertTrue(exp13.matchesGenericType(exp14));
+        Assert.assertTrue(exp13.matchesGenericType(exp15));
+        Assert.assertTrue(exp13.matchesGenericType(exp16));
+        Assert.assertFalse(exp13.matchesGenericType(exp5));
+
+        Assert.assertTrue(exp17.matchesGenericType(exp17));
+        Assert.assertTrue(exp17.matchesGenericType(exp18));
+        Assert.assertTrue(exp17.matchesGenericType(exp19));
+        Assert.assertTrue(exp17.matchesGenericType(exp20));
+        Assert.assertFalse(exp17.matchesGenericType(exp5));
+
+        Assert.assertTrue(exp21.matchesGenericType(exp21));
+        Assert.assertTrue(exp21.matchesGenericType(exp22));
+        Assert.assertTrue(exp21.matchesGenericType(exp23));
+        Assert.assertTrue(exp21.matchesGenericType(exp24));
+        Assert.assertFalse(exp21.matchesGenericType(exp5));
+        System.out.println("End matchesGenericType() test:");
+    }
+
+    @Test
+    public void testToString() throws Exception {
+        System.out.println("Testing testToString():");
+        YokelBlock exp1 = new YokelBlock();
+        Assert.assertNotNull(exp1);
+        Assert.assertEquals(String.class, exp1.toString().getClass());
+        System.out.println("End testToString() test:");
+    }
+
+    @Test
+    public void testRandomInitializer() throws Exception {
+        System.out.println("Testing testRandomInitializer():");
+        YokelBlock exp1 = new YokelBlock();
+        Assert.assertNotNull(exp1);
+        Assert.assertEquals(YokelBlock.class, exp1.getClass());
+        System.out.println("End testRandomInitializer() test:");
+    }
+
+    @Test
+    public void testEquals() throws Exception {
+        YokelBlock exp1 = new YokelBlock(YokelBlockType.DefenseE);
+        YokelBlock exp2 = new YokelBlock(YokelBlockType.DefenseY);
+        YokelBlock exp3 = new YokelBlock(YokelBlockType.DefenseE);
+        String str = "block";
+
+        Assert.assertNotEquals(null, exp1);
+        Assert.assertNotEquals(exp1, exp2);
+        Assert.assertEquals(exp1, exp3);
+        Assert.assertEquals(exp1.getType(), YokelBlockType.DefenseE);
+        Assert.assertNotEquals(exp1, str);
+    }
+
+    @Test
+    public void testSpecifiedRandomInitializer() throws Exception {
+        System.out.println("Testing testSpecifiedRandomInitializer():");
+        YokelBlock exp1 = new YokelBlock(YokelBlock.INIT_TYPE.ANY);
+        Assert.assertNotNull(exp1);
+        Assert.assertEquals(YokelBlock.class, exp1.getClass());
+
+        YokelBlock exp2 = new YokelBlock(YokelBlock.INIT_TYPE.POWER);
+        Assert.assertNotNull(exp2);
+        Assert.assertEquals(YokelBlock.class, exp2.getClass());
+        Assert.assertTrue(Util.isPowerBlock(exp2));
+
+        YokelBlock exp3 = new YokelBlock(YokelBlock.INIT_TYPE.DEFENSE);
+        Assert.assertNotNull(exp3);
+        Assert.assertEquals(YokelBlock.class, exp3.getClass());
+        Assert.assertTrue(Util.isDefenseBlock(exp3));
+        System.out.println("End testSpecifiedRandomInitializer() test:");
+    }
+
+    @Test
+    public void testSpecifiedInitializer() throws Exception {
+        System.out.println("Testing testSpecifiedInitializer():");
+
+        Array<YokelBlock> blocks = createAllBlockArry();
+        Array<YokelBlockType> types = completeYokelTypeList();
+
+        for(int i = 0; i < types.size; i++){
+            System.out.println("Asserting type=" + types.get(i) + " against block=" + blocks.get(i));
+            Assert.assertEquals(types.get(i), blocks.get(i).getType());
+        }
+
+        System.out.println("End testSpecifiedInitializer() test:");
+    }
+
+    @Test
+    public void promote() throws Exception {
+        YokelBlock exp1 = new YokelBlock(YokelBlock.INIT_TYPE.NORMAL);
+        exp1.promote(true);
+        Assert.assertTrue(Util.isPowerBlock(exp1));
+        exp1.promote(false);
+        Assert.assertTrue(Util.isDefenseBlock(exp1));
+    }
+
+    @Test
+    public void demote() throws Exception {
+        YokelBlock exp1 = new YokelBlock(YokelBlock.INIT_TYPE.NORMAL);
+        exp1.promote(false);
+        Assert.assertTrue(Util.isDefenseBlock(exp1));
+        exp1.demote();
+        Assert.assertTrue(!Util.isPowerBlock(exp1) && !Util.isDefenseBlock(exp1));
+        exp1.promote(true);
+        Assert.assertTrue(Util.isPowerBlock(exp1));
+        exp1.demote();
+        Assert.assertTrue(!Util.isPowerBlock(exp1) && !Util.isDefenseBlock(exp1));
+    }
+
+    @Test
+    public void testBreakBlock() throws Exception {
+        YokelBlock exp1 = new YokelBlock(YokelBlock.INIT_TYPE.NORMAL);
+        YokelBlock power = exp1.breakBlock();
+
+        Assert.assertNull(power);
+        Assert.assertTrue(Util.isBrokenBlock(exp1));
+
+        YokelBlock exp2 = new YokelBlock(YokelBlock.INIT_TYPE.POWER);
+        YokelBlock power2 = exp2.breakBlock();
+
+        Assert.assertTrue(Util.isBrokenBlock(exp2));
+        exp2.promote(true);
+        Assert.assertEquals(power2, exp2);
+
+        YokelBlock exp3 = new YokelBlock(YokelBlock.INIT_TYPE.DEFENSE);
+        YokelBlock power3 = exp3.breakBlock();
+
+        Assert.assertTrue(Util.isBrokenBlock(exp3));
+        exp3.promote(false);
+        Assert.assertEquals(power3, exp3);
+
+        YokelBlock any = new YokelBlock(YokelBlock.INIT_TYPE.NORMAL);
+        YokelBlock anyPower = any.breakBlock();
+
+        Assert.assertNull(anyPower);
+        Assert.assertTrue(Util.isBrokenBlock(any));
+
+        any.promote(true);
+        Assert.assertTrue(Util.isPowerBlock(any));
+        anyPower = any.breakBlock();
+        Assert.assertTrue(Util.isBrokenBlock(any));
+        any.promote(true);
+        Assert.assertEquals(anyPower, any);
+
+        any.promote(false);
+        Assert.assertTrue(Util.isDefenseBlock(any));
+        anyPower = any.breakBlock();
+        Assert.assertTrue(Util.isBrokenBlock(any));
+        any.promote(false);
+        Assert.assertEquals(anyPower, any);
+    }
+
+    private Array<YokelBlock> createAllBlockArry(){
+        Array<YokelBlock> array = new Array<YokelBlock>();
+        Array<YokelBlockType> types = completeYokelTypeList();
+
+        for(YokelBlockType type : types){
+            array.add(new YokelBlock(type));
+        }
+
+        return array;
+    }
+
+    public static Array<YokelBlockType> completeYokelTypeList(){
+        Array<YokelBlockType> array = new Array<YokelBlockType>();
+        array.add(YokelBlockType.AttackY);
+        array.add(YokelBlockType.AttackO);
+        array.add(YokelBlockType.AttackK);
+        array.add(YokelBlockType.AttackE);
+        array.add(YokelBlockType.AttackL);
+        array.add(YokelBlockType.AttackEx);
+        array.add(YokelBlockType.DefenseY);
+        array.add(YokelBlockType.DefenseO);
+        array.add(YokelBlockType.DefenseK);
+        array.add(YokelBlockType.DefenseE);
+        array.add(YokelBlockType.DefenseL);
+        array.add(YokelBlockType.DefenseEx);
+        array.add(YokelBlockType.NormalY);
+        array.add(YokelBlockType.NormalO);
+        array.add(YokelBlockType.NormalK);
+        array.add(YokelBlockType.NormalE);
+        array.add(YokelBlockType.NormalL);
+        array.add(YokelBlockType.NormalEx);
+        array.add(YokelBlockType.Clear);
+        array.add(YokelBlockType.Midas);
+        array.add(YokelBlockType.Medusa);
+        return array;
     }
 }
