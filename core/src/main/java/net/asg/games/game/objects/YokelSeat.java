@@ -1,6 +1,6 @@
 package net.asg.games.game.objects;
 
-import net.asg.games.utils.Util;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by Blakbro2k on 1/28/2018.
@@ -38,6 +38,23 @@ public class YokelSeat extends YokelObject {
 
     public int getSeatNumber(){
         return seatNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null) return false;
+        if(!this.getClass().equals(o.getClass())) return false;
+        YokelSeat seat = getSeat(o);
+        return seatNumber == seat.getSeatNumber() && isSeatedSame(seat.getSeatedPlayer());
+    }
+
+    private boolean isSeatedSame(YokelPlayer player){
+        if(player == null) return seatedPlayer == null;
+        return player.equals(seatedPlayer);
+    }
+
+    private YokelSeat getSeat(Object o){
+        return (YokelSeat) o;
     }
 
     @Override

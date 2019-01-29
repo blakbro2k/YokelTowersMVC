@@ -15,9 +15,11 @@ import net.asg.games.utils.enums.YokelBlockType;
 import org.junit.Assert;
 import org.junit.Test;
 
+import jdk.nashorn.internal.runtime.ECMAException;
+
 public class YokelTowersObjectsTest {
     @Test
-    public void YokelLoungeTest() throws Exception{
+    public void YokelLoungeTest() {
         YokelLounge lounge;
 
         try{
@@ -50,7 +52,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void YokelPlayerTest() throws Exception{
+    public void YokelPlayerTest() {
         YokelPlayer player;
 
         try{
@@ -73,7 +75,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void YokelSeatTest() throws Exception{
+    public void YokelSeatTest() {
         YokelSeat seat;
 
         try{
@@ -104,7 +106,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void YokelRoomTest() throws Exception{
+    public void YokelRoomTest() {
         YokelRoom room;
 
         try{
@@ -144,7 +146,7 @@ public class YokelTowersObjectsTest {
 
 
     @Test
-    public void YokelTableTest() throws Exception{
+    public void YokelTableTest() {
         YokelTable table1;
         try{
             table1 = new YokelTable(-1);
@@ -306,7 +308,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void getType() throws Exception {
+    public void getType() {
         YokelBlock exp1 = new YokelBlock();
         System.out.println("Testing getType():" + exp1);
         Assert.assertEquals(YokelBlockType.class, exp1.getType().getClass());
@@ -314,7 +316,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void setBroken() throws Exception {
+    public void setBroken() {
         YokelBlock exp1 = new YokelBlock();
         System.out.println("Testing setBroken():" + exp1);
         exp1.setBroken(true);
@@ -325,7 +327,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void isBroken() throws Exception {
+    public void isBroken() {
         YokelBlock exp1 = new YokelBlock();
         System.out.println("Testing getType():" + exp1);
         Assert.assertFalse(exp1.isBroken());
@@ -333,7 +335,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void matchesType() throws Exception {
+    public void matchesType() {
         System.out.println("Testing matchesType():");
         YokelBlock exp1 = new YokelBlock(YokelBlockType.AttackY);
         YokelBlock exp2 = new YokelBlock(YokelBlockType.AttackO);
@@ -349,7 +351,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void matchesGenericType() throws Exception {
+    public void matchesGenericType() {
         System.out.println("Testing matchesGenericType():");
         YokelBlock exp1 = new YokelBlock(YokelBlockType.NormalY);
         YokelBlock exp2 = new YokelBlock(YokelBlockType.AttackY);
@@ -420,7 +422,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         System.out.println("Testing testToString():");
         YokelBlock exp1 = new YokelBlock();
         Assert.assertNotNull(exp1);
@@ -429,7 +431,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void testRandomInitializer() throws Exception {
+    public void testRandomInitializer() {
         System.out.println("Testing testRandomInitializer():");
         YokelBlock exp1 = new YokelBlock();
         Assert.assertNotNull(exp1);
@@ -438,7 +440,8 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testObjectEquals() {
+        //YokelBlock
         YokelBlock exp1 = new YokelBlock(YokelBlockType.DefenseE);
         YokelBlock exp2 = new YokelBlock(YokelBlockType.DefenseY);
         YokelBlock exp3 = new YokelBlock(YokelBlockType.DefenseE);
@@ -449,10 +452,69 @@ public class YokelTowersObjectsTest {
         Assert.assertEquals(exp1, exp3);
         Assert.assertEquals(exp1.getType(), YokelBlockType.DefenseE);
         Assert.assertNotEquals(exp1, str);
+
+        Array<YokelBlock> expectedBlocks = createAllBlockArray();
+        Array<YokelBlock> testingBlocks = createAllBlockArray();
+
+        for(int i = 0; i < testingBlocks.size; i++){
+            Assert.assertEquals(expectedBlocks.get(i), testingBlocks.get(i));
+        }
+
+        //YokelLounge
+        YokelLounge expected = new YokelLounge("testing");
+        YokelLounge expected2 = new YokelLounge("testing2");
+        YokelLounge testing = new YokelLounge("testing");
+        YokelLounge testing2 = new YokelLounge("testing2");
+
+        Assert.assertEquals(expected, testing);
+        Assert.assertNotEquals(expected2, testing);
+        expected2.addRoom(new YokelRoom("room"));
+        Assert.assertNotEquals(expected2, testing);
+        expected.addRoom(new YokelRoom("room"));
+        testing.addRoom(new YokelRoom("room"));
+        Assert.assertEquals(expected, testing);
+        Assert.assertEquals(testing2, testing2);
+
+        //YokelPlayer
+        YokelPlayer player1 = new YokelPlayer("ReadyPlwyer1");
+        YokelPlayer player2 = new YokelPlayer("ReadyPlwyer2");
+        YokelPlayer player3 = new YokelPlayer("ReadyPlwyer1");
+        YokelPlayer player4 = new YokelPlayer("ReadyPlwyer2");
+        Assert.assertEquals(player1, player3);
+        Assert.assertNotEquals(player1, player2);
+        Assert.assertEquals(player4, player2);
+
+
+        //YokelRoom
+        YokelRoom room1 = new YokelRoom("Room1");
+
+        //YokelSeat
+        YokelSeat seat1 = new YokelSeat(1);
+        YokelSeat seat2 = new YokelSeat(1);
+        seat2.sitDown(player1);
+        YokelSeat seat3 = new YokelSeat(1);
+        YokelSeat seat4 = new YokelSeat(2);
+        Assert.assertEquals(seat1, seat3);
+        Assert.assertNotEquals(seat1, seat2);
+        seat2.standUp();
+        Assert.assertEquals(seat1, seat2);
+        seat2.sitDown(player1);
+        seat1.sitDown(player2);
+        seat3.sitDown(player1);
+
+        Assert.assertEquals(seat2, seat3);
+        Assert.assertNotEquals(player2, player1);
+        Assert.assertNotEquals(seat1, seat2);
+        Assert.assertNotEquals(seat1, seat4);
+        seat4.sitDown(player2);
+        Assert.assertNotEquals(seat1, seat4);
+
+        //YokelTable
+        throw new AssertionError("YokelTable not finished.");
     }
 
     @Test
-    public void testSpecifiedRandomInitializer() throws Exception {
+    public void testSpecifiedRandomInitializer() {
         System.out.println("Testing testSpecifiedRandomInitializer():");
         YokelBlock exp1 = new YokelBlock(YokelBlock.INIT_TYPE.ANY);
         Assert.assertNotNull(exp1);
@@ -471,10 +533,10 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void testSpecifiedInitializer() throws Exception {
+    public void testSpecifiedInitializer() {
         System.out.println("Testing testSpecifiedInitializer():");
 
-        Array<YokelBlock> blocks = createAllBlockArry();
+        Array<YokelBlock> blocks = createAllBlockArray();
         Array<YokelBlockType> types = completeYokelTypeList();
 
         for(int i = 0; i < types.size; i++){
@@ -486,7 +548,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void promote() throws Exception {
+    public void promote() {
         YokelBlock exp1 = new YokelBlock(YokelBlock.INIT_TYPE.NORMAL);
         exp1.promote(true);
         Assert.assertTrue(Util.isPowerBlock(exp1));
@@ -495,7 +557,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void demote() throws Exception {
+    public void demote() {
         YokelBlock exp1 = new YokelBlock(YokelBlock.INIT_TYPE.NORMAL);
         exp1.promote(false);
         Assert.assertTrue(Util.isDefenseBlock(exp1));
@@ -508,7 +570,7 @@ public class YokelTowersObjectsTest {
     }
 
     @Test
-    public void testBreakBlock() throws Exception {
+    public void testBreakBlock() {
         YokelBlock exp1 = new YokelBlock(YokelBlock.INIT_TYPE.NORMAL);
         YokelBlock power = exp1.breakBlock();
 
@@ -550,11 +612,11 @@ public class YokelTowersObjectsTest {
         Assert.assertEquals(anyPower, any);
     }
 
-    private Array<YokelBlock> createAllBlockArry(){
-        Array<YokelBlock> array = new Array<YokelBlock>();
+    private Array<YokelBlock> createAllBlockArray(){
+        Array<YokelBlock> array = new Array<>();
         Array<YokelBlockType> types = completeYokelTypeList();
 
-        for(YokelBlockType type : types){
+        for(YokelBlockType type : Util.toIterable(types)){
             array.add(new YokelBlock(type));
         }
 
@@ -562,7 +624,7 @@ public class YokelTowersObjectsTest {
     }
 
     public static Array<YokelBlockType> completeYokelTypeList(){
-        Array<YokelBlockType> array = new Array<YokelBlockType>();
+        Array<YokelBlockType> array = new Array<>();
         array.add(YokelBlockType.AttackY);
         array.add(YokelBlockType.AttackO);
         array.add(YokelBlockType.AttackK);

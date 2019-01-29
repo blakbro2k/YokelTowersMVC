@@ -1,15 +1,23 @@
 package net.asg.games.utils;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelLounge;
+import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.provider.GameBlock;
 import net.asg.games.utils.enums.YokelBlockType;
 
 import org.apache.commons.lang.StringUtils;
@@ -510,5 +518,37 @@ public class Util {
             return (TextureRegion) frame;
         }
         throw new GdxRuntimeException("Frame is not an instance of " + TextureRegion.class + ". frame=" + frame.getClass());
+    }
+
+    public static void drawBackgroundRect(Batch batch, Rectangle rectangle, Color color) {
+        if(batch != null && rectangle != null && color != null){
+            batch.end();
+
+            ShapeRenderer shapeRenderer = new ShapeRenderer();
+            shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(color);
+            shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+            shapeRenderer.end();
+            shapeRenderer.dispose();
+
+            batch.begin();
+        }
+    }
+
+    public static void resetGameBlockActors(SnapshotArray<Actor> children) {
+        if(children != null){
+            Actor[] actors = children.begin();
+            for (int i = 0, n = actors.length; i < n; i++) {
+                resetGameBlock(actors[i]);
+            }
+            children.end();
+        }
+    }
+
+    private static void resetGameBlock(Actor actor){
+        if(actor instanceof GameBlock){
+            ((GameBlock) actor).reset();
+        }
     }
 }

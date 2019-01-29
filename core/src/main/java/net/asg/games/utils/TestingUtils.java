@@ -12,9 +12,14 @@ public class TestingUtils {
 
     public static Object invokeStaticMethod(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object) throws InvocationTargetException {
         try {
-            Method method = targetClass.getDeclaredMethod(methodName, argClasses);
-            method.setAccessible(true);
-            return method.invoke(object, argObjects);
+            if(targetClass != null){
+                Method method = targetClass.getDeclaredMethod(methodName, argClasses);
+                if(method != null){
+                    method.setAccessible(true);
+                    return method.invoke(object, argObjects);
+                }
+            }
+            return null;
         }
         catch (NoSuchMethodException e) {
             // Should happen only rarely, because most times the
@@ -44,6 +49,55 @@ public class TestingUtils {
             // the problem.
             throw new InvocationTargetException(e);
         }
+    }
+
+    public static String printTestMethod(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object) throws InvocationTargetException{
+        return getMethodCallString(methodName, argClasses, argObjects) + "=" + buildMethodReturnString(targetClass,methodName,argClasses,argObjects,object);
+    }
+
+    private static String buildMethodReturnString(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object) throws InvocationTargetException{
+        Object returnType = getMethodReturnType(targetClass, methodName, argClasses);
+        Object returnObject = invokeStaticMethod(targetClass, methodName, argClasses, argObjects, object);
+        return "(" + returnType + ")" + (returnObject == null? "" : returnObject);
+    }
+
+    private static Object getMethodReturnType(Class<?> targetClass, String methodName, Class[] argClasses) throws InvocationTargetException{
+        try{
+            if(targetClass != null){
+                Method method = targetClass.getDeclaredMethod(methodName, argClasses);
+                if(method != null){
+                    method.setAccessible(true);
+                    return method.getReturnType().getSimpleName();
+                }
+            }
+            return null;
+        } catch (NoSuchMethodException e) {
+            // Should happen only rarely, because most times the
+            // specified method should exist. If it does happen, just let
+            // the test fail so the programmer can fix the problem.
+            throw new InvocationTargetException(e);
+        }
+    }
+
+    private static String getMethodCallString(String methodName, Class[] argClasses, Object[] argObjects) throws InvocationTargetException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(methodName).append("(");
+
+        if(argClasses.length == 0){
+            sb.append(")");
+        }
+        for(int i = 0; i < argClasses.length; i++) {
+            Class<?> clazz = argClasses[i];
+            if (clazz != null) {
+                sb.append(clazz.getSimpleName()).append("=").append(argObjects[i]);
+                if (i == argClasses.length - 1) {
+                    sb.append(")");
+                } else {
+                    sb.append(", ");
+                }
+            }
+        }
+        return sb.toString();
     }
 
     public static Boolean getBoolean(Object o){

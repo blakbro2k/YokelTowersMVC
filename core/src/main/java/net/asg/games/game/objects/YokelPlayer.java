@@ -2,6 +2,8 @@ package net.asg.games.game.objects;
 
 import net.asg.games.utils.Util;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Created by Blakbro2k on 1/28/2018.
  */
@@ -52,7 +54,22 @@ public class YokelPlayer extends YokelObject {
     }
 
     @Override
-    public void dispose() {
-
+    public boolean equals(Object o) {
+        if(o == null) return false;
+        if(!this.getClass().equals(o.getClass())) return false;
+        YokelPlayer player = getPlayer(o);
+        return isNameSame(player);
     }
+
+    private YokelPlayer getPlayer(Object o){
+        return (YokelPlayer) o;
+    }
+
+    private boolean isNameSame(YokelPlayer player){
+        if(player == null) return false;
+        return StringUtils.equalsIgnoreCase(name, player.getName());
+    }
+
+    @Override
+    public void dispose() {}
 }

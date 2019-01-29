@@ -4,6 +4,8 @@ import com.badlogic.gdx.utils.OrderedMap;
 
 import net.asg.games.utils.Util;
 
+import org.apache.commons.lang.StringUtils;
+
 public class YokelLounge extends YokelObject {
     public static final String SOCIAL_GROUP = "Social";
     public static final String BEGINNER_GROUP = "Beginner";
@@ -55,6 +57,28 @@ public class YokelLounge extends YokelObject {
             rooms.clear();
         }
         name = null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null) return false;
+        if(!this.getClass().equals(o.getClass())) return false;
+        YokelLounge lounge = getLounge(o);
+        return isNameSame(lounge) && isRoomsSame(lounge);
+    }
+
+    private YokelLounge getLounge(Object o){
+        return (YokelLounge) o;
+    }
+
+    private boolean isNameSame(YokelLounge lounge){
+        if(lounge == null) return false;
+        return StringUtils.equalsIgnoreCase(name, lounge.getName());
+    }
+
+    private boolean isRoomsSame(YokelLounge lounge){
+        if(rooms == null) return false;
+        return rooms.equals(lounge.getAllRooms());
     }
 
     @Override

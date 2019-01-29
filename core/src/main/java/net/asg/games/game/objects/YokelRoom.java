@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.OrderedMap;
 
 import net.asg.games.utils.Util;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Created by Blakbro2k on 1/28/2018.
  */
@@ -12,7 +14,6 @@ import net.asg.games.utils.Util;
 public class YokelRoom extends YokelObject {
     private String name;
     private String roomId;
-    private String group;
     //private Chat chatRoom;
     private Array<YokelPlayer> players;
     private OrderedMap<Integer, YokelTable> tables;
@@ -71,6 +72,23 @@ public class YokelRoom extends YokelObject {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null) return false;
+        if(!this.getClass().equals(o.getClass())) return false;
+        YokelRoom room = getRoom(o);
+        return isNameSame(room);
+    }
+
+    private YokelRoom getRoom(Object o){
+        return (YokelRoom) o;
+    }
+
+    private boolean isNameSame(YokelRoom room){
+        if(room == null) return false;
+        return StringUtils.equalsIgnoreCase(name, room.getName());
     }
 
     @Override
