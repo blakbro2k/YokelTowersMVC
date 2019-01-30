@@ -487,6 +487,8 @@ public class YokelTowersObjectsTest {
 
         //YokelRoom
         YokelRoom room1 = new YokelRoom("Room1");
+        //throw new AssertionError("YokelRoom not finished.");
+
 
         //YokelSeat
         YokelSeat seat1 = new YokelSeat(1);

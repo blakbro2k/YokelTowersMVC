@@ -1,22 +1,9 @@
 package net.asg.games.provider;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.Queue;
-
-import net.asg.games.yokel.YokelTowersGame;
-import net.asg.games.yokel.core.objects.YokelBlock;
-import net.asg.games.yokel.core.objects.YokelGameBoard;
-import net.asg.games.yokel.utils.ErrorUtils;
-import net.asg.games.yokel.utils.Util;
 
 public class GameBlockArea extends Table {
+    /*
     private static final float BLOCK_DROP_SPEED = .8f;
     private static final float MAX_BLOCK_DROP_SPEED = 6f;
     private static final float FALL_BLOCK_SPEED = 250f;
@@ -417,4 +404,5 @@ public class GameBlockArea extends Table {
         }
         return ret.toString();
     }
+    */
 }

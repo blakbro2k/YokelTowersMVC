@@ -4,9 +4,10 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import net.asg.games.yokel.utils.Util;
+import net.asg.games.utils.Util;
 
 public class GamePiece extends Actor {
+    /*
     private GameBlock top;
     private GameBlock middle;
     private GameBlock bottom;
@@ -158,4 +159,5 @@ public class GamePiece extends Actor {
         setMiddleBlock(bottomBlock);
         setBottomBlock(topBlock);
     }
+    */
 }

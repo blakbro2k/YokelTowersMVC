@@ -4,10 +4,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-import net.asg.games.yokel.YokelTowersGame;
-import net.asg.games.yokel.utils.Util;
-
 public class NextPeiceQueue extends Table {
+    /*
     private Drawable background;
     private Rectangle bounds = new Rectangle();
 
@@ -58,4 +56,5 @@ public class NextPeiceQueue extends Table {
         }
         return height;
     }
+    */
 }

@@ -90,7 +90,7 @@ public class Global implements ActionContainer {
         if(!isAlive()){
             initializeSockets();
         }
-        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_TEST_PLAYER_LIST + "", null);
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_ALL_DEBUG_PLAYERS + "", null);
         socket.send(request);
     }
 
@@ -100,7 +100,7 @@ public class Global implements ActionContainer {
         if(!isAlive()){
             initializeSockets();
         }
-        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_GAME_LOUNGE + "", null);
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_ALL_LOUNGES + "", null);
         socket.send(request);
     }
 
@@ -117,18 +117,7 @@ public class Global implements ActionContainer {
         gameOptions.add("private");
         gameOptions.add("true");
 
-        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_GAME_CREATE + "", Util.fromCollectionToStringArray(gameOptions));
-        socket.send(request);
-    }
-
-    @LmlAction("requestPrintLounges")
-    public void requestPrintLounges() {
-        System.out.println("Starting requestPrintLounges");
-        if(!isAlive()){
-            initializeSockets();
-        }
-
-        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_PRINT_LOUNGES + "", null);
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_CREATE_GAME + "", Util.fromCollectionToStringArray(gameOptions));
         socket.send(request);
     }
 
@@ -224,13 +213,13 @@ public class Global implements ActionContainer {
 
             ServerRequest value = ServerRequest.valueOf(message);
             switch (value) {
-                case REQUEST_TEST_PLAYER_LIST:
+                case REQUEST_ALL_DEBUG_PLAYERS:
                     buildTestPlayersFromJSON(payload);
                     break;
-                case REQUEST_GAME_LOUNGE:
+                case REQUEST_ALL_LOUNGES:
                     buildLoungeFromJSON(payload);
                     break;
-                case REQUEST_GAME_CREATE:
+                case REQUEST_CREATE_GAME:
                     //createNewGame
                     break;
                 default:

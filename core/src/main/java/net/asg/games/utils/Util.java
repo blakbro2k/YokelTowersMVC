@@ -539,8 +539,8 @@ public class Util {
     public static void resetGameBlockActors(SnapshotArray<Actor> children) {
         if(children != null){
             Actor[] actors = children.begin();
-            for (int i = 0, n = actors.length; i < n; i++) {
-                resetGameBlock(actors[i]);
+            for (Actor actor : actors) {
+                resetGameBlock(actor);
             }
             children.end();
         }

@@ -121,11 +121,11 @@ public class NetworkService {
         if(!StringUtils.isEmpty(message)){
             ServerRequest value = ServerRequest.valueOf(message);
             switch (value) {
-                case REQUEST_TEST_PLAYER_LIST:
+                case REQUEST_ALL_DEBUG_PLAYERS:
                     buildTestPlayersFromJSON(payload);
                     //push <UpdatePlayerTable, playerList>
                     break;
-                case REQUEST_GAME_LOUNGE:
+                case REQUEST_ALL_LOUNGES:
                     buildLoungeFromJSON(payload);
                     break;
                 default:
@@ -166,7 +166,7 @@ public class NetworkService {
 
     public void requestPlayersFromServer() {
         System.out.println("Starting requestPlayers");
-        sendClientRequest(new ClientRequest(-1, "new", ServerRequest.REQUEST_TEST_PLAYER_LIST + "", null));
+        sendClientRequest(new ClientRequest(-1, "new", ServerRequest.REQUEST_ALL_DEBUG_PLAYERS + "", null));
     }
 
     private void sendClientRequest(ClientRequest request){

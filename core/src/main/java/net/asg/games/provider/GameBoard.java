@@ -1,30 +1,13 @@
 package net.asg.games.provider;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.Queue;
-import com.kotcrab.vis.ui.VisUI;
-
-import net.asg.games.yokel.YokelTowersGame;
-import net.asg.games.yokel.core.enums.YokelBlockType;
-import net.asg.games.yokel.core.objects.YokelBlock;
-import net.asg.games.yokel.core.objects.YokelGameBoard;
-import net.asg.games.yokel.core.objects.YokelGamePiece;
-import net.asg.games.yokel.core.objects.YokelPiece;
-import net.asg.games.yokel.utils.Util;
 
 /**
  * Created by eboateng on 3/19/2018.
  */
 
 public class GameBoard extends Table {
+    /*
     private static final int NUMBER_WIDTH_BLOCKS = 6;
     private static final int NUMBER_HEIGHT_BLOCKS = 16;
     private static float MAX_KEY_HOLD_TIME = 15;
@@ -341,4 +324,5 @@ public class GameBoard extends Table {
         //isCycleKeyPressed = false;
         isDownKeyPressed = false;
     }
+    */
 }

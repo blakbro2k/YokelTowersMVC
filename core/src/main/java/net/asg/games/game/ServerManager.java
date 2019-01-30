@@ -9,7 +9,6 @@ import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.ServerResponse;
-import net.asg.games.storage.MemoryStorage;
 import net.asg.games.storage.StorageInterface;
 import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
@@ -49,6 +48,7 @@ public class ServerManager {
     private float tickRate = 1000;
     private boolean isDebug = true;
     private Level logLevel = Level.INFO;
+    private StorageInterface storageInterface;
 
     public ServerManager(String... args){
         try {
@@ -81,6 +81,7 @@ public class ServerManager {
             Logger.trace("Enter initialize()");
             Logger.info("Initializing server arguments: ");
 
+            //storageInterface =
 
             validateLounges();
             validateRegisteredPlayers();
@@ -235,6 +236,7 @@ public class ServerManager {
             throw new Exception("Error initializing input parameters: ", e);
         }
     }
+
     //validate that the next value is not a parameter string
     //if it is something else, it will fail when we try to set it.
     private boolean validateArumentParameterValue(int i, String... args) throws Exception {
@@ -248,17 +250,22 @@ public class ServerManager {
         return i != args.length - 1 && !SERVER_ARGS.contains(args[i + 1], false);
     }
 
-    private void setPort(int port){
+    public void setPort(int port){
         Logger.info("setting port to: {}", port);
         this.port = port;
     }
 
-    private void setDebug(boolean b){
+    public void setDebug(boolean b){
         Logger.info("setting debug to: {}", b);
         this.isDebug = b;
     }
 
-    private void setLogLevel(String logLevel){
+    public boolean getDebug(){
+        Logger.info("getting debug to: {}", isDebug);
+        return isDebug;
+    }
+
+    public void setLogLevel(String logLevel){
         Logger.info("setting log level to: {}", logLevel);
         this.logLevel = Util.getTinyLogLevel(logLevel);
         Configurator.defaultConfig().level(this.logLevel).activate();
@@ -303,12 +310,12 @@ public class ServerManager {
         return PLAYER_NAMES.random();
     }
 
-    private void setTickRate(int tickRate){
+    public void setTickRate(float tickRate){
         Logger.info("setting tick rate to: {}", tickRate);
         this.tickRate = tickRate;
     }
 
-    private float getTickRate(){
+    public float getTickRate(){
         return this.tickRate;
     }
 
@@ -421,16 +428,6 @@ public class ServerManager {
         }
     }
 
-    private void printLounges(){
-        Logger.trace("Enter printLounges()");
-        if(lounges != null){
-            for(String key : lounges.keys()){
-                Logger.info(lounges.get(key).toString());
-            }
-        }
-        Logger.trace("Exit printLounges()");
-    }
-
     private String[] buildPayload(String message, String[] clientPayload) {
         Logger.trace("Enter buildPayload()");
 
@@ -439,26 +436,46 @@ public class ServerManager {
             if (!StringUtils.isEmpty(message)) {
                 ServerRequest value = ServerRequest.valueOf(message);
                 switch (value) {
-                    case REQUEST_TEST_PLAYER_LIST:
-                        load = Util.fromCollectionToStringArray(testPlayersToJSON());
+                    case REQUEST_LOGIN:
                         break;
-                    case REQUEST_GAME_LOUNGE:
-                        load = Util.fromCollectionToStringArray(loungesToJSON());
+                    case LOGIN_SUCCESS:
                         break;
-                    case REQUEST_GAME_CREATE:
+                    case LOGIN_FAILURE:
+                        break;
+                    case REQUEST_PLAYER_REGISTER:
+                        load = registerPlayerRequest(getPlayerFromPayload(clientPayload));
+                        break;
+                    case REQUEST_CREATE_GAME:
                         addNewTable(clientPayload);
                         break;
-                    case REQUEST_PRINT_LOUNGES:
-                        printLounges();
+                    case REQUEST_PLAY_GAME:
+                        break;
+                    case REQUEST_TABLE_STAND:
+                        break;
+                    case REQUEST_TABLE_JOIN:
+                        break;
+                    case REQUEST_TABLE_SIT:
+                        break;
+                    case REQUEST_ROOM:
+                        break;
+                    case REQUEST_ROOM_JOIN:
+                        break;
+                    case REQUEST_ROOM_LEAVE:
+                        break;
+                    case REQUEST_ALL_TABLES:
+                        break;
+                    case REQUEST_ALL_LOUNGES:
+                        load = Util.fromCollectionToStringArray(loungesToJSON());
                         break;
                     default:
+                        Logger.error("Unknown Client Request: " + value);
                         throw new Exception("Unknown Client Request: " + value);
                 }
             }
         } catch (Exception e){
             Logger.error(e);
         }
-        Logger.trace("Exit buildPayload()");
+        Logger.trace("Exit buildPayload()=" + load);
         return load;
     }
 
@@ -482,4 +499,41 @@ public class ServerManager {
     private Array<YokelLounge> getAllLounges(){
         return Util.getValuesArray(lounges.values());
     }
+
+    private String[] registerPlayerRequest(YokelPlayer player){
+        String[] ret = new String[1];
+        ret[0] = "false";
+        if(player != null){
+            validateRegisteredPlayers();
+            String playerId = player.getPlayerId();
+            if(!registeredPlayers.containsKey(playerId)){
+                registeredPlayers.put(playerId, player);
+                ret[0] = "true";
+            } else {
+                YokelPlayer regPlayer = registeredPlayers.get(playerId);
+                ret[0] = StringUtils.equalsIgnoreCase(player.getName(), regPlayer.getName()) + "";
+            }
+        }
+        return ret;
+    }
+
+    //Assumes only 1 array with player JSON
+    private YokelPlayer getPlayerFromPayload(String[] clientPayload){
+        if(clientPayload != null && clientPayload.length == 1){
+            return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[0]);
+        }
+        return null;
+    }
+
+    //private void getLoungesRequest();
+    //private void getDebugPlayersRequest();
+    //private void joinRoomRequest();
+    //private void leaveRoomRequest();
+    //private void getRoomRequest();
+    //private void getTablesRequest();
+    //private void joinTableRequest();
+    //private void sitAtTableRequest();
+    //private void standFromTableRequest();
+    //private void playGameRequest();
+    //private void createGameRequest();
 }
