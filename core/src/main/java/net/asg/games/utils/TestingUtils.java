@@ -11,6 +11,78 @@ import java.util.Arrays;
 public class TestingUtils {
     private TestingUtils(){}
 
+    public static class TestMethod{
+        String methodName;
+        Class<?> parentClass;
+        Class<?>[] methodParameterClasses;
+        Object[] parameterValues;
+        Object instantiatedObject;
+
+
+        public TestMethod(String methodName, Class<?> parentClass, Class<?>[] methodParameterClasses, Object[] parameterValues){
+            this(methodName,parentClass,methodParameterClasses,parameterValues,null);
+        }
+
+        public TestMethod(String methodName, Class<?> parentClass, Class<?>[] methodParameterClasses, Object[] parameterValues, Object instantiatedObject){
+            setMethodName(methodName);
+            setParentClass(parentClass);
+            setMethodParameterClasses(methodParameterClasses);
+            setParameterValues(parameterValues);
+            setInstantiatedObject(instantiatedObject);
+        }
+
+        public void setMethodName(String methodName){
+            this.methodName = methodName;
+        }
+
+        public String getMethodName(){
+            return this.methodName;
+        }
+
+        public void setParentClass(Class<?> parentClass){
+            this.parentClass = parentClass;
+        }
+
+        public Class<?> getParentClass(){
+            return this.parentClass;
+        }
+
+        public void setMethodParameterClasses(Class<?>[] methodParameterClasses){
+            this.methodParameterClasses = methodParameterClasses;
+        }
+
+        public Class<?>[] getMethodParameterClasses(){
+            return this.methodParameterClasses;
+        }
+
+        public void setParameterValues(Object[] parameterValues){
+            this.parameterValues = parameterValues;
+        }
+
+        public Object[] getParameterValues(){
+            return this.parameterValues;
+        }
+
+        public void setInstantiatedObject(Object instantiatedObject){
+            this.instantiatedObject = instantiatedObject;
+        }
+
+        public Object getInstantiatedObject(){
+            return this.instantiatedObject;
+        }
+    }
+
+    public static Object invokeMethod(TestMethod method, boolean isStatic) throws InvocationTargetException {
+        if(method != null){
+            return invokeStaticMethod(method.getParentClass(),
+                    method.getMethodName(),
+                    method.getMethodParameterClasses(),
+                    method.getParameterValues(),
+                    method.getInstantiatedObject());
+        }
+        return null;
+    }
+
     public static Object invokeStaticMethod(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object) throws InvocationTargetException {
         try {
             if(targetClass != null){

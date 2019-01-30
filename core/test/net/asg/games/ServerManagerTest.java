@@ -107,12 +107,15 @@ public class ServerManagerTest {
 
         payload[0] = player1.toString();
 
-        String testingMethod = "getPlayerFromPayload";
+        String testingMethod = "getRegisterPlayerFromPayload";
         Class<?>[] args = new Class<?>[1];
         args[0] = String[].class;
         Object[] params = new Object[1];
 
         params[0] = tooBig;
+        TestingUtils.TestMethod getRegisterPlayerFromPayload = new TestingUtils.TestMethod("getRegisterPlayerFromPayload",daemonClass(),args,params,daemon);
+
+        Assert.assertNull(TestingUtils.invokeMethod(getRegisterPlayerFromPayload,true));
         Assert.assertNull(TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon));
         params[0] = null;
         Assert.assertNull(TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon));

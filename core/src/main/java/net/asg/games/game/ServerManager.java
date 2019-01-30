@@ -443,7 +443,7 @@ public class ServerManager {
                     case LOGIN_FAILURE:
                         break;
                     case REQUEST_PLAYER_REGISTER:
-                        load = registerPlayerRequest(getPlayerFromPayload(clientPayload));
+                        load = registerPlayerRequest(getRegisterPlayerFromPayload(clientPayload));
                         break;
                     case REQUEST_CREATE_GAME:
                         addNewTable(clientPayload);
@@ -501,24 +501,35 @@ public class ServerManager {
     }
 
     private String[] registerPlayerRequest(YokelPlayer player){
+        Logger.trace("Enter registerPlayerRequest()");
+
         String[] ret = new String[1];
         ret[0] = "false";
         if(player != null){
+            Logger.info("Attempting to register player={}", player.toString());
             validateRegisteredPlayers();
             String playerId = player.getPlayerId();
             if(!registeredPlayers.containsKey(playerId)){
                 registeredPlayers.put(playerId, player);
                 ret[0] = "true";
+                Logger.info("Player={} registered successfully.", player.toString());
             } else {
                 YokelPlayer regPlayer = registeredPlayers.get(playerId);
                 ret[0] = StringUtils.equalsIgnoreCase(player.getName(), regPlayer.getName()) + "";
+
+                if(Boolean.parseBoolean(ret[0])){
+                    Logger.info("Player={} already registered.", player.toString());
+                } else {
+                    Logger.warn("Player={} already registered with a different ID!", player.toString());
+                }
             }
         }
+        Logger.trace("Exit registerPlayerRequest()");
         return ret;
     }
 
     //Assumes only 1 array with player JSON
-    private YokelPlayer getPlayerFromPayload(String[] clientPayload){
+    private YokelPlayer getRegisterPlayerFromPayload(String[] clientPayload){
         if(clientPayload != null && clientPayload.length == 1){
             return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[0]);
         }
