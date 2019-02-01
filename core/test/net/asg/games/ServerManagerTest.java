@@ -9,8 +9,10 @@ import net.asg.games.utils.TestingUtils;
 import net.asg.games.utils.Util;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.pmw.tinylog.Level;
@@ -19,16 +21,16 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ServerManagerTest {
     private WebSocket socket;
-    private ServerManager daemon;
+    private static ServerManager daemon;
 
-    @Before
-    public void startDaemon() {
+    @BeforeClass
+    public static void startDaemon() {
         String[] args = {ServerManager.LOG_LEVEL_ATTR, "info", ServerManager.DEBUG_ATTR};
-        this.daemon = new ServerManager(args);
+        daemon = new ServerManager(args);
     }
 
-    @After
-    public void stopDaemon() {
+    @AfterClass
+    public static void stopDaemon() {
         daemon.shutDownServer(-1);
     }
 
@@ -141,22 +143,3 @@ public class ServerManagerTest {
         return false;
     }
 }
-
-/*
-    private String[] registerPlayerRequest(YokelPlayer player){
-        String[] ret = new String[1];
-        ret[0] = "false";
-        if(player != null){
-            validateRegisteredPlayers();
-            String playerId = player.getPlayerId();
-            if(!registeredPlayers.containsKey(playerId)){
-                registeredPlayers.put(playerId, player);
-                ret[0] = "true";
-            } else {
-                YokelPlayer regPlayer = registeredPlayers.get(playerId);
-                ret[0] = StringUtils.equalsIgnoreCase(player.getName(), regPlayer.getName()) + "";
-            }
-        }
-        return ret;
-    }
-    */

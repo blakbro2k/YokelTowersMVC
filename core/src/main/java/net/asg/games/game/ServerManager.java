@@ -192,13 +192,6 @@ public class ServerManager {
         }
     }
 
-    private void addLounge(YokelLounge lounge){
-        validateLounges();
-        lounges.put(lounge.getName(), lounge);
-    }
-
-
-
     private void initializeParams(String... args) throws Exception {
         try {
             Logger.trace("Enter initializeParams()");
@@ -288,6 +281,7 @@ public class ServerManager {
 
     public void shutDownServer(int errorCode){
         Logger.trace("Enter shutDownServer()");
+        Logger.info("Shutting server down...");
         if(lounges != null){
             lounges.clear();
             lounges = null;
@@ -428,22 +422,18 @@ public class ServerManager {
         }
     }
 
-    private String[] buildPayload(String message, String[] clientPayload) {
+    private String[] buildPayload(String message, String[] clientPayload) throws Exception {
         Logger.trace("Enter buildPayload()");
 
-        String[] load = null;
+        String[] responsePayload = null;
         try {
             if (!StringUtils.isEmpty(message)) {
                 ServerRequest value = ServerRequest.valueOf(message);
                 switch (value) {
                     case REQUEST_LOGIN:
                         break;
-                    case LOGIN_SUCCESS:
-                        break;
-                    case LOGIN_FAILURE:
-                        break;
                     case REQUEST_PLAYER_REGISTER:
-                        load = registerPlayerRequest(getRegisterPlayerFromPayload(clientPayload));
+                        responsePayload = registerPlayerRequest(getRegisterPlayerFromPayload(clientPayload));
                         break;
                     case REQUEST_CREATE_GAME:
                         addNewTable(clientPayload);
@@ -464,8 +454,11 @@ public class ServerManager {
                         break;
                     case REQUEST_ALL_TABLES:
                         break;
+                    case REQUEST_LOUNGE:
+                        responsePayload = getLoungesRequest(clientPayload);
+                        break;
                     case REQUEST_ALL_LOUNGES:
-                        load = Util.fromCollectionToStringArray(loungesToJSON());
+                        responsePayload = Util.fromCollectionToStringArray(loungesToJSON());
                         break;
                     default:
                         Logger.error("Unknown Client Request: " + value);
@@ -475,8 +468,8 @@ public class ServerManager {
         } catch (Exception e){
             Logger.error(e);
         }
-        Logger.trace("Exit buildPayload()=" + load);
-        return load;
+        Logger.trace("Exit buildPayload()=" + responsePayload);
+        return responsePayload;
     }
 
     private YokelLounge getLounge(String key) throws Exception {
@@ -486,14 +479,18 @@ public class ServerManager {
 
             String loungeName = Util.getLoungeName(key);
             YokelLounge lounge = lounges.get(loungeName);
-            Logger.debug("Lounge Name={}", loungeName);
-            Logger.debug("Lounge Object={}",lounge);
+            Logger.debug("Lounge({})={}",loungeName,lounge);
             Logger.trace("Exit getLounge()");
             return lounge;
         } catch (Exception e){
             Logger.error("Error getting Lounge.", e);
             throw new Exception(e);
         }
+    }
+
+    private void addLounge(YokelLounge lounge){
+        validateLounges();
+        lounges.put(lounge.getName(), lounge);
     }
 
     private Array<YokelLounge> getAllLounges(){
@@ -536,7 +533,17 @@ public class ServerManager {
         return null;
     }
 
-    //private void getLoungesRequest();
+    private String[] getLoungesRequest(String[] clientPayload) throws Exception {
+        Logger.trace("Enter getLoungesRequest()");
+        String[] ret = new String[1];
+        if(clientPayload != null && clientPayload.length == 1){
+            String loungeName = clientPayload[0];
+            YokelLounge lounge = getLounge(loungeName);
+            ret[0] = lounge == null ? null : lounge.toString();
+        }
+        Logger.trace("Exit getLoungesRequest()");
+        return ret;
+    }
     //private void getDebugPlayersRequest();
     //private void joinRoomRequest();
     //private void leaveRoomRequest();
