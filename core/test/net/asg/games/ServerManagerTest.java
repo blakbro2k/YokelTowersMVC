@@ -1,10 +1,12 @@
 package net.asg.games;
 
+import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.websocket.WebSocket;
 
 import net.asg.games.game.ServerManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.utils.TestingUtils;
 import net.asg.games.utils.Util;
 
@@ -16,6 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.pmw.tinylog.Level;
+import org.pmw.tinylog.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -25,7 +28,7 @@ public class ServerManagerTest {
 
     @BeforeClass
     public static void startDaemon() {
-        String[] args = {ServerManager.LOG_LEVEL_ATTR, "info", ServerManager.DEBUG_ATTR};
+        String[] args = {ServerManager.LOG_LEVEL_ATTR, "trace", ServerManager.DEBUG_ATTR};
         daemon = new ServerManager(args);
     }
 
@@ -36,7 +39,7 @@ public class ServerManagerTest {
 
     @Test
     public void createLoungeTest() throws Exception {
-        startDaemon();
+        //startDaemon();
         String testingMethod = "createLounge";
         Class<?>[] args = new Class<?>[1];
         args[0] = String.class;
@@ -51,6 +54,58 @@ public class ServerManagerTest {
         params[0] = "";
         System.out.println(TestingUtils.printTestMethod(daemonClass(),testingMethod,args,params2,daemon));
         Assert.assertNull(TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params2,daemon));
+    }
+
+    @Test
+    public void getLoungeTest() throws Exception {
+        //startDaemon();
+        String testLoungeName = "TestCreated";
+        YokelLounge expected = new YokelLounge(testLoungeName);
+
+        String testingMethod2 = "getLounge";
+        Class<?>[] args = new Class<?>[1];
+        args[0] = String.class;
+        Object[] params = new Object[1];
+        params[0] = testLoungeName;
+
+        System.out.println(TestingUtils.printTestMethod(daemonClass(),testingMethod2,args,params,daemon));
+        Assert.assertEquals(expected,TestingUtils.invokeStaticMethod(daemonClass(),testingMethod2,args,params,daemon));
+    }
+
+    @Test
+    public void getAllLoungesTest() throws Exception {
+        OrderedMap<String, YokelLounge> lounges = new OrderedMap<>();
+
+        Logger.trace("Enter generateDefaultLounges()");
+
+        Logger.info("Creating Social: Eiffel Tower");
+        YokelLounge socialLounge = new YokelLounge(YokelLounge.SOCIAL_GROUP);
+        YokelRoom room1 = new YokelRoom("Eiffel Tower");
+        socialLounge.addRoom(room1);
+
+        Logger.info("Creating Social: Leaning Tower of Pisa");
+        YokelRoom room3 = new YokelRoom("Leaning Tower of Pisa");
+        socialLounge.addRoom(room3);
+
+        Logger.info("Creating Beginning: Chang Tower");
+        YokelLounge beginningLounge = new YokelLounge(YokelLounge.BEGINNER_GROUP);
+        YokelRoom room2 = new YokelRoom("Chang Tower");
+        beginningLounge.addRoom(room2);
+
+        YokelLounge TestLounge = new YokelLounge("TestCreated");
+
+
+        lounges.put(YokelLounge.SOCIAL_GROUP,socialLounge);
+        lounges.put(YokelLounge.BEGINNER_GROUP,beginningLounge);
+        lounges.put("TestCreated",TestLounge);
+
+        String testingMethod = "getAllLounges";
+        Class<?>[] args = new Class<?>[0];
+        //args[0] = String.class;
+        Object[] params = new Object[0];
+        //params[0] = "getAllLounges";
+        System.out.println(TestingUtils.printTestMethod(daemonClass(),testingMethod,args,params,daemon));
+        Assert.assertEquals(Util.getValuesArray(lounges.values()), TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon));
     }
 
     private Class<?> daemonClass(){
@@ -131,8 +186,6 @@ public class ServerManagerTest {
         params[0] = player1;
         Assert.assertTrue(parsePayloadBoolean(TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon)));
         Assert.assertTrue(parsePayloadBoolean(TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon)));
-        //YokelPlayer player2 = new YokelPlayer();
-        //player2.setSessionId();
     }
 
     private boolean parsePayloadBoolean(Object payload){

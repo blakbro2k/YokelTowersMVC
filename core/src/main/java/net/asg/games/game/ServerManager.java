@@ -160,38 +160,6 @@ public class ServerManager {
         }
     }
 
-    private YokelLounge createLounge(String loungeName) throws Exception{
-        try{
-            Logger.trace("Enter createLounge()");
-            Logger.debug("loungeName={}",loungeName);
-            YokelLounge yl = null;
-            if(!StringUtils.isEmpty(loungeName)) {
-                yl = new YokelLounge(loungeName);
-            }
-            Logger.trace("Exit createLounge()={}",yl);
-            return yl;
-        } catch (Exception e){
-            Logger.error(e, "Error creating Lounge: ");
-            throw new Exception("Error creating lounges", e);
-        }
-    }
-
-    private YokelLounge getDefaultLounge() throws Exception {
-        try{
-            Logger.trace("Enter createLounge()");
-            YokelLounge lounge = getLounge(YokelLounge.DEFAULT_LOUNGE);
-            if(lounge == null){
-                lounge = new YokelLounge(YokelLounge.DEFAULT_LOUNGE);
-                addLounge(lounge);
-            }
-            Logger.trace("Exit createLounge()");
-            return lounge;
-        } catch(Exception e){
-            Logger.error("Error creating default lounge.", e);
-            throw new Exception("Error creating default lounge.", e);
-        }
-    }
-
     private void initializeParams(String... args) throws Exception {
         try {
             Logger.trace("Enter initializeParams()");
@@ -476,15 +444,32 @@ public class ServerManager {
         try{
             Logger.trace("Enter getLounge()");
             validateLounges();
-
-            String loungeName = Util.getLoungeName(key);
-            YokelLounge lounge = lounges.get(loungeName);
-            Logger.debug("Lounge({})={}",loungeName,lounge);
+            Logger.info("Attempting to get {} lounge.",key);
+            //String loungeName = Util.getLoungeName(key);
+            YokelLounge lounge = lounges.get(key);
+            Logger.debug("Lounge({})={}", key,lounge);
             Logger.trace("Exit getLounge()");
             return lounge;
         } catch (Exception e){
             Logger.error("Error getting Lounge.", e);
             throw new Exception(e);
+        }
+    }
+
+    private YokelLounge createLounge(String loungeName) throws Exception{
+        try{
+            Logger.trace("Enter createLounge()");
+            Logger.debug("loungeName={}",loungeName);
+            YokelLounge yl = null;
+            if(!StringUtils.isEmpty(loungeName)) {
+                yl = new YokelLounge(loungeName);
+                addLounge(yl);
+            }
+            Logger.trace("Exit createLounge()={}",yl);
+            return yl;
+        } catch (Exception e){
+            Logger.error(e, "Error creating Lounge: ");
+            throw new Exception("Error creating lounges", e);
         }
     }
 
