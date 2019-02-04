@@ -10,13 +10,10 @@ import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.utils.TestingUtils;
 import net.asg.games.utils.Util;
 
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
 
@@ -194,5 +191,19 @@ public class ServerManagerTest {
             return Boolean.parseBoolean(Util.otos(gotten[0]));
         }
         return false;
+    }
+
+    @Test
+    public void getRoomTest() throws Exception {
+        String expectedRoomName1 = "Eiffel Tower";
+        String expectedRoomName2 = "Chang Tower";
+        YokelRoom room1 = new YokelRoom(expectedRoomName1);
+        YokelRoom room2 = new YokelRoom(expectedRoomName2);
+
+        Assert.assertEquals(room1, daemon.getRoom(YokelLounge.SOCIAL_GROUP, expectedRoomName1));
+        Assert.assertNull(daemon.getRoom(YokelLounge.SOCIAL_GROUP, expectedRoomName2));
+        Assert.assertEquals(room2, daemon.getRoom(YokelLounge.BEGINNER_GROUP, expectedRoomName2));
+        Assert.assertNull(daemon.getRoom(YokelLounge.SOCIAL_GROUP, null));
+        Assert.assertNull(daemon.getRoom(null, expectedRoomName2));
     }
 }

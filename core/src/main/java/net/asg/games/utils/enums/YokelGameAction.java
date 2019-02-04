@@ -8,7 +8,7 @@ import net.asg.games.utils.GlobalConstants;
  * Created by Blakbro2k on 2/5/2018.
  */
 
-public enum YokelAction {
+public enum YokelGameAction {
     /**
      * Defensive Powers
 
@@ -40,16 +40,11 @@ public enum YokelAction {
     AddStones(GlobalConstants.ATTACK_K),
     AddMedusa(GlobalConstants.ATTACK_E),
     TurnPowerStone(GlobalConstants.ATTACK_L),
-    RemovePowers(GlobalConstants.ATTACK_EX),
-    GetRooms(GlobalConstants.GET_ROOMS),
-    GetTables(GlobalConstants.GET_TABLES),
-    GetSeats(GlobalConstants.GET_SEATS),
-    PingServer(GlobalConstants.PING_SERVER),
-    RegisterPlayer(GlobalConstants.REGISTER_PLAYER);
+    RemovePowers(GlobalConstants.ATTACK_EX);
 
     protected final int value;
 
-    YokelAction(int value){
+    YokelGameAction(int value){
         this.value = value;
     }
 
@@ -57,7 +52,7 @@ public enum YokelAction {
         return value;
     }
 
-    public static YokelAction fromValue(int value) throws GdxRuntimeException {
+    public static YokelGameAction fromValue(int value) throws GdxRuntimeException {
         switch(value){
             case GlobalConstants.DEFENSE_Y:
                 return DeleteRow;
@@ -83,16 +78,7 @@ public enum YokelAction {
                 return TurnPowerStone;
             case GlobalConstants.ATTACK_EX:
                 return RemovePowers;
-            case GlobalConstants.PING_SERVER:
-                return PingServer;
-            case GlobalConstants.GET_ROOMS:
-                return GetRooms;
-            case GlobalConstants.GET_TABLES:
-                return GetTables;
-            case GlobalConstants.GET_SEATS:
-                return GetSeats;
-            case GlobalConstants.REGISTER_PLAYER:
-                return RegisterPlayer;        }
-        throw new ArrayIndexOutOfBoundsException("invalid value in YokelAction class: value=" + value);
+        }
+        throw new ArrayIndexOutOfBoundsException("invalid value in YokelGameAction class: value=" + value);
     }
 }

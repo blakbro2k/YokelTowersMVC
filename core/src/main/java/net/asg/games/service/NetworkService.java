@@ -155,7 +155,7 @@ public class NetworkService {
             if(!StringUtils.isEmpty(jsonLounge)){
                 //System.out.println("jsonPlayer" + jsonPlayer);
                 YokelLounge lounge = json.fromJson(YokelLounge.class, jsonLounge);
-                //TODO: implement a way for handled responsed be queued for processing.
+                //TODO: implement a way for handled responses be queued for processing.
                 //if(lounges != null){
                     //lounges.put(lounge.getName(), lounge);
                // }
