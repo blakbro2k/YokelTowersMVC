@@ -54,7 +54,7 @@ public class ServerManagerTest {
     }
 
     @Test
-    public void getLoungeTest() throws Exception {
+    public void getLoungeInvokeTest() throws Exception {
         //startDaemon();
         String testLoungeName = "TestCreated";
         YokelLounge expected = new YokelLounge(testLoungeName);
@@ -177,12 +177,13 @@ public class ServerManagerTest {
         Assert.assertEquals(player1, TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon));
 
         testingMethod = "registerPlayerRequest";
-        args[0] = YokelPlayer.class;
+        args[0] = String[].class;
         params[0] = null;
+
         Assert.assertFalse(parsePayloadBoolean(TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon)));
-        params[0] = player1;
+        params[0] = new String[]{player1.toString()};
         Assert.assertTrue(parsePayloadBoolean(TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon)));
-        Assert.assertTrue(parsePayloadBoolean(TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon)));
+        Assert.assertFalse(parsePayloadBoolean(TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon)));
     }
 
     private boolean parsePayloadBoolean(Object payload){
@@ -194,7 +195,7 @@ public class ServerManagerTest {
     }
 
     @Test
-    public void getRoomTest() throws Exception {
+    public void internalServerFuctionalTest() throws Exception {
         String expectedRoomName1 = "Eiffel Tower";
         String expectedRoomName2 = "Chang Tower";
         YokelRoom room1 = new YokelRoom(expectedRoomName1);
@@ -205,5 +206,23 @@ public class ServerManagerTest {
         Assert.assertEquals(room2, daemon.getRoom(YokelLounge.BEGINNER_GROUP, expectedRoomName2));
         Assert.assertNull(daemon.getRoom(YokelLounge.SOCIAL_GROUP, null));
         Assert.assertNull(daemon.getRoom(null, expectedRoomName2));
+
+        /*
+    private YokelLounge getLounge(String key) throws Exception {
+    private YokelLounge createLounge(String loungeName) throws Exception{
+    private void addLounge(YokelLounge lounge){
+    private Array<YokelLounge> getAllLounges(){
+    private Array<YokelRoom> getAllRooms(String loungeName) throws Exception {
+    private Array<YokelTable> getAllTables(String loungeName, String roomName) throws Exception {
+    private Array<YokelPlayer> getAllRoomPlayers(String loungeName, String roomName) throws Exception {
+    public YokelRoom getRoom(String loungeName, String roomName) throws Exception {
+    private YokelTable getTable(String loungeName, String roomName, int tableNumber) throws Exception {
+    private YokelSeat getSeat(String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
+    private boolean joinLeaveRoom(YokelPlayer player, String loungeName, String roomName, boolean isJoin) throws Exception {
+    private boolean sitAtTable(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
+    private boolean standAtTable(String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
+    private boolean registerPlayer(YokelPlayer player){
+    private YokelPlayer getRegisteredPlayer(String playerId){
+         */
     }
 }

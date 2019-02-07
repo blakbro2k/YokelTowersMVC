@@ -61,12 +61,6 @@ public class ServerManager {
         }
     }
 
-    public void update(){}
-
-    public void readClientInputs(){}
-
-    public void processServerResponses(){}
-
     private void validateLounges(){
         if(lounges == null){
             lounges = new OrderedMap<>();
@@ -511,7 +505,7 @@ public class ServerManager {
         return room;
     }
 
-    public YokelTable getTable(String loungeName, String roomName, int tableNumber) throws Exception {
+    private YokelTable getTable(String loungeName, String roomName, int tableNumber) throws Exception {
         YokelTable table = null;
 
         YokelRoom room = getRoom(loungeName, roomName);
@@ -522,7 +516,7 @@ public class ServerManager {
         return table;
     }
 
-    public YokelSeat getSeat(String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
+    private YokelSeat getSeat(String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
         YokelSeat seat = null;
 
         YokelTable table = getTable(loungeName, roomName, tableNumber);
@@ -533,7 +527,7 @@ public class ServerManager {
         return seat;
     }
 
-    public boolean joinLeaveRoom(YokelPlayer player, String loungeName, String roomName, boolean isJoin) throws Exception {
+    private boolean joinLeaveRoom(YokelPlayer player, String loungeName, String roomName, boolean isJoin) throws Exception {
         if(player != null){
             YokelRoom room = getRoom(loungeName, roomName);
 
@@ -549,7 +543,7 @@ public class ServerManager {
         return false;
     }
 
-    public boolean sitAtTable(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
+    private boolean sitAtTable(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
         if(player != null){
             YokelSeat seat = getSeat(loungeName, roomName, tableNumber, seatNumber);
 
@@ -561,7 +555,7 @@ public class ServerManager {
         return false;
     }
 
-    public boolean standAtTable(String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
+    private boolean standAtTable(String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
         YokelSeat seat = getSeat(loungeName, roomName, tableNumber, seatNumber);
 
         if(seat != null){
@@ -571,7 +565,7 @@ public class ServerManager {
         return false;
     }
 
-    public boolean registerPlayer(YokelPlayer player){
+    private boolean registerPlayer(YokelPlayer player){
         if(player != null){
             validateRegisteredPlayers();
             String playerId = player.getPlayerId();
@@ -593,7 +587,7 @@ public class ServerManager {
         return false;
     }
 
-    public YokelPlayer getRegisteredPlayer(String playerId){
+    private YokelPlayer getRegisteredPlayer(String playerId){
         if(playerId != null){
             return registeredPlayers.get(playerId);
         }
@@ -618,7 +612,7 @@ public class ServerManager {
 
     //0 = Player JSON
     private YokelPlayer getRegisterPlayerFromPayload(String[] clientPayload){
-        if(clientPayload != null && clientPayload.length == 1){
+        if(Util.isValidPayload(clientPayload, 1)){
             return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[0]);
         }
         return null;
@@ -628,7 +622,7 @@ public class ServerManager {
     private String[] getLoungesRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter getLoungesRequest()");
         String[] ret = new String[1];
-        if(clientPayload != null && clientPayload.length == 1){
+        if(Util.isValidPayload(clientPayload, 1)){
             String loungeName = clientPayload[0];
             YokelLounge lounge = getLounge(loungeName);
             ret[0] = lounge == null ? null : lounge.toString();
@@ -642,7 +636,7 @@ public class ServerManager {
     private String[] getRoomRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter getRoomRequest()");
         String[] ret = new String[1];
-        if(clientPayload != null && clientPayload.length == 2){
+        if(Util.isValidPayload(clientPayload, 2)){
             String loungeName = clientPayload[0];
             String roomName = clientPayload[1];
             YokelRoom room = getRoom(loungeName, roomName);
@@ -661,7 +655,7 @@ public class ServerManager {
         try{
             String[] ret = new String[1];
             ret[0] = "false";
-            if(clientPayload != null && clientPayload.length == 4){
+            if(Util.isValidPayload(clientPayload, 4)){
                 String loungeName = Util.getStringValue(clientPayload, 0);
                 String roomName = Util.getStringValue(clientPayload, 1);
                 String type = Util.getStringValue(clientPayload, 2);
@@ -702,12 +696,12 @@ public class ServerManager {
     //0 = Player id
     //1 = Lounge Name
     //2 = Room Name
-    public String[] joinRoomRequest(String[] clientPayload) throws Exception {
+    private String[] joinRoomRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter joinRoomRequest()");
         String[] ret = new String[1];
         ret[0] = "false";
 
-        if(clientPayload != null && clientPayload.length == 3){
+        if(Util.isValidPayload(clientPayload, 3)){
             String playerId = clientPayload[0];
             String loungeName = clientPayload[1];
             String roomName = clientPayload[2];
@@ -723,12 +717,12 @@ public class ServerManager {
     //0 = Player id
     //1 = Lounge Name
     //2 = Room Name
-    public String[] leaveRoomRequest(String[] clientPayload) throws Exception {
+    private String[] leaveRoomRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter leaveRoomRequest()");
         String[] ret = new String[1];
         ret[0] = "false";
 
-        if(clientPayload != null && clientPayload.length == 3){
+        if(Util.isValidPayload(clientPayload, 3)){
             String playerId = clientPayload[0];
             String loungeName = clientPayload[1];
             String roomName = clientPayload[2];
@@ -746,7 +740,7 @@ public class ServerManager {
     private String[] getTablesRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter getTablesRequest()");
 
-        if(clientPayload != null && clientPayload.length == 2){
+        if(Util.isValidPayload(clientPayload, 2)){
             String loungeName = clientPayload[0];
             String roomName = clientPayload[1];
 
@@ -765,7 +759,7 @@ public class ServerManager {
         Logger.trace("Enter tableSitRequest()");
         String[] ret = new String[1];
 
-        if(clientPayload != null && clientPayload.length == 5){
+        if(Util.isValidPayload(clientPayload, 5)){
             String playerId = clientPayload[0];
             String loungeName = clientPayload[1];
             String roomName = clientPayload[2];
@@ -788,7 +782,7 @@ public class ServerManager {
         Logger.trace("Enter tableStandRequest()");
         String[] ret = new String[1];
 
-        if(clientPayload != null && clientPayload.length == 5){
+        if(Util.isValidPayload(clientPayload, 5)){
             String loungeName = clientPayload[0];
             String roomName = clientPayload[1];
             int tableNumber = Util.otoi(clientPayload[2]);

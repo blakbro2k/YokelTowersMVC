@@ -551,4 +551,11 @@ public class Util {
             ((GameBlock) actor).reset();
         }
     }
+
+    public static boolean isValidPayload(String[] payload, int size){
+        if(payload != null){
+            return payload.length == size;
+        }
+        return false;
+    }
 }
