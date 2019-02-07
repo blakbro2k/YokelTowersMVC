@@ -493,7 +493,7 @@ public class ServerManager {
         return players;
     }
 
-    public YokelRoom getRoom(String loungeName, String roomName) throws Exception {
+    private YokelRoom getRoom(String loungeName, String roomName) throws Exception {
         validateLounges();
         YokelRoom room = null;
 

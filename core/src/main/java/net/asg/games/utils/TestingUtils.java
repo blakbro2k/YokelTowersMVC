@@ -17,58 +17,86 @@ public class TestingUtils {
         Class<?>[] methodParameterClasses;
         Object[] parameterValues;
         Object instantiatedObject;
+        boolean isPrivate;
 
-
-        public TestMethod(String methodName, Class<?> parentClass, Class<?>[] methodParameterClasses, Object[] parameterValues){
-            this(methodName,parentClass,methodParameterClasses,parameterValues,null);
-        }
-
-        public TestMethod(String methodName, Class<?> parentClass, Class<?>[] methodParameterClasses, Object[] parameterValues, Object instantiatedObject){
+        public TestMethod(String methodName, Class<?> parentClass, Class<?>[] methodParameterClasses, Object[] parameterValues, Object instantiatedObject, boolean isPrivate){
             setMethodName(methodName);
             setParentClass(parentClass);
             setMethodParameterClasses(methodParameterClasses);
             setParameterValues(parameterValues);
             setInstantiatedObject(instantiatedObject);
+            setPrivate(isPrivate);
         }
 
-        public void setMethodName(String methodName){
+        public TestMethod(String methodName, Class<?> parentClass, Class<?>[] methodParameterClasses, Object[] parameterValues, Object instantiatedObject){
+            this(methodName,parentClass,methodParameterClasses, parameterValues,instantiatedObject, false);
+        }
+
+        void setMethodName(String methodName){
             this.methodName = methodName;
         }
 
-        public String getMethodName(){
+        String getMethodName(){
             return this.methodName;
         }
 
-        public void setParentClass(Class<?> parentClass){
+        void setParentClass(Class<?> parentClass){
             this.parentClass = parentClass;
         }
 
-        public Class<?> getParentClass(){
+        Class<?> getParentClass(){
             return this.parentClass;
         }
 
-        public void setMethodParameterClasses(Class<?>[] methodParameterClasses){
+        void setMethodParameterClasses(Class<?>... methodParameterClasses){
             this.methodParameterClasses = methodParameterClasses;
         }
 
-        public Class<?>[] getMethodParameterClasses(){
+        Class<?>[] getMethodParameterClasses(){
             return this.methodParameterClasses;
         }
 
-        public void setParameterValues(Object[] parameterValues){
+        public void setParameterValues(Object... parameterValues){
             this.parameterValues = parameterValues;
         }
 
-        public Object[] getParameterValues(){
+        Object[] getParameterValues(){
             return this.parameterValues;
         }
 
-        public void setInstantiatedObject(Object instantiatedObject){
+        void setInstantiatedObject(Object instantiatedObject){
             this.instantiatedObject = instantiatedObject;
         }
 
-        public Object getInstantiatedObject(){
+        Object getInstantiatedObject(){
             return this.instantiatedObject;
+        }
+
+        public void setPrivate(boolean isPrivate){
+            this.isPrivate = isPrivate;
+        }
+
+        boolean isPrivate(){
+            return isPrivate;
+        }
+
+        public Object invoke() throws InvocationTargetException {
+            return invokeMethod(this, isPrivate());
+        }
+
+        @Override
+        public String toString(){
+            try {
+                return printTestMethod(getParentClass(),
+                        getMethodName(),
+                        getMethodParameterClasses(),
+                        getParameterValues(),
+                        getInstantiatedObject(),
+                        isPrivate());
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            return super.toString();
         }
     }
 
@@ -78,17 +106,18 @@ public class TestingUtils {
                     method.getMethodName(),
                     method.getMethodParameterClasses(),
                     method.getParameterValues(),
-                    method.getInstantiatedObject());
+                    method.getInstantiatedObject(),
+                    isStatic);
         }
         return null;
     }
 
-    public static Object invokeStaticMethod(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object) throws InvocationTargetException {
+    public static Object invokeStaticMethod(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object, boolean isStatic) throws InvocationTargetException {
         try {
             if(targetClass != null){
                 Method method = targetClass.getDeclaredMethod(methodName, argClasses);
                 if(method != null){
-                    method.setAccessible(true);
+                    method.setAccessible(isStatic);
                     return method.invoke(object, argObjects);
                 }
             }
@@ -124,13 +153,13 @@ public class TestingUtils {
         }
     }
 
-    public static String printTestMethod(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object) throws InvocationTargetException{
-        return getMethodCallString(methodName, argClasses, argObjects) + "=" + buildMethodReturnString(targetClass,methodName,argClasses,argObjects,object);
+    public static String printTestMethod(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object, boolean isPrivate) throws InvocationTargetException{
+        return getMethodCallString(methodName, argClasses, argObjects) + "=" + buildMethodReturnString(targetClass,methodName,argClasses,argObjects,object, isPrivate);
     }
 
-    private static String buildMethodReturnString(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object) throws InvocationTargetException{
+    private static String buildMethodReturnString(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object, boolean isPrivate) throws InvocationTargetException{
         Object returnType = getMethodReturnType(targetClass, methodName, argClasses);
-        Object returnObject = invokeStaticMethod(targetClass, methodName, argClasses, argObjects, object);
+        Object returnObject = invokeStaticMethod(targetClass, methodName, argClasses, argObjects, object, isPrivate);
         return "(" + returnType + ")" + (returnObject == null? "" : returnObject);
     }
 
@@ -152,7 +181,7 @@ public class TestingUtils {
         }
     }
 
-    private static String getMethodCallString(String methodName, Class[] argClasses, Object[] argObjects) throws InvocationTargetException{
+    private static String getMethodCallString(String methodName, Class[] argClasses, Object[] argObjects) {
         StringBuilder sb = new StringBuilder();
         sb.append(methodName).append("(");
 
