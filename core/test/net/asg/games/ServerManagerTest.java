@@ -206,7 +206,25 @@ public class ServerManagerTest {
         YokelRoom room1 = new YokelRoom(expectedRoomName1);
         YokelRoom room2 = new YokelRoom(expectedRoomName2);
 
-                /*
+
+
+        //private YokelLounge getLounge(String key) throws Exception {
+        TestingUtils.TestMethod getLoungeMethod = new TestingUtils.TestMethod("getLounge",
+                daemonClass(), new Class[]{String.class}, new Object[]{null}, daemon, true);
+
+        System.out.println("internal: " + getLoungeMethod);
+        getLoungeMethod.setParameterValues(YokelLounge.ADVANCED_GROUP);
+        System.out.println("internal: " + getLoungeMethod);
+        getLoungeMethod.setParameterValues(YokelLounge.BEGINNER_GROUP);
+        System.out.println("internal: " + getLoungeMethod);
+        getLoungeMethod.setParameterValues(YokelLounge.INTERMEDIATE_GROUP);
+        System.out.println("internal: " + getLoungeMethod);
+        getLoungeMethod.setParameterValues(YokelLounge.SOCIAL_GROUP);
+        System.out.println("internal: " + getLoungeMethod);
+
+
+
+        /*
         Assert.assertEquals(room1, daemon.getRoom(YokelLounge.SOCIAL_GROUP, expectedRoomName1));
         Assert.assertNull(daemon.getRoom(YokelLounge.SOCIAL_GROUP, expectedRoomName2));
         Assert.assertEquals(room2, daemon.getRoom(YokelLounge.BEGINNER_GROUP, expectedRoomName2));
