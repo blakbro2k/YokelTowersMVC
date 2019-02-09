@@ -386,13 +386,13 @@ public class ServerManager {
                     case REQUEST_ROOM_LEAVE:
                         responsePayload = leaveRoomRequest(clientPayload);
                         break;
-                    case REQUEST_ALL_TABLES:
+                    case REQUEST_TABLES_ALL:
                         responsePayload = getTablesRequest(clientPayload);
                         break;
                     case REQUEST_LOUNGE:
                         responsePayload = getLoungesRequest(clientPayload);
                         break;
-                    case REQUEST_ALL_LOUNGES:
+                    case REQUEST_LOUNGE_ALL:
                         responsePayload = Util.fromCollectionToStringArray(loungesToJSON());
                         break;
                     default:
@@ -427,10 +427,11 @@ public class ServerManager {
     }
 
     private YokelLounge createLounge(String loungeName) throws Exception{
+        Logger.trace("Enter createLounge()");
         try{
-            Logger.trace("Enter createLounge()");
             Logger.debug("loungeName={}",loungeName);
             YokelLounge yl = null;
+
             if(!StringUtils.isEmpty(loungeName)) {
                 yl = new YokelLounge(loungeName);
                 addLounge(yl);

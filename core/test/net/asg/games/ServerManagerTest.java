@@ -1,5 +1,6 @@
 package net.asg.games;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.websocket.WebSocket;
 
@@ -200,25 +201,58 @@ public class ServerManagerTest {
     }
 
     @Test
-    public void internalServerFuctionalTest() throws Exception {
+    public void internalServerFunctionalTest() throws Exception {
         String expectedRoomName1 = "Eiffel Tower";
         String expectedRoomName2 = "Chang Tower";
         YokelRoom room1 = new YokelRoom(expectedRoomName1);
         YokelRoom room2 = new YokelRoom(expectedRoomName2);
 
+        //private YokelLounge getLounge(String key) throws Exception
+        YokelLounge expectedLounge = new YokelLounge(YokelLounge.BEGINNER_GROUP);
+        TestingUtils.TestMethod getLoungeTestMethod = new TestingUtils.TestMethod("getLounge",
+                daemonClass(),
+                new Class[]{String.class},
+                new String[]{null},
+                daemon,
+                true);
+
+        //Null Test
+        Assert.assertNull(getLoungeTestMethod.invoke());
+        getLoungeTestMethod.setParameterValues(YokelLounge.BEGINNER_GROUP);
+        Assert.assertNotNull(getLoungeTestMethod.invoke());
+        YokelLounge testingLounge = (YokelLounge) getLoungeTestMethod.invoke();
+        Assert.assertEquals(expectedLounge.getName(), testingLounge.getName());
+
+        //private YokelLounge createLounge(String loungeName) throws Exception{
+        YokelLounge testLounge = new YokelLounge("TestLounge");
+        TestingUtils.TestMethod createLoungeTestMethod = new TestingUtils.TestMethod("createLounge",
+                daemonClass(),
+                new Class[]{String.class},
+                new String[]{null},
+                daemon,
+                true);
+        //Null Test
+        Assert.assertNull(createLoungeTestMethod.invoke());
+        createLoungeTestMethod.setParameterValues(testLounge.getName());
+        Assert.assertNotNull(createLoungeTestMethod.invoke());
+        testingLounge = (YokelLounge) createLoungeTestMethod.invoke();
+        Assert.assertEquals(testLounge.getName(), testingLounge.getName());
+
+        //private Array<YokelLounge> getAllLounges(){
+        TestingUtils.TestMethod getAllLoungesTestMethod = new TestingUtils.TestMethod("getAllLounges",
+                daemonClass(),
+                null,
+                null,
+                daemon,
+                true);
+        //Null Test
+        Assert.assertNotNull(getAllLoungesTestMethod.invoke());
+        Array<YokelLounge> lounges = (Array<YokelLounge>) getAllLoungesTestMethod.invoke();
+        System.out.println("test return=" + getAllLoungesTestMethod.returnType());
+
+        //private Array<YokelRoom> getAllRooms(String loungeName) throws Exception {
                 /*
-        Assert.assertEquals(room1, daemon.getRoom(YokelLounge.SOCIAL_GROUP, expectedRoomName1));
-        Assert.assertNull(daemon.getRoom(YokelLounge.SOCIAL_GROUP, expectedRoomName2));
-        Assert.assertEquals(room2, daemon.getRoom(YokelLounge.BEGINNER_GROUP, expectedRoomName2));
-        Assert.assertNull(daemon.getRoom(YokelLounge.SOCIAL_GROUP, null));
-        Assert.assertNull(daemon.getRoom(null, expectedRoomName2));
 
-
-    private YokelLounge getLounge(String key) throws Exception {
-    private YokelLounge createLounge(String loungeName) throws Exception{
-    private void addLounge(YokelLounge lounge){
-    private Array<YokelLounge> getAllLounges(){
-    private Array<YokelRoom> getAllRooms(String loungeName) throws Exception {
     private Array<YokelTable> getAllTables(String loungeName, String roomName) throws Exception {
     private Array<YokelPlayer> getAllRoomPlayers(String loungeName, String roomName) throws Exception {
     private YokelRoom getRoom(String loungeName, String roomName) throws Exception {

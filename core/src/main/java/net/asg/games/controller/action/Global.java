@@ -100,7 +100,7 @@ public class Global implements ActionContainer {
         if(!isAlive()){
             initializeSockets();
         }
-        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_ALL_LOUNGES + "", null);
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_LOUNGE_ALL + "", null);
         socket.send(request);
     }
 
@@ -216,7 +216,7 @@ public class Global implements ActionContainer {
                 case REQUEST_ALL_DEBUG_PLAYERS:
                     buildTestPlayersFromJSON(payload);
                     break;
-                case REQUEST_ALL_LOUNGES:
+                case REQUEST_LOUNGE_ALL:
                     buildLoungeFromJSON(payload);
                     break;
                 case REQUEST_CREATE_GAME:

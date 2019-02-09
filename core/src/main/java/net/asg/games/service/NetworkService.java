@@ -125,7 +125,7 @@ public class NetworkService {
                     buildTestPlayersFromJSON(payload);
                     //push <UpdatePlayerTable, playerList>
                     break;
-                case REQUEST_ALL_LOUNGES:
+                case REQUEST_LOUNGE_ALL:
                     buildLoungeFromJSON(payload);
                     break;
                 default:
