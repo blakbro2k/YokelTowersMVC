@@ -324,7 +324,7 @@ public class ServerManager {
         return new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
     }
 
-    private Array<String> testPlayersToJSON(){
+    public Array<String> testPlayersToJSON(){
         Array<String> jsonPlayers = new Array<>();
 
         for(String playerName : Util.toIterable(testPlayers.orderedKeys())){
@@ -359,7 +359,7 @@ public class ServerManager {
                     case REQUEST_LOGIN:
                         break;
                     case REQUEST_ALL_DEBUG_PLAYERS:
-                        //responsePayload = getDebugPlayersRequest(clientPayload);
+                        responsePayload = Util.fromCollectionToStringArray(testPlayersToJSON());
                         break;
                     case REQUEST_PLAYER_REGISTER:
                         responsePayload = registerPlayerRequest(clientPayload);
@@ -794,6 +794,8 @@ public class ServerManager {
         Logger.trace("Exit tableStandRequest()");
         return ret;
     }
+
+    //No payload from lient
 
     //private void playGameRequest();
 }

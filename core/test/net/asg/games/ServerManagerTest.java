@@ -250,6 +250,8 @@ public class ServerManagerTest {
         Array<YokelLounge> lounges = (Array<YokelLounge>) getAllLoungesTestMethod.invoke();
         System.out.println("test return=" + getAllLoungesTestMethod.returnType());
 
+
+
         //private Array<YokelRoom> getAllRooms(String loungeName) throws Exception {
                 /*
 
@@ -265,4 +267,12 @@ public class ServerManagerTest {
     private YokelPlayer getRegisteredPlayer(String playerId){
          */
     }
+
+    @Test
+    public void tempTester() throws Exception {
+System.out.println(daemon.testPlayersToJSON());
+//throw new Exception("Whut?");
+    }
+
+
 }

@@ -20,6 +20,7 @@ import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
+import net.asg.games.utils.NetworkUtil;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,9 +37,11 @@ public class NetworkService {
     private String message = "Connecting...";
     private OrderedMap<String, Object> serverResponse = new OrderedMap<String, Object>();
 
-    //TODO: Implement send and receive queue of message objects.
-
     public boolean initializeSockets() throws WebSocketException {
+        //TODO: Create Unique client ID
+        //TODO: Create PHPSESSION token
+        //TODO: Create CSRF Token
+
         LOGGER.debug("Enter initializeSockets()");
         dtdService.saveDtdSchema(Gdx.files.local("lml.dtd"));
 
@@ -80,10 +83,14 @@ public class NetworkService {
         return "localHost";
     }
 
+    public boolean isInternetAvailable(){
+        return NetworkUtil.isInternetAvailable();
+    }
+
     private WebSocketListener getClientListener() {
         final WebSocketHandler handler = new WebSocketHandler();
         // Registering ServerResponse handler:
-        /*handler.registerHandler(ServerResponse.class, new WebSocketHandler.Handler<ServerResponse>() {
+        handler.registerHandler(ServerResponse.class, new WebSocketHandler.Handler<ServerResponse>() {
             @Override
             public boolean handle(final WebSocket webSocket, final ServerResponse packet) {
                 try {
@@ -93,9 +100,9 @@ public class NetworkService {
                 }
                 return true;
             }
-        });*/
+        });
 
-        handler.registerHandler(ServerResponse.class, new ServerResponseHandler());
+        //handler.registerHandler(ServerResponse.class, new ServerResponseHandler());
 
         return handler;
     }
@@ -164,7 +171,7 @@ public class NetworkService {
         //System.out.println("lounges: " + lounges);
     }
 
-    public void requestPlayersFromServer() {
+    public void requestDebugPlayersFromServer() {
         System.out.println("Starting requestPlayers");
         sendClientRequest(new ClientRequest(-1, "new", ServerRequest.REQUEST_ALL_DEBUG_PLAYERS + "", null));
     }
