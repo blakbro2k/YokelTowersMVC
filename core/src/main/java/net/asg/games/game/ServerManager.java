@@ -326,7 +326,7 @@ public class ServerManager {
         return new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
     }
 
-    private Array<String> testPlayersToJSON(){
+    public Array<String> testPlayersToJSON(){
         Array<String> jsonPlayers = new Array<>();
 
         for(String playerName : Util.toIterable(testPlayers.orderedKeys())){
@@ -361,7 +361,7 @@ public class ServerManager {
                     case REQUEST_LOGIN:
                         break;
                     case REQUEST_ALL_DEBUG_PLAYERS:
-                        //responsePayload = getDebugPlayersRequest(clientPayload);
+                        responsePayload = Util.fromCollectionToStringArray(testPlayersToJSON());
                         break;
                     case REQUEST_PLAYER_REGISTER:
                         responsePayload = registerPlayerRequest(clientPayload);
@@ -388,13 +388,13 @@ public class ServerManager {
                     case REQUEST_ROOM_LEAVE:
                         responsePayload = leaveRoomRequest(clientPayload);
                         break;
-                    case REQUEST_ALL_TABLES:
+                    case REQUEST_TABLES_ALL:
                         responsePayload = getTablesRequest(clientPayload);
                         break;
                     case REQUEST_LOUNGE:
                         responsePayload = getLoungesRequest(clientPayload);
                         break;
-                    case REQUEST_ALL_LOUNGES:
+                    case REQUEST_LOUNGE_ALL:
                         responsePayload = Util.fromCollectionToStringArray(loungesToJSON());
                         break;
                     default:
@@ -429,10 +429,11 @@ public class ServerManager {
     }
 
     private YokelLounge createLounge(String loungeName) throws Exception{
+        Logger.trace("Enter createLounge()");
         try{
-            Logger.trace("Enter createLounge()");
             Logger.debug("loungeName={}",loungeName);
             YokelLounge yl = null;
+
             if(!StringUtils.isEmpty(loungeName)) {
                 yl = new YokelLounge(loungeName);
                 addLounge(yl);
@@ -795,6 +796,8 @@ public class ServerManager {
         Logger.trace("Exit tableStandRequest()");
         return ret;
     }
+
+    //No payload from lient
 
     //private void playGameRequest();
 }

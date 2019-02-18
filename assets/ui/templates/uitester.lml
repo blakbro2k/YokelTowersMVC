@@ -1,0 +1,6 @@
+<!-- Going through LML tutorials is suggested before starting with Autumn MVC. If anything is unclear
+    in the .lml files, you should go through LML resources first. -->
+<window title="@loadingTitle" titleAlign="center">
+    <label>This is the UI Tester Page</label>
+    <textButton onChange="app:exit">@exit</textButton>
+</window>

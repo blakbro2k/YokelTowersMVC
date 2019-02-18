@@ -10,6 +10,7 @@ import com.github.czyzby.websocket.CommonWebSockets;
 
 import net.asg.games.YokelTowersMVC;
 import net.asg.games.utils.GlobalConstants;
+import net.asg.games.utils.PreLoader;
 
 /** Launches the desktop (LWJGL) application. */
 public class DesktopLauncher {
@@ -17,7 +18,6 @@ public class DesktopLauncher {
 
         if(args != null){
             for (String arg : args) {
-                //if (StringUtils.equalsIgnoreCase("texturepacker", (args[i]))) {
                 if ("texturepacker".equalsIgnoreCase((arg))) {
                     // Create two run configurations
                     // 1. For texture packing. Pass 'texturepacker' as argument and use desktop/src
@@ -31,10 +31,19 @@ public class DesktopLauncher {
 
                     System.exit(0);
                 }
+
+                if("-debugPlayers".equalsIgnoreCase((arg))) {
+                    PreLoader.getInstance().setDebugPreloader();
+                }
+
+                if("-uiTest".equalsIgnoreCase((arg))) {
+                    PreLoader.getInstance().setUIPreLoader();
+                }
             }
         }
 
-        LwjglApplication app = createApplication();
+        createApplication();
+        //LwjglApplication app = createApplication();
         //app.exit();
     }
 

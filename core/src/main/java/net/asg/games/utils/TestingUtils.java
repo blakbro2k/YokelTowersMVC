@@ -84,6 +84,10 @@ public class TestingUtils {
             return invokeMethod(this, isPrivate());
         }
 
+        public Object returnType() throws InvocationTargetException {
+            return getMethodReturnType(this);
+        }
+
         @Override
         public String toString(){
             try {
@@ -100,24 +104,64 @@ public class TestingUtils {
         }
     }
 
-    public static Object invokeMethod(TestMethod method, boolean isStatic) throws InvocationTargetException {
-        if(method != null){
-            return invokeStaticMethod(method.getParentClass(),
-                    method.getMethodName(),
-                    method.getMethodParameterClasses(),
-                    method.getParameterValues(),
-                    method.getInstantiatedObject(),
+    public static Object invokeMethod(TestMethod testMethod, boolean isStatic) throws InvocationTargetException {
+        if(testMethod != null){
+            return invokeStaticMethod(testMethod.getParentClass(),
+                    testMethod.getMethodName(),
+                    testMethod.getMethodParameterClasses(),
+                    testMethod.getParameterValues(),
+                    testMethod.getInstantiatedObject(),
                     isStatic);
         }
         return null;
     }
 
-    public static Object invokeStaticMethod(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object, boolean isStatic) throws InvocationTargetException {
+    public static Object getMethodReturnType(TestMethod testMethod) throws InvocationTargetException {
+        if(testMethod != null){
+            return getMethodReturnType(testMethod.getParentClass(),
+                    testMethod.getMethodName(),
+                    testMethod.getMethodParameterClasses(),
+                    testMethod.getParameterValues(),
+                    testMethod.getInstantiatedObject());
+        }
+        return null;
+    }
+
+    public static Object getMethodReturnType(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object) throws InvocationTargetException {
+        try {
+            if (targetClass != null) {
+                Method method = targetClass.getDeclaredMethod(methodName, argClasses);
+                if (method != null) {
+                    return method.getReturnType();
+                }
+            }
+            return null;
+        } catch (NoSuchMethodException e) {
+            // Should happen only rarely, because most times the
+            // specified method should exist. If it does happen, just let
+            // the test fail so the programmer can fix the problem.
+            throw new InvocationTargetException(e);
+        } catch (SecurityException e) {
+            // Should happen only rarely, because the setAccessible(true)
+            // should be allowed in when running unit tests. If it does
+            // happen, just let the test fail so the programmer can fix
+            // the problem.
+            throw new InvocationTargetException(e);
+        } catch (IllegalArgumentException e) {
+            // Should happen only rarely, because usually the right
+            // number and types of arguments will be passed. If it does
+            // happen, just let the test fail so the programmer can fix
+            // the problem.
+            throw new InvocationTargetException(e);
+        }
+    }
+
+        public static Object invokeStaticMethod(Class<?> targetClass, String methodName, Class[] argClasses, Object[] argObjects, Object object, boolean doPrivate) throws InvocationTargetException {
         try {
             if(targetClass != null){
                 Method method = targetClass.getDeclaredMethod(methodName, argClasses);
                 if(method != null){
-                    method.setAccessible(isStatic);
+                    method.setAccessible(doPrivate);
                     return method.invoke(object, argObjects);
                 }
             }

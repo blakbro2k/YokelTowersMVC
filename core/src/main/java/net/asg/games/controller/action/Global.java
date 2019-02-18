@@ -23,6 +23,8 @@ import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Arrays;
+
 /**
  * Since this class implements ActionContainer and is annotated with ViewActionContainer, its methods will be reflected
  * and available in all LML templates. Note that this class is a component like any other, so it can inject any fields,
@@ -100,7 +102,7 @@ public class Global implements ActionContainer {
         if(!isAlive()){
             initializeSockets();
         }
-        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_ALL_LOUNGES + "", null);
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_LOUNGE_ALL + "", null);
         socket.send(request);
     }
 
@@ -133,7 +135,7 @@ public class Global implements ActionContainer {
         //System.out.println("pleyr=" + json.toJson(player));
         //final ClientRequest request = new ClientRequest(-1, "state:" + socket.getState().getId(), ServerRequest.REQUEST_LOGIN + "", null);
         //socket.send(request);
-        //getPlayers();
+        getPlayers();
     }
 
     @LmlAction("getPlayers")
@@ -216,7 +218,7 @@ public class Global implements ActionContainer {
                 case REQUEST_ALL_DEBUG_PLAYERS:
                     buildTestPlayersFromJSON(payload);
                     break;
-                case REQUEST_ALL_LOUNGES:
+                case REQUEST_LOUNGE_ALL:
                     buildLoungeFromJSON(payload);
                     break;
                 case REQUEST_CREATE_GAME:
@@ -230,12 +232,13 @@ public class Global implements ActionContainer {
 
     private void buildTestPlayersFromJSON(String[] jsonPlayers){
         Json json  = new Json();
-        //System.out.println("jsonPlayer" + Arrays.asList(jsonPlayers));
 
         if(jsonPlayers != null){
+            System.out.println("jsonPlayer" + Arrays.asList(jsonPlayers));
+
             for(String jsonPlayer : jsonPlayers){
                 if(!StringUtils.isEmpty(jsonPlayer)){
-                    //System.out.println("jsonPlayer" + jsonPlayer);
+                    System.out.println("jsonPlayer" + jsonPlayer);
                     YokelPlayer player = json.fromJson(YokelPlayer.class, jsonPlayer);
 
                     if(player != null){
@@ -244,7 +247,7 @@ public class Global implements ActionContainer {
                 }
             }
         }
-        //System.out.println("players: " + players);
+        System.out.println("players: " + players);
     }
 
     private void buildLoungeFromJSON(String[] jsonLounges){

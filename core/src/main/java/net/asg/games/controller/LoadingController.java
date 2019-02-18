@@ -20,7 +20,7 @@ import net.asg.games.service.DTDService;
  *
  * This is the first application's views, shown right after the application starts. It will hide after all assests are
  * loaded. */
-@View(value = "ui/templates/loading.lml", first = true)
+@View(value = "ui/templates/loading.lml")
 public class LoadingController implements ViewRenderer {
     /** Will be injected automatically. Manages assets. Used to display loading progress. */
     @Inject private AssetService assetService;
