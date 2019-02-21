@@ -1,5 +1,8 @@
 <!-- Going through LML tutorials is suggested before starting with Autumn MVC. If anything is unclear
     in the .lml files, you should go through LML resources first. -->
-<window title="@loadingTitle" titleAlign="center">
-    <testtextButton onClickTest="goto:loading" row="true">text</testtextButton>
+<window title="@loadingComplete" titleAlign="center">
+    <:anyNotNull $isDebug>
+    <label onClose="goto:debug"/>
+</:anyNotNull>
+    <label onClose="goto:uitest"/>
 </window>

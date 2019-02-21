@@ -1,14 +1,17 @@
 package net.asg.games.utils;
 
-public class PreLoader {
-    private static PreLoader myInstance = new PreLoader();
+public class PostLoader {
+    public static final String UI_TEST = "uitest";
+    public static final String DEBUG = "debug";
+
+    private static PostLoader myInstance = new PostLoader();
     private String preLoader;
 
-    public PreLoader(){
+    public PostLoader(){
         clearPreLoader();
     }
 
-    public static PreLoader getInstance(){
+    public static PostLoader getInstance(){
         return myInstance;
     }
 
@@ -17,11 +20,11 @@ public class PreLoader {
     }
 
     public void setUIPreLoader(){
-        this.preLoader = "uitester";
+        this.preLoader = UI_TEST;
     }
 
     public void setDebugPreloader(){
-        this.preLoader = "preload";
+        this.preLoader = DEBUG;
     }
 
     public String getPreLoader(){

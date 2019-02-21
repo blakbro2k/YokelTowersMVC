@@ -9,7 +9,7 @@ import com.github.czyzby.lml.parser.action.ActionContainer;
 
 import net.asg.games.service.NetworkService;
 
-@View(id = "debug", value = "ui/templates/uitester.lml")
+@View(id = "uitest", value = "ui/templates/uitester.lml")
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
     @Inject private NetworkService networkService;
 
@@ -23,7 +23,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     public void requestPlayerRegistration(final Object player) {
         System.out.println("Starting requestPlayers");
 
-        networkService.requestDebugPlayersFromServer();
+        //networkService.requestDebugPlayersFromServer();
         //networkService.requestDebugPlayersFromServer();
     }
 }

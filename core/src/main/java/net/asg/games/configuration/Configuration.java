@@ -19,7 +19,6 @@ import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundEnabled;
 import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundVolume;
 import com.github.czyzby.kiwi.util.gdx.asset.lazy.provider.ObjectProvider;
 import com.github.czyzby.lml.parser.LmlSyntax;
-import com.github.czyzby.lml.parser.impl.attribute.OnClickLmlAttribute;
 import com.github.czyzby.lml.util.Lml;
 import com.github.czyzby.lml.vis.parser.impl.VisLmlSyntax;
 import com.github.czyzby.lml.vis.util.ColorPickerContainer;
@@ -27,9 +26,6 @@ import com.kotcrab.vis.ui.VisUI;
 
 import net.asg.games.YokelTowersMVC;
 import net.asg.games.provider.LoungeLmlTagProvider;
-import net.asg.games.provider.OnClickTesterLmlAttribute;
-import net.asg.games.provider.TestClickListenerLmlTagProvider;
-import net.asg.games.provider.TestTextButtonLmlTagProvider;
 import net.asg.games.service.ScaleService;
 
 /** Thanks to the Component annotation, this class will be automatically found and processed.
@@ -90,9 +86,6 @@ import net.asg.games.service.ScaleService;
             Lml.EXTRACT_UNANNOTATED_METHODS = false;
 
             syntax.addTagProvider(new LoungeLmlTagProvider(), "lounge");
-            syntax.addTagProvider(new TestTextButtonLmlTagProvider(), "testtextbutton");
-            syntax.addTagProvider(new TestClickListenerLmlTagProvider(), "onClickTest");
-            syntax.addAttributeProcessor(new OnClickTesterLmlAttribute(), "onClickTest");
         }
 
         @Destroy

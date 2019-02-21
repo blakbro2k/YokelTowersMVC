@@ -10,7 +10,7 @@ import com.github.czyzby.websocket.CommonWebSockets;
 
 import net.asg.games.YokelTowersMVC;
 import net.asg.games.utils.GlobalConstants;
-import net.asg.games.utils.PreLoader;
+import net.asg.games.utils.PostLoader;
 
 /** Launches the desktop (LWJGL) application. */
 public class DesktopLauncher {
@@ -33,11 +33,11 @@ public class DesktopLauncher {
                 }
 
                 if("-debugPlayers".equalsIgnoreCase((arg))) {
-                    PreLoader.getInstance().setDebugPreloader();
+                    PostLoader.getInstance().setDebugPreloader();
                 }
 
                 if("-uiTest".equalsIgnoreCase((arg))) {
-                    PreLoader.getInstance().setUIPreLoader();
+                    PostLoader.getInstance().setUIPreLoader();
                 }
             }
         }
@@ -65,7 +65,5 @@ public class DesktopLauncher {
         return configuration;
     }
 
-    private static void YokelTowersUITest(){
-
-    }
+    private static void YokelTowersUITest(){}
 }
