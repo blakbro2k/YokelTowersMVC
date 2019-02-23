@@ -1,8 +1,14 @@
 <!-- Going through LML tutorials is suggested before starting with Autumn MVC. If anything is unclear
     in the .lml files, you should go through LML resources first. -->
 <window title="@loadingComplete" titleAlign="center">
-    <:anyNotNull $isDebug>
-    <label onClose="goto:debug"/>
-</:anyNotNull>
-    <label onClose="goto:uitest"/>
+    <label>$isDebug</label>
+    <label>$isUITest</label>
+
+    <:if test=$isDebug>
+        <label onClose="goto:debug"/>
+    </:if>
+    <:if test=$isUITest>
+        <label onClose="goto:uitest"/>
+    </:if>
+    <label onClose="goto:lounge"/>
 </window>

@@ -24,6 +24,6 @@ public class DebugController extends ApplicationAdapter implements ViewRenderer,
     public void requestPlayerRegistration(final Object player) {
         System.out.println("Starting requestPlayers");
 
-        networkService.requestDebugPlayersFromServer();
+        //networkService.requestDebugPlayersFromServer();
     }
 }
