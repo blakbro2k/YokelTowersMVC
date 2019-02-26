@@ -8,14 +8,17 @@ import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
 import net.asg.games.service.NetworkService;
+import net.asg.games.service.UserInterfaceService;
 
 @View(id = "uitest", value = "ui/templates/uitester.lml")
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
     @Inject private NetworkService networkService;
+    @Inject private UserInterfaceService uiService;
 
     @Override
     public void render(Stage stage, float delta) {
         stage.act(delta);
+        stage.addActor(uiService.createAnimatedImage("defense_K_block", true));
         stage.draw();
     }
 

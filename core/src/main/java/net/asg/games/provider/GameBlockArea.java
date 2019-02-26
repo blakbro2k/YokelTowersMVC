@@ -1,15 +1,18 @@
 package net.asg.games.provider;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class GameBlockArea extends Table {
-    /*
+
     private static final float BLOCK_DROP_SPEED = .8f;
     private static final float MAX_BLOCK_DROP_SPEED = 6f;
     private static final float FALL_BLOCK_SPEED = 250f;
 
     private boolean isSpeedDown;
-    private Queue<GameBlock> blocks;
+    private Array<GameBlock> blocks;
 
     private int boardNumber;
     private GamePiece currentPiece;
@@ -28,7 +31,7 @@ public class GameBlockArea extends Table {
         setBounds(getX(), getY(), getPrefWidth(), getPrefHeight());
         bounds.set(getX(), getY(), getPrefWidth(), getPrefHeight());
     }
-
+/*
     private void updateDrawableBoard(){
         int col = 0;
         Queue<YokelBlock> column;
