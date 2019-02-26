@@ -1,4 +1,4 @@
-package net.asg.games.provider;
+package net.asg.games.provider.tags;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.OrderedMap;

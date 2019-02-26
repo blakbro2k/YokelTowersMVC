@@ -1,4 +1,4 @@
-package net.asg.games.provider;
+package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;

@@ -1,6 +1,5 @@
 package net.asg.games.service;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -8,15 +7,13 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.autumn.annotation.Component;
 import com.github.czyzby.autumn.annotation.Initiate;
 import com.github.czyzby.autumn.annotation.Inject;
-import com.github.czyzby.autumn.annotation.OnMessage;
 import com.github.czyzby.autumn.mvc.component.asset.AssetService;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.SkinService;
-import com.github.czyzby.autumn.mvc.config.AutumnMessage;
 
 import net.asg.games.game.objects.YokelBlock;
-import net.asg.games.provider.AnimatedImage;
-import net.asg.games.provider.GameBlock;
+import net.asg.games.provider.actors.AnimatedImage;
+import net.asg.games.provider.actors.GameBlock;
 
 
 @Component

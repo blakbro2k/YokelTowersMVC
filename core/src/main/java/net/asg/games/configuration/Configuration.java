@@ -25,7 +25,7 @@ import com.github.czyzby.lml.vis.util.ColorPickerContainer;
 import com.kotcrab.vis.ui.VisUI;
 
 import net.asg.games.YokelTowersMVC;
-import net.asg.games.provider.LoungeLmlTagProvider;
+import net.asg.games.provider.tags.LoungeLmlTagProvider;
 import net.asg.games.service.ScaleService;
 
 /** Thanks to the Component annotation, this class will be automatically found and processed.

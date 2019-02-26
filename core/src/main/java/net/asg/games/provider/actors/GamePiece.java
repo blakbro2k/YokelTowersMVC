@@ -1,4 +1,4 @@
-package net.asg.games.provider;
+package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
