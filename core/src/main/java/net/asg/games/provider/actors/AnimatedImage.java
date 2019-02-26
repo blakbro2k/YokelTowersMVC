@@ -22,14 +22,20 @@ public class AnimatedImage extends Image {
     }
 
 
-        @Override
-    public void act(float delta)
-    {
-        getTextureRegionDrawable().setRegion(animation.getKeyFrame(stateTime += delta, looping));
+    @Override
+    public void act(float delta){
+        setRegion(delta, looping);
         super.act(delta);
     }
 
-    public TextureRegionDrawable getTextureRegionDrawable(){
+    private TextureRegionDrawable getTextureRegionDrawable(){
         return (TextureRegionDrawable) getDrawable();
+    }
+
+    private void setRegion(float delta, boolean looping){
+        TextureRegionDrawable drawable = getTextureRegionDrawable();
+        if(drawable != null){
+            drawable.setRegion(animation.getKeyFrame(stateTime += delta, looping));
+        }
     }
 }
