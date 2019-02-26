@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class AnimatedImage extends Image {
-    protected Animation<TextureRegion> animation = null;
+    protected Animation<TextureRegion> animation;
     private float stateTime = 0;
     private boolean looping;
 
@@ -24,7 +24,7 @@ public class AnimatedImage extends Image {
 
     @Override
     public void act(float delta){
-        setRegion(delta, looping);
+        setRegion(delta);
         super.act(delta);
     }
 
@@ -32,7 +32,7 @@ public class AnimatedImage extends Image {
         return (TextureRegionDrawable) getDrawable();
     }
 
-    private void setRegion(float delta, boolean looping){
+    private void setRegion(float delta){
         TextureRegionDrawable drawable = getTextureRegionDrawable();
         if(drawable != null){
             drawable.setRegion(animation.getKeyFrame(stateTime += delta, looping));
