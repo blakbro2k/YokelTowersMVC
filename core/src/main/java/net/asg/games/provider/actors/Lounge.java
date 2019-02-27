@@ -1,4 +1,4 @@
-package net.asg.games.provider.tags;
+package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;

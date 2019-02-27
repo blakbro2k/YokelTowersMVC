@@ -25,6 +25,7 @@ import com.github.czyzby.lml.vis.util.ColorPickerContainer;
 import com.kotcrab.vis.ui.VisUI;
 
 import net.asg.games.YokelTowersMVC;
+import net.asg.games.provider.tags.GameBoardLmlTagProvider;
 import net.asg.games.provider.tags.LoungeLmlTagProvider;
 import net.asg.games.service.ScaleService;
 
@@ -86,6 +87,7 @@ import net.asg.games.service.ScaleService;
             Lml.EXTRACT_UNANNOTATED_METHODS = false;
 
             syntax.addTagProvider(new LoungeLmlTagProvider(), "lounge");
+            syntax.addTagProvider(new GameBoardLmlTagProvider(), "gameboard");
         }
 
         @Destroy

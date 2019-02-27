@@ -11,6 +11,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelRoom;
+import net.asg.games.provider.actors.Lounge;
 import net.asg.games.utils.Util;
 
 public class LoungeLmlTag extends TableLmlTag {

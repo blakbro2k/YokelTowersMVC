@@ -32,7 +32,7 @@ public class LoadingController implements ViewRenderer {
     @Asset("ui/game/game.atlas") private TextureAtlas gameAtlas;
 
     private boolean regionsAssigned;
-    private boolean dtdSaved = false;
+    private boolean dtdSaved;
 
     // Since this class implements ViewRenderer, it can modify the way its views is drawn. Additionally to drawing the
     // stage, this views also updates assets manager and reads its progress.

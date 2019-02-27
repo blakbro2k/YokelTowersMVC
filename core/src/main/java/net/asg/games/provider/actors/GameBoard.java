@@ -1,53 +1,27 @@
 package net.asg.games.provider.actors;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.ui.VisUI;
 
 /**
  * Created by eboateng on 3/19/2018.
  */
 
 public class GameBoard extends Table {
-    /*
     private static final int NUMBER_WIDTH_BLOCKS = 6;
     private static final int NUMBER_HEIGHT_BLOCKS = 16;
     private static float MAX_KEY_HOLD_TIME = 15;
 
-    private float keyHeld;
-
-    private int index;
-    private Rectangle background;
-
-    //UI
-    private GamePiece currentPiece;
-    private NextPeiceQueue next;
-    private PowersQueue powers;
-    private GameBlockArea blockArea;
-
-    private boolean isLeftKeyPressed = false;
-    private boolean isRightKeyPressed = false;
-    private boolean isDownKeyPressed = false;
-
-    private boolean isBoardRunning = false;
-    private boolean needsReset = false;
-    private boolean isKeyHeld = false;
-
-    public GameBoard() {
-        super(VisUI.getSkin());
-
-        initialize();
-        invalidateHierarchy();
-    }
-
     public GameBoard(Skin skin) {
         super(skin);
-    }
 
-    public GameBoard(int boardNumber){
         initialize();
         invalidateHierarchy();
     }
 
     private void initialize(){
+        /*
         resetBoard();
 
         float prefWidth = getPrefWidth();
@@ -79,8 +53,43 @@ public class GameBoard extends Table {
         gameTable.add(blockArea);
 
         add(gameTable).row();
-        add(new Label(blockArea.getNumber() + "", skin));
+        add(new Label(blockArea.getNumber() + "", skin));*/
     }
+
+    /*
+
+
+    private float keyHeld;
+
+    private int index;
+    private Rectangle background;
+
+    //UI
+    private GamePiece currentPiece;
+    private NextPeiceQueue next;
+    private PowersQueue powers;
+    private GameBlockArea blockArea;
+
+    private boolean isLeftKeyPressed = false;
+    private boolean isRightKeyPressed = false;
+    private boolean isDownKeyPressed = false;
+
+    private boolean isBoardRunning = false;
+    private boolean needsReset = false;
+    private boolean isKeyHeld = false;
+
+    public GameBoard() {
+
+    }
+
+
+
+    public GameBoard(int boardNumber){
+        initialize();
+        invalidateHierarchy();
+    }
+
+
 
     public YokelPiece getNextPiece(){
         if (nextPieceBuffer.size < 1){
