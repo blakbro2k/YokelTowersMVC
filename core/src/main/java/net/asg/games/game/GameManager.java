@@ -53,21 +53,21 @@ public class GameManager {
 
     public Array<TextureRegion> getRegions(String regionName) {
         int i = 0;
-        StringBuilder regionNames = (new StringBuilder()).append(regionName).append("_");
-        TextureRegion region = getRegion(regionNames, i);
+        regionName +=  "_";
+        TextureRegion region = getRegion(regionName, i);
 
         Array<TextureRegion> regions = null;
         while(region != null){
             i++;
-            region = getRegion(regionNames, i);
+            region = getRegion(regionName, i);
             addRegion(regions,region);
         }
         return regions;
     }
 
-    private TextureRegion getRegion(StringBuilder regionNames, int i){
+    private TextureRegion getRegion(String regionNames, int i){
         try{
-            return interfaceService.getSkin().getRegion(regionNames.append(i).toString());
+            return interfaceService.getSkin().getRegion(regionNames + i);
         } catch(GdxRuntimeException e) {
             return null;
         }
