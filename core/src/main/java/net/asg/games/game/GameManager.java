@@ -40,8 +40,9 @@ public class GameManager {
         uiView.eBlockImage.setDrawable(interfaceService.getSkin(), "E_block");
         uiView.lBlockImage.setDrawable(interfaceService.getSkin(), "L_block");
         uiView.bashBlockImage.setDrawable(interfaceService.getSkin(), "Bash_block");
-        System.out.println(getRegions("defense_Bash_block"));
-        System.out.println(interfaceService.getSkin().getRegion("Bash_block_Broken_2"));
+        System.out.println("Regions=" + getRegions("defense_Bash_block"));
+        System.out.println("Regions=" + interfaceService.getSkin().getRegions("defense_Bash_block"));
+        System.out.println("retion(Bash_block_Broken_2)=" + interfaceService.getSkin().getRegion("Bash_block_Broken_2"));
     }
 
     public void update(){}
