@@ -16,8 +16,7 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelLounge;
-import net.asg.games.game.objects.YokelPlayer;
-import net.asg.games.provider.GameBlock;
+import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.utils.enums.YokelBlockType;
 
 import org.apache.commons.lang.StringUtils;
@@ -558,4 +557,6 @@ public class Util {
         }
         return false;
     }
+
+
 }

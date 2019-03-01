@@ -20,7 +20,7 @@ import net.asg.games.service.DTDService;
  *
  * This is the first application's views, shown right after the application starts. It will hide after all assests are
  * loaded. */
-@View(value = "ui/templates/loading.lml")
+@View(value = "ui/templates/loading.lml", first = true)
 public class LoadingController implements ViewRenderer {
     /** Will be injected automatically. Manages assets. Used to display loading progress. */
     @Inject private AssetService assetService;
@@ -32,7 +32,7 @@ public class LoadingController implements ViewRenderer {
     @Asset("ui/game/game.atlas") private TextureAtlas gameAtlas;
 
     private boolean regionsAssigned;
-    private boolean dtdSaved = false;
+    private boolean dtdSaved;
 
     // Since this class implements ViewRenderer, it can modify the way its views is drawn. Additionally to drawing the
     // stage, this views also updates assets manager and reads its progress.

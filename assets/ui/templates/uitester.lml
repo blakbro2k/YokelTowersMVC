@@ -1,6 +1,18 @@
 <!-- Going through LML tutorials is suggested before starting with Autumn MVC. If anything is unclear
     in the .lml files, you should go through LML resources first. -->
-<window title="@loadingTitle" titleAlign="center">
-    <label>This is the UI Tester Page</label>
-    <textButton onChange="app:exit">@exit</textButton>
+<window title="@loadingTitle" titleAlign="center" width="20" debug="true" align="center">
+    <container width="200" row="true" colspan="2">
+        <label>This is the UI Tester Page</label>
+    </container>
+    <verticalGroup>
+        <image id="Y_block"/>
+        <image id="O_block"/>
+        <image id="K_block"/>
+    </verticalGroup>
+    <verticalGroup row="true">
+        <image id="E_block"/>
+        <image id="L_block"/>
+        <image id="Bash_block"/>
+    </verticalGroup>
+    <textButton  colspan="2" onChange="app:exit">@exit</textButton>
 </window>

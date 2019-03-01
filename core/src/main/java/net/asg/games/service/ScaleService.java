@@ -40,17 +40,14 @@ package net.asg.games.service;
             }
             preference.set(scale);
             // Changing GUI skin, reloading all screens:
-            interfaceService.reload(new Runnable() {
-                @Override
-                public void run() {
-                    // Removing previous skin resources:
-                    VisUI.dispose();
-                    // Loading new skin:
-                    VisUI.load(scale);
-                    // Replacing the previously default skin:
-                    skinService.clear();
-                    skinService.addSkin("default", VisUI.getSkin());
-                }
+            interfaceService.reload(() -> {
+                // Removing previous skin resources:
+                VisUI.dispose();
+                // Loading new skin:
+                VisUI.load(scale);
+                // Replacing the previously default skin:
+                skinService.clear();
+                skinService.addSkin("default", VisUI.getSkin());
             });
         }
     }

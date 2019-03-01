@@ -1,4 +1,4 @@
-package net.asg.games.provider;
+package net.asg.games.provider.tags;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.OrderedMap;
@@ -11,6 +11,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelRoom;
+import net.asg.games.provider.actors.Lounge;
 import net.asg.games.utils.Util;
 
 public class LoungeLmlTag extends TableLmlTag {

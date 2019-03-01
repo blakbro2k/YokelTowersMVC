@@ -18,6 +18,7 @@ import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
+import net.asg.games.utils.PostLoader;
 import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
 
@@ -38,7 +39,6 @@ public class Global implements ActionContainer {
     private OrderedMap<String, YokelPlayer> players = new OrderedMap<String, YokelPlayer>();
     private OrderedMap<String, YokelLounge> lounges = new OrderedMap<String, YokelLounge>();
 
-
     /**
      * This is a mock-up method that does nothing. It will be available in LML templates through "close" (annotation
      * argument) and "noOp" (method name) IDs.
@@ -47,9 +47,16 @@ public class Global implements ActionContainer {
     public void noOp() {
     }
 
+    @LmlAction("isUITest")
+    public boolean isUITest(){
+        System.out.println("isUITestResult  called.");
+        return PostLoader.UI_TEST.equalsIgnoreCase(PostLoader.getInstance().getPreLoader());
+    }
+
     @LmlAction("isDebug")
-    public boolean isDebug() {
-        return true;
+    public boolean isDebug(){
+        System.out.println("isDebugResult  called.");
+        return PostLoader.DEBUG.equalsIgnoreCase(PostLoader.getInstance().getPreLoader());
     }
 
     @LmlAction("initConnection")
