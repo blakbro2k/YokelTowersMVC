@@ -40,9 +40,9 @@ public class GameManager {
         uiView.eBlockImage.setDrawable(interfaceService.getSkin(), "E_block");
         uiView.lBlockImage.setDrawable(interfaceService.getSkin(), "L_block");
         uiView.bashBlockImage.setDrawable(interfaceService.getSkin(), "Bash_block");
-        System.out.println("Regions=" + getRegions("defense_Bash_block"));
+        System.out.println("Regions=" + getRegions("Bash_block_Broken"));
         System.out.println("Regions=" + interfaceService.getSkin().getRegions("defense_Bash_block"));
-        System.out.println("retion(Bash_block_Broken_2)=" + interfaceService.getSkin().getRegion("Bash_block_Broken_2"));
+        System.out.println("retion(defense_Bash_block_1)=" + interfaceService.getSkin().getRegion("defense_Bash_block_1"));
     }
 
     public void update(){}
@@ -52,15 +52,15 @@ public class GameManager {
     public String[] getBoardState(){ return null;}
 
     public Array<TextureRegion> getRegions(String regionName) {
-        int i = 0;
+        int i = 1;
         regionName +=  "_";
         TextureRegion region = getRegion(regionName, i);
 
-        Array<TextureRegion> regions = null;
+        Array<TextureRegion> regions = new Array<>();
         while(region != null){
+            regions.add(region);
             i++;
             region = getRegion(regionName, i);
-            addRegion(regions,region);
         }
         return regions;
     }
@@ -68,17 +68,8 @@ public class GameManager {
     private TextureRegion getRegion(String regionNames, int i){
         try{
             return interfaceService.getSkin().getRegion(regionNames + i);
-        } catch(GdxRuntimeException e) {
+        } catch (GdxRuntimeException e){
             return null;
-        }
-    }
-
-    private void addRegion(Array<TextureRegion> regions, TextureRegion region){
-        if(region != null){
-            if(regions == null){
-                regions = new Array<>();
-            }
-            regions.add(region);
         }
     }
 }
