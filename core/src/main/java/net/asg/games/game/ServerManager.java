@@ -283,10 +283,12 @@ public class ServerManager {
     }
 
     private class GameRunner implements Runnable{
-        ServerManager manager;
+        ServerManager serverManager;
+        GameManager gameManager;
 
         public GameRunner(ServerManager manager){
-            this.manager = manager;
+            this.serverManager = manager;
+            this.gameManager = new GameManager();
         }
 
         public void run() {
