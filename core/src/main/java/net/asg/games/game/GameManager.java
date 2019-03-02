@@ -31,6 +31,23 @@ public class GameManager {
         uiService.loadDrawable(uiView.lBlockImage);
         uiService.loadDrawable(uiView.bashBlockImage);
         uiService.loadDrawable(uiView.defenseYBlockImage);
+        uiService.loadDrawable(uiView.defenseOBlockImage);
+        uiService.loadDrawable(uiView.defenseKBlockImage);
+        uiService.loadDrawable(uiView.defenseEBlockImage);
+        uiService.loadDrawable(uiView.defenseLBlockImage);
+        uiService.loadDrawable(uiView.defenseBashBlockImage);
+        uiService.loadDrawable(uiView.powerYBlockImage);
+        uiService.loadDrawable(uiView.powerOBlockImage);
+        uiService.loadDrawable(uiView.powerKBlockImage);
+        uiService.loadDrawable(uiView.powerEBlockImage);
+        uiService.loadDrawable(uiView.powerLBlockImage);
+        uiService.loadDrawable(uiView.powerBashBlockImage);
+        uiService.loadDrawable(uiView.brokenYBlockImage);
+        uiService.loadDrawable(uiView.brokenOBlockImage);
+        uiService.loadDrawable(uiView.brokenKBlockImage);
+        uiService.loadDrawable(uiView.brokenEBlockImage);
+        uiService.loadDrawable(uiView.brokenLBlockImage);
+        uiService.loadDrawable(uiView.brokenBashBlockImage);
     }
 
     public void update(){}

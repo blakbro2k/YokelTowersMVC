@@ -8,12 +8,24 @@
     <image id="E_block"/>
     <image id="L_block"/>
     <image id="Bash_block" row="true"/>
-    <image id="defense_Y_block"/>
-    <!--<image id="defense_O_block"/>
-    <image id="defense_K_block"/>
-    <image id="defense_E_block"/>
-    <image id="defense_L_block"/>
-    <image id="defense_Bash_block" row="true"/>-->
-    <textButton  colspan="2" onChange="app:exit">@exit</textButton>
+    <animatedimage id="defense_Y_block"/>
+    <animatedimage id="defense_O_block"/>
+    <animatedimage id="defense_K_block" row="true"/>
+    <animatedimage id="defense_E_block"/>
+    <animatedimage id="defense_L_block"/>
+    <animatedimage id="defense_Bash_block" row="true"/>
+    <animatedimage id="power_Y_block"/>
+    <animatedimage id="power_O_block"/>
+    <animatedimage id="power_K_block" row="true"/>
+    <animatedimage id="power_E_block"/>
+    <animatedimage id="power_L_block"/>
+    <animatedimage id="power_Bash_block" row="true"/>
+    <animatedimage id="Y_block_Broken"/>
+    <animatedimage id="O_block_Broken"/>
+    <animatedimage id="K_block_Broken" row="true"/>
+    <animatedimage id="E_block_Broken"/>
+    <animatedimage id="L_block_Broken"/>
+    <animatedimage id="Bash_block_Broken" row="true"/>
+    <textButton  colspan="3" onChange="app:exit">@exit</textButton>
 </table>
 </window>

@@ -45,7 +45,17 @@ public class UserInterfaceService {
     }
 
     private void loadDrawable(Actor actor, String name){
-        if(actor instanceof Image){
+        System.out.println("loadDrawable=" + actor.getClass());
+
+        if(actor instanceof AnimatedImage){
+            AnimatedImage image = (AnimatedImage) actor;
+            try{
+                System.out.println("setting frames");
+                image.setFrames(getDrawableFrames(name));
+            } catch(GdxRuntimeException ge){
+                ge.printStackTrace();
+            }
+        } else if(actor instanceof Image){
             Image image = (Image) actor;
             try{
                 image.setDrawable(interfaceService.getSkin(), name);
@@ -53,14 +63,7 @@ public class UserInterfaceService {
                 ge.printStackTrace();
             }
         }
-        if(actor instanceof AnimatedImage){
-            AnimatedImage image = (AnimatedImage) actor;
-            try{
-                image.setFrames(getDrawableFrames(name));
-            } catch(GdxRuntimeException ge){
-                ge.printStackTrace();
-            }
-        }
+
     }
 
     public Array<Drawable> getDrawableFrames(String regionName) {
