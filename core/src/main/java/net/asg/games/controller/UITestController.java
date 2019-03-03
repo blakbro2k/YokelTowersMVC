@@ -1,6 +1,7 @@
 package net.asg.games.controller;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.github.czyzby.autumn.annotation.Inject;
@@ -43,6 +44,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("E_block_Broken") public AnimatedImage brokenEBlockImage;
     @LmlActor("L_block_Broken") public AnimatedImage brokenLBlockImage;
     @LmlActor("Bash_block_Broken") public AnimatedImage brokenBashBlockImage;
+    @LmlActor("stone") public Image stoneBlockImage;
 
     private boolean isInitiated;
 

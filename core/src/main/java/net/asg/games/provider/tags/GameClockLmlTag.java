@@ -16,7 +16,7 @@ public class GameClockLmlTag extends AbstractNonParentalActorLmlTag {
 
     @Override
     protected Actor getNewInstanceOfActor(final LmlActorBuilder builder) {
-        return new GameClock(getSkin(builder)).start();
+        return new GameClock(getSkin(builder));
     }
 
     @Override

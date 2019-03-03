@@ -50,10 +50,10 @@ public class LoadingController implements ViewRenderer {
             regionsAssigned = true;
             interfaceService.getSkin().addRegions(gameAtlas);
         }
-        if(!dtdSaved){
-            dtdService.saveDtdSchema(Gdx.files.local("core/lml.dtd"));
-            dtdSaved = true;
-        }
+        //if(!dtdSaved){
+            //dtdService.saveDtdSchema(Gdx.files.local("core/lml.dtd"));
+           // dtdSaved = true;
+        //}
     }
 }
 

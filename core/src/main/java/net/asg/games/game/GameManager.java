@@ -46,6 +46,7 @@ public class GameManager {
         uiService.loadDrawable(uiView.brokenEBlockImage);
         uiService.loadDrawable(uiView.brokenLBlockImage);
         uiService.loadDrawable(uiView.brokenBashBlockImage);
+        uiService.loadDrawable(uiView.stoneBlockImage);
     }
 
     public void update(){}
