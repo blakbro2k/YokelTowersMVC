@@ -2,6 +2,7 @@
     in the .lml files, you should go through LML resources first. -->
 <window title="@loadingTitle" titleAlign="center" width="20" debug="true" align="center">
 <table>
+    <image id="stone" row="true"/>
     <image id="Y_block"/>
     <image id="O_block"/>
     <image id="K_block" row="true"/>
@@ -26,7 +27,6 @@
     <animatedimage id="E_block_Broken"/>
     <animatedimage id="L_block_Broken"/>
     <animatedimage id="Bash_block_Broken" row="true"/>
-    <image id="stone" row="true"/>
     <gameclock row="true"/>
     <textButton  colspan="3" onChange="app:exit">@exit</textButton>
 </table>
