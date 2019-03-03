@@ -17,7 +17,6 @@ import net.asg.games.service.UserInterfaceService;
 @View(id = "uitest", value = "ui/templates/uitester.lml")
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
     @Inject private NetworkService networkService;
-    @Inject private UserInterfaceService uiService;
     @Inject private GameManager gameManager;
 
     @LmlActor("Y_block") public Image yBlockImage;
@@ -37,7 +36,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("power_K_block") public AnimatedImage powerKBlockImage;
     @LmlActor("power_E_block") public AnimatedImage powerEBlockImage;
     @LmlActor("power_L_block") public AnimatedImage powerLBlockImage;
-    @LmlActor("power_Bash_block") public AnimatedImage powerBashBlockImage;
+    @LmlActor("power_bash_block") public AnimatedImage powerBashBlockImage;
     @LmlActor("Y_block_Broken") public AnimatedImage brokenYBlockImage;
     @LmlActor("O_block_Broken") public AnimatedImage brokenOBlockImage;
     @LmlActor("K_block_Broken") public AnimatedImage brokenKBlockImage;

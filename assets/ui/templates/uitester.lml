@@ -19,13 +19,14 @@
     <animatedimage id="power_K_block" row="true"/>
     <animatedimage id="power_E_block"/>
     <animatedimage id="power_L_block"/>
-    <animatedimage id="power_Bash_block" row="true"/>
+    <animatedimage id="power_bash_block" row="true"/>
     <animatedimage id="Y_block_Broken"/>
     <animatedimage id="O_block_Broken"/>
     <animatedimage id="K_block_Broken" row="true"/>
     <animatedimage id="E_block_Broken"/>
     <animatedimage id="L_block_Broken"/>
     <animatedimage id="Bash_block_Broken" row="true"/>
+    <gameclock row="true"/>
     <textButton  colspan="3" onChange="app:exit">@exit</textButton>
 </table>
 </window>

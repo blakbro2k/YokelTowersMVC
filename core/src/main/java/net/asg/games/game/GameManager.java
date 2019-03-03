@@ -19,9 +19,7 @@ public class GameManager {
 
     @Initiate
     @SuppressWarnings("unchecked")
-    private void loadGameData() {
-
-    }
+    private void loadGameData() {}
 
     public void initiateGame() {
         uiService.loadDrawable(uiView.yBlockImage);
