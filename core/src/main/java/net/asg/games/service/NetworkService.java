@@ -31,7 +31,6 @@ public class NetworkService {
 
     // @Inject-annotated fields will be automatically filled by the context initializer.
     @Inject private InterfaceService interfaceService;
-    @Inject private DTDService dtdService;
 
     private WebSocket socket = null;
     private String message = "Connecting...";
@@ -43,7 +42,6 @@ public class NetworkService {
         //TODO: Create CSRF Token
 
         LOGGER.debug("Enter initializeSockets()");
-        dtdService.saveDtdSchema(Gdx.files.local("lml.dtd"));
 
         LOGGER.info("Listening for server on //" + getServerHost() + ":" + getServerPort());
         // Note: you can also use WebSockets.newSocket() and WebSocket.toWebSocketUrl() methods.

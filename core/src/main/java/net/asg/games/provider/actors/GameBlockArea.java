@@ -206,7 +206,7 @@ public class GameBlockArea extends Table {
                 }
             }
         }
-}
+    }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {

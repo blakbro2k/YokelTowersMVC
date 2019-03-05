@@ -93,6 +93,7 @@ public class Global implements ActionContainer {
         return isConnected;
     }
 
+
     @LmlAction("requestPlayers")
     public void requestPlayers() {
         System.out.println("Starting requestPlayers");

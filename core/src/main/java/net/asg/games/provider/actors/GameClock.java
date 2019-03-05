@@ -1,12 +1,9 @@
 package net.asg.games.provider.actors;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class GameClock extends Table {
@@ -36,7 +33,7 @@ public class GameClock extends Table {
     }
 
     public void stop(){
-        isRunning = false;
+        resetTimer();
     }
 
     public void pause(){
@@ -53,14 +50,14 @@ public class GameClock extends Table {
 
     public int getSeconds(){
         if(isRunning()){
-            return (int) Math.round(getElapsedSeconds()) % 60;
+            return Math.round(getElapsedSeconds()) % 60;
         }
         return -1;
     }
 
     public int getMinutes(){
         if(isRunning()){
-            return (int) Math.round(getElapsedSeconds()) / 60;
+            return Math.round(getElapsedSeconds()) / 60;
         }
         return -1;
     }
@@ -79,7 +76,7 @@ public class GameClock extends Table {
 
     //public void draw(Batch batch, float parentAlpha){}
 
-    public Drawable getImage(String imageName){
+    public Drawable getDigitImage(String imageName){
         if(imageName != null){
             return getSkin().getDrawable(imageName);
         }
@@ -90,7 +87,7 @@ public class GameClock extends Table {
         if(digit_1 == null){
             digit_1 = new Image();
         }
-        setDigit_1();
+        //setDigit_1();
         return digit_1;
     }
 
@@ -98,7 +95,7 @@ public class GameClock extends Table {
         if(digit_2 == null){
             digit_2 = new Image();
         }
-        setDigit_2();
+        //setDigit_2();
         return digit_2;
     }
 
@@ -106,7 +103,7 @@ public class GameClock extends Table {
         if(digit_3 == null){
             digit_3 = new Image();
         }
-        setDigit_3();
+        //setDigit_3();
         return digit_3;
     }
 
@@ -114,7 +111,7 @@ public class GameClock extends Table {
         if(digit_4 == null){
             digit_4 = new Image();
         }
-        setDigit_4();
+        //setDigit_4();
         return digit_4;
     }
 
@@ -122,15 +119,15 @@ public class GameClock extends Table {
         if(colon == null){
             colon = new Image();
         }
-        colon.setDrawable(getImage("colon"));
+        colon.setDrawable(getDigitImage("colon"));
         return colon;
     }
 
     public Drawable getDigit(int i){
         if(!isRunning){
-            return getImage("no_digit");
+            return getDigitImage("no_digit");
         } else {
-            return getImage(i + "_digit");
+            return getDigitImage(i + "_digit");
         }
     }
     private long getElapsedTime(){

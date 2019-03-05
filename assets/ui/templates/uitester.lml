@@ -1,33 +1,36 @@
-<!-- Going through LML tutorials is suggested before starting with Autumn MVC. If anything is unclear
-    in the .lml files, you should go through LML resources first. -->
-<window title="@loadingTitle" titleAlign="center" width="20" debug="true" align="center">
-<table>
-    <image id="stone" row="true"/>
-    <image id="Y_block"/>
-    <image id="O_block"/>
-    <image id="K_block" row="true"/>
-    <image id="E_block"/>
-    <image id="L_block"/>
-    <image id="Bash_block" row="true"/>
-    <animatedimage id="defense_Y_block"/>
-    <animatedimage id="defense_O_block"/>
-    <animatedimage id="defense_K_block" row="true"/>
-    <animatedimage id="defense_E_block"/>
-    <animatedimage id="defense_L_block"/>
-    <animatedimage id="defense_Bash_block" row="true"/>
-    <animatedimage id="power_Y_block"/>
-    <animatedimage id="power_O_block"/>
-    <animatedimage id="power_K_block" row="true"/>
-    <animatedimage id="power_E_block"/>
-    <animatedimage id="power_L_block"/>
-    <animatedimage id="power_bash_block" row="true"/>
-    <animatedimage id="Y_block_Broken"/>
-    <animatedimage id="O_block_Broken"/>
-    <animatedimage id="K_block_Broken" row="true"/>
-    <animatedimage id="E_block_Broken"/>
-    <animatedimage id="L_block_Broken"/>
-    <animatedimage id="Bash_block_Broken" row="true"/>
-    <gameclock row="true"/>
-    <textButton  colspan="3" onChange="app:exit">@exit</textButton>
-</table>
+<window defaultPad="2" width="480">
+    <image width="16" height="16" id="Y_block"/>
+    <image width="16" height="16" id="O_block"/>
+    <image width="16" height="16" id="K_block"/>
+    <image width="16" height="16" id="E_block"/>
+    <image width="16" height="16" id="L_block"/>
+    <image width="16" height="16" id="Bash_block" row="true"/>
+    <animatedimage width="16" height="16" id="defense_Y_block"/>
+    <animatedimage width="16" height="16" id="defense_O_block"/>
+    <animatedimage width="16" height="16" id="defense_K_block"/>
+    <animatedimage width="16" height="16" id="defense_E_block"/>
+    <animatedimage width="16" height="16" id="defense_L_block"/>
+    <animatedimage width="16" height="16" id="defense_Bash_block" row="true"/>
+    <animatedimage width="16" height="16" id="power_Y_block"/>
+    <animatedimage width="16" height="16" id="power_O_block"/>
+    <animatedimage width="16" height="16" id="power_K_block"/>
+    <animatedimage width="16" height="16" id="power_E_block"/>
+    <animatedimage width="16" height="16" id="power_L_block"/>
+    <animatedimage width="16" height="16" id="power_bash_block" row="true"/>
+    <animatedimage width="16" height="16" id="Y_block_Broken"/>
+    <animatedimage width="16" height="16" id="O_block_Broken"/>
+    <animatedimage width="16" height="16" id="K_block_Broken"/>
+    <animatedimage width="16" height="16" id="E_block_Broken"/>
+    <animatedimage width="16" height="16" id="L_block_Broken"/>
+    <animatedimage width="16" height="16" id="Bash_block_Broken" row="true"/>
+    <image width="16" height="16" id="stone" row="true"/>
+    <gameclock id="gameClock" colspan="6" row="true">
+
+    </gameclock>
+    <textField  id="gameClock">
+        <:inputListener keys="Space">
+            <:evaluate method="toggleGameStart"/>
+        </:inputListener>
+    </textField>
+    <textButton onChange="app:exit">@exit</textButton>
 </window>
