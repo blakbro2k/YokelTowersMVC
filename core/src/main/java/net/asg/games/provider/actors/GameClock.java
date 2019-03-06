@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 public class GameClock extends Table {
     private long start;
-    private long elapsed;
     private boolean isRunning;
     private Image digit_1;
     private Image digit_2;
@@ -26,18 +25,13 @@ public class GameClock extends Table {
         add(getDigit_3());
         add(getDigit_4());
     }
-    public GameClock start(){
+    public void start(){
         isRunning = true;
         start = TimeUtils.millis();
-        return this;
     }
 
     public void stop(){
         resetTimer();
-    }
-
-    public void pause(){
-        this.isRunning = !isRunning;
     }
 
     public boolean isRunning(){
@@ -48,14 +42,14 @@ public class GameClock extends Table {
         return (int) ((TimeUtils.millis() - start) / 1000);
     }
 
-    public int getSeconds(){
+    private int getSeconds(){
         if(isRunning()){
             return Math.round(getElapsedSeconds()) % 60;
         }
         return -1;
     }
 
-    public int getMinutes(){
+    private int getMinutes(){
         if(isRunning()){
             return Math.round(getElapsedSeconds()) / 60;
         }
@@ -63,10 +57,11 @@ public class GameClock extends Table {
     }
 
     private void resetTimer(){
-        start = elapsed = 0;
+        start = 0;
         this.isRunning = false;
     }
 
+    @Override
     public void act(float delta){
         setDigit_1();
         setDigit_2();
@@ -74,48 +69,42 @@ public class GameClock extends Table {
         setDigit_4();
     }
 
-    //public void draw(Batch batch, float parentAlpha){}
-
-    public Drawable getDigitImage(String imageName){
+    private Drawable getDigitImage(String imageName){
         if(imageName != null){
             return getSkin().getDrawable(imageName);
         }
         return null;
     }
 
-    public Image getDigit_1(){
+    private Image getDigit_1(){
         if(digit_1 == null){
             digit_1 = new Image();
         }
-        //setDigit_1();
         return digit_1;
     }
 
-    public Image getDigit_2(){
+    private Image getDigit_2(){
         if(digit_2 == null){
             digit_2 = new Image();
         }
-        //setDigit_2();
         return digit_2;
     }
 
-    public Image getDigit_3(){
+    private Image getDigit_3(){
         if(digit_3 == null){
             digit_3 = new Image();
         }
-        //setDigit_3();
         return digit_3;
     }
 
-    public Image getDigit_4(){
+    private Image getDigit_4(){
         if(digit_4 == null){
             digit_4 = new Image();
         }
-        //setDigit_4();
         return digit_4;
     }
 
-    public Image getColon(){
+    private Image getColon(){
         if(colon == null){
             colon = new Image();
         }
@@ -123,7 +112,7 @@ public class GameClock extends Table {
         return colon;
     }
 
-    public Drawable getDigit(int i){
+    private Drawable getDigit(int i){
         if(!isRunning){
             return getDigitImage("no_digit");
         } else {

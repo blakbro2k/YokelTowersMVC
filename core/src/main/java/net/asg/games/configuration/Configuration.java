@@ -28,6 +28,7 @@ import net.asg.games.YokelTowersMVC;
 import net.asg.games.provider.tags.GameBoardLmlTagProvider;
 import net.asg.games.provider.tags.GameClockLmlTagProvider;
 import net.asg.games.provider.tags.LoungeLmlTagProvider;
+import net.asg.games.provider.tags.PlayerIconLmlTagProvider;
 import net.asg.games.service.ScaleService;
 
 /** Thanks to the Component annotation, this class will be automatically found and processed.
@@ -87,14 +88,19 @@ import net.asg.games.service.ScaleService;
             // speeding up method look-up:
             Lml.EXTRACT_UNANNOTATED_METHODS = false;
 
-            syntax.addTagProvider(new LoungeLmlTagProvider(), "lounge");
-            syntax.addTagProvider(new GameBoardLmlTagProvider(), "gameboard");
-            syntax.addTagProvider(new GameClockLmlTagProvider(), "gameclock");
+            addCustomLmlTags();
         }
 
         @Destroy
         public static void destroyColorPicker() {
             ColorPickerContainer.dispose();
+        }
+
+        private void addCustomLmlTags(){
+            syntax.addTagProvider(new LoungeLmlTagProvider(), "lounge");
+            syntax.addTagProvider(new GameBoardLmlTagProvider(), "gameboard");
+            syntax.addTagProvider(new GameClockLmlTagProvider(), "gameclock");
+            syntax.addTagProvider(new PlayerIconLmlTagProvider(), "playericon");
         }
     }
 
