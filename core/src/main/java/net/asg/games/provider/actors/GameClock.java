@@ -44,7 +44,7 @@ public class GameClock extends Table {
         return this.isRunning;
     }
 
-    private int getElapsedSeconds(){
+    public int getElapsedSeconds(){
         return (int) ((TimeUtils.millis() - start) / 1000);
     }
 
@@ -130,9 +130,6 @@ public class GameClock extends Table {
             return getDigitImage(i + "_digit");
         }
     }
-    private long getElapsedTime(){
-        return elapsed;
-    }
 
     private void setDigit_1(){
         digit_1.setDrawable(getDigit(getMinutes() / 10));
@@ -148,10 +145,5 @@ public class GameClock extends Table {
 
     private void setDigit_4(){
         digit_4.setDrawable(getDigit(getSeconds() % 10));
-    }
-
-    public int getSecondsDigit(long elapsedTime){
-        return 1;
-       // TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
     }
 }

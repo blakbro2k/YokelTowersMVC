@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.OrderedMap;
+import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.stereotype.ViewActionContainer;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
@@ -14,6 +15,7 @@ import com.github.czyzby.websocket.data.WebSocketException;
 import com.github.czyzby.websocket.net.ExtendedNet;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
+import net.asg.games.controller.UITestController;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.server.serialization.ClientRequest;
@@ -34,6 +36,8 @@ import java.util.Arrays;
  */
 @ViewActionContainer("global")
 public class Global implements ActionContainer {
+    @Inject private UITestController ui;
+
     private WebSocket socket;
     private String message = "Connecting...";
     private boolean isConnected = false;
@@ -89,9 +93,17 @@ public class Global implements ActionContainer {
         return isConnected;
     }
     @LmlAction("toggleGameStart")
-    public void toggleGameStart(final Actor actor) {
-        System.out.println("toggleGameStart:" + actor);
-        //return isConnected;
+    public void toggleGameStart() {
+        if(!ui.gameClock.isRunning()){
+            ui.gameClock.start();
+        } else {
+            ui.gameClock.stop();
+        }
+    }
+
+    @LmlAction("getTimerSeconds")
+    public int getTimerSeconds() {
+        return ui.gameClock.isRunning() ? ui.gameClock.getElapsedSeconds() : 0;
     }
 
     @LmlAction("isAlive")
