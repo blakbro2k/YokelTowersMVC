@@ -24,8 +24,8 @@ public class GameClockLmlTag extends TableLmlTag {
     protected void handlePlainTextLine(final String plainTextLine) {
     }
 
-    /** @return casted actor. */
-    private GameClock getGameClock() {
-        return (GameClock) getActor();
-    }
+    ///** @return casted actor. */
+   // private GameClock getGameClock() {
+    //    return (GameClock) getActor();
+    //}
  }

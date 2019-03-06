@@ -1,5 +1,6 @@
 package net.asg.games.controller.action;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.OrderedMap;
@@ -86,6 +87,11 @@ public class Global implements ActionContainer {
         System.out.println("socket=" + socket);
         Packets.register(serializer);
         return isConnected;
+    }
+    @LmlAction("toggleGameStart")
+    public void toggleGameStart(final Actor actor) {
+        System.out.println("toggleGameStart:" + actor);
+        //return isConnected;
     }
 
     @LmlAction("isAlive")

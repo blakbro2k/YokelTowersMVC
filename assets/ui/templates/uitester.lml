@@ -1,4 +1,7 @@
 <window defaultPad="2" width="480">
+    <:inputListener keys="Space">
+        <:evaluate method="toggleGameStart" id="gameClock"/>
+    </:inputListener>
     <image width="16" height="16" id="Y_block"/>
     <image width="16" height="16" id="O_block"/>
     <image width="16" height="16" id="K_block"/>
@@ -24,13 +27,6 @@
     <animatedimage width="16" height="16" id="L_block_Broken"/>
     <animatedimage width="16" height="16" id="Bash_block_Broken" row="true"/>
     <image width="16" height="16" id="stone" row="true"/>
-    <gameclock id="gameClock" colspan="6" row="true">
-
-    </gameclock>
-    <textField  id="gameClock">
-        <:inputListener keys="Space">
-            <:evaluate method="toggleGameStart"/>
-        </:inputListener>
-    </textField>
+    <gameclock id="gameClock" colspan="6" row="true"/>
     <textButton onChange="app:exit">@exit</textButton>
 </window>
