@@ -6,10 +6,10 @@ import com.kotcrab.vis.ui.VisUI;
 
 import net.asg.games.game.objects.YokelLounge;
 
-public class Lounge extends Table {
+public class GameLounge extends Table {
     private YokelLounge lounge;
 
-    public Lounge(Skin skin) {
+    public GameLounge(Skin skin) {
         super(skin);
     }
 

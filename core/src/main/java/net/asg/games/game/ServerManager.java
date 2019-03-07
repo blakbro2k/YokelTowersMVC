@@ -419,11 +419,11 @@ public class ServerManager {
             if(key != null){
                 lounge = lounges.get(key);
             }
-            Logger.debug("Lounge({})={}", key,lounge);
+            Logger.debug("GameLounge({})={}", key,lounge);
             Logger.trace("Exit getLounge()");
             return lounge;
         } catch (Exception e){
-            Logger.error("Error getting Lounge.", e);
+            Logger.error("Error getting GameLounge.", e);
             throw new Exception(e);
         }
     }
@@ -441,7 +441,7 @@ public class ServerManager {
             Logger.trace("Exit createLounge()={}",yl);
             return yl;
         } catch (Exception e){
-            Logger.error(e, "Error creating Lounge: ");
+            Logger.error(e, "Error creating GameLounge: ");
             throw new Exception("Error creating lounges", e);
         }
     }
@@ -621,7 +621,7 @@ public class ServerManager {
         return null;
     }
 
-    //0 = Lounge Name
+    //0 = GameLounge Name
     private String[] getLoungesRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter getLoungesRequest()");
         String[] ret = new String[1];
@@ -697,7 +697,7 @@ public class ServerManager {
     }
 
     //0 = Player id
-    //1 = Lounge Name
+    //1 = GameLounge Name
     //2 = Room Name
     private String[] joinRoomRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter joinRoomRequest()");
@@ -718,7 +718,7 @@ public class ServerManager {
     }
 
     //0 = Player id
-    //1 = Lounge Name
+    //1 = GameLounge Name
     //2 = Room Name
     private String[] leaveRoomRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter leaveRoomRequest()");
@@ -738,7 +738,7 @@ public class ServerManager {
         return ret;
     }
 
-    //0 = Lounge Name
+    //0 = GameLounge Name
     //1 = Room Name
     private String[] getTablesRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter getTablesRequest()");
@@ -754,7 +754,7 @@ public class ServerManager {
     }
 
     //0 = Player id
-    //1 = Lounge Name
+    //1 = GameLounge Name
     //2 = Room Name
     //3 = Table Number
     //4 = Seat Number
@@ -777,7 +777,7 @@ public class ServerManager {
         return ret;
     }
 
-    //0 = Lounge Name
+    //0 = GameLounge Name
     //1 = Room Name
     //2 = Table Number
     //3 = Seat Number

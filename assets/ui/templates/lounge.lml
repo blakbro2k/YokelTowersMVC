@@ -1,11 +1,11 @@
 <table oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true" debug="true">
     <:evaluate method="requestLounges"/>
-    <label>This is the lounge screen</label>
+    <label>This is the gameLounge screen</label>
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
     <table>
-        <:for lounge="$getLoungeTitles">
-            <lounge row="true">{lounge}</lounge>
-            <!--<:for room="$getRooms" id="{lounge}">
+        <:for gameLounge="$getLoungeTitles">
+            <gameLounge row="true">{gameLounge}</gameLounge>
+            <!--<:for room="$getRooms" id="{gameLounge}">
                 <label>{room}</label>
             </:for>-->
         </:for>

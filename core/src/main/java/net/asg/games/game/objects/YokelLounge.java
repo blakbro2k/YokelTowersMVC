@@ -19,7 +19,7 @@ public class YokelLounge extends YokelObject {
     public YokelLounge(){}
 
     public YokelLounge(String name) {
-        if(name == null) throw new IllegalArgumentException("Lounge name cannot be null.");
+        if(name == null) throw new IllegalArgumentException("GameLounge name cannot be null.");
         setName(name);
         this.rooms = new OrderedMap<>();
     }

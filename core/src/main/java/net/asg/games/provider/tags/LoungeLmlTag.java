@@ -11,7 +11,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelRoom;
-import net.asg.games.provider.actors.Lounge;
+import net.asg.games.provider.actors.GameLounge;
 import net.asg.games.utils.Util;
 
 public class LoungeLmlTag extends TableLmlTag {
@@ -23,32 +23,32 @@ public class LoungeLmlTag extends TableLmlTag {
 
     @Override
     protected Actor getNewInstanceOfActor(final LmlActorBuilder builder) {
-        return new Lounge(getSkin(builder));
+        return new GameLounge(getSkin(builder));
     }
 
     @Override
     protected void handlePlainTextLine(final String plainTextLine) {
-        final Lounge lounge = getLounge();
+        final GameLounge gameLounge = getLounge();
         YokelLounge obj = Util.getObjectFromJsonString(YokelLounge.class, Util.revertJsonString(plainTextLine));
 
-        lounge.add(obj.getName()).row();
+        gameLounge.add(obj.getName()).row();
 
         OrderedMap<String, YokelRoom> iter = obj.getAllRooms();
         if(iter != null){
             for(String roomName : Util.toIterable(iter.orderedKeys())){
                 addChild(buildRoomButton(iter.get(roomName)));
-                lounge.row();
+                gameLounge.row();
             }
         }
 
-        /*if (LmlUtilities.isOneColumn(lounge)) {
-            lounge.row();
+        /*if (LmlUtilities.isOneColumn(gameLounge)) {
+            gameLounge.row();
         }*/
     }
 
     /** @return casted actor. */
-    private Lounge getLounge() {
-        return (Lounge) getActor();
+    private GameLounge getLounge() {
+        return (GameLounge) getActor();
     }
 
     private String getRoomName(YokelRoom room){

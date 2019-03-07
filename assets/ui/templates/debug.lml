@@ -3,7 +3,7 @@
     <label>@playerChoose</label>
     <!--
     <:for player="$getPlayers">
-        <textButton onChange="requestPlayerRegistration" id="{player}" onClick="goto:lounge">{player}</textButton>
+        <textButton onChange="requestPlayerRegistration" id="{player}" onClick="goto:gameLounge">{player}</textButton>
     </:for>-->
     <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
     <textButton onChange="app:exit">@exit</textButton>
