@@ -24,10 +24,14 @@ public class GameIcon extends ImageButton {
     }
 
     public static ImageButtonStyle getGameDefaultIconStyle(Skin skin){
+        return getGameIconStyle(skin, 1);
+    }
+
+    public static ImageButtonStyle getGameIconStyle(Skin skin, int currentIconNumber){
         if(skin == null){
             throw new GdxRuntimeException("Skin cannot be null to set Default Icon Style.");
         }
-        Drawable icon = skin.getDrawable(ICON_ATTR_NAME + 1);
+        Drawable icon = skin.getDrawable(ICON_ATTR_NAME + currentIconNumber);
         return new ImageButtonStyle(icon,icon,icon,icon,icon,icon);
     }
 
