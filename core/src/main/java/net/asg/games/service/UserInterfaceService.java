@@ -29,38 +29,6 @@ public class UserInterfaceService {
     @Inject private InterfaceService interfaceService;
     @Inject private SkinService skinService;
 
-    @LmlActor("Y_block") public Image yBlockImage;
-    @LmlActor("O_block") public Image oBlockImage;
-    @LmlActor("K_block") public Image kBlockImage;
-    @LmlActor("E_block") public Image eBlockImage;
-    @LmlActor("L_block") public Image lBlockImage;
-    @LmlActor("Bash_block") public Image bashBlockImage;
-    @LmlActor("defense_Y_block") public AnimatedImage defenseYBlockImage;
-    @LmlActor("defense_O_block") public AnimatedImage defenseOBlockImage;
-    @LmlActor("defense_K_block") public AnimatedImage defenseKBlockImage;
-    @LmlActor("defense_E_block") public AnimatedImage defenseEBlockImage;
-    @LmlActor("defense_L_block") public AnimatedImage defenseLBlockImage;
-    @LmlActor("defense_Bash_block") public AnimatedImage defenseBashBlockImage;
-    @LmlActor("power_Y_block") public AnimatedImage powerYBlockImage;
-    @LmlActor("power_O_block") public AnimatedImage powerOBlockImage;
-    @LmlActor("power_K_block") public AnimatedImage powerKBlockImage;
-    @LmlActor("power_E_block") public AnimatedImage powerEBlockImage;
-    @LmlActor("power_L_block") public AnimatedImage powerLBlockImage;
-    @LmlActor("power_bash_block") public AnimatedImage powerBashBlockImage;
-    @LmlActor("Y_block_Broken") public AnimatedImage brokenYBlockImage;
-    @LmlActor("O_block_Broken") public AnimatedImage brokenOBlockImage;
-    @LmlActor("K_block_Broken") public AnimatedImage brokenKBlockImage;
-    @LmlActor("E_block_Broken") public AnimatedImage brokenEBlockImage;
-    @LmlActor("L_block_Broken") public AnimatedImage brokenLBlockImage;
-    @LmlActor("Bash_block_Broken") public AnimatedImage brokenBashBlockImage;
-    @LmlActor("stone") public Image stoneBlockImage;
-    @LmlActor("gameClock") private GameClock gameClock;
-
-    @LmlAction("toggleGameStart")
-    public void toggleGameStart(){
-        System.out.println("gameClock=" + gameClock);
-    }
-
     private ObjectMap<String, Actor> uiAssetMap;
 
     @Initiate

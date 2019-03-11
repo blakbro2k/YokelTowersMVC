@@ -48,7 +48,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("Bash_block_Broken") public AnimatedImage brokenBashBlockImage;
     @LmlActor("stone") public Image stoneBlockImage;
     @LmlActor("gameClock") public GameClock gameClock;
-
+    @LmlActor("clear_block") public Image clearBlock;
 
     private boolean isInitiated;
 
