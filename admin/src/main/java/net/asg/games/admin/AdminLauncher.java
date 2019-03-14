@@ -2,7 +2,7 @@ package net.asg.games.admin;
 
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
-import net.asg.games.game.ServerManager;
+import net.asg.games.game.managers.ServerManager;
 import net.asg.games.server.serialization.AdminClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;

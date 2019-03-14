@@ -1,4 +1,4 @@
-package net.asg.games.game;
+package net.asg.games.game.managers;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;

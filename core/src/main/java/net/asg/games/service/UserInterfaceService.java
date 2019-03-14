@@ -36,17 +36,27 @@ public class UserInterfaceService {
         this.uiAssetMap = new ObjectMap<>();
     }
 
+    public void loadAssets(){
+
+    }
+
     public GameBlock getGameBlock(YokelBlock yokelBlock){
         return null;
     }
 
     public void loadDrawable(Actor actor){
         if(actor != null){
-            loadDrawable(actor, actor.getName());
+            /*String actorName = actor.getName();
+            Actor cachedActore = uiAssetMap.get(actorName);
+            if(cachedActore == null){
+                actor = cachedActore;
+            } else {*/
+                loadDrawable(actor, actor.getName());
+            //}
         }
     }
 
-    private void loadDrawable(Actor actor, String name){
+    public void loadDrawable(Actor actor, String name){
         if(actor instanceof AnimatedImage){
             AnimatedImage image = (AnimatedImage) actor;
             image.setFrames(getDrawableFrames(name));

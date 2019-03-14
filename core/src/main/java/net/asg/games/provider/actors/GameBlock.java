@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
@@ -12,12 +12,13 @@ import com.badlogic.gdx.utils.Pool;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.utils.Util;
 
+
 /**
  * Created by Blakbro2k on 3/15/2018.
  */
 
 public class GameBlock extends Actor implements Pool.Poolable{
-    private Actor uiBlock;
+    private Image uiBlock;
     private YokelBlock myBlock;
     private boolean isActive;
 
@@ -34,7 +35,6 @@ public class GameBlock extends Actor implements Pool.Poolable{
         if(block == null){
             throw new GdxRuntimeException("Block cannot be null");
         }
-
         this.myBlock = block;
     }
 

@@ -1,18 +1,19 @@
 package net.asg.games.controller;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.github.czyzby.autumn.annotation.Initiate;
 import com.github.czyzby.autumn.annotation.Inject;
+import com.github.czyzby.autumn.annotation.OnMessage;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
+import com.github.czyzby.autumn.mvc.config.AutumnMessage;
 import com.github.czyzby.autumn.mvc.stereotype.View;
-import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
-import net.asg.games.game.GameManager;
+import net.asg.games.game.managers.GameManager;
 import net.asg.games.provider.actors.GameClock;
 import net.asg.games.service.NetworkService;
 import net.asg.games.service.UserInterfaceService;
@@ -21,6 +22,7 @@ import net.asg.games.service.UserInterfaceService;
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
     @Inject private NetworkService networkService;
     @Inject private GameManager gameManager;
+    @Inject private UserInterfaceService uiService;
 
     @LmlActor("Y_block") public Image yBlockImage;
     @LmlActor("O_block") public Image oBlockImage;
@@ -52,6 +54,38 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
     private boolean isInitiated;
 
+    @SuppressWarnings("unchecked")
+    private void loadGameData() {}
+
+    public void initiateGame() {
+        uiService.loadDrawable(yBlockImage);
+        uiService.loadDrawable(this.oBlockImage);
+        uiService.loadDrawable(this.kBlockImage);
+        uiService.loadDrawable(this.eBlockImage);
+        uiService.loadDrawable(this.lBlockImage);
+        uiService.loadDrawable(this.bashBlockImage);
+        uiService.loadDrawable(this.defenseYBlockImage);
+        uiService.loadDrawable(this.defenseOBlockImage);
+        uiService.loadDrawable(this.defenseKBlockImage);
+        uiService.loadDrawable(this.defenseEBlockImage);
+        uiService.loadDrawable(this.defenseLBlockImage);
+        uiService.loadDrawable(this.defenseBashBlockImage);
+        uiService.loadDrawable(this.powerYBlockImage);
+        uiService.loadDrawable(this.powerOBlockImage);
+        uiService.loadDrawable(this.powerKBlockImage);
+        uiService.loadDrawable(this.powerEBlockImage);
+        uiService.loadDrawable(this.powerLBlockImage);
+        uiService.loadDrawable(this.powerBashBlockImage);
+        uiService.loadDrawable(this.brokenYBlockImage);
+        uiService.loadDrawable(this.brokenOBlockImage);
+        uiService.loadDrawable(this.brokenKBlockImage);
+        uiService.loadDrawable(this.brokenEBlockImage);
+        uiService.loadDrawable(this.brokenLBlockImage);
+        uiService.loadDrawable(this.brokenBashBlockImage);
+        uiService.loadDrawable(this.stoneBlockImage);
+        uiService.loadDrawable(this.clearBlock);
+    }
+
     @Override
     public void render(Stage stage, float delta) {
         initiate();
@@ -63,7 +97,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private void initiate(){
         if(!isInitiated){
             isInitiated = true;
-            gameManager.initiateGame();
+            initiateGame();
         }
     }
 

@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.websocket.WebSocket;
 
-import net.asg.games.game.ServerManager;
+import net.asg.games.game.managers.ServerManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;

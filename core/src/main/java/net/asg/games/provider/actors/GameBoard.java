@@ -9,8 +9,6 @@ import com.kotcrab.vis.ui.VisUI;
  */
 
 public class GameBoard extends Table {
-    private static final int NUMBER_WIDTH_BLOCKS = 6;
-    private static final int NUMBER_HEIGHT_BLOCKS = 16;
     private static float MAX_KEY_HOLD_TIME = 15;
     //private
 
