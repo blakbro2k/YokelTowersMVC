@@ -6,13 +6,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelGameBoard;
 
 public class GameBlockArea extends Table {
     private static final float BLOCK_DROP_SPEED = .8f;
     private static final float MAX_BLOCK_DROP_SPEED = 6f;
     private static final float FALL_BLOCK_SPEED = 250f;
-    private static final int NUMBER_WIDTH_BLOCKS = 6;
-    private static final int NUMBER_HEIGHT_BLOCKS = 16;
 
     private boolean isSpeedDown;
     private YokelBlock[] blocks;
@@ -24,7 +23,7 @@ public class GameBlockArea extends Table {
         if (boardNumber < 1 || boardNumber > 8){
             throw new GdxRuntimeException("Board number must be 0 < x < 9");
         }
-        blocks = new YokelBlock[NUMBER_WIDTH_BLOCKS * NUMBER_HEIGHT_BLOCKS];
+        blocks = new YokelBlock[YokelGameBoard.MAX_WIDTH * YokelGameBoard.MAX_HEIGHT];
     }
 
     private void initializeBoard(){
@@ -35,7 +34,7 @@ public class GameBlockArea extends Table {
         if(blocks == null) {
             throw new GdxRuntimeException("Blocks to update cannot be null");
         }
-        if(blocks.length != NUMBER_WIDTH_BLOCKS * NUMBER_HEIGHT_BLOCKS){
+        if(blocks.length != YokelGameBoard.MAX_WIDTH * YokelGameBoard.MAX_HEIGHT ){
             throw new GdxRuntimeException("blocks index mismatch.");
         }
         this.blocks = blocks;

@@ -38,6 +38,10 @@ public class GameBlock extends Actor implements Pool.Poolable{
         this.myBlock = block;
     }
 
+    public void update(){
+
+    }
+
     @Override
     public void act(float delta) {
         uiBlock.act(delta);

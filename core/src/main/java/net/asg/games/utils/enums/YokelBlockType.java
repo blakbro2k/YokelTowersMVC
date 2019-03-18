@@ -2,41 +2,41 @@ package net.asg.games.utils.enums;
 
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import net.asg.games.utils.GlobalConstants;
+import net.asg.games.game.objects.YokelBlock;
 
 
 /**
  * Created by Blakbro2k on 12/29/2017.
  */
 public enum YokelBlockType {
-    NormalY(GlobalConstants.NORMAL_Y),
-    NormalO(GlobalConstants.NORMAL_O),
-    NormalK(GlobalConstants.NORMAL_K),
-    NormalE(GlobalConstants.NORMAL_E),
-    NormalL(GlobalConstants.NORMAL_L),
-    NormalEx(GlobalConstants.NORMAL_EX),
-    AttackY(GlobalConstants.ATTACK_Y),
-    AttackO(GlobalConstants.ATTACK_O),
-    AttackK(GlobalConstants.ATTACK_K),
-    AttackE(GlobalConstants.ATTACK_E),
-    AttackL(GlobalConstants.ATTACK_L),
-    AttackEx(GlobalConstants.ATTACK_EX),
-    DefenseY(GlobalConstants.DEFENSE_Y),
-    DefenseO(GlobalConstants.DEFENSE_O),
-    DefenseK(GlobalConstants.DEFENSE_K),
-    DefenseE(GlobalConstants.DEFENSE_E),
-    DefenseL(GlobalConstants.DEFENSE_L),
-    DefenseEx(GlobalConstants.DEFENSE_EX),
-    BrokenY(GlobalConstants.BROKEN_Y),
-    BrokenO(GlobalConstants.BROKEN_O),
-    BrokenK(GlobalConstants.BROKEN_K),
-    BrokenE(GlobalConstants.BROKEN_E),
-    BrokenL(GlobalConstants.BROKEN_L),
-    BrokenEx(GlobalConstants.BROKEN_EX),
-    Medusa(GlobalConstants.MEDUSA),
-    Midas(GlobalConstants.MIDAS),
-    Stone(GlobalConstants.STONE),
-    Clear(GlobalConstants.CLEAR_BLOCK);
+    NormalY(YokelBlock.NORMAL_Y),
+    NormalO(YokelBlock.NORMAL_O),
+    NormalK(YokelBlock.NORMAL_K),
+    NormalE(YokelBlock.NORMAL_E),
+    NormalL(YokelBlock.NORMAL_L),
+    NormalEx(YokelBlock.NORMAL_EX),
+    AttackY(YokelBlock.ATTACK_Y),
+    AttackO(YokelBlock.ATTACK_O),
+    AttackK(YokelBlock.ATTACK_K),
+    AttackE(YokelBlock.ATTACK_E),
+    AttackL(YokelBlock.ATTACK_L),
+    AttackEx(YokelBlock.ATTACK_EX),
+    DefenseY(YokelBlock.DEFENSE_Y),
+    DefenseO(YokelBlock.DEFENSE_O),
+    DefenseK(YokelBlock.DEFENSE_K),
+    DefenseE(YokelBlock.DEFENSE_E),
+    DefenseL(YokelBlock.DEFENSE_L),
+    DefenseEx(YokelBlock.DEFENSE_EX),
+    BrokenY(YokelBlock.BROKEN_Y),
+    BrokenO(YokelBlock.BROKEN_O),
+    BrokenK(YokelBlock.BROKEN_K),
+    BrokenE(YokelBlock.BROKEN_E),
+    BrokenL(YokelBlock.BROKEN_L),
+    BrokenEx(YokelBlock.BROKEN_EX),
+    Medusa(YokelBlock.MEDUSA),
+    Midas(YokelBlock.MIDAS),
+    Stone(YokelBlock.STONE),
+    Clear(YokelBlock.CLEAR);
 
     protected final int value;
 
@@ -50,61 +50,61 @@ public enum YokelBlockType {
 
     public static YokelBlockType fromValue(int value) throws GdxRuntimeException {
         switch(value){
-            case GlobalConstants.NORMAL_Y:
+            case YokelBlock.NORMAL_Y:
                 return NormalY;
-            case GlobalConstants.NORMAL_O:
+            case YokelBlock.NORMAL_O:
                 return NormalO;
-            case GlobalConstants.NORMAL_K:
+            case YokelBlock.NORMAL_K:
                 return NormalK;
-            case GlobalConstants.NORMAL_E:
+            case YokelBlock.NORMAL_E:
                 return NormalE;
-            case GlobalConstants.NORMAL_L:
+            case YokelBlock.NORMAL_L:
                 return NormalL;
-            case GlobalConstants.ATTACK_Y:
+            case YokelBlock.ATTACK_Y:
                 return AttackY;
-            case GlobalConstants.ATTACK_O:
+            case YokelBlock.ATTACK_O:
                 return AttackO;
-            case GlobalConstants.ATTACK_K:
+            case YokelBlock.ATTACK_K:
                 return AttackK;
-            case GlobalConstants.ATTACK_E:
+            case YokelBlock.ATTACK_E:
                 return AttackE;
-            case GlobalConstants.ATTACK_L:
+            case YokelBlock.ATTACK_L:
                 return AttackL;
-            case GlobalConstants.DEFENSE_Y:
+            case YokelBlock.DEFENSE_Y:
                 return DefenseY;
-            case GlobalConstants.DEFENSE_O:
+            case YokelBlock.DEFENSE_O:
                 return DefenseO;
-            case GlobalConstants.DEFENSE_K:
+            case YokelBlock.DEFENSE_K:
                 return DefenseK;
-            case GlobalConstants.DEFENSE_E:
+            case YokelBlock.DEFENSE_E:
                 return DefenseE;
-            case GlobalConstants.DEFENSE_L:
+            case YokelBlock.DEFENSE_L:
                 return DefenseE;
-            case GlobalConstants.NORMAL_EX:
+            case YokelBlock.NORMAL_EX:
                 return NormalEx;
-            case GlobalConstants.ATTACK_EX:
+            case YokelBlock.ATTACK_EX:
                 return AttackEx;
-            case GlobalConstants.DEFENSE_EX:
+            case YokelBlock.DEFENSE_EX:
                 return DefenseEx;
-            case GlobalConstants.MEDUSA:
+            case YokelBlock.MEDUSA:
                 return Medusa;
-            case GlobalConstants.MIDAS:
+            case YokelBlock.MIDAS:
                 return Midas;
-            case GlobalConstants.CLEAR_BLOCK:
+            case YokelBlock.CLEAR:
                 return Clear;
-            case GlobalConstants.BROKEN_Y:
+            case YokelBlock.BROKEN_Y:
                 return BrokenY;
-            case GlobalConstants.BROKEN_O:
+            case YokelBlock.BROKEN_O:
                 return BrokenO;
-            case GlobalConstants.BROKEN_K:
+            case YokelBlock.BROKEN_K:
                 return BrokenK;
-            case GlobalConstants.BROKEN_E:
+            case YokelBlock.BROKEN_E:
                 return BrokenE;
-            case GlobalConstants.BROKEN_L:
+            case YokelBlock.BROKEN_L:
                 return BrokenL;
-            case GlobalConstants.BROKEN_EX:
+            case YokelBlock.BROKEN_EX:
                 return BrokenEx;
-            case GlobalConstants.STONE:
+            case YokelBlock.STONE:
                 return Stone;
         }
         throw new ArrayIndexOutOfBoundsException("invalid value in YokelBlockType class: value=" + value);

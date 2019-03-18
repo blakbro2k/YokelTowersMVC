@@ -648,6 +648,7 @@ public class YokelTowersObjectsTest {
         array.add(YokelBlockType.Clear);
         array.add(YokelBlockType.Midas);
         array.add(YokelBlockType.Medusa);
+        array.add(YokelBlockType.Stone);
         return array;
     }
 }

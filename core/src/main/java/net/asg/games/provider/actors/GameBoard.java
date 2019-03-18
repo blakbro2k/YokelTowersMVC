@@ -10,7 +10,6 @@ import com.kotcrab.vis.ui.VisUI;
 
 public class GameBoard extends Table {
     private static float MAX_KEY_HOLD_TIME = 15;
-    //private
 
     public GameBoard(Skin skin) {
         super(skin);

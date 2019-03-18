@@ -45,37 +45,9 @@ public class GlobalConstants {
     public static final String PREFERENCES_NAME = "yokel_prefs";
     public static final String DEFAULT_HOST = "localhost";
 
-    public static final int CLEAR_BLOCK = 0;
-    public static final int NORMAL_Y = 1;
-    public static final int NORMAL_O = 2;
-    public static final int NORMAL_K = 3;
-    public static final int NORMAL_E = 4;
-    public static final int NORMAL_L = 5;
-    public static final int ATTACK_Y = 6;
-    public static final int ATTACK_O = 7;
-    public static final int ATTACK_K = 8;
-    public static final int ATTACK_E = 9;
-    public static final int ATTACK_L = 10;
-    public static final int DEFENSE_Y = 11;
-    public static final int DEFENSE_O = 12;
-    public static final int DEFENSE_K = 13;
-    public static final int DEFENSE_E = 14;
-    public static final int DEFENSE_L = 15;
-    public static final int NORMAL_EX = 16;
-    public static final int ATTACK_EX = 17;
-    public static final int DEFENSE_EX = 18;
-    public static final int MIDAS = 19;
-    public static final int MEDUSA = 20;
-    public static final int BROKEN_Y = 21;
-    public static final int BROKEN_O = 22;
-    public static final int BROKEN_K = 23;
-    public static final int BROKEN_E = 24;
-    public static final int BROKEN_L = 25;
-    public static final int BROKEN_EX = 26;
     public static final int PING_SERVER = 90;
     public static final int GET_ROOMS = 91;
     public static final int GET_TABLES = 92;
     public static final int GET_SEATS = 93;
     public static final int REGISTER_PLAYER = 94;
-    public static final int STONE = 27;
 }

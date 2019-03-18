@@ -80,9 +80,4 @@ public class YokelLounge extends YokelObject {
         if(rooms == null) return false;
         return rooms.equals(lounge.getAllRooms());
     }
-
-    @Override
-    public String toString(){
-        return Util.getJsonString(this);
-    }
 }
