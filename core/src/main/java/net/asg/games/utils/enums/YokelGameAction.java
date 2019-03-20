@@ -2,6 +2,7 @@ package net.asg.games.utils.enums;
 
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.utils.GlobalConstants;
 
 /**
@@ -29,18 +30,18 @@ public enum YokelGameAction {
      L This block turns a special purple pices into a stone
      ! This removes powers.
      */
-    DeleteRow(GlobalConstants.DEFENSE_Y),
-    ClumpBlocks(GlobalConstants.DEFENSE_O),
-    DropStones(GlobalConstants.DEFENSE_K),
-    AddMidas(GlobalConstants.DEFENSE_E),
-    TurnPowerL(GlobalConstants.DEFENSE_L),
-    RemoveColor(GlobalConstants.DEFENSE_EX),
-    AddRow(GlobalConstants.ATTACK_Y),
-    DitherBlocks(GlobalConstants.ATTACK_O),
-    AddStones(GlobalConstants.ATTACK_K),
-    AddMedusa(GlobalConstants.ATTACK_E),
-    TurnPowerStone(GlobalConstants.ATTACK_L),
-    RemovePowers(GlobalConstants.ATTACK_EX);
+    DeleteRow(YokelBlock.DEFENSE_Y),
+    ClumpBlocks(YokelBlock.DEFENSE_O),
+    DropStones(YokelBlock.DEFENSE_K),
+    AddMidas(YokelBlock.DEFENSE_E),
+    TurnPowerL(YokelBlock.DEFENSE_L),
+    RemoveColor(YokelBlock.DEFENSE_EX),
+    AddRow(YokelBlock.ATTACK_Y),
+    DitherBlocks(YokelBlock.ATTACK_O),
+    AddStones(YokelBlock.ATTACK_K),
+    AddMedusa(YokelBlock.ATTACK_E),
+    TurnPowerStone(YokelBlock.ATTACK_L),
+    RemovePowers(YokelBlock.ATTACK_EX);
 
     protected final int value;
 
@@ -54,29 +55,29 @@ public enum YokelGameAction {
 
     public static YokelGameAction fromValue(int value) throws GdxRuntimeException {
         switch(value){
-            case GlobalConstants.DEFENSE_Y:
+            case YokelBlock.DEFENSE_Y:
                 return DeleteRow;
-            case GlobalConstants.DEFENSE_O:
+            case YokelBlock.DEFENSE_O:
                 return ClumpBlocks;
-            case GlobalConstants.DEFENSE_K:
+            case YokelBlock.DEFENSE_K:
                 return DropStones;
-            case GlobalConstants.DEFENSE_E:
+            case YokelBlock.DEFENSE_E:
                 return AddMidas;
-            case GlobalConstants.DEFENSE_L:
+            case YokelBlock.DEFENSE_L:
                 return TurnPowerL;
-            case GlobalConstants.DEFENSE_EX:
+            case YokelBlock.DEFENSE_EX:
                 return RemoveColor;
-            case GlobalConstants.ATTACK_Y:
+            case YokelBlock.ATTACK_Y:
                 return AddRow;
-            case GlobalConstants.ATTACK_O:
+            case YokelBlock.ATTACK_O:
                 return DitherBlocks;
-            case GlobalConstants.ATTACK_K:
+            case YokelBlock.ATTACK_K:
                 return AddStones;
-            case GlobalConstants.ATTACK_E:
+            case YokelBlock.ATTACK_E:
                 return AddMedusa;
-            case GlobalConstants.ATTACK_L:
+            case YokelBlock.ATTACK_L:
                 return TurnPowerStone;
-            case GlobalConstants.ATTACK_EX:
+            case YokelBlock.ATTACK_EX:
                 return RemovePowers;
         }
         throw new ArrayIndexOutOfBoundsException("invalid value in YokelGameAction class: value=" + value);

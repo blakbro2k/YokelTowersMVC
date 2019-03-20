@@ -220,41 +220,41 @@ public class YokelBlock extends YokelObject implements Json.Serializable, Pool.P
         YokelBlock block = new YokelBlock();
         switch (type){
             case CLEAR:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.Clear);
             case NORMAL_Y:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.NormalY);
             case NORMAL_O:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.NormalO);
             case NORMAL_K:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.NormalK);
             case NORMAL_E:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.NormalE);
             case NORMAL_L:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.NormalL);
             case NORMAL_EX:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.NormalEx);
             case ATTACK_Y:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.AttackY);
             case ATTACK_O:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.AttackO);
             case ATTACK_K:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.AttackK);
             case ATTACK_E:
                 return new YokelBlock(YokelBlockType.AttackE);
             case ATTACK_L:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.AttackL);
             case ATTACK_EX:
                 return new YokelBlock(YokelBlockType.AttackEx);
             case DEFENSE_Y:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.DefenseY);
             case DEFENSE_O:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.DefenseO);
             case DEFENSE_K:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.DefenseK);
             case DEFENSE_E:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.DefenseE);
             case DEFENSE_L:
-                return new YokelBlock(YokelBlockType.AttackE);
+                return new YokelBlock(YokelBlockType.DefenseL);
             case DEFENSE_EX:
                 return new YokelBlock(YokelBlockType.DefenseEx);
             case MIDAS:
