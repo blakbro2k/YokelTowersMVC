@@ -28,6 +28,7 @@ public class YokelObjectFactory {
     private AnimatedImage powerOBlockImage;
     private AnimatedImage powerKBlockImage;
     private AnimatedImage powerEBlockImage;
+
     private AnimatedImage powerLBlockImage;
     private AnimatedImage powerBashBlockImage;
     private AnimatedImage brokenYBlockImage;

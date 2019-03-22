@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class GameIcon extends ImageButton {
     private static final String ICON_ATTR_NAME = "player_icon";
-    private int currentIconNumber = 0;
+    private int currentIconNumber = 1;
 
     public GameIcon(ImageButtonStyle imageButtonStyle, Skin skin){
         super(imageButtonStyle);
@@ -45,6 +45,13 @@ public class GameIcon extends ImageButton {
         setStyle(new ImageButtonStyle(icon,icon,icon,icon,icon,icon));
     }
 
+public void setIconNumber(int num){
+        currentIconNumber = num;
+}
+
+public int getCurrentIconNumber(){
+        return currentIconNumber;
+}
     public String getIconAttrName(){
         return ICON_ATTR_NAME + currentIconNumber;
     }

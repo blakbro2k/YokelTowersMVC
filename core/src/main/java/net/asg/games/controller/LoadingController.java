@@ -3,6 +3,8 @@ package net.asg.games.controller;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.annotation.OnMessage;
@@ -16,6 +18,8 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.tag.Dtd;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
+
+import org.lwjgl.opengl.Drawable;
 
 import java.io.Writer;
 
@@ -51,6 +55,7 @@ public class LoadingController implements ViewRenderer {
         if (!regionsAssigned) {
             regionsAssigned = true;
             interfaceService.getSkin().addRegions(gameAtlas);
+            System.out.println("Assets: " + assetService.getAssetManager().getAll(Drawable.class, new Array<Drawable>()));
         }
         //if(!dtdSaved){
             //saveDtdSchema(Gdx.files.local("core/lml.dtd"));
