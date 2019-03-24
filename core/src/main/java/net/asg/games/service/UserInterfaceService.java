@@ -34,11 +34,24 @@ public class UserInterfaceService {
     @Initiate
     private void initilize() {
         this.uiAssetMap = new ObjectMap<>();
+        loadAssets();
     }
 
-    public void loadAssets(){
-
+    private void loadAssets(){
+        for(Actor actor : createActors()){
+           if(actor != null){
+               uiAssetMap.put(actor.getName(),actor);
+            }
+        }
     }
+
+    private Iterable<? extends Actor> createActors() {
+        Array<Actor> actors = new Array<>();
+        actors.add(new Image());
+
+        return actors;
+    }
+
 
     public GameBlock getGameBlock(YokelBlock yokelBlock){
         return null;
