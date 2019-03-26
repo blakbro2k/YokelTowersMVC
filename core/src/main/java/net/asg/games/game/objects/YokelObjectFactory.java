@@ -12,36 +12,8 @@ import net.asg.games.service.UserInterfaceService;
 public class YokelObjectFactory {
     @Inject private UserInterfaceService userInterfaceService;
 
-    private Image yBlockImage;
-    private Image oBlockImage;
-    private Image kBlockImage;
-    private Image eBlockImage;
-    private Image lBlockImage;
-    private Image bashBlockImage;
-    private AnimatedImage defenseYBlockImage;
-    private AnimatedImage defenseOBlockImage;
-    private AnimatedImage defenseKBlockImage;
-    private AnimatedImage defenseEBlockImage;
-    private AnimatedImage defenseLBlockImage;
-    private AnimatedImage defenseBashBlockImage;
-    private AnimatedImage powerYBlockImage;
-    private AnimatedImage powerOBlockImage;
-    private AnimatedImage powerKBlockImage;
-    private AnimatedImage powerEBlockImage;
-
-    private AnimatedImage powerLBlockImage;
-    private AnimatedImage powerBashBlockImage;
-    private AnimatedImage brokenYBlockImage;
-    private AnimatedImage brokenOBlockImage;
-    private AnimatedImage brokenKBlockImage;
-    private AnimatedImage brokenEBlockImage;
-    private AnimatedImage brokenLBlockImage;
-    private AnimatedImage brokenBashBlockImage;
-    private Image stoneBlockImage;
-    private Image clearBlock;
-
     public YokelObjectFactory(){
-
+        userInterfaceService.loadDrawables();
     }
 
     // YokelBlock pool.

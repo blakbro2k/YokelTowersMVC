@@ -22,6 +22,8 @@ import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.provider.actors.GameClock;
 
+import java.util.Collection;
+
 
 @Component
 public class UserInterfaceService {
@@ -39,7 +41,7 @@ public class UserInterfaceService {
 
     private void loadAssets(){
         for(Actor actor : createActors()){
-           if(actor != null){
+           if(actor != null){System.out.println("loading asset: " + actor.getName());
                uiAssetMap.put(actor.getName(),actor);
             }
         }
@@ -47,14 +49,50 @@ public class UserInterfaceService {
 
     private Iterable<? extends Actor> createActors() {
         Array<Actor> actors = new Array<>();
-        actors.add(new Image());
 
+        String[] imageNames = new String[]{"Y_block","O_block","K_block","E_block","L_block","Bash_block","stone","clear_block"};
+        for(String imageName : imageNames){
+            actors.add(addImageName(imageName));
+        }
+
+        String[] animatedImageNames = {"defense_Y_block","defense_O_block","defense_K_block","defense_E_block","defense_L_block",
+                "defense_Bash_block","power_Y_block","power_O_block","power_K_block","power_E_block","power_L_block","power_bash_block",
+                "Y_block_Broken","O_block_Broken","K_block_Broken","E_block_Broken","L_block_Broken","Bash_block_Broken"};
+        for(String aniImageName : animatedImageNames){
+            actors.add(addAnimatedImageName(aniImageName));
+        }
         return actors;
+    }
+
+    private Image addImageName(String name){
+        if(name != null){
+            Image image = new Image();
+            image.setName(name);
+            return image;
+        }
+        return null;
+    }
+
+    private AnimatedImage addAnimatedImageName(String name){
+        if(name != null){
+            AnimatedImage animatedImage = new AnimatedImage();
+            animatedImage.setName(name);
+            return animatedImage;
+        }
+        return null;
     }
 
 
     public GameBlock getGameBlock(YokelBlock yokelBlock){
         return null;
+    }
+
+    public void loadDrawables(){
+        for(Actor asset : uiAssetMap.values()){
+            if(asset != null){
+                loadDrawable(asset);
+            }
+        }
     }
 
     public void loadDrawable(Actor actor){
