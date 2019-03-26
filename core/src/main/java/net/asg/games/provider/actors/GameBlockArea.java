@@ -1,12 +1,15 @@
 package net.asg.games.provider.actors;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
+import net.asg.games.game.objects.YokelObjectFactory;
 
 public class GameBlockArea extends Table {
     private static final float BLOCK_DROP_SPEED = .8f;
@@ -14,30 +17,50 @@ public class GameBlockArea extends Table {
     private static final float FALL_BLOCK_SPEED = 250f;
 
     private boolean isSpeedDown;
-    private YokelBlock[] blocks;
+    private int[][] blocks;
+    private GameBlock[][] uiBlocks;
 
     private int boardNumber;
     private GamePiece currentPiece;
+    private YokelObjectFactory factory;
 
-    public GameBlockArea(int boardNumber) {
+    public GameBlockArea(int boardNumber, Skin skin, YokelObjectFactory factory) {
         if (boardNumber < 1 || boardNumber > 8){
             throw new GdxRuntimeException("Board number must be 0 < x < 9");
         }
-        blocks = new YokelBlock[YokelGameBoard.MAX_WIDTH * YokelGameBoard.MAX_HEIGHT];
+        if (factory == null){
+            throw new GdxRuntimeException("YokelObjectFactory cannot be null.");
+        }
+        if (skin == null){
+            throw new GdxRuntimeException("skin cannot be null.");
+        }
+        setSkin(skin);
+        initializeBoard(boardNumber, factory);
     }
 
-    private void initializeBoard(){
+    private void initializeBoard(int boardNumber, YokelObjectFactory factory){
+        this.blocks = new int[YokelGameBoard.MAX_WIDTH][ YokelGameBoard.MAX_HEIGHT];
+        this.uiBlocks = new GameBlock[YokelGameBoard.MAX_WIDTH][YokelGameBoard.MAX_HEIGHT];
+        this.boardNumber = boardNumber;
+        this.factory = factory;
+    }
+
+    private void setBlock(int block, int row, int col){
 
     }
 
-    public void updateBlocks(YokelBlock[] blocks) throws GdxRuntimeException {
-        if(blocks == null) {
-            throw new GdxRuntimeException("Blocks to update cannot be null");
+    @Override
+    public void act(float delta){
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha){
+    }
+
+    public void updateBlocks(int[][] blocks) {
+        if(blocks != null && blocks.length == YokelGameBoard.MAX_WIDTH * YokelGameBoard.MAX_HEIGHT) {
+            this.blocks = blocks;
         }
-        if(blocks.length != YokelGameBoard.MAX_WIDTH * YokelGameBoard.MAX_HEIGHT ){
-            throw new GdxRuntimeException("blocks index mismatch.");
-        }
-        this.blocks = blocks;
     }
 /*
     @Override

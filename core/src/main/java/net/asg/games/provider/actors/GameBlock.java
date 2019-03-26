@@ -19,26 +19,13 @@ import net.asg.games.utils.Util;
 
 public class GameBlock extends Actor implements Pool.Poolable{
     private Image uiBlock;
-    private YokelBlock myBlock;
     private boolean isActive;
 
-    public GameBlock(YokelBlock block){
+    public GameBlock(){
         super();
-        this.myBlock = block;
     }
 
-    public YokelBlock getBlock(){
-        return myBlock;
-    }
-
-    public void setBlock(YokelBlock block){
-        if(block == null){
-            throw new GdxRuntimeException("Block cannot be null");
-        }
-        this.myBlock = block;
-    }
-
-    public void update(){
+    public void setImage(Image image){
 
     }
 
