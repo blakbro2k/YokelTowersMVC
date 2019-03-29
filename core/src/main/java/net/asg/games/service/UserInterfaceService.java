@@ -19,6 +19,7 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelObjectFactory;
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.provider.actors.GameClock;
 

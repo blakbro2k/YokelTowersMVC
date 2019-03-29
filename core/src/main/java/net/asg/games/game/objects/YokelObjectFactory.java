@@ -11,7 +11,7 @@ import net.asg.games.provider.actors.GameClock;
 import net.asg.games.service.UserInterfaceService;
 
 public class YokelObjectFactory {
-    @Inject private UserInterfaceService userInterfaceService;
+    private UserInterfaceService userInterfaceService;
 
     public YokelObjectFactory(UserInterfaceService userInterfaceService){
         if(userInterfaceService == null) throw new GdxRuntimeException("userInterfaceService was not initialized.");
