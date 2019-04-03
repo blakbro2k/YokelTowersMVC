@@ -51,16 +51,45 @@ public class GameBlockArea extends Table {
 
     @Override
     public void act(float delta){
+        for(int r = 0; r < YokelGameBoard.MAX_WIDTH; r++){
+            for(int c = 0; c < YokelGameBoard.MAX_HEIGHT; c++){
+                actOnBlock(r, c, delta);
+            }
+        }
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha){
+        for(int r = 0; r < YokelGameBoard.MAX_WIDTH; r++){
+            for(int c = 0; c < YokelGameBoard.MAX_HEIGHT; c++){
+                drawBlock(r, c, batch, parentAlpha);
+            }
+        }
+    }
+
+    private void drawBlock(int r, int c, Batch batch, float parentAlpha) {
+        GameBlock uiBlock = uiBlocks[r][c];
+
+        if(uiBlock != null){
+            uiBlock.draw(batch,parentAlpha);
+        }
     }
 
     public void updateBlocks(int[][] blocks) {
         if(blocks != null && blocks.length == YokelGameBoard.MAX_WIDTH * YokelGameBoard.MAX_HEIGHT) {
             this.blocks = blocks;
         }
+    }
+
+    private void actOnBlock(int row, int col, float delta){
+        //update ui blocks
+        GameBlock gameBlock = uiBlocks[row][col];
+
+        if(gameBlock != null){
+             //=
+        }
+        //if not broken, act
+        //if broken, interpolate down
     }
 /*
     @Override

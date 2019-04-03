@@ -23,31 +23,43 @@ public class GameBlock extends Actor implements Pool.Poolable{
 
     public GameBlock(){
         super();
+        reset();
     }
 
     public void setImage(Image image){
+        this.uiBlock = image;
+    }
 
+    public boolean isActive(){
+        return uiBlock != null && isActive;
     }
 
     @Override
     public void act(float delta) {
-        uiBlock.act(delta);
+        if(uiBlock != null){
+            uiBlock.act(delta);
+        }
     }
 
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        uiBlock.draw(batch, parentAlpha);
+        if(uiBlock != null){
+            uiBlock.draw(batch, parentAlpha);
+        }
     }
 
     @Override
     public void drawDebug(ShapeRenderer shapes) {
-        uiBlock.drawDebug(shapes);
+        if(uiBlock != null){
+            uiBlock.drawDebug(shapes);
+        }
     }
 
     @Override
     public void reset() {
-        //setPosition(0,0);
+        setPosition(0,0);
+        uiBlock = null;
         isActive = false;
     }
 }
