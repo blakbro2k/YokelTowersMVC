@@ -17,6 +17,7 @@ public class GameBlockArea extends Table {
     private static final float FALL_BLOCK_SPEED = 250f;
 
     private boolean isSpeedDown;
+    private boolean isActive;
     private int[][] blocks;
     private GameBlock[][] uiBlocks;
 
@@ -82,26 +83,23 @@ public class GameBlockArea extends Table {
     }
 
     private void actOnBlock(int row, int col, float delta){
+        if(!isActive) return;
         //update ui blocks
         GameBlock gameBlock = uiBlocks[row][col];
 
         if(gameBlock != null){
-             //=
+             gameBlock.act(delta);
+              // move down one space
+            // if speed down move down more spaces
+            //if not broken, act
+            //if broken, interpolate down
         }
-        //if not broken, act
-        //if broken, interpolate down
     }
-/*
-    @Override
-    public String toString(){
-        StringBuilder ret = new StringBuilder();
-        for(int i = 0; i < YokelGameBoard.MAX_ROWS; i++){
-            for(int j = 0; j < YokelGameBoard.MAX_COLS; j++){
-                ret.append("|").append(drawableBoard[i][j]);
-            }
-            ret.append("|\n");
-        }
-        return ret.toString();
-    }
-    */
 }
+
+
+
+
+
+
+

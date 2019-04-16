@@ -30,6 +30,10 @@ public class GameBlock extends Actor implements Pool.Poolable{
         this.uiBlock = image;
     }
 
+    public void setActive(boolean b){
+        this.isActive = b;
+    }
+
     public boolean isActive(){
         return uiBlock != null && isActive;
     }
@@ -60,6 +64,6 @@ public class GameBlock extends Actor implements Pool.Poolable{
     public void reset() {
         setPosition(0,0);
         uiBlock = null;
-        isActive = false;
+        setActive(false);
     }
 }
