@@ -25,6 +25,7 @@ import com.github.czyzby.lml.vis.util.ColorPickerContainer;
 import com.kotcrab.vis.ui.VisUI;
 
 import net.asg.games.YokelTowersMVC;
+import net.asg.games.provider.tags.GameBlockAreaLmlTagProvider;
 import net.asg.games.provider.tags.GameBoardLmlTagProvider;
 import net.asg.games.provider.tags.GameClockLmlTagProvider;
 import net.asg.games.provider.tags.LoungeLmlTagProvider;
@@ -101,6 +102,7 @@ import net.asg.games.service.ScaleService;
             syntax.addTagProvider(new GameBoardLmlTagProvider(), "gameboard");
             syntax.addTagProvider(new GameClockLmlTagProvider(), "gameclock");
             syntax.addTagProvider(new PlayerIconLmlTagProvider(), "playericon");
+            syntax.addTagProvider(new GameBlockAreaLmlTagProvider(), "gameblockarea");
         }
     }
 

@@ -15,6 +15,7 @@ import com.github.czyzby.autumn.mvc.component.ui.SkinService;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelObjectFactory;
 import net.asg.games.provider.actors.GameBlock;
 
 
@@ -25,12 +26,17 @@ public class UserInterfaceService {
     @Inject private SkinService skinService;
 
     private ObjectMap<String, Actor> uiAssetMap;
+    private YokelObjectFactory factory;
 
     @Initiate
     private void initilize() {
         this.uiAssetMap = new ObjectMap<>();
+        factory = new YokelObjectFactory(this);
     }
 
+    public YokelObjectFactory getFactory(){
+        return this.factory;
+    }
     public void loadActors(Iterable<? extends Actor> actors){
         if(actors != null){
             for(Actor actor : actors){

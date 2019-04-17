@@ -36,7 +36,22 @@ public class GameBlockArea extends Table {
             throw new GdxRuntimeException("skin cannot be null.");
         }
         setSkin(skin);
+        setSize(getPrefWidth(), getPrefHeight());
         initializeBoard(boardNumber, factory);
+    }
+
+    @Override
+    public float getPrefWidth() {
+        GameBlock actor = factory.getGameBlock(YokelBlock.CLEAR);
+        if (actor != null) return actor.getWidth() * YokelGameBoard.MAX_WIDTH;
+        return 100f;
+    }
+
+    @Override
+    public float getPrefHeight() {
+        GameBlock actor = factory.getGameBlock(YokelBlock.CLEAR);
+        if (actor != null) return actor.getHeight() * YokelGameBoard.MAX_HEIGHT;
+        return 100f;
     }
 
     private void initializeBoard(int boardNumber, YokelObjectFactory factory){
@@ -47,7 +62,10 @@ public class GameBlockArea extends Table {
     }
 
     private void setBlock(int block, int row, int col){
-
+        GameBlock blockUi = factory.getGameBlock(block);
+        if(blockUi != null){
+            uiBlocks[row][col] = blockUi;
+        }
     }
 
     @Override
@@ -79,6 +97,15 @@ public class GameBlockArea extends Table {
     public void updateBlocks(int[][] blocks) {
         if(blocks != null && blocks.length == YokelGameBoard.MAX_WIDTH * YokelGameBoard.MAX_HEIGHT) {
             this.blocks = blocks;
+            update();
+        }
+    }
+
+    private void update(){
+        for(int r = 0; r < YokelGameBoard.MAX_WIDTH; r++){
+            for(int c = 0; c < YokelGameBoard.MAX_HEIGHT; c++){
+                setBlock(blocks[r][c], r, c);
+            }
         }
     }
 
