@@ -17,6 +17,7 @@ import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelObjectFactory;
 import net.asg.games.provider.actors.GameBlock;
+import net.asg.games.utils.UIUtil;
 
 
 @Component
@@ -30,13 +31,18 @@ public class UserInterfaceService {
 
     @Initiate
     private void initilize() {
+        System.out.println("init userinterface=" + interfaceService);
         this.uiAssetMap = new ObjectMap<>();
-        factory = new YokelObjectFactory(this);
     }
 
     public YokelObjectFactory getFactory(){
+        if(factory == null){
+            factory = new YokelObjectFactory(this);
+            UIUtil.getInstance().setFactory(factory);
+        }
         return this.factory;
     }
+
     public void loadActors(Iterable<? extends Actor> actors){
         if(actors != null){
             for(Actor actor : actors){
@@ -85,7 +91,7 @@ public class UserInterfaceService {
             if(cachedActore == null){
                 actor = cachedActore;
             } else {*/
-                loadDrawable(actor, actor.getName());
+            loadDrawable(actor, actor.getName());
             //}
         }
     }

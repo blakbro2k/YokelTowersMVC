@@ -1,5 +1,13 @@
 package net.asg.games.game.objects;
 
+import com.badlogic.gdx.utils.Array;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
+
+import net.asg.games.utils.Util;
+
+import java.util.Arrays;
+import java.util.Iterator;
+
 public class YokelGameBoard extends YokelObject {
     public static final int MAX_WIDTH = 6;
     public static final int MAX_HEIGHT = 16;
@@ -40,19 +48,35 @@ public class YokelGameBoard extends YokelObject {
     public YokelGameBoard(){
         cells = new int[MAX_WIDTH][MAX_HEIGHT];
     }
+
     @Override
     public void dispose() {
 
     }
 
+    public int[][] getCells(){
+        return cells;
+    }
+
+    public void setCelles(int row, int col, int cell){
+        cells[row][col] = cell;
+    }
+
     public void clearBoard() {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++)
-                cells[i][j] = YokelBlock.CLEAR;
+        //Util.invokeMethodOnMatrix(MAX_WIDTH, MAX_HEIGHT, this, );
+        //invokeMethodOnMatrix
+        for (int i = 0; i < MAX_WIDTH; i++) {
+            for (int j = 0; j < MAX_HEIGHT; j++){
+                clearCell(i,j);
+            }
         }
         for (int i = 0; i < 128; i++)
             ids[i] = false;
         idIndex = 0;
+    }
+
+    private void clearCell(int r, int c){
+        cells[r][c] = YokelBlock.CLEAR;
     }
 }
 

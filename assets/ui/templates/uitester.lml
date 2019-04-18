@@ -36,5 +36,6 @@
 <window>
 <playericon/>
 <playericon/>
-<playericon/>
+<playericon row="true"/>
+<gameblockarea/>
 </window>

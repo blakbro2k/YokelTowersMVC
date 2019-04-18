@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.Pool;
 
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.service.UserInterfaceService;
-import net.asg.games.utils.enums.YokelBlockType;
 
 public class YokelObjectFactory {
     private UserInterfaceService userInterfaceService;

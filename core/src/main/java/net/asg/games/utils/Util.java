@@ -24,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.pmw.tinylog.Level;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -558,5 +560,17 @@ public class Util {
         return false;
     }
 
+    public static void invokeMethodOnMatrix(int maxWidth, int maxHeight, Object o,
+                                    String methodName, Class<?>[] paramClasses, Object[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        for(int r = 0; r < maxWidth; r++){
+            for(int c = 0; c < maxHeight; c++){
+                Class<?> clazz = o.getClass();
+                Method m = clazz.getDeclaredMethod(methodName, paramClasses);
 
+                if(m != null){
+                    m.invoke(o, args);
+                }
+            }
+        }
+    }
 }

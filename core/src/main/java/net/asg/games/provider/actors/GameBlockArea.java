@@ -19,6 +19,7 @@ public class GameBlockArea extends Table {
     private boolean isSpeedDown;
     private boolean isActive;
     private int[][] blocks;
+    private YokelGameBoard board;
     private GameBlock[][] uiBlocks;
 
     private int boardNumber;
@@ -94,9 +95,9 @@ public class GameBlockArea extends Table {
         }
     }
 
-    public void updateBlocks(int[][] blocks) {
-        if(blocks != null && blocks.length == YokelGameBoard.MAX_WIDTH * YokelGameBoard.MAX_HEIGHT) {
-            this.blocks = blocks;
+    public void updateGameBoard(YokelGameBoard gameBoard) {
+        if(gameBoard != null) {
+            this.board = gameBoard;
             update();
         }
     }
@@ -115,8 +116,9 @@ public class GameBlockArea extends Table {
         GameBlock gameBlock = uiBlocks[row][col];
 
         if(gameBlock != null){
-             gameBlock.act(delta);
-              // move down one space
+            gameBlock.act(delta);
+
+            // move down one space
             // if speed down move down more spaces
             //if not broken, act
             //if broken, interpolate down
