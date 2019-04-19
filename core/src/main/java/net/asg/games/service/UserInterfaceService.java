@@ -12,13 +12,12 @@ import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.asset.AssetService;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.SkinService;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelObjectFactory;
 import net.asg.games.provider.actors.GameBlock;
-import net.asg.games.utils.UIUtil;
-
 
 @Component
 public class UserInterfaceService {
@@ -31,14 +30,12 @@ public class UserInterfaceService {
 
     @Initiate
     private void initilize() {
-        System.out.println("init userinterface=" + interfaceService);
         this.uiAssetMap = new ObjectMap<>();
     }
 
     public YokelObjectFactory getFactory(){
         if(factory == null){
             factory = new YokelObjectFactory(this);
-            UIUtil.getInstance().setFactory(factory);
         }
         return this.factory;
     }
@@ -77,7 +74,7 @@ public class UserInterfaceService {
     }
 
     public void loadDrawables(){
-        for(Actor asset : uiAssetMap.values()){
+        for(Actor asset : getAssets()){
             if(asset != null){
                 loadDrawable(asset);
             }
@@ -86,13 +83,7 @@ public class UserInterfaceService {
 
     public void loadDrawable(Actor actor){
         if(actor != null){
-            /*String actorName = actor.getName();
-            Actor cachedActore = uiAssetMap.get(actorName);
-            if(cachedActore == null){
-                actor = cachedActore;
-            } else {*/
             loadDrawable(actor, actor.getName());
-            //}
         }
     }
 
@@ -130,5 +121,13 @@ public class UserInterfaceService {
 
     public Actor getActor(String name) {
         return uiAssetMap.get(name);
+    }
+
+    public ObjectMap.Values<Actor> getAssets(){
+        if(this.uiAssetMap != null){
+            return uiAssetMap.values().iterator();
+        } else {
+            return GdxMaps.<String, Actor>newObjectMap().values().iterator();
+        }
     }
 }

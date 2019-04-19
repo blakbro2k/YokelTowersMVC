@@ -43,14 +43,16 @@ public class GameBlockArea extends Table {
 
     @Override
     public float getPrefWidth() {
-        GameBlock actor = factory.getGameBlock(YokelBlock.CLEAR);
+        GameBlock actor = null;
+        if(factory != null) actor = factory.getGameBlock(YokelBlock.CLEAR);
         if (actor != null) return actor.getWidth() * YokelGameBoard.MAX_WIDTH;
         return 100f;
     }
 
     @Override
     public float getPrefHeight() {
-        GameBlock actor = factory.getGameBlock(YokelBlock.CLEAR);
+        GameBlock actor = null;
+        if(factory != null) actor = factory.getGameBlock(YokelBlock.CLEAR);
         if (actor != null) return actor.getHeight() * YokelGameBoard.MAX_HEIGHT;
         return 100f;
     }
@@ -64,6 +66,7 @@ public class GameBlockArea extends Table {
 
     private void setBlock(int block, int row, int col){
         GameBlock blockUi = factory.getGameBlock(block);
+
         if(blockUi != null){
             uiBlocks[row][col] = blockUi;
         }

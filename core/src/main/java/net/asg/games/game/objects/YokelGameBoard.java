@@ -58,8 +58,8 @@ public class YokelGameBoard extends YokelObject {
         return cells;
     }
 
-    public void setCelles(int row, int col, int cell){
-        cells[row][col] = cell;
+    public void setCels(int row, int col, int cell){
+        cells[col][row] = cell;
     }
 
     public void clearBoard() {

@@ -30,6 +30,10 @@ public class GameBlock extends Actor implements Pool.Poolable{
         this.uiBlock = image;
     }
 
+    public Image getImage(){
+        return this.uiBlock;
+    }
+
     public void setActive(boolean b){
         this.isActive = b;
     }

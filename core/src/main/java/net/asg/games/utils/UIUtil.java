@@ -10,7 +10,6 @@ public class UIUtil {
     }
 
     public void setFactory(YokelObjectFactory factory){
-        System.out.println("init factory=" + factory);
         this.factory = factory;
     }
 

@@ -21,7 +21,9 @@ import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
+import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.PostLoader;
+import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
 
@@ -37,6 +39,7 @@ import java.util.Arrays;
 @ViewActionContainer("global")
 public class Global implements ActionContainer {
     @Inject private UITestController ui;
+    @Inject private UserInterfaceService uiService;
 
     private WebSocket socket;
     private String message = "Connecting...";
@@ -66,6 +69,7 @@ public class Global implements ActionContainer {
 
     @LmlAction("initConnection")
     public boolean initializeSockets() throws WebSocketException {
+        //
         System.out.println("initializeSockets called");
 
         // Note: you can also use WebSockets.newSocket() and WebSocket.toWebSocketUrl() methods.

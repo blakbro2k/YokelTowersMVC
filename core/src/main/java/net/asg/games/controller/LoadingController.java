@@ -3,7 +3,6 @@ package net.asg.games.controller;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.czyzby.autumn.annotation.Inject;
@@ -14,10 +13,14 @@ import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.config.AutumnMessage;
 import com.github.czyzby.autumn.mvc.stereotype.Asset;
 import com.github.czyzby.autumn.mvc.stereotype.View;
+import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.tag.Dtd;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
+
+import net.asg.games.service.UserInterfaceService;
+import net.asg.games.utils.UIUtil;
 
 import org.lwjgl.opengl.Drawable;
 
@@ -32,6 +35,8 @@ public class LoadingController implements ViewRenderer {
     /** Will be injected automatically. Manages assets. Used to display loading progress. */
     @Inject private AssetService assetService;
     @Inject private InterfaceService interfaceService;
+    @Inject private UserInterfaceService uiService;
+
 
     /** This is a widget injected from the loading.lml template. "loadingBar" is its ID. */
     @LmlActor("loadingBar") private VisProgressBar loadingBar;
@@ -55,7 +60,7 @@ public class LoadingController implements ViewRenderer {
         if (!regionsAssigned) {
             regionsAssigned = true;
             interfaceService.getSkin().addRegions(gameAtlas);
-            System.out.println("Assets: " + assetService.getAssetManager().getAll(Drawable.class, new Array<Drawable>()));
+            UIUtil.getInstance().setFactory(uiService.getFactory());
         }
         //if(!dtdSaved){
             //saveDtdSchema(Gdx.files.local("core/lml.dtd"));
