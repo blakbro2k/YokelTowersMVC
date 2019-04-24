@@ -1,10 +1,8 @@
 package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.asg.games.game.objects.YokelBlock;
@@ -36,7 +34,7 @@ public class GameBlockArea extends Table {
         }
         setSkin(skin);
         setSize(getPrefWidth(), getPrefHeight());
-        initializeBoard(0, factory);
+        initializeBoard(factory);
         this.add(factory.getGameBlock(YokelBlock.CLEAR));
         this.add(factory.getGameBlock(YokelBlock.ATTACK_E));
         this.add(factory.getGameBlock(YokelBlock.DEFENSE_EX));
@@ -58,10 +56,10 @@ public class GameBlockArea extends Table {
         return 16f;
     }
 
-    private void initializeBoard(int boardNumber, YokelObjectFactory factory){
+    private void initializeBoard(YokelObjectFactory factory){
         this.blocks = new int[YokelGameBoard.MAX_WIDTH][ YokelGameBoard.MAX_HEIGHT];
         this.uiBlocks = new GameBlock[YokelGameBoard.MAX_WIDTH][YokelGameBoard.MAX_HEIGHT];
-        this.boardNumber = boardNumber;
+        this.boardNumber = 0;
         this.factory = factory;
     }
 
@@ -109,6 +107,7 @@ public class GameBlockArea extends Table {
     }
 
     public void updateData(YokelGameBoard gameBoard) {
+        System.out.println(gameBoard);
         if(gameBoard != null) {
             this.board = gameBoard;
             update();

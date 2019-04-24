@@ -38,7 +38,8 @@ public class YokelGameBoard extends YokelObject {
     int[] rowMatchLookup = { 0, 1, 1, 1, 0, -1, -1, -1 };
 
     public YokelGameBoard(){
-        cells = new int[MAX_WIDTH][MAX_HEIGHT];
+        cells = new int[MAX_HEIGHT][MAX_WIDTH];
+        clearBoard();
     }
 
     @Override
@@ -51,7 +52,7 @@ public class YokelGameBoard extends YokelObject {
     }
 
     public void setCels(int row, int col, int cell){
-        cells[col][row] = cell;
+        cells[row][col] = cell;
     }
 
     public void clearBoard() {
@@ -59,16 +60,16 @@ public class YokelGameBoard extends YokelObject {
         //invokeMethodOnMatrix
         for (int i = 0; i < MAX_WIDTH; i++) {
             for (int j = 0; j < MAX_HEIGHT; j++){
-                clearCell(i,j);
+                clearCell(j,i);
             }
-        }
+        }/*
         for (int i = 0; i < 128; i++)
             ids[i] = false;
-        idIndex = 0;
+        idIndex = 0;*/
     }
 
     private void clearCell(int r, int c){
-        cells[c][r] = YokelBlock.CLEAR;
+        cells[r][c] = YokelBlock.CLEAR;
     }
 }
 
