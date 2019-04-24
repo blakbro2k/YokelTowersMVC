@@ -69,15 +69,15 @@ public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
         board.setCels(2,5,1);
 
         board.setCels(3,0,1);
-        board.setCels(3,1,1);
+        board.setCels(3,1,2);
         board.setCels(3,2,1);
-        board.setCels(3,3,1);
+        board.setCels(3,3,3);
         board.setCels(3,4,1);
         board.setCels(3,5,1);
 
         board.setCels(4,0,1);
-        board.setCels(4,1,1);
-        board.setCels(4,2,1);
+        board.setCels(4,1,5);
+        board.setCels(4,2,0);
         board.setCels(4,3,1);
         board.setCels(4,4,1);
         board.setCels(4,5,1);
@@ -98,8 +98,8 @@ public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
 
         board.setCels(7,0,1);
         board.setCels(7,1,1);
-        board.setCels(7,2,1);
-        board.setCels(7,3,1);
+        board.setCels(7,2,10);
+        board.setCels(7,3,14);
         board.setCels(7,4,1);
         board.setCels(7,5,1);
 
@@ -119,7 +119,7 @@ public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
 
         board.setCels(10,0,1);
         board.setCels(10,1,1);
-        board.setCels(10,2,1);
+        board.setCels(10,2,0);
         board.setCels(10,3,1);
         board.setCels(10,4,1);
         board.setCels(10,5,1);
@@ -138,26 +138,26 @@ public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
         board.setCels(12,4,1);
         board.setCels(12,5,1);
 
-        board.setCels(13,0,1);
-        board.setCels(13,1,1);
-        board.setCels(13,2,1);
-        board.setCels(13,3,1);
-        board.setCels(13,4,1);
-        board.setCels(13,5,1);
+        board.setCels(13,0,0);
+        board.setCels(13,1,0);
+        board.setCels(13,2,0);
+        board.setCels(13,3,0);
+        board.setCels(13,4,0);
+        board.setCels(13,5,0);
 
-        board.setCels(14,0,1);
-        board.setCels(14,1,1);
-        board.setCels(14,2,1);
-        board.setCels(14,3,1);
-        board.setCels(14,4,1);
-        board.setCels(14,5,1);
+        board.setCels(14,0,0);
+        board.setCels(14,1,0);
+        board.setCels(14,2,0);
+        board.setCels(14,3,0);
+        board.setCels(14,4,0);
+        board.setCels(14,5,0);
 
-        board.setCels(15,0,1);
-        board.setCels(15,1,1);
-        board.setCels(15,2,1);
-        board.setCels(15,3,1);
-        board.setCels(15,4,1);
-        board.setCels(15,5,1);
+        board.setCels(15,0,0);
+        board.setCels(15,1,0);
+        board.setCels(15,2,0);
+        board.setCels(15,3,0);
+        board.setCels(15,4,0);
+        board.setCels(15,5,0);
         return board;
     }
 }

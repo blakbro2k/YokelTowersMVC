@@ -1,34 +1,34 @@
 package net.asg.games.game.objects;
 
 public class YokelGameBoard extends YokelObject {
-    public static final int MAX_WIDTH = 6;
-    public static final int MAX_HEIGHT = 16;
+    public static final int MAX_COLS = 6;
+    public static final int MAX_ROWS = 16;
 
     public int[][] cells;
     boolean[] ids;
     int idIndex;
-    static int[] targetRows = new int[MAX_WIDTH];
-    int[] randomColumnIndices = new int[MAX_WIDTH];
+    static int[] targetRows = new int[MAX_COLS];
+    int[] randomColumnIndices = new int[MAX_COLS];
     boolean[][] colorBlastGrid
-            = { new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH],
-            new boolean[MAX_WIDTH] };
+            = { new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS],
+            new boolean[MAX_COLS] };
     int[] pushRowOrder = { 0, 1, 2, 2, 1, 0 };
     int[] pushColumnOrder = { 2, 3, 1, 4, 0, 5 };
-    int[] countOfPieces = new int[MAX_WIDTH];
+    int[] countOfPieces = new int[MAX_COLS];
 
     boolean[] cellMatches = new boolean[7];
     int[] cellIndices = { 0,  1, 2,  3,  4,  5,  6 };
@@ -38,7 +38,9 @@ public class YokelGameBoard extends YokelObject {
     int[] rowMatchLookup = { 0, 1, 1, 1, 0, -1, -1, -1 };
 
     public YokelGameBoard(){
-        cells = new int[MAX_WIDTH][MAX_HEIGHT];
+        cells = new int[MAX_ROWS][MAX_COLS];
+        ids = new boolean[128];
+        clearBoard();
     }
 
     @Override
@@ -51,24 +53,25 @@ public class YokelGameBoard extends YokelObject {
     }
 
     public void setCels(int row, int col, int cell){
-        cells[col][row] = cell;
+        cells[row][col] = cell;
     }
 
     public void clearBoard() {
-        //Util.invokeMethodOnMatrix(MAX_WIDTH, MAX_HEIGHT, this, );
+        //Util.invokeMethodOnMatrix(MAX_COLS, MAX_ROWS, this, );
         //invokeMethodOnMatrix
-        for (int i = 0; i < MAX_WIDTH; i++) {
-            for (int j = 0; j < MAX_HEIGHT; j++){
-                clearCell(i,j);
+        for (int c = 0; c < MAX_COLS; c++) {
+            for (int r = 0; r < MAX_ROWS; r++){
+                clearCell(r,c);
             }
         }
-        for (int i = 0; i < 128; i++)
+        for (int i = 0; i < 128; i++){
             ids[i] = false;
+        }
         idIndex = 0;
     }
 
     private void clearCell(int r, int c){
-        cells[c][r] = YokelBlock.CLEAR;
+        cells[r][c] = YokelBlock.CLEAR;
     }
 }
 

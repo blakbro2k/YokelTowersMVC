@@ -115,6 +115,6 @@
 <gameblock blocktype="Bash_block" row="true"/>
 </window>
 <window>
-    <gameblockarea areanumber="1" blockareadata="first_board_cell_data"/>
-    <gameblockarea areanumber="2" blockareadata="second_board_cell_data"/>
+<gameblockarea areanumber="1" blockareadata="first_board_cell_data"/>
+<gameblockarea areanumber="2" blockareadata="second_board_cell_data"/>
 </window>

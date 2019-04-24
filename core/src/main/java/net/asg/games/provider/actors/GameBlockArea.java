@@ -1,30 +1,31 @@
 package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelObjectFactory;
 
 public class GameBlockArea extends Table {
+    private static final String CELL_ATTR = "uiCell";
+    private static final String CELL_ATTR_SEPARATOR = "_";
+
     private static final float BLOCK_DROP_SPEED = .8f;
     private static final float MAX_BLOCK_DROP_SPEED = 6f;
     private static final float FALL_BLOCK_SPEED = 250f;
 
     private boolean isSpeedDown;
     private boolean isActive;
-    private int[][] blocks;
     private YokelGameBoard board;
-    private GameBlock[][] uiBlocks;
 
     private int boardNumber;
     private GamePiece currentPiece;
     private YokelObjectFactory factory;
+    private ObjectMap<String, GameBlock> uiBlocks;
 
     public GameBlockArea(YokelObjectFactory factory) {
         if (factory == null){
@@ -34,35 +35,35 @@ public class GameBlockArea extends Table {
         if (skin == null){
             throw new GdxRuntimeException("skin cannot be null.");
         }
+        initializeBoard(factory);
         setSkin(skin);
         setSize(getPrefWidth(), getPrefHeight());
-        initializeBoard(0, factory);
-        this.add(factory.getGameBlock(YokelBlock.CLEAR));
-        this.add(factory.getGameBlock(YokelBlock.ATTACK_E));
-        this.add(factory.getGameBlock(YokelBlock.DEFENSE_EX));
     }
 
-    @Override
-    public float getPrefWidth() {
-        GameBlock actor = null;
-        if(factory != null) actor = factory.getGameBlock(YokelBlock.CLEAR);
-        if (actor != null) return actor.getWidth() * YokelGameBoard.MAX_WIDTH;
-        return 16f;
-    }
-
-    @Override
-    public float getPrefHeight() {
-        GameBlock actor = null;
-        if(factory != null) actor = factory.getGameBlock(YokelBlock.CLEAR);
-        if (actor != null) return actor.getHeight() * YokelGameBoard.MAX_HEIGHT;
-        return 16f;
-    }
-
-    private void initializeBoard(int boardNumber, YokelObjectFactory factory){
-        this.blocks = new int[YokelGameBoard.MAX_WIDTH][ YokelGameBoard.MAX_HEIGHT];
-        this.uiBlocks = new GameBlock[YokelGameBoard.MAX_WIDTH][YokelGameBoard.MAX_HEIGHT];
-        this.boardNumber = boardNumber;
+    private void initializeBoard(YokelObjectFactory factory){
         this.factory = factory;
+        uiBlocks = new ObjectMap<>();
+        initilizeUiCells();
+        this.boardNumber = 0;
+    }
+
+    private void initilizeUiCells(){
+        for(int r = YokelGameBoard.MAX_ROWS - 1; r >= 0; r--){
+            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
+                GameBlock uiBlock = factory.getGameBlock(YokelBlock.CLEAR);
+
+                uiBlocks.put(getCellAttrName(r,c), uiBlock);
+                if(c + 1 == YokelGameBoard.MAX_COLS){
+                    add(uiBlock).row();
+                } else {
+                    add(uiBlock);
+                }
+            }
+        }
+    }
+
+    private String getCellAttrName(int r, int c){
+        return CELL_ATTR + CELL_ATTR_SEPARATOR + r + CELL_ATTR_SEPARATOR + c;
     }
 
     public int getBoardNumber(){
@@ -73,18 +74,21 @@ public class GameBlockArea extends Table {
         this.boardNumber = number;
     }
 
-    private void setBlock(int block, int row, int col){
-        GameBlock blockUi = factory.getGameBlock(block);
+    private void setBlock(int block, int r, int c){
+        GameBlock uiCell = uiBlocks.get(getCellAttrName(r, c));
 
-        if(blockUi != null){
-            uiBlocks[row][col] = blockUi;
+        if(uiCell != null){
+            GameBlock blockUi = factory.getGameBlock(block);
+            if(blockUi != null){
+                uiCell.setImage(blockUi.getImage());
+            }
         }
     }
 
     @Override
     public void act(float delta){
-        for(int r = 0; r < YokelGameBoard.MAX_WIDTH; r++){
-            for(int c = 0; c < YokelGameBoard.MAX_HEIGHT; c++){
+        for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
+            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
                 actOnBlock(r, c, delta);
             }
         }
@@ -93,16 +97,15 @@ public class GameBlockArea extends Table {
     @Override
     public void draw(Batch batch, float parentAlpha){
         super.draw(batch, parentAlpha);
-        for(int r = 0; r < YokelGameBoard.MAX_WIDTH; r++){
-            for(int c = 0; c < YokelGameBoard.MAX_HEIGHT; c++){
+        for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
+            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
                 drawBlock(r, c, batch, parentAlpha);
             }
         }
     }
 
     private void drawBlock(int r, int c, Batch batch, float parentAlpha) {
-        GameBlock uiBlock = uiBlocks[r][c];
-
+        GameBlock uiBlock = uiBlocks.get(getCellAttrName(r,c));
         if(uiBlock != null){
             uiBlock.draw(batch,parentAlpha);
         }
@@ -116,20 +119,21 @@ public class GameBlockArea extends Table {
     }
 
     private void update(){
-        for(int r = 0; r < YokelGameBoard.MAX_WIDTH; r++){
-            for(int c = 0; c < YokelGameBoard.MAX_HEIGHT; c++){
-                setBlock(blocks[r][c], r, c);
+        int[][] cells = board.getCells();
+        for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
+            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
+                setBlock(cells[r][c], r, c);
             }
         }
     }
 
-    private void actOnBlock(int row, int col, float delta){
+    private void actOnBlock(int r, int c, float delta){
         if(!isActive) return;
         //update ui blocks
-        GameBlock gameBlock = uiBlocks[row][col];
+        GameBlock uiBlock = uiBlocks.get(getCellAttrName(r,c));
 
-        if(gameBlock != null){
-            gameBlock.act(delta);
+        if(uiBlock != null){
+            uiBlock.act(delta);
 
             // move down one space
             // if speed down move down more spaces
