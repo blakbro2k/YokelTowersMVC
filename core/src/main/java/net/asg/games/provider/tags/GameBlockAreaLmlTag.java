@@ -14,7 +14,6 @@ import net.asg.games.utils.UIUtil;
 public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
     private GameBlockArea gameBlockArea;
 
-
     public GameBlockAreaLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
         super(parser, parentTag, rawTagData);
     }
@@ -26,20 +25,19 @@ public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
 
     @Override
     protected void handlePlainTextLine(final String plainTextLine) {
-        System.out.println("gameblockarea text=" + plainTextLine);
     }
 
     /** @return casted actor. */
     private GameBlockArea getGameBlockArea() {
         if(gameBlockArea == null){
-            initGameBoard();
+            initGameBlockArea();
         }
         return gameBlockArea;
     }
 
-    private void initGameBoard(){
-        gameBlockArea = new GameBlockArea(1, getSkin(getNewInstanceOfBuilder()), getFactory());
-        gameBlockArea.updateGameBoard(getTestBoard());
+    private void initGameBlockArea(){
+        gameBlockArea = new GameBlockArea(getFactory());
+        gameBlockArea.updateData(getTestBoard());
     }
 
     private YokelObjectFactory getFactory(){

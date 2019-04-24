@@ -26,19 +26,20 @@ public class GameBlockArea extends Table {
     private GamePiece currentPiece;
     private YokelObjectFactory factory;
 
-    public GameBlockArea(int boardNumber, Skin skin, YokelObjectFactory factory) {
-        if (boardNumber < 1 || boardNumber > 8){
-            throw new GdxRuntimeException("Board number must be 0 < x < 9");
-        }
+    public GameBlockArea(YokelObjectFactory factory) {
         if (factory == null){
             throw new GdxRuntimeException("YokelObjectFactory cannot be null.");
         }
+        Skin skin = factory.getUserInterfaceService().getSkin();
         if (skin == null){
             throw new GdxRuntimeException("skin cannot be null.");
         }
         setSkin(skin);
         setSize(getPrefWidth(), getPrefHeight());
-        initializeBoard(boardNumber, factory);
+        initializeBoard(0, factory);
+        this.add(factory.getGameBlock(YokelBlock.CLEAR));
+        this.add(factory.getGameBlock(YokelBlock.ATTACK_E));
+        this.add(factory.getGameBlock(YokelBlock.DEFENSE_EX));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class GameBlockArea extends Table {
         GameBlock actor = null;
         if(factory != null) actor = factory.getGameBlock(YokelBlock.CLEAR);
         if (actor != null) return actor.getWidth() * YokelGameBoard.MAX_WIDTH;
-        return 100f;
+        return 16f;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class GameBlockArea extends Table {
         GameBlock actor = null;
         if(factory != null) actor = factory.getGameBlock(YokelBlock.CLEAR);
         if (actor != null) return actor.getHeight() * YokelGameBoard.MAX_HEIGHT;
-        return 100f;
+        return 16f;
     }
 
     private void initializeBoard(int boardNumber, YokelObjectFactory factory){
@@ -62,6 +63,14 @@ public class GameBlockArea extends Table {
         this.uiBlocks = new GameBlock[YokelGameBoard.MAX_WIDTH][YokelGameBoard.MAX_HEIGHT];
         this.boardNumber = boardNumber;
         this.factory = factory;
+    }
+
+    public int getBoardNumber(){
+        return this.boardNumber;
+    }
+
+    public void setBoardNumber(int number){
+        this.boardNumber = number;
     }
 
     private void setBlock(int block, int row, int col){
@@ -83,6 +92,7 @@ public class GameBlockArea extends Table {
 
     @Override
     public void draw(Batch batch, float parentAlpha){
+        super.draw(batch, parentAlpha);
         for(int r = 0; r < YokelGameBoard.MAX_WIDTH; r++){
             for(int c = 0; c < YokelGameBoard.MAX_HEIGHT; c++){
                 drawBlock(r, c, batch, parentAlpha);
@@ -98,7 +108,7 @@ public class GameBlockArea extends Table {
         }
     }
 
-    public void updateGameBoard(YokelGameBoard gameBoard) {
+    public void updateData(YokelGameBoard gameBoard) {
         if(gameBoard != null) {
             this.board = gameBoard;
             update();

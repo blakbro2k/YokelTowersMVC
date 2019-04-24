@@ -1,8 +1,6 @@
 package net.asg.games.provider.actors;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -27,7 +25,7 @@ public class GameIcon extends ImageButton {
         return getGameIconStyle(skin, 1);
     }
 
-    public static ImageButtonStyle getGameIconStyle(Skin skin, int currentIconNumber){
+    private static ImageButtonStyle getGameIconStyle(Skin skin, int currentIconNumber){
         if(skin == null){
             throw new GdxRuntimeException("Skin cannot be null to set Default Icon Style.");
         }
@@ -45,11 +43,11 @@ public class GameIcon extends ImageButton {
         setStyle(new ImageButtonStyle(icon,icon,icon,icon,icon,icon));
     }
 
-public void setIconNumber(int num){
+    public void setIconNumber(int num){
         currentIconNumber = num;
 }
 
-public int getCurrentIconNumber(){
+    public int getCurrentIconNumber(){
         return currentIconNumber;
 }
     public String getIconAttrName(){

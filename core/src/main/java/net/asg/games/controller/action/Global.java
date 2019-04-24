@@ -1,6 +1,5 @@
 package net.asg.games.controller.action;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.OrderedMap;
@@ -23,7 +22,6 @@ import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.PostLoader;
-import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
 
@@ -149,7 +147,7 @@ public class Global implements ActionContainer {
         gameOptions.add("private");
         gameOptions.add("true");
 
-        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_CREATE_GAME + "", Util.fromCollectionToStringArray(gameOptions));
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_CREATE_GAME + "", Util.toStringArray(gameOptions));
         socket.send(request);
     }
 

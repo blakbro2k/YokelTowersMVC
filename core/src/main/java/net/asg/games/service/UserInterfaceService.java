@@ -2,6 +2,7 @@ package net.asg.games.service;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -12,12 +13,15 @@ import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.asset.AssetService;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.SkinService;
+import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelObjectFactory;
 import net.asg.games.provider.actors.GameBlock;
+import net.asg.games.utils.Util;
 
 @Component
 public class UserInterfaceService {
@@ -48,6 +52,10 @@ public class UserInterfaceService {
                 }
             }
         }
+    }
+
+    public Skin getSkin(){
+        return skinService.getSkin();
     }
 
     public Image addImageName(String name){
@@ -123,11 +131,11 @@ public class UserInterfaceService {
         return uiAssetMap.get(name);
     }
 
-    public ObjectMap.Values<Actor> getAssets(){
+    public Array<Actor> getAssets(){
         if(this.uiAssetMap != null){
-            return uiAssetMap.values().iterator();
+            return Util.getValuesArray(uiAssetMap.values());
         } else {
-            return GdxMaps.<String, Actor>newObjectMap().values().iterator();
+            return Util.getValuesArray(GdxMaps.<String, Actor>newObjectMap().values());
         }
     }
 }

@@ -1,13 +1,5 @@
 package net.asg.games.game.objects;
 
-import com.badlogic.gdx.utils.Array;
-import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
-
-import net.asg.games.utils.Util;
-
-import java.util.Arrays;
-import java.util.Iterator;
-
 public class YokelGameBoard extends YokelObject {
     public static final int MAX_WIDTH = 6;
     public static final int MAX_HEIGHT = 16;
@@ -76,7 +68,7 @@ public class YokelGameBoard extends YokelObject {
     }
 
     private void clearCell(int r, int c){
-        cells[r][c] = YokelBlock.CLEAR;
+        cells[c][r] = YokelBlock.CLEAR;
     }
 }
 

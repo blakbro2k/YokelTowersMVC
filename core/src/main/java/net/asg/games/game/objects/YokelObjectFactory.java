@@ -42,18 +42,21 @@ public class YokelObjectFactory {
         }
     }
 
+    public UserInterfaceService getUserInterfaceService() {
+        return userInterfaceService;
+    }
+
     // YokelBlock pool.
     private final Pool<GameBlock> yokelGameBlockPool = new Pool<GameBlock>() {
         @Override
         protected GameBlock newObject() {
-            return new GameBlock();
+            return new GameBlock(userInterfaceService.getSkin(), getBlockImageName(0));
         }
     };
 
     public GameBlock getGameBlock(int blockType){
-        Image image = (Image) userInterfaceService.getActor(getBlockImageName(blockType));
         GameBlock block = yokelGameBlockPool.obtain();
-        block.setImage(image);
+        block.setImage(blockType);
         if(blockType != YokelBlock.CLEAR){
             block.setActive(true);
         }
@@ -66,7 +69,7 @@ public class YokelObjectFactory {
         }
     }
 
-    private String getBlockImageName(int blockValue){
+    public String getBlockImageName(int blockValue){
         switch (blockValue){
             case YokelBlock.CLEAR:
                 return "clear_block";
@@ -128,5 +131,4 @@ public class YokelObjectFactory {
                 return "";
         }
     }
-    //public YokelBlock
 }

@@ -142,7 +142,7 @@ public class Util {
         return array == null || array.length < 1;
     }
 
-    public static <T> String[] fromCollectionToStringArray(Array<T> collection) {
+    public static <T> String[] toStringArray(Array<T> collection) {
         if(collection != null){
             int size = collection.size;
             String[] c2 = new String[size];
@@ -246,6 +246,13 @@ public class Util {
     public static long otol(Object o){
         if(o != null){
             return Long.valueOf(otos(o));
+        }
+        return -1;
+    }
+
+    public static float otof(Object o){
+        if(o != null){
+            return Float.valueOf(otos(o));
         }
         return -1;
     }

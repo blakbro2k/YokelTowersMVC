@@ -361,7 +361,7 @@ public class ServerManager {
                     case REQUEST_LOGIN:
                         break;
                     case REQUEST_ALL_DEBUG_PLAYERS:
-                        responsePayload = Util.fromCollectionToStringArray(testPlayersToJSON());
+                        responsePayload = Util.toStringArray(testPlayersToJSON());
                         break;
                     case REQUEST_PLAYER_REGISTER:
                         responsePayload = registerPlayerRequest(clientPayload);
@@ -395,7 +395,7 @@ public class ServerManager {
                         responsePayload = getLoungesRequest(clientPayload);
                         break;
                     case REQUEST_LOUNGE_ALL:
-                        responsePayload = Util.fromCollectionToStringArray(loungesToJSON());
+                        responsePayload = Util.toStringArray(loungesToJSON());
                         break;
                     default:
                         Logger.error("Unknown Client Request: " + value);
@@ -747,7 +747,7 @@ public class ServerManager {
             String loungeName = clientPayload[0];
             String roomName = clientPayload[1];
 
-            return Util.fromCollectionToStringArray(getAllTables(loungeName, roomName));
+            return Util.toStringArray(getAllTables(loungeName, roomName));
         }
         Logger.trace("Exit getTablesRequest()");
         return new String[]{"false"};
