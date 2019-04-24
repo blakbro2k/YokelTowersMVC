@@ -64,7 +64,7 @@ public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
         board.setCels(2,0,1);
         board.setCels(2,1,1);
         board.setCels(2,2,1);
-        board.setCels(2,3,1);
+        board.setCels(2,3,3);
         board.setCels(2,4,1);
         board.setCels(2,5,1);
 

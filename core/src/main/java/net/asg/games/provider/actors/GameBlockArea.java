@@ -21,6 +21,7 @@ public class GameBlockArea extends Table {
     private boolean isSpeedDown;
     private boolean isActive;
     private YokelGameBoard board;
+    private Table blockAll;
 
     private int boardNumber;
     private GamePiece currentPiece;
@@ -78,6 +79,7 @@ public class GameBlockArea extends Table {
         GameBlock uiCell = uiBlocks.get(getCellAttrName(r, c));
 
         if(uiCell != null){
+            //factory.freeObject(uiCell);
             GameBlock blockUi = factory.getGameBlock(block);
             if(blockUi != null){
                 uiCell.setImage(blockUi.getImage());
@@ -95,20 +97,9 @@ public class GameBlockArea extends Table {
     }
 
     @Override
-    public void draw(Batch batch, float parentAlpha){
-        super.draw(batch, parentAlpha);
-        for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
-            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
-                drawBlock(r, c, batch, parentAlpha);
-            }
-        }
-    }
-
-    private void drawBlock(int r, int c, Batch batch, float parentAlpha) {
-        GameBlock uiBlock = uiBlocks.get(getCellAttrName(r,c));
-        if(uiBlock != null){
-            uiBlock.draw(batch,parentAlpha);
-        }
+    public void draw(Batch batch, float alpha){
+        //if(!isActive) return;
+        super.draw(batch, alpha);
     }
 
     public void updateData(YokelGameBoard gameBoard) {
@@ -128,7 +119,7 @@ public class GameBlockArea extends Table {
     }
 
     private void actOnBlock(int r, int c, float delta){
-        if(!isActive) return;
+        //if(!isActive) return;
         //update ui blocks
         GameBlock uiBlock = uiBlocks.get(getCellAttrName(r,c));
 
