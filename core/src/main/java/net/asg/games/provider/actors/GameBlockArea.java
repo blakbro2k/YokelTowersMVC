@@ -24,7 +24,7 @@ public class GameBlockArea extends Table {
     private Table blockAll;
 
     private int boardNumber;
-    private GamePiece currentPiece;
+    private GamePiece gamePiece;
     private YokelObjectFactory factory;
     private ObjectMap<String, GameBlock> uiBlocks;
 
@@ -38,17 +38,19 @@ public class GameBlockArea extends Table {
         }
         initializeBoard(factory);
         setSkin(skin);
-        setSize(getPrefWidth(), getPrefHeight());
+        setSize(getPrefWidth() + 10, getPrefHeight() + 10);
+
+        setBackground(factory.getGameBlock(YokelBlock.ATTACK_Y).getImage().getDrawable());
     }
 
     private void initializeBoard(YokelObjectFactory factory){
         this.factory = factory;
         uiBlocks = new ObjectMap<>();
-        initilizeUiCells();
+        initializeUiCells();
         this.boardNumber = 0;
     }
 
-    private void initilizeUiCells(){
+    private void initializeUiCells(){
         for(int r = YokelGameBoard.MAX_ROWS - 1; r >= 0; r--){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
                 GameBlock uiBlock = factory.getGameBlock(YokelBlock.CLEAR);
@@ -79,12 +81,16 @@ public class GameBlockArea extends Table {
         GameBlock uiCell = uiBlocks.get(getCellAttrName(r, c));
 
         if(uiCell != null){
-            //factory.freeObject(uiCell);
             GameBlock blockUi = factory.getGameBlock(block);
             if(blockUi != null){
                 uiCell.setImage(blockUi.getImage());
             }
+            //factory.freeObject(blockUi);
         }
+    }
+
+    public void setGamePiece(GamePiece gamePiece){
+
     }
 
     @Override
