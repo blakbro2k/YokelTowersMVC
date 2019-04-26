@@ -36,5 +36,5 @@
 </window>
 <window>
 <gameblockarea areanumber="1" debug="true" blockareadata="$getTestBoard"/>
-<gameblockarea areanumber="2" blockareadata="second_board_cell_data"/>
+<gameblockarea areanumber="2" blockareadata="$getTestBoard"/>
 </window>
