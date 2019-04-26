@@ -116,27 +116,31 @@ public class Global implements ActionContainer {
             }
         }
 
-        board.setCels(0,0,MathUtils.random(YokelBlock.STONE));
-        board.setCels(0,1,MathUtils.random(YokelBlock.STONE));
-        board.setCels(0,2,MathUtils.random(YokelBlock.STONE));
-        board.setCels(0,3,MathUtils.random(YokelBlock.STONE));
-        board.setCels(0,4,MathUtils.random(YokelBlock.STONE));
-        board.setCels(0,5,MathUtils.random(YokelBlock.STONE));
+        board.setCels(0,0, getRandomNumber());
+        board.setCels(0,1, getRandomNumber());
+        board.setCels(0,2, getRandomNumber());
+        board.setCels(0,3, getRandomNumber());
+        board.setCels(0,4, getRandomNumber());
+        board.setCels(0,5, getRandomNumber());
 
-        board.setCels(1,0,MathUtils.random(YokelBlock.STONE));
-        board.setCels(1,1,MathUtils.random(YokelBlock.STONE));
-        board.setCels(1,2,MathUtils.random(YokelBlock.STONE));
-        board.setCels(1,3,MathUtils.random(YokelBlock.STONE));
-        board.setCels(1,4,MathUtils.random(YokelBlock.STONE));
-        board.setCels(1,5,MathUtils.random(YokelBlock.STONE));
+        board.setCels(1,0, getRandomNumber());
+        board.setCels(1,1, getRandomNumber());
+        board.setCels(1,2, getRandomNumber());
+        board.setCels(1,3, getRandomNumber());
+        board.setCels(1,4, getRandomNumber());
+        board.setCels(1,5, getRandomNumber());
 
-        board.setCels(2,0,MathUtils.random(YokelBlock.STONE));
-        board.setCels(2,1,MathUtils.random(YokelBlock.STONE));
-        board.setCels(2,2,MathUtils.random(YokelBlock.STONE));
-        board.setCels(2,3,MathUtils.random(YokelBlock.STONE));
-        board.setCels(2,4,MathUtils.random(YokelBlock.STONE));
-        board.setCels(2,5,MathUtils.random(YokelBlock.STONE));
+        board.setCels(2,0, getRandomNumber());
+        board.setCels(2,1, getRandomNumber());
+        board.setCels(2,2, getRandomNumber());
+        board.setCels(2,3, getRandomNumber());
+        board.setCels(2,4, getRandomNumber());
+        board.setCels(2,5, getRandomNumber());
         return board;
+    }
+
+    private int getRandomNumber(){
+        return MathUtils.random(YokelBlock.DEFENSE_EX);
     }
 
     @LmlAction("getTimerSeconds")
