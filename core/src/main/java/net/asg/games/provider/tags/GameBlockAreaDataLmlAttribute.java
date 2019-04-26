@@ -1,9 +1,14 @@
 package net.asg.games.provider.tags;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.github.czyzby.lml.parser.LmlParser;
+import com.github.czyzby.lml.parser.action.ActorConsumer;
 import com.github.czyzby.lml.parser.tag.LmlAttribute;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 
+import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.provider.actors.GameBlockArea;
 
 public class GameBlockAreaDataLmlAttribute implements LmlAttribute<GameBlockArea> {
@@ -13,9 +18,12 @@ public class GameBlockAreaDataLmlAttribute implements LmlAttribute<GameBlockArea
         return GameBlockArea.class;
     }
 
-    public void process(LmlParser parser, LmlTag tag, GameBlockArea actor, String rawAttributeData) {
-        System.out.println(rawAttributeData);
-        //System.out.println(rawAttributeData + "=" + parser.parseInt(rawAttributeData));
-        //actor.setImage(parser.parseString(rawAttributeData, actor));
+    public void process(final LmlParser parser, final LmlTag tag, GameBlockArea actor, final String rawAttributeData) {
+        final ActorConsumer<?, GameBlockArea> action = parser.parseAction(rawAttributeData, actor);
+        if (action == null) {
+            parser.throwError("Could not find action for: " + rawAttributeData + " with actor: " + actor);
+        } else {
+            actor.updateData((YokelGameBoard) action.consume(actor));
+        }
     }
 }

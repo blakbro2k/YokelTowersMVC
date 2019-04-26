@@ -1,5 +1,6 @@
 package net.asg.games.controller.action;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.OrderedMap;
@@ -15,6 +16,8 @@ import com.github.czyzby.websocket.net.ExtendedNet;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
 import net.asg.games.controller.UITestController;
+import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.server.serialization.ClientRequest;
@@ -101,6 +104,39 @@ public class Global implements ActionContainer {
         } else {
             ui.gameClock.stop();
         }
+    }
+
+    @LmlAction("getTestBoard")
+    private YokelGameBoard getTestBoard(){
+
+        YokelGameBoard board = new YokelGameBoard();
+        for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
+            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
+                board.setCels(r, c, 0);
+            }
+        }
+
+        board.setCels(0,0,MathUtils.random(YokelBlock.STONE));
+        board.setCels(0,1,MathUtils.random(YokelBlock.STONE));
+        board.setCels(0,2,MathUtils.random(YokelBlock.STONE));
+        board.setCels(0,3,MathUtils.random(YokelBlock.STONE));
+        board.setCels(0,4,MathUtils.random(YokelBlock.STONE));
+        board.setCels(0,5,MathUtils.random(YokelBlock.STONE));
+
+        board.setCels(1,0,MathUtils.random(YokelBlock.STONE));
+        board.setCels(1,1,MathUtils.random(YokelBlock.STONE));
+        board.setCels(1,2,MathUtils.random(YokelBlock.STONE));
+        board.setCels(1,3,MathUtils.random(YokelBlock.STONE));
+        board.setCels(1,4,MathUtils.random(YokelBlock.STONE));
+        board.setCels(1,5,MathUtils.random(YokelBlock.STONE));
+
+        board.setCels(2,0,MathUtils.random(YokelBlock.STONE));
+        board.setCels(2,1,MathUtils.random(YokelBlock.STONE));
+        board.setCels(2,2,MathUtils.random(YokelBlock.STONE));
+        board.setCels(2,3,MathUtils.random(YokelBlock.STONE));
+        board.setCels(2,4,MathUtils.random(YokelBlock.STONE));
+        board.setCels(2,5,MathUtils.random(YokelBlock.STONE));
+        return board;
     }
 
     @LmlAction("getTimerSeconds")

@@ -1,7 +1,6 @@
 package net.asg.games.game.objects;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
@@ -60,6 +59,8 @@ public class YokelObjectFactory {
         if(blockType != YokelBlock.CLEAR){
             block.setActive(true);
         }
+        //System.out.println("Pool:free:" + yokelGameBlockPool.getFree());
+        //System.out.println("Pool:peak:" + yokelGameBlockPool.peak);
         return block;
     }
 

@@ -1,28 +1,40 @@
 package net.asg.games.provider.actors;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelObjectFactory;
+import net.asg.games.utils.Util;
 
 public class GameBlockArea extends Table {
+    private static final String CELL_ATTR = "uiCell";
+    private static final String CELL_ATTR_SEPARATOR = "_";
+    private static final Color ACTIVE_BACKGROUND_COLOR = new Color(0.7f, 0.7f, 0.7f, 1);
+    private static final Color DEFAULT_BACKGROUND_COLOR = new Color(0.3f, 0.3f, 0.3f, 1);
+
     private static final float BLOCK_DROP_SPEED = .8f;
     private static final float MAX_BLOCK_DROP_SPEED = 6f;
     private static final float FALL_BLOCK_SPEED = 250f;
 
     private boolean isSpeedDown;
     private boolean isActive;
-    private int[][] blocks;
     private YokelGameBoard board;
-    private GameBlock[][] uiBlocks;
+    private Table boarder;
 
     private int boardNumber;
-    private GamePiece currentPiece;
+    private GamePiece gamePiece;
     private YokelObjectFactory factory;
+    private ObjectMap<String, GameBlock> uiBlocks;
+    private Array<GameBlock> sprites;
 
     public GameBlockArea(YokelObjectFactory factory) {
         if (factory == null){
@@ -33,34 +45,46 @@ public class GameBlockArea extends Table {
             throw new GdxRuntimeException("skin cannot be null.");
         }
         setSkin(skin);
-        setSize(getPrefWidth(), getPrefHeight());
+
+        boarder = new Table();
+        boarder.setDebug(this.getDebug());
+        boarder.setSize(getWidth() + 20, getHeight() + 20);
+        boarder.setBounds(this.getX(), this.getY(), getWidth() - 8, getHeight() - 8);
+        this.setColor(DEFAULT_BACKGROUND_COLOR);
+
+        //add(boarder);
+
+        NinePatch patch = new NinePatch(getSkin().getRegion("8_digit"),3, 3, 3, 3);
+        NinePatchDrawable background = new NinePatchDrawable(patch);
+
         initializeBoard(factory);
-        this.add(factory.getGameBlock(YokelBlock.CLEAR));
-        this.add(factory.getGameBlock(YokelBlock.ATTACK_E));
-        this.add(factory.getGameBlock(YokelBlock.DEFENSE_EX));
-    }
-
-    @Override
-    public float getPrefWidth() {
-        GameBlock actor = null;
-        if(factory != null) actor = factory.getGameBlock(YokelBlock.CLEAR);
-        if (actor != null) return actor.getWidth() * YokelGameBoard.MAX_WIDTH;
-        return 16f;
-    }
-
-    @Override
-    public float getPrefHeight() {
-        GameBlock actor = null;
-        if(factory != null) actor = factory.getGameBlock(YokelBlock.CLEAR);
-        if (actor != null) return actor.getHeight() * YokelGameBoard.MAX_HEIGHT;
-        return 16f;
     }
 
     private void initializeBoard(YokelObjectFactory factory){
-        this.blocks = new int[YokelGameBoard.MAX_WIDTH][ YokelGameBoard.MAX_HEIGHT];
-        this.uiBlocks = new GameBlock[YokelGameBoard.MAX_WIDTH][YokelGameBoard.MAX_HEIGHT];
-        this.boardNumber = 0;
         this.factory = factory;
+        uiBlocks = new ObjectMap<>();
+        this.sprites = new Array<>();
+        this.boardNumber = 0;
+        initializeUiCells();
+    }
+
+    private void initializeUiCells(){
+        for(int r = YokelGameBoard.MAX_ROWS - 1; r >= 0; r--){
+            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
+                GameBlock uiBlock = factory.getGameBlock(YokelBlock.CLEAR);
+
+                uiBlocks.put(getCellAttrName(r,c), uiBlock);
+                if(c + 1 == YokelGameBoard.MAX_COLS){
+                    add(uiBlock).row();
+                } else {
+                    add(uiBlock);
+                }
+            }
+        }
+    }
+
+    private String getCellAttrName(int r, int c){
+        return CELL_ATTR + CELL_ATTR_SEPARATOR + r + CELL_ATTR_SEPARATOR + c;
     }
 
     public int getBoardNumber(){
@@ -68,46 +92,44 @@ public class GameBlockArea extends Table {
     }
 
     public void setBoardNumber(int number){
+        this.setBackground(number + "_digit");
         this.boardNumber = number;
     }
 
-    private void setBlock(int block, int row, int col){
-        GameBlock blockUi = factory.getGameBlock(block);
+    private void setBlock(int block, int r, int c){
+        GameBlock uiCell = uiBlocks.get(getCellAttrName(r, c));
 
-        if(blockUi != null){
-            uiBlocks[row][col] = blockUi;
+        if(uiCell != null){
+            GameBlock blockUi = factory.getGameBlock(block);
+            if(blockUi != null){
+                uiCell.setImage(blockUi.getImage());
+            }
+            //factory.freeObject(blockUi);
         }
+    }
+
+    public void setGamePiece(GamePiece gamePiece){
+
     }
 
     @Override
     public void act(float delta){
-        for(int r = 0; r < YokelGameBoard.MAX_WIDTH; r++){
-            for(int c = 0; c < YokelGameBoard.MAX_HEIGHT; c++){
+        for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
+            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
                 actOnBlock(r, c, delta);
             }
         }
     }
 
     @Override
-    public void draw(Batch batch, float parentAlpha){
-        super.draw(batch, parentAlpha);
-        for(int r = 0; r < YokelGameBoard.MAX_WIDTH; r++){
-            for(int c = 0; c < YokelGameBoard.MAX_HEIGHT; c++){
-                drawBlock(r, c, batch, parentAlpha);
-            }
-        }
-    }
-
-    private void drawBlock(int r, int c, Batch batch, float parentAlpha) {
-        GameBlock uiBlock = uiBlocks[r][c];
-
-        if(uiBlock != null){
-            uiBlock.draw(batch,parentAlpha);
-        }
+    public void draw(Batch batch, float alpha){
+        //if(!isActive) return;
+        boarder.draw(batch, alpha);
+        super.draw(batch, alpha);
+        drawSprites(batch, alpha);
     }
 
     public void updateData(YokelGameBoard gameBoard) {
-        System.out.println(gameBoard);
         if(gameBoard != null) {
             this.board = gameBoard;
             update();
@@ -115,20 +137,31 @@ public class GameBlockArea extends Table {
     }
 
     private void update(){
-        for(int r = 0; r < YokelGameBoard.MAX_WIDTH; r++){
-            for(int c = 0; c < YokelGameBoard.MAX_HEIGHT; c++){
-                setBlock(blocks[r][c], r, c);
+        int[][] cells = board.getCells();
+        for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
+            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
+                setBlock(cells[r][c], r, c);
             }
         }
     }
 
-    private void actOnBlock(int row, int col, float delta){
-        if(!isActive) return;
-        //update ui blocks
-        GameBlock gameBlock = uiBlocks[row][col];
+    private void drawSprites(Batch batch, float alpha){
+        if(!Util.isArrayEmpty(sprites)){
+            for(GameBlock sprite : sprites){
+               if(sprite != null){
+                   sprite.draw(batch, alpha);
+               }
+            }
+        }
+    }
 
-        if(gameBlock != null){
-            gameBlock.act(delta);
+    private void actOnBlock(int r, int c, float delta){
+        //if(!isActive) return;
+        //update ui blocks
+        GameBlock uiBlock = uiBlocks.get(getCellAttrName(r,c));
+
+        if(uiBlock != null){
+            uiBlock.act(delta);
 
             // move down one space
             // if speed down move down more spaces
