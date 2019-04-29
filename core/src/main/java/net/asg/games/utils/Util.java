@@ -180,11 +180,11 @@ public class Util {
         return json.fromJson(type, jsonStr);
     }
 
-    public static String convertJsonString(String str){
+    public static String jsonToString(String str){
         return StringUtils.replace(StringUtils.replace(str, "{","["),"}","]");
     }
 
-    public static String revertJsonString(String str){
+    public static String stringToJson(String str){
         return StringUtils.replace(StringUtils.replace(str, "[","{"),"]","}");
     }
 
@@ -462,7 +462,7 @@ public class Util {
         if(isExclamationBlock(block)){
             return YokelBlockType.DefenseEx;
         }
-        throw new GdxRuntimeException("Cannot get Power Block Type, block is unknown");
+        throw new GdxRuntimeException("Cannot get Defense Block Type, block is unknown");
     }
 
     public static YokelBlockType getNormalType(YokelBlock block) throws GdxRuntimeException {
@@ -484,7 +484,7 @@ public class Util {
         if(isExclamationBlock(block)){
             return YokelBlockType.NormalEx;
         }
-        throw new GdxRuntimeException("Cannot get Power Block Type, block is unknown");
+        throw new GdxRuntimeException("Cannot get Normal Block Type, block is unknown");
     }
 
     public static YokelBlockType getBrokenType(YokelBlock block) throws GdxRuntimeException {
@@ -506,7 +506,7 @@ public class Util {
         if(isExclamationBlock(block)){
             return YokelBlockType.BrokenEx;
         }
-        throw new GdxRuntimeException("Cannot get Power Block Type, block is unknown");
+        throw new GdxRuntimeException("Cannot get Broken Block Type, block is unknown");
     }
 
     public static TextureRegion get2DAnimationFrame(Animation animation, int keyFrame) throws GdxRuntimeException{

@@ -7,6 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class GameClock extends Table {
+    public final static String NO_DIGIT_NME = "no_digit";
+    public final static String COLON_NME = "colon";
+    public  final static String DIGIT_NME = "_digit";
+
     private long start;
     private boolean isRunning;
     private Image digit_1;
@@ -108,15 +112,15 @@ public class GameClock extends Table {
         if(colon == null){
             colon = new Image();
         }
-        colon.setDrawable(getDigitImage("colon"));
+        colon.setDrawable(getDigitImage(COLON_NME));
         return colon;
     }
 
     private Drawable getDigit(int i){
         if(!isRunning){
-            return getDigitImage("no_digit");
+            return getDigitImage(NO_DIGIT_NME);
         } else {
-            return getDigitImage(i + "_digit");
+            return getDigitImage(i + DIGIT_NME);
         }
     }
 

@@ -33,8 +33,10 @@
     <textButton onChange="toggleGameStart">Start</textButton>
     <textButton onChange="app:exit" row="true">@exit</textButton>
     <playericon/>
+    <gamepiece data="1;2;3"/>
+    <gamepiece data="4;5;6"/>
 </window>
-<window>
-<gameblockarea areanumber="1" debug="true" blockareadata="$getTestBoard"/>
-<gameblockarea areanumber="2" blockareadata="$getTestBoard"/>
+<window defaultPad="2" title="The One">
+    <gameblockarea areanumber="1" debug="true" blockareadata="$getTestBoard"/>
+    <gameblockarea areanumber="2" blockareadata="$getTestBoard"/>
 </window>

@@ -29,7 +29,7 @@ public class LoungeLmlTag extends TableLmlTag {
     @Override
     protected void handlePlainTextLine(final String plainTextLine) {
         final GameLounge gameLounge = getLounge();
-        YokelLounge obj = Util.getObjectFromJsonString(YokelLounge.class, Util.revertJsonString(plainTextLine));
+        YokelLounge obj = Util.getObjectFromJsonString(YokelLounge.class, Util.stringToJson(plainTextLine));
 
         gameLounge.add(obj.getName()).row();
 

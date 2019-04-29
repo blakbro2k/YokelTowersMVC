@@ -1,146 +1,93 @@
 package net.asg.games.provider.actors;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
+import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.Util;
 
-public class GamePiece extends Actor {
-    /*
-    private GameBlock top;
-    private GameBlock middle;
-    private GameBlock bottom;
-    private Rectangle bounds = new Rectangle();
+public class GamePiece extends Table {
+    public static final String TOP_ATTR = "top";
+    public static final String MIDDLE_ATTR = "middle";
+    public static final String BOTTOM_ATTR = "bottom";
+    private ObjectMap<String, GameBlock> uiBlocks;
 
 
-    public GamePiece(GameBlock bottom, GameBlock mid, GameBlock top){
-        setSize(getPrefWidth(), getPrefHeight());
-        setBounds();
 
+    public GamePiece(Skin skin, GameBlock top, GameBlock mid, GameBlock bottom){
+        setSkin(skin);
+        this.uiBlocks = new ObjectMap<>();
+        setDebug(true);
         setTopBlock(top);
         setMiddleBlock(mid);
         setBottomBlock(bottom);
-        setDebug(true);
+        initializeUiCells();
+    }
+
+    public GamePiece(Skin skin, int top, int mid, int bottom){
+        this(skin, UIUtil.getInstance().getGameBlock(top), UIUtil.getInstance().getGameBlock(mid), UIUtil.getInstance().getGameBlock(bottom));
+    }
+
+    private void initializeUiCells(){
+        add(getTopBlock()).row();
+        add(getMiddleBlock()).row();
+        add(getBottomBlock());
     }
 
     public GameBlock getTopBlock() {
-        return top;
+        return uiBlocks.get(TOP_ATTR);
     }
 
     public void setTopBlock(GameBlock top) {
-        if(top != null){
-            top.setPosition(getX(), getY() + (Util.getClearBlockHeight() * 2));
+        GameBlock uiBlock = uiBlocks.get(TOP_ATTR);
+        if(uiBlock != null){
+            if(top != null){
+                System.out.println("setting top image:" + top.getImage().getName());
+                uiBlock.setImage(top.getImage());
+            }
+        } else {
+            uiBlocks.put(TOP_ATTR, UIUtil.getInstance().getGameBlock(0));
         }
-        this.top = top;
     }
 
     public GameBlock getMiddleBlock() {
-        return middle;
+        return uiBlocks.get(MIDDLE_ATTR);
     }
 
     public void setMiddleBlock(GameBlock middle) {
-        if(middle != null){
-            middle.setPosition(getX(), getY() + (Util.getClearBlockHeight()));
+        GameBlock uiBlock = uiBlocks.get(MIDDLE_ATTR);
+        if(uiBlock != null){
+            if(middle != null){
+                System.out.println("setting middle image:" + middle.getImage().getName());
+
+                uiBlock.setImage(middle.getImage());
+            }
+        } else {
+            uiBlocks.put(MIDDLE_ATTR, UIUtil.getInstance().getGameBlock(0));
         }
-        this.middle = middle;
     }
 
     public GameBlock getBottomBlock() {
-        return bottom;
+        return uiBlocks.get(BOTTOM_ATTR);
     }
 
     public void setBottomBlock(GameBlock bottom) {
-        if(bottom != null){
-            bottom.setPosition(getX(), getY());
-        }
-        this.bottom = bottom;
-    }
+        GameBlock uiBlock = uiBlocks.get(BOTTOM_ATTR);
+        if(uiBlock != null){
+            if(bottom != null){
+                System.out.println("setting bottom image:" + bottom.getImage().getName());
 
-    @Override
-    public void act(float delta){
-        GameBlock topBlock = getTopBlock();
-        GameBlock midBlock = getMiddleBlock();
-        GameBlock bottomBlock = getBottomBlock();
-
-        if(topBlock != null){
-            topBlock.act(delta);
-        }
-
-        if(midBlock != null){
-            midBlock.act(delta);
-        }
-
-        if(bottomBlock != null){
-            bottomBlock.act(delta);
+                uiBlock.setImage(bottom.getImage());
+            }
+        } else {
+            uiBlocks.put(BOTTOM_ATTR, UIUtil.getInstance().getGameBlock(0));
         }
     }
 
-    public void setBounds() {
-        bounds.set(getX(), getY(), getWidth(), getHeight());
-        setBounds(getX(), getY(), getWidth(), getHeight());
-    }
-
-    public Rectangle getBounds() {
-        return bounds;
-    }
-
-    @Override
-    protected void positionChanged () {
-        setBounds();
-    }
-
-    @Override
-    public void draw (Batch batch, float parentAlpha) {
-        GameBlock topBlock = getTopBlock();
-        GameBlock midBlock = getMiddleBlock();
-        GameBlock bottomBlock = getBottomBlock();
-
-        float localX = getX();
-        float localY = getY();
-        float localHeight = Util.getClearBlockHeight();
-
-        if(topBlock != null){
-            topBlock.setPosition(localX, localY + (localHeight * 2));
-            topBlock.draw(batch, parentAlpha);
-        }
-        if(midBlock != null){
-            midBlock.setPosition(localX, localY + (localHeight));
-            midBlock.draw(batch, parentAlpha);
-    }
-        if(bottomBlock != null){
-            bottomBlock.setPosition(localX, localY);
-            bottomBlock.draw(batch, parentAlpha);
-        }
-    }
-
-    public float getPrefWidth() {
-        float width = 0;
-        float localWidth = Util.getClearBlockWidth();
-
-        if (localWidth > 0){
-            width = localWidth * 1;
-        }
-        return width;
-    }
-
-    public float getPrefHeight() {
-        float height = 0;
-        float localHeight = Util.getClearBlockHeight();
-
-        if (localHeight > 0){
-            height = localHeight * 3;
-        }
-        return height;
-    }
-
-    public String toString(){
-        return "[" + getTopBlock() + "]\n" +
-                "[" + getMiddleBlock() + "]\n" +
-                "[" + getBottomBlock() + "]";
-    }
-
-    public void cycleClockWise(){
+    public void cycleUp(){
         GameBlock topBlock = getTopBlock();
         GameBlock midBlock = getMiddleBlock();
         GameBlock bottomBlock = getBottomBlock();
@@ -150,7 +97,7 @@ public class GamePiece extends Actor {
         setBottomBlock(midBlock);
     }
 
-    public void cycleCounterClockWise(){
+    public void cycleDown(){
         GameBlock topBlock = getTopBlock();
         GameBlock midBlock = getMiddleBlock();
         GameBlock bottomBlock = getBottomBlock();
@@ -159,5 +106,20 @@ public class GamePiece extends Actor {
         setMiddleBlock(bottomBlock);
         setBottomBlock(topBlock);
     }
-    */
+
+    public void setData(String[] data) {
+        if(data != null && data.length < 4){
+            setTopBlock(UIUtil.getInstance().getGameBlock(Util.otoi(data[0])));
+            setMiddleBlock(UIUtil.getInstance().getGameBlock(Util.otoi(data[1])));
+            setBottomBlock(UIUtil.getInstance().getGameBlock(Util.otoi(data[2])));
+        }
+    }
+
+    public Array<AnimatedImage> getBlockImages(){
+        Array<AnimatedImage> images = new Array<AnimatedImage>();
+        images.add(getTopBlock().getImage());
+        images.add(getMiddleBlock().getImage());
+        images.add(getBottomBlock().getImage());
+        return images;
+    }
 }

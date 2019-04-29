@@ -1,8 +1,10 @@
 package net.asg.games.utils;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import net.asg.games.game.objects.YokelObjectFactory;
+import net.asg.games.provider.actors.GameBlock;
 
 public class UIUtil {
     private static UIUtil myInstance = new UIUtil();
@@ -25,5 +27,9 @@ public class UIUtil {
 
     public Image getBlockImage(int blockId){
         return getBlockImage(factory.getBlockImageName(blockId));
+    }
+
+    public GameBlock getGameBlock(int blockId){
+        return getFactory().getGameBlock(blockId);
     }
 }

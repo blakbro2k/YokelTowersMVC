@@ -23,14 +23,14 @@ public class YokelObjectFactory {
 
         String[] imageNames = new String[]{"Y_block","O_block","K_block","E_block","L_block","Bash_block","stone","clear_block"};
         for(String imageName : imageNames){
-            addActor(actors, userInterfaceService.addImageName(imageName));
+            addActor(actors, userInterfaceService.getImage(imageName));
         }
 
         String[] animatedImageNames = {"defense_Y_block","defense_O_block","defense_K_block","defense_E_block","defense_L_block",
                 "defense_Bash_block","power_Y_block","power_O_block","power_K_block","power_E_block","power_L_block","power_bash_block",
                 "Y_block_Broken","O_block_Broken","K_block_Broken","E_block_Broken","L_block_Broken","Bash_block_Broken"};
         for(String aniImageName : animatedImageNames){
-            addActor(actors, userInterfaceService.addAnimatedImageName(aniImageName));
+            addActor(actors, userInterfaceService.getAnimatedImage(aniImageName));
         }
         return actors;
     }

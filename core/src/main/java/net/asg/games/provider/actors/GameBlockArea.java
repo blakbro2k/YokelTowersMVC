@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Array;
@@ -15,7 +16,7 @@ import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelObjectFactory;
 import net.asg.games.utils.Util;
 
-public class GameBlockArea extends Table {
+public class GameBlockArea extends Stack {
     private static final String CELL_ATTR = "uiCell";
     private static final String CELL_ATTR_SEPARATOR = "_";
     private static final Color ACTIVE_BACKGROUND_COLOR = new Color(0.7f, 0.7f, 0.7f, 1);
@@ -24,14 +25,19 @@ public class GameBlockArea extends Table {
     private static final float BLOCK_DROP_SPEED = .8f;
     private static final float MAX_BLOCK_DROP_SPEED = 6f;
     private static final float FALL_BLOCK_SPEED = 250f;
+    private final Skin skin;
 
     private boolean isSpeedDown;
     private boolean isActive;
-    private YokelGameBoard board;
-    private Table boarder;
 
     private int boardNumber;
+    private YokelGameBoard board;
+
+    private Table boarder;
+    private Table grid;
     private GamePiece gamePiece;
+    private Table bgNumber;
+
     private YokelObjectFactory factory;
     private ObjectMap<String, GameBlock> uiBlocks;
     private Array<GameBlock> sprites;
@@ -44,43 +50,54 @@ public class GameBlockArea extends Table {
         if (skin == null){
             throw new GdxRuntimeException("skin cannot be null.");
         }
-        setSkin(skin);
-
-        boarder = new Table();
-        boarder.setDebug(this.getDebug());
-        boarder.setSize(getWidth() + 20, getHeight() + 20);
-        boarder.setBounds(this.getX(), this.getY(), getWidth() - 8, getHeight() - 8);
-        this.setColor(DEFAULT_BACKGROUND_COLOR);
-
-        //add(boarder);
-
-        NinePatch patch = new NinePatch(getSkin().getRegion("8_digit"),3, 3, 3, 3);
-        NinePatchDrawable background = new NinePatchDrawable(patch);
+        this.skin = skin;
 
         initializeBoard(factory);
+        initializeBackground();
+        initializeGrid();
+        //(gamePiece);
     }
 
     private void initializeBoard(YokelObjectFactory factory){
         this.factory = factory;
-        uiBlocks = new ObjectMap<>();
+        this.uiBlocks = new ObjectMap<>();
         this.sprites = new Array<>();
         this.boardNumber = 0;
-        initializeUiCells();
+        this.grid = new Table(skin);
+        this.bgNumber = new Table(skin);
     }
 
-    private void initializeUiCells(){
+
+    private void initializeGrid(){
         for(int r = YokelGameBoard.MAX_ROWS - 1; r >= 0; r--){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
                 GameBlock uiBlock = factory.getGameBlock(YokelBlock.CLEAR);
 
                 uiBlocks.put(getCellAttrName(r,c), uiBlock);
                 if(c + 1 == YokelGameBoard.MAX_COLS){
-                    add(uiBlock).row();
+                    grid.add(uiBlock).row();
                 } else {
-                    add(uiBlock);
+                    grid.add(uiBlock);
                 }
             }
         }
+        add(grid);
+    }
+
+    private void initializeBackground(){
+        boarder = new Table();
+        boarder.setSkin(skin);
+        boarder.setDebug(this.getDebug());
+        boarder.setSize(getWidth() + 20, getHeight() + 20);
+        boarder.setBounds(this.getX(), this.getY(), getWidth(), getHeight());
+        this.setColor(DEFAULT_BACKGROUND_COLOR);
+        //add(boarder);
+
+        NinePatch patch = new NinePatch(skin.getRegion(GameClock.NO_DIGIT_NME),3, 3, 3, 3);
+        NinePatchDrawable backgroundNum = new NinePatchDrawable(patch);
+        bgNumber = new Table(skin);
+        bgNumber.setBackground(backgroundNum);
+        add(bgNumber);
     }
 
     private String getCellAttrName(int r, int c){
@@ -92,7 +109,7 @@ public class GameBlockArea extends Table {
     }
 
     public void setBoardNumber(int number){
-        this.setBackground(number + "_digit");
+        bgNumber.setBackground(number + GameClock.DIGIT_NME);
         this.boardNumber = number;
     }
 
@@ -109,22 +126,35 @@ public class GameBlockArea extends Table {
     }
 
     public void setGamePiece(GamePiece gamePiece){
+        if(this.gamePiece == null && gamePiece != null){
+            this.gamePiece = gamePiece;
 
+            add(gamePiece);
+            gamePiece.setPosition(0, 0);
+
+            System.out.println("gamePiece=" + gamePiece.getCullingArea());
+            System.out.println("gamePiece(Parent)=" + gamePiece.getParent().getCullingArea());
+        }
     }
 
+    /*
     @Override
     public void act(float delta){
+        super.act(delta);
         for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
-                actOnBlock(r, c, delta);
+                actOnBlocks(r, c, delta);
             }
         }
+    }*/
+
+    private String printBounds(){
+        return "(" + getX() + "," + getY() + ")[w:" + getWidth() + " h:" + getHeight() + "]";
     }
 
     @Override
     public void draw(Batch batch, float alpha){
         //if(!isActive) return;
-        boarder.draw(batch, alpha);
         super.draw(batch, alpha);
         drawSprites(batch, alpha);
     }
@@ -155,7 +185,15 @@ public class GameBlockArea extends Table {
         }
     }
 
-    private void actOnBlock(int r, int c, float delta){
+    private void drawGamePiece(Batch batch, float alpha){
+        if(this.gamePiece != null){
+            //System.out.println("drawing gamePiece(" + gamePiece.getX() + "," + gamePiece.getY());
+            //System.out.println(getStage().getActors());
+            gamePiece.draw(batch, alpha);
+        }
+    }
+
+    private void actOnBlocks(int r, int c, float delta){
         //if(!isActive) return;
         //update ui blocks
         GameBlock uiBlock = uiBlocks.get(getCellAttrName(r,c));
@@ -168,6 +206,31 @@ public class GameBlockArea extends Table {
             //if not broken, act
             //if broken, interpolate down
         }
+
+        //Move game piece down
+        moveGamePiece(delta);
+    }
+
+    private void moveGamePiece(float delta) {
+        if(this.gamePiece != null){
+            attemptGamePieceMoveDown(delta);
+        }
+    }
+
+    private void attemptGamePieceMoveDown(float delta) {
+        if(gamePiece != null){
+            if(gamePiece.getY() < 0){
+                gamePiece.setY(gamePiece.getY() - (10 * delta));
+            }
+        }
+    }
+
+    public Skin getSkin() {
+        return this.skin;
+    }
+
+    public YokelObjectFactory getFactory(){
+        return factory;
     }
 }
 

@@ -48,7 +48,7 @@ public class GameBlock extends Table implements Pool.Poolable{
         setImage(UIUtil.getInstance().getBlockImage(blockValue));
     }
 
-    public Image getImage(){
+    public AnimatedImage getImage(){
         return this.uiBlock;
     }
 

@@ -116,30 +116,30 @@ public class Global implements ActionContainer {
             }
         }
 
-        board.setCels(0,0, getRandomNumber());
-        board.setCels(0,1, getRandomNumber());
-        board.setCels(0,2, getRandomNumber());
-        board.setCels(0,3, getRandomNumber());
-        board.setCels(0,4, getRandomNumber());
-        board.setCels(0,5, getRandomNumber());
+        board.setCels(0,0, getRandomBlockId());
+        board.setCels(0,1, getRandomBlockId());
+        board.setCels(0,2, getRandomBlockId());
+        board.setCels(0,3, getRandomBlockId());
+        board.setCels(0,4, getRandomBlockId());
+        board.setCels(0,5, getRandomBlockId());
 
-        board.setCels(1,0, getRandomNumber());
-        board.setCels(1,1, getRandomNumber());
-        board.setCels(1,2, getRandomNumber());
-        board.setCels(1,3, getRandomNumber());
-        board.setCels(1,4, getRandomNumber());
-        board.setCels(1,5, getRandomNumber());
+        board.setCels(1,0, getRandomBlockId());
+        board.setCels(1,1, getRandomBlockId());
+        board.setCels(1,2, getRandomBlockId());
+        board.setCels(1,3, getRandomBlockId());
+        board.setCels(1,4, getRandomBlockId());
+        board.setCels(1,5, getRandomBlockId());
 
-        board.setCels(2,0, getRandomNumber());
-        board.setCels(2,1, getRandomNumber());
-        board.setCels(2,2, getRandomNumber());
-        board.setCels(2,3, getRandomNumber());
-        board.setCels(2,4, getRandomNumber());
-        board.setCels(2,5, getRandomNumber());
+        board.setCels(2,0, getRandomBlockId());
+        board.setCels(2,1, getRandomBlockId());
+        board.setCels(2,2, getRandomBlockId());
+        board.setCels(2,3, getRandomBlockId());
+        board.setCels(2,4, getRandomBlockId());
+        board.setCels(2,5, getRandomBlockId());
         return board;
     }
 
-    private int getRandomNumber(){
+    private int getRandomBlockId(){
         return MathUtils.random(YokelBlock.DEFENSE_EX);
     }
 

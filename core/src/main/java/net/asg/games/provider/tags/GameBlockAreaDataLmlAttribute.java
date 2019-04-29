@@ -1,8 +1,5 @@
 package net.asg.games.provider.tags;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.action.ActorConsumer;
 import com.github.czyzby.lml.parser.tag.LmlAttribute;
@@ -10,6 +7,7 @@ import com.github.czyzby.lml.parser.tag.LmlTag;
 
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.provider.actors.GameBlockArea;
+import net.asg.games.provider.actors.GamePiece;
 
 public class GameBlockAreaDataLmlAttribute implements LmlAttribute<GameBlockArea> {
     public GameBlockAreaDataLmlAttribute() {}
@@ -24,6 +22,9 @@ public class GameBlockAreaDataLmlAttribute implements LmlAttribute<GameBlockArea
             parser.throwError("Could not find action for: " + rawAttributeData + " with actor: " + actor);
         } else {
             actor.updateData((YokelGameBoard) action.consume(actor));
+            GamePiece gp = new GamePiece(actor.getSkin(),8,2,3);
+            gp.setData(new String[]{"10","16","3"});
+            actor.setGamePiece(gp);
         }
     }
 }

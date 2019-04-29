@@ -32,6 +32,8 @@ import net.asg.games.provider.tags.GameBlockAreaDataLmlAttribute;
 import net.asg.games.provider.tags.GameBlockAreaNumberLmlAttribute;
 import net.asg.games.provider.tags.GameBoardLmlTagProvider;
 import net.asg.games.provider.tags.GameClockLmlTagProvider;
+import net.asg.games.provider.tags.GamePieceDataLmlAttribute;
+import net.asg.games.provider.tags.GamePieceLmlTagProvider;
 import net.asg.games.provider.tags.LoungeLmlTagProvider;
 import net.asg.games.provider.tags.PlayerIconLmlTagProvider;
 import net.asg.games.service.ScaleService;
@@ -108,9 +110,11 @@ import net.asg.games.service.ScaleService;
             syntax.addTagProvider(new PlayerIconLmlTagProvider(), "playericon");
             syntax.addTagProvider(new GameBlockAreaLmlTagProvider(), "gameblockarea");
             syntax.addTagProvider(new GameBlockLmlTagProvider(), "gameblock");
+            syntax.addTagProvider(new GamePieceLmlTagProvider(), "gamepiece");
 
-            syntax.addAttributeProcessor(new GameBlockTypeLmlAttribute(), new String[]{"blocktype"});
-            syntax.addAttributeProcessor(new GameBlockAreaNumberLmlAttribute(), new String[]{"areanumber"});
-            syntax.addAttributeProcessor(new GameBlockAreaDataLmlAttribute(), new String[]{"blockareadata"});
+            syntax.addAttributeProcessor(new GameBlockTypeLmlAttribute(), "blocktype");
+            syntax.addAttributeProcessor(new GameBlockAreaNumberLmlAttribute(), "areanumber");
+            syntax.addAttributeProcessor(new GameBlockAreaDataLmlAttribute(), "blockareadata");
+            syntax.addAttributeProcessor(new GamePieceDataLmlAttribute(), "data");
         }
     }

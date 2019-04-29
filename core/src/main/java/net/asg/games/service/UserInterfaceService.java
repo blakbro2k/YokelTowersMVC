@@ -1,6 +1,7 @@
 package net.asg.games.service;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -37,6 +38,7 @@ public class UserInterfaceService {
         this.uiAssetMap = new ObjectMap<>();
     }
 
+    //Get Objects Factory
     public YokelObjectFactory getFactory(){
         if(factory == null){
             factory = new YokelObjectFactory(this);
@@ -44,6 +46,7 @@ public class UserInterfaceService {
         return this.factory;
     }
 
+    //Load actors into asset map
     public void loadActors(Iterable<? extends Actor> actors){
         if(actors != null){
             for(Actor actor : actors){
@@ -58,7 +61,11 @@ public class UserInterfaceService {
         return skinService.getSkin();
     }
 
-    public Image addImageName(String name){
+    public Stage getStage() {
+        return interfaceService.getCurrentController().getStage();
+    }
+
+    public Image getImage(String name){
         if(name != null){
             Image image = new Image();
             image.setName(name);
@@ -67,17 +74,12 @@ public class UserInterfaceService {
         return null;
     }
 
-    public AnimatedImage addAnimatedImageName(String name){
+    public AnimatedImage getAnimatedImage(String name){
         if(name != null){
             AnimatedImage animatedImage = new AnimatedImage();
             animatedImage.setName(name);
             return animatedImage;
         }
-        return null;
-    }
-
-
-    public GameBlock getGameBlockAsset(YokelBlock yokelBlock){
         return null;
     }
 
