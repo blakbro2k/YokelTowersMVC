@@ -61,7 +61,7 @@ public class GameBlockArea extends Stack {
         initializeBoard(factory);
         initializeBackground();
         initializeGrid();
-        //(gamePiece);
+        //add(gamePiece);
     }
 
     private void initializeBoard(YokelObjectFactory factory){
@@ -102,17 +102,16 @@ public class GameBlockArea extends Stack {
     private void initializeBackground(){
         boarder = new Table();
         boarder.setSkin(skin);
-        boarder.setDebug(this.getDebug());
         boarder.setWidth(getWidth() + 20);
         boarder.setHeight(getHeight() + 20);
         boarder.setBounds(this.getX(), this.getY(), getWidth(), getHeight());
         this.setColor(DEFAULT_BACKGROUND_COLOR);
-        //add(boarder);
+        add(boarder);
 
         bgNumber = new Table(skin);
         bgNumber.align(Align.top);
         bgNumber.setBackground(GameClock.NO_DIGIT_NME);
-        bgNumber.setScale(2);
+        //bgNumber.setScale(2);
         add(bgNumber);
     }
 
@@ -147,8 +146,8 @@ public class GameBlockArea extends Stack {
             //gamePiece
 
             //gamePiece.validate();
-            gamePiece.setPosition(5, 566);
-            System.out.println(Util.printBounds(gamePiece));
+            //gamePiece.setPosition(5, 566);
+            //System.out.println(Util.printBounds(gamePiece));
             //gamePiece.align(Align.topLeft);
             add(gamePiece);
             //gamePiece.setX(0);
@@ -164,11 +163,6 @@ public class GameBlockArea extends Stack {
         //Move game piece down
         moveGamePiece(delta);
 
-        for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
-            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
-                actOnBlocks(r, c, delta);
-            }
-        }
     }
 
     @Override
