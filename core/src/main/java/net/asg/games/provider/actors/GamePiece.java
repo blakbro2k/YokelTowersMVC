@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -15,12 +16,10 @@ import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.Util;
 
-public class GamePiece extends Actor {
+public class GamePiece extends Table {
     private GameBlock top;
     private GameBlock middle;
     private GameBlock bottom;
-    private Skin skin;
-    private Table table;
 
     public GamePiece(){
         this(null,null,null,null);
@@ -45,18 +44,14 @@ public class GamePiece extends Actor {
         this.top = getClearBlock();
         this.middle = getClearBlock();
         this.bottom = getClearBlock();
-        setWidth(top.getImage().getDrawable().getMinWidth());
-        setHeight(top.getImage().getDrawable().getMinHeight() * 3);
-        this.table = new Table(skin);
-        table.setDebug(getDebug());
-        top.setDebug(getDebug());
-        table.setBounds(getX(), getY(), getWidth(), getHeight());
+        this.setWidth(top.getWidth());
+        this.setHeight(top.getHeight() + middle.getHeight() + bottom.getHeight());
     }
 
     private void initializeUiCells(){
-        table.add(getTopBlock()).row();
-        table.add(getMiddleBlock()).row();
-        table.add(getBottomBlock());
+        add(getTopBlock()).row();
+        add(getMiddleBlock()).row();
+        add(getBottomBlock());
     }
 
     private GameBlock getClearBlock(){
@@ -119,59 +114,5 @@ public class GamePiece extends Actor {
             setMiddleBlock(UIUtil.getInstance().getGameBlock(Util.otoi(data[1])));
             setBottomBlock(UIUtil.getInstance().getGameBlock(Util.otoi(data[2])));
         }
-    }
-
-    public Array<AnimatedImage> getBlockImages(){
-        Array<AnimatedImage> images = new Array<>();
-        images.add(getTopBlock().getImage());
-        images.add(getMiddleBlock().getImage());
-        images.add(getBottomBlock().getImage());
-        return images;
-    }
-
-    public void setSkin (Skin skin) {
-        this.skin = skin;
-    }
-
-    public Skin getSkin(){
-        return this.skin;
-    }
-
-    @Override
-    public void act(float delta){
-        super.act(delta);
-        table.act(delta);
-    }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha){
-        //validate();
-        //batch.begin();
-        table.draw(batch, parentAlpha);
-        super.draw(batch, parentAlpha);
-
-        //printBounds();
-        //printDebugBlocks();
-    }
-
-    @Override
-    protected void positionChanged() {
-        super.positionChanged();
-        setPosition(getX(),getY());
-        table.setPosition(getX(),getY());
-        printBounds();
-    }
-
-    private void printDebugBlocks(){
-        System.out.println("top=" + top.getImage().getDrawable());
-        System.out.println("middle=" + middle.getImage().getDrawable());
-        System.out.println("bottom=" + bottom.getImage().getDrawable());
-    }
-
-    private void printBounds(){
-        System.out.println("table=(" + table.getX() + "," + table.getY() + ")[w:" + table.getWidth() + " h:" + table.getHeight() + "]");
-        System.out.println("top=(" + top.getX() + "," + top.getY() + ")[w:" + top.getWidth() + " h:" + top.getHeight() + "]");
-        System.out.println("mid=(" + middle.getX() + "," + middle.getY() + ")[w:" + middle.getWidth() + " h:" + middle.getHeight() + "]");
-        System.out.println("bottom=(" + bottom.getX() + "," + bottom.getY() + ")[w:" + bottom.getWidth() + " h:" + bottom.getHeight() + "]");
     }
 }

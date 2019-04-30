@@ -3,6 +3,7 @@ package net.asg.games.provider.actors;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.ui.widget.VisWindow;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
@@ -91,7 +93,8 @@ public class GameBlockArea extends Stack {
         boarder = new Table();
         boarder.setSkin(skin);
         boarder.setDebug(this.getDebug());
-        boarder.setSize(getWidth() + 20, getHeight() + 20);
+        boarder.setWidth(getWidth() + 20);
+        boarder.setHeight(getHeight() + 20);
         boarder.setBounds(this.getX(), this.getY(), getWidth(), getHeight());
         this.setColor(DEFAULT_BACKGROUND_COLOR);
         //add(boarder);
@@ -131,36 +134,40 @@ public class GameBlockArea extends Stack {
     public void setGamePiece(GamePiece gamePiece){
         if(this.gamePiece == null && gamePiece != null){
             this.gamePiece = gamePiece;
+            //gamePiece
 
-            add(gamePiece);
             //gamePiece.validate();
-            gamePiece.setPosition(35, getY());
+            gamePiece.setPosition(5, 566);
+            System.out.println(Util.printBounds(gamePiece));
             //gamePiece.align(Align.topLeft);
+            add(gamePiece);
+            //gamePiece.setX(0);
 
-            //System.out.println("gamePiece=" + gamePiece.getCullingArea());
-            //System.out.println("gamePiece(Parent)=" + gamePiece.getParent());
         }
     }
 
-    /*
+
     @Override
     public void act(float delta){
         super.act(delta);
+
+        //Move game piece down
+        moveGamePiece(delta);
+
         for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
                 actOnBlocks(r, c, delta);
             }
         }
-    }*/
-
-    private String printBounds(){
-        return "(" + getX() + "," + getY() + ")[w:" + getWidth() + " h:" + getHeight() + "]";
     }
 
     @Override
     public void draw(Batch batch, float alpha){
         //if(!isActive) return;
+        System.out.println(Util.printBounds(gamePiece));
+
         super.draw(batch, alpha);
+        drawGamePiece(batch, alpha);
         drawSprites(batch, alpha);
     }
 
@@ -194,6 +201,8 @@ public class GameBlockArea extends Stack {
         if(this.gamePiece != null){
             //System.out.println("drawing gamePiece(" + gamePiece.getX() + "," + gamePiece.getY());
             //System.out.println(getStage().getActors());
+            gamePiece.setX(getX());
+            gamePiece.setY(getY());
             gamePiece.draw(batch, alpha);
         }
     }
@@ -211,9 +220,6 @@ public class GameBlockArea extends Stack {
             //if not broken, act
             //if broken, interpolate down
         }
-
-        //Move game piece down
-        moveGamePiece(delta);
     }
 
     private void moveGamePiece(float delta) {
@@ -224,9 +230,8 @@ public class GameBlockArea extends Stack {
 
     private void attemptGamePieceMoveDown(float delta) {
         if(gamePiece != null){
-            System.out.println("X:" + gamePiece.getY());
-            if(gamePiece.getY() < -60){
-                gamePiece.setPosition(getX(), gamePiece.getY() - (10 * delta));
+            if(gamePiece.getY() < 0){
+                gamePiece.setY(gamePiece.getY() - 1);
             }
         }
     }

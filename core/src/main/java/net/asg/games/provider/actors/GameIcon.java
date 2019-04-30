@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+import net.asg.games.utils.Util;
+
 public class GameIcon extends ImageButton {
     private static final String ICON_ATTR_NAME = "player_icon";
     private int currentIconNumber = 1;
@@ -40,6 +42,7 @@ public class GameIcon extends ImageButton {
         }
 
         Drawable icon = getSkin().getDrawable(ICON_ATTR_NAME + currentIconNumber);
+        Util.setSizeFromDrawable(this, icon);
         setStyle(new ImageButtonStyle(icon,icon,icon,icon,icon,icon));
     }
 
@@ -50,6 +53,7 @@ public class GameIcon extends ImageButton {
     public int getCurrentIconNumber(){
         return currentIconNumber;
 }
+
     public String getIconAttrName(){
         return ICON_ATTR_NAME + currentIconNumber;
     }

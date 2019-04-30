@@ -61,6 +61,7 @@ public class YokelObjectFactory {
         }
         //System.out.println("Pool:free:" + yokelGameBlockPool.getFree());
         //System.out.println("Pool:peak:" + yokelGameBlockPool.peak);
+        //System.out.println("Pool:max:" + yokelGameBlockPool.max);
         return block;
     }
 

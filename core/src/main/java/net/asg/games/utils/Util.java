@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
+import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelLounge;
@@ -32,6 +34,13 @@ import java.util.UUID;
 
 public class Util {
     private final static Json json = new Json();
+
+    public static void setSizeFromDrawable(Actor actor, Drawable drawable){
+        if(actor != null && drawable != null){
+            actor.setWidth(drawable.getMinWidth());
+            actor.setHeight(drawable.getMinHeight());
+        }
+    }
 
 
     public static class IDGenerator {
@@ -578,6 +587,19 @@ public class Util {
                     m.invoke(o, args);
                 }
             }
+        }
+    }
+
+    public static String printBounds(Actor actor){
+        if(actor != null){
+            String name = actor.getClass().getSimpleName() + "@" + Integer.toHexString(actor.hashCode());
+            String cname = actor.getName();
+            if(cname != null){
+                name = cname;
+            }
+            return name + "(" + actor.getX() + "," + actor.getY() + ")[w:" + actor.getWidth() + " h:" + actor.getHeight() + "]";
+        } else {
+            return "";
         }
     }
 }
