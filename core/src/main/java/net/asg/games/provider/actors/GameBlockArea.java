@@ -3,13 +3,16 @@ package net.asg.games.provider.actors;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Scaling;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
@@ -93,10 +96,10 @@ public class GameBlockArea extends Stack {
         this.setColor(DEFAULT_BACKGROUND_COLOR);
         //add(boarder);
 
-        NinePatch patch = new NinePatch(skin.getRegion(GameClock.NO_DIGIT_NME),3, 3, 3, 3);
-        NinePatchDrawable backgroundNum = new NinePatchDrawable(patch);
         bgNumber = new Table(skin);
-        bgNumber.setBackground(backgroundNum);
+        bgNumber.align(Align.top);
+        bgNumber.setBackground(GameClock.NO_DIGIT_NME);
+        bgNumber.setScale(2);
         add(bgNumber);
     }
 
@@ -130,10 +133,12 @@ public class GameBlockArea extends Stack {
             this.gamePiece = gamePiece;
 
             add(gamePiece);
-            gamePiece.setPosition(0, 0);
+            //gamePiece.validate();
+            gamePiece.setPosition(35, getY());
+            //gamePiece.align(Align.topLeft);
 
-            System.out.println("gamePiece=" + gamePiece.getCullingArea());
-            System.out.println("gamePiece(Parent)=" + gamePiece.getParent().getCullingArea());
+            //System.out.println("gamePiece=" + gamePiece.getCullingArea());
+            //System.out.println("gamePiece(Parent)=" + gamePiece.getParent());
         }
     }
 
@@ -219,8 +224,9 @@ public class GameBlockArea extends Stack {
 
     private void attemptGamePieceMoveDown(float delta) {
         if(gamePiece != null){
-            if(gamePiece.getY() < 0){
-                gamePiece.setY(gamePiece.getY() - (10 * delta));
+            System.out.println("X:" + gamePiece.getY());
+            if(gamePiece.getY() < -60){
+                gamePiece.setPosition(getX(), gamePiece.getY() - (10 * delta));
             }
         }
     }

@@ -1,89 +1,95 @@
 package net.asg.games.provider.actors;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
+import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.Util;
 
-public class GamePiece extends Table {
-    public static final String TOP_ATTR = "top";
-    public static final String MIDDLE_ATTR = "middle";
-    public static final String BOTTOM_ATTR = "bottom";
-    private ObjectMap<String, GameBlock> uiBlocks;
+public class GamePiece extends Actor {
+    private GameBlock top;
+    private GameBlock middle;
+    private GameBlock bottom;
+    private Skin skin;
+    private Table table;
 
-
+    public GamePiece(){
+        this(null,null,null,null);
+    }
 
     public GamePiece(Skin skin, GameBlock top, GameBlock mid, GameBlock bottom){
-        setSkin(skin);
-        this.uiBlocks = new ObjectMap<>();
         setDebug(true);
+        setSkin(skin);
+        initialize();
+        initializeUiCells();
+        //validate();
         setTopBlock(top);
         setMiddleBlock(mid);
         setBottomBlock(bottom);
-        initializeUiCells();
     }
 
     public GamePiece(Skin skin, int top, int mid, int bottom){
         this(skin, UIUtil.getInstance().getGameBlock(top), UIUtil.getInstance().getGameBlock(mid), UIUtil.getInstance().getGameBlock(bottom));
     }
 
+    private void initialize(){
+        this.top = getClearBlock();
+        this.middle = getClearBlock();
+        this.bottom = getClearBlock();
+        setWidth(top.getImage().getDrawable().getMinWidth());
+        setHeight(top.getImage().getDrawable().getMinHeight() * 3);
+        this.table = new Table(skin);
+        table.setDebug(getDebug());
+        top.setDebug(getDebug());
+        table.setBounds(getX(), getY(), getWidth(), getHeight());
+    }
+
     private void initializeUiCells(){
-        add(getTopBlock()).row();
-        add(getMiddleBlock()).row();
-        add(getBottomBlock());
+        table.add(getTopBlock()).row();
+        table.add(getMiddleBlock()).row();
+        table.add(getBottomBlock());
+    }
+
+    private GameBlock getClearBlock(){
+        return UIUtil.getInstance().getGameBlock(YokelBlock.CLEAR);
     }
 
     public GameBlock getTopBlock() {
-        return uiBlocks.get(TOP_ATTR);
+        return top;
     }
 
     public void setTopBlock(GameBlock top) {
-        GameBlock uiBlock = uiBlocks.get(TOP_ATTR);
-        if(uiBlock != null){
-            if(top != null){
-                System.out.println("setting top image:" + top.getImage().getName());
-                uiBlock.setImage(top.getImage());
-            }
-        } else {
-            uiBlocks.put(TOP_ATTR, UIUtil.getInstance().getGameBlock(0));
+        if(top != null){
+            this.top.setImage(top.getImage());
         }
     }
 
     public GameBlock getMiddleBlock() {
-        return uiBlocks.get(MIDDLE_ATTR);
+        return middle;
     }
 
     public void setMiddleBlock(GameBlock middle) {
-        GameBlock uiBlock = uiBlocks.get(MIDDLE_ATTR);
-        if(uiBlock != null){
-            if(middle != null){
-                System.out.println("setting middle image:" + middle.getImage().getName());
-
-                uiBlock.setImage(middle.getImage());
-            }
-        } else {
-            uiBlocks.put(MIDDLE_ATTR, UIUtil.getInstance().getGameBlock(0));
+        if(middle != null){
+            this.middle.setImage(middle.getImage());
         }
     }
 
     public GameBlock getBottomBlock() {
-        return uiBlocks.get(BOTTOM_ATTR);
+        return bottom;
     }
 
     public void setBottomBlock(GameBlock bottom) {
-        GameBlock uiBlock = uiBlocks.get(BOTTOM_ATTR);
-        if(uiBlock != null){
-            if(bottom != null){
-                System.out.println("setting bottom image:" + bottom.getImage().getName());
-
-                uiBlock.setImage(bottom.getImage());
-            }
-        } else {
-            uiBlocks.put(BOTTOM_ATTR, UIUtil.getInstance().getGameBlock(0));
+        if(bottom != null){
+            this.bottom.setImage(bottom.getImage());
         }
     }
 
@@ -116,10 +122,56 @@ public class GamePiece extends Table {
     }
 
     public Array<AnimatedImage> getBlockImages(){
-        Array<AnimatedImage> images = new Array<AnimatedImage>();
+        Array<AnimatedImage> images = new Array<>();
         images.add(getTopBlock().getImage());
         images.add(getMiddleBlock().getImage());
         images.add(getBottomBlock().getImage());
         return images;
+    }
+
+    public void setSkin (Skin skin) {
+        this.skin = skin;
+    }
+
+    public Skin getSkin(){
+        return this.skin;
+    }
+
+    @Override
+    public void act(float delta){
+        super.act(delta);
+        table.act(delta);
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha){
+        //validate();
+        //batch.begin();
+        table.draw(batch, parentAlpha);
+        super.draw(batch, parentAlpha);
+
+        //printBounds();
+        //printDebugBlocks();
+    }
+
+    @Override
+    protected void positionChanged() {
+        super.positionChanged();
+        setPosition(getX(),getY());
+        table.setPosition(getX(),getY());
+        printBounds();
+    }
+
+    private void printDebugBlocks(){
+        System.out.println("top=" + top.getImage().getDrawable());
+        System.out.println("middle=" + middle.getImage().getDrawable());
+        System.out.println("bottom=" + bottom.getImage().getDrawable());
+    }
+
+    private void printBounds(){
+        System.out.println("table=(" + table.getX() + "," + table.getY() + ")[w:" + table.getWidth() + " h:" + table.getHeight() + "]");
+        System.out.println("top=(" + top.getX() + "," + top.getY() + ")[w:" + top.getWidth() + " h:" + top.getHeight() + "]");
+        System.out.println("mid=(" + middle.getX() + "," + middle.getY() + ")[w:" + middle.getWidth() + " h:" + middle.getHeight() + "]");
+        System.out.println("bottom=(" + bottom.getX() + "," + bottom.getY() + ")[w:" + bottom.getWidth() + " h:" + bottom.getHeight() + "]");
     }
 }
