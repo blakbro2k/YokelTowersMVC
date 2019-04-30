@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -70,6 +71,15 @@ public class GameBlockArea extends Stack {
         this.boardNumber = 0;
         this.grid = new Table(skin);
         this.bgNumber = new Table(skin);
+        checkDebug();
+    }
+
+    private void checkDebug() {
+        Stage stage = getStage();
+        if(stage != null){
+            System.out.println("Stage=" + stage);
+            Util.setDebug(stage.isDebugAll(), grid, bgNumber, gamePiece);
+        }
     }
 
 
@@ -164,7 +174,7 @@ public class GameBlockArea extends Stack {
     @Override
     public void draw(Batch batch, float alpha){
         //if(!isActive) return;
-        System.out.println(Util.printBounds(gamePiece));
+        //System.out.println(Util.printBounds(gamePiece));
 
         super.draw(batch, alpha);
         drawGamePiece(batch, alpha);

@@ -602,4 +602,14 @@ public class Util {
             return "";
         }
     }
+
+    public static void setDebug(boolean b, Actor... actors){
+        if(actors != null){
+            for(Actor actor : actors){
+                if(actor != null){
+                    actor.setDebug(b);
+                }
+            }
+        }
+    }
 }

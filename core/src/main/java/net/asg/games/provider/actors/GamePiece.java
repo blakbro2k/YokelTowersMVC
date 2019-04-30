@@ -26,7 +26,7 @@ public class GamePiece extends Table {
     }
 
     public GamePiece(Skin skin, GameBlock top, GameBlock mid, GameBlock bottom){
-        setDebug(true);
+        //setDebug(true);
         setSkin(skin);
         initialize();
         initializeUiCells();

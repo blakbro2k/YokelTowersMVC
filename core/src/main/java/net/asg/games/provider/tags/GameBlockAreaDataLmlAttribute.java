@@ -24,7 +24,7 @@ public class GameBlockAreaDataLmlAttribute implements LmlAttribute<GameBlockArea
             actor.updateData((YokelGameBoard) action.consume(actor));
             GamePiece gp = new GamePiece(actor.getSkin(),8,2,3);
             gp.setData(new String[]{"10","16","3"});
-            actor.setGamePiece(gp);
+            //actor.setGamePiece(gp);
         }
     }
 }
