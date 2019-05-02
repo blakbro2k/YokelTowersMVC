@@ -2,20 +2,15 @@ package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.Scaling;
-import com.kotcrab.vis.ui.widget.VisWindow;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
@@ -46,7 +41,7 @@ public class GameBlockArea extends Stack {
 
     private YokelObjectFactory factory;
     private ObjectMap<String, GameBlock> uiBlocks;
-    private Array<GameBlock> sprites;
+    private Array<Actor> actors;
 
     public GameBlockArea(YokelObjectFactory factory) {
         if (factory == null){
@@ -61,25 +56,23 @@ public class GameBlockArea extends Stack {
         initializeBoard(factory);
         initializeBackground();
         initializeGrid();
-        //add(gamePiece);
     }
 
     private void initializeBoard(YokelObjectFactory factory){
         this.factory = factory;
         this.uiBlocks = new ObjectMap<>();
-        this.sprites = new Array<>();
+        this.actors = new Array<>();
         this.boardNumber = 0;
         this.grid = new Table(skin);
         this.bgNumber = new Table(skin);
-        checkDebug();
     }
 
-    private void checkDebug() {
-        Stage stage = getStage();
-        if(stage != null){
-            System.out.println("Stage=" + stage);
-            Util.setDebug(stage.isDebugAll(), grid, bgNumber, gamePiece);
-        }
+    public void setDebug (boolean enabled) {
+        boarder.setDebug(enabled);
+        grid.setDebug(enabled);
+        //gamePiece.setDebug(enabled);
+        bgNumber.setDebug(enabled);
+        super.setDebug(enabled);
     }
 
 
@@ -102,8 +95,8 @@ public class GameBlockArea extends Stack {
     private void initializeBackground(){
         boarder = new Table();
         boarder.setSkin(skin);
-        boarder.setWidth(getWidth() + 20);
-        boarder.setHeight(getHeight() + 20);
+        boarder.setWidth(getWidth());
+        boarder.setHeight(getHeight());
         boarder.setBounds(this.getX(), this.getY(), getWidth(), getHeight());
         this.setColor(DEFAULT_BACKGROUND_COLOR);
         add(boarder);
@@ -142,15 +135,19 @@ public class GameBlockArea extends Stack {
 
     public void setGamePiece(GamePiece gamePiece){
         if(this.gamePiece == null && gamePiece != null){
-            this.gamePiece = gamePiece;
-            //gamePiece
+            System.out.println("SetGamePiece");
+            //System.out.println("gamePiece.. " + gamePiece);
+            //Stage stage = getStage();
+            gamePiece.setX(getX());
+            gamePiece.setY(getY());
 
-            //gamePiece.validate();
-            //gamePiece.setPosition(5, 566);
-            //System.out.println(Util.printBounds(gamePiece));
-            //gamePiece.align(Align.topLeft);
+            //stage.addActor(gamePiece);
+            //System.out.println("stage:" + stage);
+            this.gamePiece = gamePiece;
+            actors.add(gamePiece);
             add(gamePiece);
-            //gamePiece.setX(0);
+            System.out.println("stage:" + Util.printBounds(gamePiece));
+System.out.println(this);
 
         }
     }
@@ -162,16 +159,14 @@ public class GameBlockArea extends Stack {
 
         //Move game piece down
         moveGamePiece(delta);
-
     }
 
     @Override
     public void draw(Batch batch, float alpha){
         //if(!isActive) return;
-        //System.out.println(Util.printBounds(gamePiece));
 
         super.draw(batch, alpha);
-        drawGamePiece(batch, alpha);
+        //drawGamePiece(batch, alpha);
         drawSprites(batch, alpha);
     }
 
@@ -192,19 +187,23 @@ public class GameBlockArea extends Stack {
     }
 
     private void drawSprites(Batch batch, float alpha){
-        if(!Util.isArrayEmpty(sprites)){
-            for(GameBlock sprite : sprites){
-               if(sprite != null){
-                   sprite.draw(batch, alpha);
+        if(!Util.isArrayEmpty(actors)){
+            for(Actor actor : actors){
+               if(actor != null){
+                   //System.out.println("Drawing.. " + actor);
+
+                   //System.out.println(Util.printBounds(actor));
+
+
+                   //stage.draw();
+                   actor.draw(batch, alpha);
                }
             }
         }
     }
 
     private void drawGamePiece(Batch batch, float alpha){
-        if(this.gamePiece != null){
-            //System.out.println("drawing gamePiece(" + gamePiece.getX() + "," + gamePiece.getY());
-            //System.out.println(getStage().getActors());
+        if(gamePiece != null){
             gamePiece.setX(getX());
             gamePiece.setY(getY());
             gamePiece.draw(batch, alpha);
@@ -234,6 +233,7 @@ public class GameBlockArea extends Stack {
 
     private void attemptGamePieceMoveDown(float delta) {
         if(gamePiece != null){
+
             if(gamePiece.getY() < 0){
                 gamePiece.setY(gamePiece.getY() - 1);
             }

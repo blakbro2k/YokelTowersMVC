@@ -1,6 +1,7 @@
 package net.asg.games.controller.action;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.OrderedMap;
@@ -20,6 +21,7 @@ import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.provider.actors.GamePiece;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
@@ -98,12 +100,20 @@ public class Global implements ActionContainer {
         return isConnected;
     }
     @LmlAction("toggleGameStart")
-    public void toggleGameStart() {
+    public void toggleGameStart(Actor actor) {
         if(!ui.gameClock.isRunning()){
             ui.gameClock.start();
         } else {
             ui.gameClock.stop();
         }
+    }
+
+    @LmlAction("setGamePiece")
+    private void setGamePiece(){
+        GamePiece gp = new GamePiece(uiService.getSkin(),null,null,null);
+        gp.setData(new String[]{"12","16","3"});
+        //System.out.println("lksjfd\n" + gp);
+        ui.area1.setGamePiece(gp);
     }
 
     @LmlAction("getTestBoard")

@@ -14,6 +14,7 @@ import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.managers.GameManager;
+import net.asg.games.provider.actors.GameBlockArea;
 import net.asg.games.provider.actors.GameClock;
 import net.asg.games.service.NetworkService;
 import net.asg.games.service.UserInterfaceService;
@@ -51,6 +52,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("stone") public Image stoneBlockImage;
     @LmlActor("gameClock") public GameClock gameClock;
     @LmlActor("clear_block") public Image clearBlock;
+    @LmlActor("area1") public GameBlockArea area1;
+    @LmlActor("area2") public GameBlockArea area2;
 
     private boolean isInitiated;
 

@@ -59,8 +59,8 @@ public class YokelObjectFactory {
         if(blockType != YokelBlock.CLEAR){
             block.setActive(true);
         }
-        //System.out.println("Pool:free:" + yokelGameBlockPool.getFree());
-        //System.out.println("Pool:peak:" + yokelGameBlockPool.peak);
+        //System.out.println("blockType:" + blockType);
+        //System.out.println("block:" + block);
         //System.out.println("Pool:max:" + yokelGameBlockPool.max);
         return block;
     }

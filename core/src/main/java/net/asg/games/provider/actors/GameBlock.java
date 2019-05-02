@@ -67,10 +67,14 @@ public class GameBlock extends Table implements Pool.Poolable{
     private void setDrawable(Image image){
         if(uiBlock != null){
             Drawable drawable = image.getDrawable();
+
             Util.setSizeFromDrawable(uiBlock, drawable);
             Util.setSizeFromDrawable(this, drawable);
 
+            this.setName(image.getName());
             uiBlock.setDrawable(drawable);
+            uiBlock.setName(image.getName());
+
             if(image instanceof AnimatedImage){
                 uiBlock.setFrames(getFrames((AnimatedImage)image));
             } else {

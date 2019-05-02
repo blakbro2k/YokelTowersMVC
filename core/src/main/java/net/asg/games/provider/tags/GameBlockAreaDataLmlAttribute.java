@@ -21,9 +21,6 @@ public class GameBlockAreaDataLmlAttribute implements LmlAttribute<GameBlockArea
         if (action == null) {
             parser.throwError("Could not find action for: " + rawAttributeData + " with actor: " + actor);
         } else {
-            GamePiece gp = new GamePiece(actor.getSkin(),null,null,null);
-            gp.setData(new String[]{"12","16","3"});
-            actor.setGamePiece(gp);
             actor.updateData((YokelGameBoard) action.consume(actor));
         }
     }

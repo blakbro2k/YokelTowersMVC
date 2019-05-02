@@ -34,6 +34,7 @@ public class GamePiece extends Table {
         setTopBlock(top);
         setMiddleBlock(mid);
         setBottomBlock(bottom);
+        invalidate();
     }
 
     public GamePiece(Skin skin, int top, int mid, int bottom){
@@ -49,6 +50,8 @@ public class GamePiece extends Table {
     }
 
     private void initializeUiCells(){
+        setX(0);
+        setY(0);
         add(getTopBlock()).row();
         add(getMiddleBlock()).row();
         add(getBottomBlock());
@@ -110,6 +113,7 @@ public class GamePiece extends Table {
 
     public void setData(String[] data) {
         if(data != null && data.length < 4){
+            //System.out.println(Util.otoi(data[0]) + "|1:" + UIUtil.getInstance().getGameBlock(Util.otoi(data[0])));
             setTopBlock(UIUtil.getInstance().getGameBlock(Util.otoi(data[0])));
             setMiddleBlock(UIUtil.getInstance().getGameBlock(Util.otoi(data[1])));
             setBottomBlock(UIUtil.getInstance().getGameBlock(Util.otoi(data[2])));

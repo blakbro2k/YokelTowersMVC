@@ -37,6 +37,7 @@
     <gamepiece data="4;5;6"/>
 </window>
 <window defaultPad="2" title="The One">
-    <gameblockarea debug="true" areanumber="1" blockareadata="$getTestBoard"/>
-    <gameblockarea areanumber="2" blockareadata="$getTestBoard"/>
+    <textButton onChange="setGamePiece">Set</textButton>
+    <gameblockarea id="area1" debug="true" areanumber="1" blockareadata="$getTestBoard"/>
+    <gameblockarea id="area2" debug="true" areanumber="2" blockareadata="$getTestBoard"/>
 </window>
