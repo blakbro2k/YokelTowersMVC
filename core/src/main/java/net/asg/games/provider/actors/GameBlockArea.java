@@ -147,7 +147,7 @@ public class GameBlockArea extends Stack {
             actors.add(gamePiece);
             add(gamePiece);
             System.out.println("stage:" + Util.printBounds(gamePiece));
-System.out.println(this);
+            System.out.println(this);
 
         }
     }

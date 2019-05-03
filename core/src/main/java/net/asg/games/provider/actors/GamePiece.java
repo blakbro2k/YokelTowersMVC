@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
@@ -29,11 +30,11 @@ public class GamePiece extends Table {
         //setDebug(true);
         setSkin(skin);
         initialize();
-        initializeUiCells();
-        //validate();
         setTopBlock(top);
         setMiddleBlock(mid);
         setBottomBlock(bottom);
+        initializeUiCells();
+        //validate();
         invalidate();
     }
 
@@ -52,6 +53,7 @@ public class GamePiece extends Table {
     private void initializeUiCells(){
         setX(0);
         setY(0);
+
         add(getTopBlock()).row();
         add(getMiddleBlock()).row();
         add(getBottomBlock());
