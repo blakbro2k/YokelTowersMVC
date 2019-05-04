@@ -612,4 +612,17 @@ public class Util {
             }
         }
     }
+
+
+    public static Array<Drawable> getAniImageFrames(AnimatedImage image){
+        Array<Drawable> drawables = new Array<>();
+        if(image != null){
+            for(Drawable frame : Util.toIterable(image.getFrames())){
+                if(frame != null){
+                    drawables.add(frame);
+                }
+            }
+        }
+        return drawables;
+    }
 }
