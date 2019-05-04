@@ -25,9 +25,6 @@ public class GameBlock extends Table implements Pool.Poolable{
     public GameBlock(Skin skin, String blockName){
         super(skin);
         reset();
-        setName(blockName);
-        uiBlock = new AnimatedImage();
-        uiBlock.setName(blockName);
         setImage(blockName);
         add(uiBlock);
     }
@@ -65,33 +62,35 @@ public class GameBlock extends Table implements Pool.Poolable{
     }
 
     private void setDrawable(Image image){
-        if(uiBlock != null){
+        if(uiBlock == null){
+            uiBlock = new AnimatedImage();
+        }
+        if(image != null) {
             Drawable drawable = image.getDrawable();
+            setName(image.getName());
 
             Util.setSizeFromDrawable(uiBlock, drawable);
             Util.setSizeFromDrawable(this, drawable);
 
-            this.setName(image.getName());
             uiBlock.setDrawable(drawable);
-            uiBlock.setName(image.getName());
 
-            if(image instanceof AnimatedImage){
-                uiBlock.setFrames(getFrames((AnimatedImage)image));
+            if (image instanceof AnimatedImage) {
+                uiBlock.setFrames(Util.getAniImageFrames((AnimatedImage) image));
             } else {
                 uiBlock.setFrames(GdxArrays.newArray(image.getDrawable()));
             }
         }
     }
 
-    private Array<Drawable> getFrames(AnimatedImage image){
-        Array<Drawable> drawables = new Array<>();
-        if(image != null){
-            for(Drawable frame : Util.toIterable(image.getFrames())){
-                if(frame != null){
-                    drawables.add(frame);
-                }
-            }
-        }
-        return drawables;
+    @Override
+    public void setName(String name){
+        super.setName(name);
+        uiBlock.setName(name);
+    }
+
+    @Override
+    public void setPosition(float x, float y){
+        super.setPosition(x, y);
+        uiBlock.setPosition(x, y);
     }
 }

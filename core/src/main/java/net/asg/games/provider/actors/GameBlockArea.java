@@ -99,7 +99,7 @@ public class GameBlockArea extends Stack {
         boarder.setHeight(getHeight());
         boarder.setBounds(this.getX(), this.getY(), getWidth(), getHeight());
         this.setColor(DEFAULT_BACKGROUND_COLOR);
-        add(boarder);
+        //add(boarder);
 
         bgNumber = new Table(skin);
         bgNumber.align(Align.top);
@@ -134,24 +134,39 @@ public class GameBlockArea extends Stack {
     }
 
     public void setGamePiece(GamePiece gamePiece){
+        System.out.println("SetGamePiece");
+        //printParentCoords();
         if(this.gamePiece == null && gamePiece != null){
-            System.out.println("SetGamePiece");
+            this.gamePiece = gamePiece;
+            this.gamePiece.setPosition(grid.getX(), grid.getY() + 220);
             //System.out.println("gamePiece.. " + gamePiece);
             //Stage stage = getStage();
-            gamePiece.setX(getX());
-            gamePiece.setY(getY());
+            //gamePiece.setX(getParent().getX());
+            //gamePiece.setY(getParent().getY());
 
             //stage.addActor(gamePiece);
-            //System.out.println("stage:" + stage);
-            this.gamePiece = gamePiece;
-            actors.add(gamePiece);
-            add(gamePiece);
-            System.out.println("stage:" + Util.printBounds(gamePiece));
-System.out.println(this);
+            //System.out.println(getMinWidth());
+            //System.out.println(getMaxWidth());
 
+            actors.add(this.gamePiece);
+            //add(this.gamePiece);
         }
     }
 
+    @Override
+    public void setPosition(float x, float y){
+        super.setPosition(x, y);
+        boarder.setPosition(x, y);
+        grid.setPosition(x, y);
+        gamePiece.setPosition(x, y);
+        bgNumber.setPosition(x, y);
+    }
+
+    public void printParentCoords(){
+        if(hasParent()){
+            System.out.println("(" + getParent().getX() + "," + getParent().getY() + ")");
+        }
+    }
 
     @Override
     public void act(float delta){
@@ -159,6 +174,9 @@ System.out.println(this);
 
         //Move game piece down
         moveGamePiece(delta);
+        if(this.gamePiece != null){
+            System.out.println("(" + this.gamePiece.getX() + "," + this.gamePiece.getY() + ")");
+        }
     }
 
     @Override
@@ -190,12 +208,6 @@ System.out.println(this);
         if(!Util.isArrayEmpty(actors)){
             for(Actor actor : actors){
                if(actor != null){
-                   //System.out.println("Drawing.. " + actor);
-
-                   //System.out.println(Util.printBounds(actor));
-
-
-                   //stage.draw();
                    actor.draw(batch, alpha);
                }
             }
@@ -234,8 +246,11 @@ System.out.println(this);
     private void attemptGamePieceMoveDown(float delta) {
         if(gamePiece != null){
 
-            if(gamePiece.getY() < 0){
+            if(gamePiece.getY() > 0){
                 gamePiece.setY(gamePiece.getY() - 1);
+            } else {
+                actors.removeValue(gamePiece, false);
+                gamePiece = null;
             }
         }
     }
