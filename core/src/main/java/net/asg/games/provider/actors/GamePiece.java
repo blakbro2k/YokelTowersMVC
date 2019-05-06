@@ -13,6 +13,7 @@ public class GamePiece extends Table {
     private GameBlock top;
     private GameBlock middle;
     private GameBlock bottom;
+    static final private int GRID_OFFSET = 6;
 
     public GamePiece(){
         this(null,null,null,null);
@@ -29,13 +30,11 @@ public class GamePiece extends Table {
     }
 
     private void initialize(GameBlock top, GameBlock middle, GameBlock bottom){
-        setX(0);
-        setY(0);
         this.top = getBlock(top);
         this.middle = getBlock(middle);
         this.bottom = getBlock(bottom);
         this.setWidth(this.top.getWidth());
-        this.setHeight(this.top.getHeight() + this.middle.getHeight() + this.bottom.getHeight());
+        this.setHeight(this.top.getHeight() * 3);
         setTopBlock(top);
         setMiddleBlock(middle);
         setBottomBlock(bottom);
@@ -49,11 +48,24 @@ public class GamePiece extends Table {
         }
     }
 
+    public void setDebug(boolean enabled) {
+        System.out.println("My Debug Set");
+super.setDebug(enabled);    }
+
+    public void act(float delta){
+        setPosition(getX(), getY());
+    }
+
+    /*
     public void draw(Batch batch, float a){
         super.draw(batch, a);
         //setPosition(this.getX(), this.getY());
+        top.draw(batch, a);
+        middle.draw(batch, a);
+        bottom.draw(batch, a);
+
         System.out.println(this);
-    }
+    }*/
 
     public String toString(){
         return "this(" + this.getX() + "," + this.getY() + ")" +
@@ -81,14 +93,16 @@ public class GamePiece extends Table {
             this.top.setImage(top.getImage());
         }
     }
-
+/*
     @Override
     public void setPosition(float x, float y){
-        super.setPosition(x, y);
-        top.setPosition(x, y);
-        middle.setPosition(x, y + top.getHeight());
-        bottom.setPosition(x, y + (top.getHeight() * 2));
-    }
+        super.setPosition(x + GRID_OFFSET, y);
+        float x2 = getX();
+        float y2 = getY();
+        top.setPosition(x2, getY());
+        middle.setPosition(x2, y2 + top.getHeight());
+        bottom.setPosition(x2, y2 + (top.getHeight() * 2));
+    }*/
 
     public GameBlock getMiddleBlock() {
         return middle;

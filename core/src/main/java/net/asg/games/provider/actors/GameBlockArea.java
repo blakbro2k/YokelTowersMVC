@@ -97,7 +97,7 @@ public class GameBlockArea extends Stack {
         boarder.setSkin(skin);
         boarder.setWidth(getWidth());
         boarder.setHeight(getHeight());
-        boarder.setBounds(this.getX(), this.getY(), getWidth(), getHeight());
+        boarder.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setColor(DEFAULT_BACKGROUND_COLOR);
         //add(boarder);
 
@@ -138,7 +138,8 @@ public class GameBlockArea extends Stack {
         //printParentCoords();
         if(this.gamePiece == null && gamePiece != null){
             this.gamePiece = gamePiece;
-            this.gamePiece.setPosition(grid.getX(), grid.getY() + 220);
+            this.gamePiece.setDebug(true);
+            this.gamePiece.setPosition(grid.getX() + (2 * gamePiece.getWidth()), grid.getY() + (16 * gamePiece.getWidth()));
             //System.out.println("gamePiece.. " + gamePiece);
             //Stage stage = getStage();
             //gamePiece.setX(getParent().getX());
@@ -248,9 +249,10 @@ public class GameBlockArea extends Stack {
 
             if(gamePiece.getY() > 0){
                 gamePiece.setY(gamePiece.getY() - 1);
+                System.out.println("Grid:" + grid.getPadX() + "," + grid.getY() + ")");
             } else {
-                actors.removeValue(gamePiece, false);
-                gamePiece = null;
+                //actors.removeValue(gamePiece, false);
+                //gamePiece = null;
             }
         }
     }
