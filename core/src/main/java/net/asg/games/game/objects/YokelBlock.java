@@ -204,6 +204,11 @@ public class YokelBlock extends YokelObject implements Json.Serializable, Pool.P
     }
 
     @Override
+    public YokelBlock fromString(String str) {
+        return Util.getObjectFromJsonString(YokelBlock.class, str);
+    }
+
+    @Override
     public void dispose() {}
 
     public YokelBlock copy() {

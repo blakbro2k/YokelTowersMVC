@@ -10,6 +10,8 @@ public abstract class YokelObject implements Disposable {
         return Util.getJsonString(this);
     }
 
+    public abstract YokelObject fromString(String strArr);
+
     @Override
     public abstract void dispose();
 }
