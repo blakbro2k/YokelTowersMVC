@@ -335,6 +335,7 @@ public class Global implements ActionContainer {
 
             if(!StringUtils.isEmpty(jsonLounge)){
                 YokelLounge lounge = json.fromJson(YokelLounge.class, jsonLounge);
+                //Y/okelLounge lounge = YokelLounge.fromString(jsonLounge);
 
                 if(lounges != null){
                     lounges.put(lounge.getName(), lounge);

@@ -13,7 +13,7 @@ import net.asg.games.utils.enums.YokelBlockType;
  * Created by Blakbro2k on 12/29/2017.
  */
 
-public class YokelBlock extends YokelObject implements Json.Serializable, Pool.Poolable {
+public class YokelBlock extends YokelObject implements Pool.Poolable, Json.Serializable {
     public enum INIT_TYPE {DEFENSE, POWER, ANY, NORMAL}
 
     public static final int CLEAR = 0;
@@ -62,6 +62,7 @@ public class YokelBlock extends YokelObject implements Json.Serializable, Pool.P
      */
     public YokelBlock(INIT_TYPE initType) {
         blockType = initializeType(initType);
+        isBroken = false;
     }
 
     /**
@@ -201,11 +202,6 @@ public class YokelBlock extends YokelObject implements Json.Serializable, Pool.P
             return matchesType(o);
         }
         return false;
-    }
-
-    @Override
-    public YokelBlock fromString(String str) {
-        return Util.getObjectFromJsonString(YokelBlock.class, str);
     }
 
     @Override

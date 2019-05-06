@@ -43,7 +43,7 @@ public class YokelTable extends YokelObject {
         setRated(false);
         setSound(true);
         setUpArguments(arguments);
-        retartTable();
+        stopGame();
     }
 
     private void setUpArguments(OrderedMap<String, Object> arguments){
@@ -69,10 +69,6 @@ public class YokelTable extends YokelObject {
 
     public String getTableId() {
         return tableId;
-    }
-
-    private void retartTable(){
-        isStarted = false;
     }
 
     public void setAccessType(ACCESS_TYPE accessType){

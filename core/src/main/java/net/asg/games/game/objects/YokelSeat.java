@@ -59,6 +59,9 @@ public class YokelSeat extends YokelObject {
 
     @Override
     public void dispose() {
-        seatedPlayer.dispose();
+        if(isOccupied()){
+            seatedPlayer.dispose();
+            standUp();
+        }
     }
 }
