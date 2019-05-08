@@ -153,9 +153,7 @@ public class YokelGameBoard extends YokelObject {
                 value = YokelBlockEval.setIDFlag(value, incrementID());
 
                 if (value < 0) {
-                    System.out.println
-                            ("Assertion failure: unable to find non-adjacent cell "
-                                    + col + "," + i);
+                    System.out.println("Assertion failure: unable to find non-adjacent cell " + col + "," + i);
                 }
 
                 cells[i][col] = value;
@@ -319,9 +317,9 @@ public class YokelGameBoard extends YokelObject {
     void colorBlast() {
         markColorBlast();
 
-        if (isColorBlastGridEmpty())
+        if (isColorBlastGridEmpty()){
             pushCellToBottomOfBoard(YokelBlockEval.setPowerFlag(3, 2));
-        else {
+        } else {
             for (int row = 0; row < MAX_ROWS; row++) {
                 for (int col = 0; col < MAX_COLS; col++) {
                     if (colorBlastGrid[row][col]) {
@@ -444,8 +442,9 @@ public class YokelGameBoard extends YokelObject {
                 }
             }
 
-            for (; index < MAX_ROWS; index++)
+            for (; index < MAX_ROWS; index++){
                 cells[index][col] = MAX_COLS;
+            }
         }
         //updateBoard();
     }
@@ -517,7 +516,7 @@ public class YokelGameBoard extends YokelObject {
 
             switch (YokelBlockEval.getCellFlag(i)) {
                 //Y
-                case 0:
+                case YokelBlockEval.NORMAL_Y:
                     if (isOffensive) {
                         addRow(1);
                     } else {
@@ -525,7 +524,7 @@ public class YokelGameBoard extends YokelObject {
                     }
 
                     break;
-                case 1:
+                case YokelBlockEval.NORMAL_O:
                     if (isOffensive) {
                         dither(2 * Math.min(level, 3));
                     } else {
@@ -533,7 +532,7 @@ public class YokelGameBoard extends YokelObject {
                     }
 
                     break;
-                case 2:
+                case YokelBlockEval.NORMAL_K:
                     if (isOffensive) {
                         addStone(Math.min(level, 3));
                     } else {
@@ -541,7 +540,7 @@ public class YokelGameBoard extends YokelObject {
                     }
 
                     break;
-                case 3:
+                case YokelBlockEval.NORMAL_E:
                     if (isOffensive) {
                         defuse(Math.min(level, 3));
                     } else {
@@ -550,11 +549,11 @@ public class YokelGameBoard extends YokelObject {
                     }
 
                     break;
-                case 4:
+                case YokelBlockEval.NORMAL_L:
                     System.out.println
                             ("Assertion failure: invalid CELL5 board attack " + i);
                     break;
-                case 5:
+                case YokelBlockEval.NORMAL_EX:
                     removeColorFromBoard();
                     break;
                 default:
@@ -693,8 +692,9 @@ public class YokelGameBoard extends YokelObject {
 
                     //updateBoard();
 
-                    if (successfulSwap && ++swapCount == numberOfCellsToChange)
+                    if (successfulSwap && ++swapCount == numberOfCellsToChange){
                         return;
+                    }
                 }
             }
         }
@@ -828,11 +828,13 @@ public class YokelGameBoard extends YokelObject {
 
     public boolean isCellFree(int column, int row) {
 
-        if (row < 0 || row > MAX_PLAYABLE_ROWS)
+        if (row < 0 || row > MAX_PLAYABLE_ROWS){
             return false;
+        }
 
-        if (row == 0)
+        if (row == 0){
             return true;
+        }
 
         return getCell(column, row - 1) != MAX_COLS;
     }
@@ -996,7 +998,7 @@ public class YokelGameBoard extends YokelObject {
         //updateBoard();
         return duration;
     }
-/* Possible UI function
+    /* Possible UI function
     public void placeBlockAt(GameBoardBlock block, int x, int y) {
         int index = block.getIndex();
 
@@ -1060,8 +1062,7 @@ public class YokelGameBoard extends YokelObject {
         if (!YokelBlockEval.hasPowerBlockFlag(value)) {
             System.out.println("Assertion failure:  cell isn't weird " + value);
         } else if (YokelBlockEval.getCellFlag(value) != 4) {
-            System.out
-                    .println("Assertion failure:  cell isn't weird type " + value);
+            System.out.println("Assertion failure:  cell isn't weird type " + value);
         } else if (!YokelBlockEval.hasPowerBlockFlag(cells[row][col])) {
             boolean isAttack = YokelBlockEval.isOffensive(value);
 
