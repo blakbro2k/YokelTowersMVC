@@ -1,13 +1,13 @@
 package net.asg.games.game.objects;
 
-import com.badlogic.gdx.math.Vector;
-
-import net.asg.games.utils.IntStack;
 import net.asg.games.utils.RandomUtil;
+
+import java.util.Stack;
 
 public class YokelGameBoard extends YokelObject {
     public static final int MAX_COLS = 6;
     public static final int MAX_ROWS = 16;
+    public static final int MAX_PLAYABLE_ROWS = MAX_ROWS - 3;
 
     private int[][] cells;
     private boolean[] ids;
@@ -134,20 +134,20 @@ public class YokelGameBoard extends YokelObject {
     }
 
     void addRow(int amount) {
-        for (int row = 13; row >= amount; row--) {
-            for (int col = 0; col < 6; col++)
+        for (int row = MAX_PLAYABLE_ROWS; row >= amount; row--) {
+            for (int col = 0; col < MAX_COLS; col++)
                 cells[row][col] = cells[row - amount][col];
         }
 
         for (int row = 0; row < amount; row++) {
-            for (int col = 0; col < 6; col++)
-                cells[row][col] = 6;
+            for (int col = 0; col < MAX_COLS; col++)
+                cells[row][col] = MAX_COLS;
         }
 
         int hash = getBoardMakeupHash();
 
         for (int i = amount - 1; i >= 0; i--) {
-            for (int col = 0; col < 6; col++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 int value = getNonAdjacentCell(col, i, hash + i + col);
 
                 value = YokelBlockEval.setIDFlag(value, incrementID());
@@ -165,18 +165,18 @@ public class YokelGameBoard extends YokelObject {
     }
 
     void removeRow(int amount) {
-        for (int row = 0; row < 13 - amount; row++) {
-            for (int col = 0; col < 6; col++) {
-                if (row < amount && YokelBlockEval.getCellFlag(cells[row][col]) < 6)
+        for (int row = 0; row < MAX_PLAYABLE_ROWS - amount; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
+                if (row < amount && YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS)
                     releaseID(YokelBlockEval.getID(cells[row][col]));
 
                 cells[row][col] = cells[row + amount][col];
             }
         }
 
-        for (int row = 13 - amount; row < 13; row++) {
-            for (int col = 0; col < 6; col++) {
-                cells[row][col] = 6;
+        for (int row = MAX_PLAYABLE_ROWS - amount; row < MAX_PLAYABLE_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
+                cells[row][col] = MAX_COLS;
             }
         }
 
@@ -184,15 +184,15 @@ public class YokelGameBoard extends YokelObject {
     }
 
     void shuffleColumnIndices() {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < MAX_COLS; i++) {
             randomColumnIndices[i] = i;
         }
 
         RandomUtil.RandomNumber generator = new RandomUtil.RandomNumber((long) getBoardMakeupHash());
 
         for (int i = 0; i < 10; i++) {
-            int first = generator.next(6);
-            int second = generator.next(6);
+            int first = generator.next(MAX_COLS);
+            int second = generator.next(MAX_COLS);
             int value = randomColumnIndices[first];
             randomColumnIndices[first] = randomColumnIndices[second];
             randomColumnIndices[second] = value;
@@ -205,8 +205,8 @@ public class YokelGameBoard extends YokelObject {
         for (int i = 0; i < amount; i++) {
             int x = randomColumnIndices[i];
 
-            for (int y = 0; y < 13; y++) {
-                if (getCell(x, y) == 6) {
+            for (int y = 0; y < MAX_PLAYABLE_ROWS; y++) {
+                if (getCell(x, y) == MAX_COLS) {
                     cells[y][x] = 7;
                     break;
                 }
@@ -220,7 +220,7 @@ public class YokelGameBoard extends YokelObject {
         int count = 0;
 
         for (int y = 12; y >= 0; y--) {
-            for (int x = 0; x < 6; x++) {
+            for (int x = 0; x < MAX_COLS; x++) {
                 if (getCell(x, y) == 7) {
                     for (int i = y; i >= 1; i--) {
                         cells[i][x] = cells[i - 1][x];
@@ -247,8 +247,8 @@ public class YokelGameBoard extends YokelObject {
         }
 
         // loop through cells
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
 
                 // if the piece is purple
                 if (YokelBlockEval.getCellFlag(cells[row][col]) == 3
@@ -282,8 +282,8 @@ public class YokelGameBoard extends YokelObject {
     }
 
     boolean isColorBlastGridEmpty() {
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 if (colorBlastGrid[row][col]) {
                     return false;
                 }
@@ -298,12 +298,12 @@ public class YokelGameBoard extends YokelObject {
 
     void pushCellToBottomOfBoard(int value) {
         for (int y = -2; y < 8; y++) {
-            for (int x = 0; x < 6; x++) {
+            for (int x = 0; x < MAX_COLS; x++) {
                 int col = pushColumnOrder[x];
                 int row = y + pushRowOrder[col];
 
                 if (row >= 0 && YokelBlockEval.getCellFlag(cells[row][col]) != 7) {
-                    if (YokelBlockEval.getCellFlag(cells[row][col]) < 6) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS) {
                         releaseID(YokelBlockEval.getID(cells[row][col]));
                     }
 
@@ -322,10 +322,10 @@ public class YokelGameBoard extends YokelObject {
         if (isColorBlastGridEmpty())
             pushCellToBottomOfBoard(YokelBlockEval.setPowerFlag(3, 2));
         else {
-            for (int row = 0; row < 16; row++) {
-                for (int col = 0; col < 6; col++) {
+            for (int row = 0; row < MAX_ROWS; row++) {
+                for (int col = 0; col < MAX_COLS; col++) {
                     if (colorBlastGrid[row][col]) {
-                        if (YokelBlockEval.getCellFlag(cells[row][col]) < 6) {
+                        if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS) {
                             releaseID(YokelBlockEval.getID(cells[row][col]));
                         }
 
@@ -334,11 +334,11 @@ public class YokelGameBoard extends YokelObject {
                 }
             }
 
-            for (int col = 0; col < 6; col++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 boolean bool = false;
 
                 for (int row = 15; row >= 0; row--) {
-                    if (YokelBlockEval.getCellFlag(cells[row][col]) == 6) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) == MAX_COLS) {
                         if (bool) {
                             cells[row][col] = YokelBlockEval.setIDFlag(3, incrementID());
                         }
@@ -354,15 +354,15 @@ public class YokelGameBoard extends YokelObject {
     void defuse(int intensity) {
         int cellsDefused = 0;
 
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 if (YokelBlockEval.getCellFlag(cells[row][col]) == 3
                         && YokelBlockEval.getPowerFlag(cells[row][col]) != 0) {
 
-                    if (YokelBlockEval.getCellFlag(cells[row][col]) < 6)
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS)
                         releaseID(YokelBlockEval.getID(cells[row][col]));
 
-                    if (YokelBlockEval.getCellFlag(cells[row][col]) != 6)
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) != MAX_COLS)
                         cells[row][col] = 7;
 
                     if (++cellsDefused == intensity)
@@ -385,11 +385,11 @@ public class YokelGameBoard extends YokelObject {
         }
 
         // Loop through the board and tally up count of cells
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 int value = YokelBlockEval.getCellFlag(cells[row][col]);
 
-                if (value < 6) {
+                if (value < MAX_COLS) {
                     countOfPieces[value]++;
                 }
             }
@@ -415,8 +415,8 @@ public class YokelGameBoard extends YokelObject {
 
         boolean colorRemoved = false;
 
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 if (YokelBlockEval.getCellFlag(cells[row][col]) == index) {
                     cells[row][col] = YokelBlockEval.addBrokenFlag(cells[row][col]);
                     colorRemoved = true;
@@ -431,12 +431,12 @@ public class YokelGameBoard extends YokelObject {
     }
 
     public void handleBrokenCellDrops() {
-        for (int col = 0; col < 6; col++) {
+        for (int col = 0; col < MAX_COLS; col++) {
             int index = 0;
 
-            for (int row = 0; row < 16; row++) {
+            for (int row = 0; row < MAX_ROWS; row++) {
                 if (isCellBroken(col, row)) {
-                    if (YokelBlockEval.getCellFlag(cells[row][col]) < 6)
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS)
                         releaseID(YokelBlockEval.getID(cells[row][col]));
                 } else {
                     cells[index][col] = cells[row][col];
@@ -444,15 +444,15 @@ public class YokelGameBoard extends YokelObject {
                 }
             }
 
-            for (; index < 16; index++)
-                cells[index][col] = 6;
+            for (; index < MAX_ROWS; index++)
+                cells[index][col] = MAX_COLS;
         }
         //updateBoard();
     }
 
     public void flagPowerBlockCells() {
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 if (YokelBlockEval.hasPowerBlockFlag(cells[row][col])) {
                     cells[row][col] = YokelBlockEval.addBrokenFlag(cells[row][col]);
                 }
@@ -462,14 +462,14 @@ public class YokelGameBoard extends YokelObject {
     }
 
     public void flagBoardMatches() {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++)
+        for (int i = 0; i < MAX_ROWS; i++) {
+            for (int j = 0; j < MAX_COLS; j++)
                 flagCellForMatches(j, i);
         }
     }
 
     void flagCellForMatches(int column, int row) {
-        if (getCell(column, row) < 6) {
+        if (getCell(column, row) < MAX_COLS) {
             flagCellForMatches(column, row, -1, 1);
             flagCellForMatches(column, row, 0, 1);
             flagCellForMatches(column, row, 1, 1);
@@ -516,6 +516,7 @@ public class YokelGameBoard extends YokelObject {
             int level = YokelBlockEval.getPowerLevel(i);
 
             switch (YokelBlockEval.getCellFlag(i)) {
+                //Y
                 case 0:
                     if (isOffensive) {
                         addRow(1);
@@ -562,22 +563,22 @@ public class YokelGameBoard extends YokelObject {
         }
     }
 
-    public void addRemovedPowersToBoard(IntStack powers) {
+    public void addRemovedPowersToBoard(Stack<Integer> powers) {
         shuffleColumnIndices();
 
         int count = 0;
 
-        while (powers.length() > 0) {
+        while (powers.size() > 0) {
             int value = powers.pop();
 
             //powers.removeAt(0);
 
             int i;
 
-            for (i = count; i != (count + 6 - 1) % 6; i = (i + 1) % 6) {
+            for (i = count; i != (count + MAX_COLS - 1) % MAX_COLS; i = (i + 1) % MAX_COLS) {
                 int col = randomColumnIndices[i];
 
-                if (cells[12][col] == 6) {
+                if (cells[12][col] == MAX_COLS) {
                     for (int row = 15; row >= 1; row--) {
                         cells[row][col] = cells[row - 1][col];
                     }
@@ -593,11 +594,11 @@ public class YokelGameBoard extends YokelObject {
                         cells[row][col] = cells[row + 1][col];
                     }
 
-                    cells[15][col] = 6;
+                    cells[15][col] = MAX_COLS;
                 }
             }
 
-            count = (i + 1) % 6;
+            count = (i + 1) % MAX_COLS;
         }
 
         //updateBoard();
@@ -607,7 +608,7 @@ public class YokelGameBoard extends YokelObject {
         int num = 0;
 
         for (int row = 12; row >= 0; row--) {
-            for (int col = 0; col < 6; col++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 boolean bool = unmatchCell(col, row);
 
                 if (bool && ++num == intensity)
@@ -622,9 +623,9 @@ public class YokelGameBoard extends YokelObject {
         // If there's a matching cell nearby
         if (hasMatchingCellInProximity(col, row)) {
             // Loop through the board
-            for (int r = 0; r < 13 && !successfulSwap; r++) {
-                for (int c = 0; c < 6; c++) {
-                    if (getCell(c, r) < 6) {
+            for (int r = 0; r < MAX_PLAYABLE_ROWS && !successfulSwap; r++) {
+                for (int c = 0; c < MAX_COLS; c++) {
+                    if (getCell(c, r) < MAX_COLS) {
                         int swap = cells[r][c];
 
                         // Swap passed cell with another on board
@@ -655,17 +656,17 @@ public class YokelGameBoard extends YokelObject {
         int swapCount = 0;
         // start from the top and work way down
         for (int row = 12; row >= 0; row--) {
-            for (int col = 0; col < 6; col++) {
-                if (getCell(col, row) < 6
+            for (int col = 0; col < MAX_COLS; col++) {
+                if (getCell(col, row) < MAX_COLS
                         // If there's not a matching cell nearby
                         && !hasMatchingCellInProximity(col, row)) {
 
                     boolean successfulSwap = false;
 
                     // Start from the bottom and work up
-                    for (int y = 0; y < 13 && !successfulSwap; y++) {
-                        for (int x = 0; x < 6; x++) {
-                            if (getCell(x, y) < 6) {
+                    for (int y = 0; y < MAX_PLAYABLE_ROWS && !successfulSwap; y++) {
+                        for (int x = 0; x < MAX_COLS; x++) {
+                            if (getCell(x, y) < MAX_COLS) {
                                 int copy = cells[y][x];
 
                                 // swap the two cells
@@ -716,9 +717,9 @@ public class YokelGameBoard extends YokelObject {
         int id = hash % cellHashes.length;
         int value = cellHashes[id];
 
-        for (int col = 0; col < 6; col++) {
-            if (!cellMatches[(cellIndices[id] + value * col) % 6]) {
-                return (cellIndices[id] + value * col) % 6;
+        for (int col = 0; col < MAX_COLS; col++) {
+            if (!cellMatches[(cellIndices[id] + value * col) % MAX_COLS]) {
+                return (cellIndices[id] + value * col) % MAX_COLS;
             }
         }
 
@@ -731,7 +732,7 @@ public class YokelGameBoard extends YokelObject {
     boolean hasMatchingCellInProximity(int col, int row) {
         int value = getCell(col, row);
 
-        if (value >= 6) return false;
+        if (value >= MAX_COLS) return false;
 
         for (int i = 0; i < columnMatchLookup.length; i++) {
             if (getSafeCell(col + columnMatchLookup[i], row + rowMatchLookup[i]) == value)
@@ -744,7 +745,7 @@ public class YokelGameBoard extends YokelObject {
     boolean hasFullMatchInProximity(int x, int y) {
         int value = getCell(x, y);
 
-        if (value < 6) {
+        if (value < MAX_COLS) {
             // x = 2, y = 4
 
             // x + -1, y + 0 = 1, 4
@@ -775,7 +776,7 @@ public class YokelGameBoard extends YokelObject {
     }
 
     void removeAllPowersFromBoard() {
-        for (int row = 0; row < MAX_ROWS - 3; row++) {
+        for (int row = 0; row < MAX_PLAYABLE_ROWS; row++) {
             for (int col = 0; col < MAX_COLS; col++) {
                 int value = cells[row][col];
 
@@ -788,18 +789,18 @@ public class YokelGameBoard extends YokelObject {
     }
 
     void removeAllStonesFromBoard() {
-        for (int x = 0; x < 6; x++) {
+        for (int x = 0; x < MAX_COLS; x++) {
             int row = 0;
 
-            for (int y = 0; y < 16; y++) {
+            for (int y = 0; y < MAX_ROWS; y++) {
                 if (YokelBlockEval.getCellFlag(cells[y][x]) != 7) {
                     cells[row][x] = cells[y][x];
                     row++;
                 }
             }
 
-            for (; row < 16; row++)
-                cells[row][x] = 6;
+            for (; row < MAX_ROWS; row++)
+                cells[row][x] = MAX_COLS;
         }
         //updateBoard();
     }
@@ -807,9 +808,9 @@ public class YokelGameBoard extends YokelObject {
     int getBoardMakeupHash() {
         int num = 999;
 
-        for (int row = 0; row < 13; row++) {
-            for (int col = 0; col < 6; col++) {
-                num += YokelBlockEval.removePartnerBreakFlag(cells[row][col]) * (row * 6 + col);
+        for (int row = 0; row < MAX_PLAYABLE_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
+                num += YokelBlockEval.removePartnerBreakFlag(cells[row][col]) * (row * MAX_COLS + col);
             }
         }
 
@@ -818,8 +819,8 @@ public class YokelGameBoard extends YokelObject {
 
     public int getColumnFill(int column) {
         int row;
-        for (row = 16; row > 0; row--) {
-            if (getCell(column, row - 1) != 6)
+        for (row = MAX_ROWS; row > 0; row--) {
+            if (getCell(column, row - 1) != MAX_COLS)
                 break;
         }
         return row;
@@ -827,23 +828,20 @@ public class YokelGameBoard extends YokelObject {
 
     public boolean isCellFree(int column, int row) {
 
-        if (row < 0 || row > 13)
+        if (row < 0 || row > MAX_PLAYABLE_ROWS)
             return false;
 
         if (row == 0)
             return true;
 
-        if (getCell(column, row - 1) == 6)
-            return false;
-
-        return true;
+        return getCell(column, row - 1) != MAX_COLS;
     }
 
     /*
     public int getColumnWithPossiblePieceMatch(GameBoardBlock piece) {
         shuffleColumnIndices();
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < MAX_COLS; i++) {
             int x = randomColumnIndices[i];
             int y = getColumnFill(x);
 
@@ -858,9 +856,9 @@ public class YokelGameBoard extends YokelObject {
                                     || hasFullMatchInProximity(x, y + 1)
                                     || hasFullMatchInProximity(x, y + 2));
 
-                    cells[y][x] = 6;
-                    cells[y + 1][x] = 6;
-                    cells[y + 2][x] = 6;
+                    cells[y][x] = MAX_COLS;
+                    cells[y + 1][x] = MAX_COLS;
+                    cells[y + 2][x] = MAX_COLS;
 
                     //updateBoard();
 
@@ -870,9 +868,9 @@ public class YokelGameBoard extends YokelObject {
             }
         }
 
-        int column = getBoardMakeupHash() % 6;
+        int column = getBoardMakeupHash() % MAX_COLS;
 
-        for (int col = 0; col < 6; col++) {
+        for (int col = 0; col < MAX_COLS; col++) {
             if (getColumnFill(col) < getColumnFill(column)) {
                 column = col;
             }
@@ -883,10 +881,10 @@ public class YokelGameBoard extends YokelObject {
 
     public int getColumnToPlaceYahooCell(int value) {
         // pick "random" column to start
-        int x = getBoardMakeupHash() % 6;
+        int x = getBoardMakeupHash() % MAX_COLS;
 
         // loop through columns
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < MAX_COLS; i++) {
             // get the height of the column
             int y = getColumnFill(x);
 
@@ -899,7 +897,7 @@ public class YokelGameBoard extends YokelObject {
                 boolean match = hasMatchingCellInProximity(x, y);
 
                 // reset the cell
-                cells[y][x] = 6;
+                cells[y][x] = MAX_COLS;
 
                 // if there is no match, return the column
                 if (!match)
@@ -907,27 +905,27 @@ public class YokelGameBoard extends YokelObject {
             }
 
             // move to next column wrapped around column count
-            x = (x + 1) % 6;
+            x = (x + 1) % MAX_COLS;
         }
 
         // If unable to find a column without piece like this nearby,
         // get less picky and only ensure that the piece won't make a break
 
         // loop through columns again
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < MAX_COLS; i++) {
             // get height of column
             int y = getColumnFill(x);
 
             if (y < 12) {
                 cells[y][x] = value;
                 boolean bool = hasFullMatchInProximity(x, y);
-                cells[y][x] = 6;
+                cells[y][x] = MAX_COLS;
 
                 if (!bool)
                     return x;
             }
 
-            x = (x + 1) % 6;
+            x = (x + 1) % MAX_COLS;
         }
 
         return -1;
@@ -939,17 +937,17 @@ public class YokelGameBoard extends YokelObject {
         int vertical = 4;
         int diagonal = 3;
 
-        for (int row = 0; row < 13; row++) {
+        for (int row = 0; row < MAX_PLAYABLE_ROWS; row++) {
             if (checkForNonVerticalYahoo(row, 0)) {
                 duration += horizontal;
 
-                for (int column = 0; column < 6; column++) {
+                for (int column = 0; column < MAX_COLS; column++) {
                     cells[row][column] = YokelBlockEval.addBrokenFlag(cells[row][column]);
                 }
             }
         }
 
-        for (int column = 0; column < 6; column++) {
+        for (int column = 0; column < MAX_COLS; column++) {
             for (int row = 0; row < 10; row++) {
                 if (YokelBlockEval.getCellFlag(cells[row][column]) == 5) {
                     if (YokelBlockEval.getCellFlag(cells[row + 1][column]) == 4) {
@@ -967,7 +965,7 @@ public class YokelGameBoard extends YokelObject {
 
                         duration += vertical;
 
-                        for (int i = 0; i < 6; i++) {
+                        for (int i = 0; i < MAX_COLS; i++) {
                             cells[row + i][column] = YokelBlockEval.addBrokenFlag(cells[row + i][column]);
                         }
                     }
@@ -979,17 +977,17 @@ public class YokelGameBoard extends YokelObject {
             if (checkForNonVerticalYahoo(row, 1)) {
                 duration += diagonal;
 
-                for (int col = 0; col < 6; col++) {
+                for (int col = 0; col < MAX_COLS; col++) {
                     cells[row + col][col] = YokelBlockEval.addBrokenFlag(cells[row + col][col]);
                 }
             }
         }
 
-        for (int row = 5; row < 13; row++) {
+        for (int row = 5; row < MAX_PLAYABLE_ROWS; row++) {
             if (checkForNonVerticalYahoo(row, -1)) {
                 duration += diagonal;
 
-                for (int col = 0; col < 6; col++) {
+                for (int col = 0; col < MAX_COLS; col++) {
                     cells[row - col][col] = YokelBlockEval.addBrokenFlag(cells[row - col][col]);
                 }
             }
@@ -998,7 +996,7 @@ public class YokelGameBoard extends YokelObject {
         //updateBoard();
         return duration;
     }
-/*
+/* Possible UI function
     public void placeBlockAt(GameBoardBlock block, int x, int y) {
         int index = block.getIndex();
 
@@ -1009,17 +1007,17 @@ public class YokelGameBoard extends YokelObject {
         v1 = YokelBlockEval.setIDFlag(v1, incrementID());
         int v2 = block.getValueAt((2 + index) % 3);
         v2 = YokelBlockEval.setIDFlag(v2, incrementID());
-        if (YokelBlockEval.getCellFlag(cells[y][x]) != 6) {
+        if (YokelBlockEval.getCellFlag(cells[y][x]) != MAX_COLS) {
             Thread.dumpStack();
             System.out.println("Assertion failure: grid at " + x + "," + y
                     + " isn't empty for piece placement");
         }
-        if (YokelBlockEval.getCellFlag(cells[y + 1][x]) != 6) {
+        if (YokelBlockEval.getCellFlag(cells[y + 1][x]) != MAX_COLS) {
             Thread.dumpStack();
             System.out.println("Assertion failure: grid at " + x + "," + y
                     + " isn't empty for piece placement");
         }
-        if (YokelBlockEval.getCellFlag(cells[y + 2][x]) != 6) {
+        if (YokelBlockEval.getCellFlag(cells[y + 2][x]) != MAX_COLS) {
             Thread.dumpStack();
             System.out.println("Assertion failure: grid at " + x + "," + y
                     + " isn't empty for piece placement");
@@ -1032,8 +1030,8 @@ public class YokelGameBoard extends YokelObject {
     }*/
 
     public void handlePlacedPowerBlock(int type) {
-        for (int y = 0; y < 16; y++) {
-            for (int x = 0; x < 6; x++) {
+        for (int y = 0; y < MAX_ROWS; y++) {
+            for (int x = 0; x < MAX_COLS; x++) {
                 if (YokelBlockEval.hasPowerBlockFlag(cells[y][x])) {
                     if (isCellInBoard(x - 1, y - 1))
                         applyPowerBlockAt(type, x - 1, y - 1);
@@ -1068,14 +1066,14 @@ public class YokelGameBoard extends YokelObject {
             boolean isAttack = YokelBlockEval.isOffensive(value);
 
             if (isAttack) {
-                if (YokelBlockEval.getCellFlag(cells[row][col]) < 6) {
+                if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS) {
                     releaseID(YokelBlockEval.getID(cells[row][col]));
                 }
 
-                if (YokelBlockEval.getCellFlag(cells[row][col]) != 6) {
+                if (YokelBlockEval.getCellFlag(cells[row][col]) != MAX_COLS) {
                     cells[row][col] = 7;
                 }
-            } else if (YokelBlockEval.getCellFlag(cells[row][col]) < 6)
+            } else if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS)
                 cells[row][col] = YokelBlockEval.addArtificialFlag(YokelBlockEval.setValueFlag(cells[row][col], 4));
 
             //updateBoard();
@@ -1083,7 +1081,7 @@ public class YokelGameBoard extends YokelObject {
     }
 
     public void setValueAt(int value, int column, int row) {
-        if (YokelBlockEval.getCellFlag(cells[row][column]) != 6)
+        if (YokelBlockEval.getCellFlag(cells[row][column]) != MAX_COLS)
             System.out.println("Assertion failure: grid at " + column + ","
                     + row + " isn't empty for cell placement");
         value = YokelBlockEval.setIDFlag(value, incrementID());
@@ -1092,14 +1090,14 @@ public class YokelGameBoard extends YokelObject {
     }
 
     public boolean hasPlayerDied() {
-        for (int row = 13; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
-                if (getCell(col, row) != 6)
+        for (int row = MAX_PLAYABLE_ROWS; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
+                if (getCell(col, row) != MAX_COLS)
                     return true;
             }
         }
 
-        if (getCell(2, 12) != 6)
+        if (getCell(2, 12) != MAX_COLS)
             return true;
 
         return false;
@@ -1108,8 +1106,8 @@ public class YokelGameBoard extends YokelObject {
     public int getBrokenCellCount() {
         int count = 0;
 
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++) {
+        for (int i = 0; i < MAX_ROWS; i++) {
+            for (int j = 0; j < MAX_COLS; j++) {
                 if (YokelBlockEval.hasBrokenFlag(cells[i][j]))
                     count++;
             }
@@ -1118,24 +1116,24 @@ public class YokelGameBoard extends YokelObject {
         return count;
     }
 
-    /*
+    /* Possible UI Function
     public Vector<Cell> getBrokenCells() {
         Vector<Cell> vector = new Vector<Cell>();
 
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++) {
+        for (int i = 0; i < MAX_ROWS; i++) {
+            for (int j = 0; j < MAX_COLS; j++) {
                 if (CellEval.hasBrokenFlag(cells[i][j]))
                     vector.addElement(new Cell(j, i));
             }
         }
         return vector;
     }*/
-
+/*
     public ByteStack getBrokenByPartnerCellIDs() {
         ByteStack stack = new ByteStack();
 
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 if (YokelBlockEval.hasPartnerBreakFlag(cells[row][col])) {
                     stack.push(YokelBlockEval.getID(cells[row][col]));
                 }
@@ -1151,9 +1149,9 @@ public class YokelGameBoard extends YokelObject {
         while (index < stack.length()) {
             int count = 0;
 
-            for (int row = 0; row < 16; row++) {
-                for (int col = 0; col < 6; col++) {
-                    if (YokelBlockEval.getCellFlag(cells[row][col]) < 6) {
+            for (int row = 0; row < MAX_ROWS; row++) {
+                for (int col = 0; col < MAX_COLS; col++) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS) {
                         int id = YokelBlockEval.getID(cells[row][col]);
 
                         if (stack.getValueAt(index) == id) {
@@ -1167,7 +1165,7 @@ public class YokelGameBoard extends YokelObject {
                 default:
                     System.out.println("fucked up, found " + count
                             + " instances of id " + stack.getValueAt(index));
-                    /* fall through */
+                    /* fall through *//*
                 case 0:
                 case 1:
                     index++;
@@ -1175,9 +1173,9 @@ public class YokelGameBoard extends YokelObject {
         }
 
         for (int i = 0; i < stack.length(); i++) {
-            for (int row = 0; row < 16; row++) {
-                for (int col = 0; col < 6; col++) {
-                    if (YokelBlockEval.getCellFlag(cells[row][col]) < 6
+            for (int row = 0; row < MAX_ROWS; row++) {
+                for (int col = 0; col < MAX_COLS; col++) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS
                             && stack.getValueAt(i) == YokelBlockEval.getID(cells[row][col])) {
 
                         cells[row][col] = YokelBlockEval.addBrokenFlag(cells[row][col]);
@@ -1187,8 +1185,69 @@ public class YokelGameBoard extends YokelObject {
         }
 
         //updateBoard();
+    }*/
+
+
+    public Stack<Integer> getBrokenByPartnerCellIDs() {
+        Stack<Integer> stack = new Stack<>();
+
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
+                if (YokelBlockEval.hasPartnerBreakFlag(cells[row][col])) {
+                    stack.push(YokelBlockEval.getID(cells[row][col]));
+                }
+            }
+        }
+
+        return stack;
     }
-/*
+
+    public void flagBrokenCells(Stack<Integer> stack) {
+        int index = 0;
+
+        while (index < stack.size()) {
+            int count = 0;
+
+            for (int row = 0; row < MAX_ROWS; row++) {
+                for (int col = 0; col < MAX_COLS; col++) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS) {
+                        int id = YokelBlockEval.getID(cells[row][col]);
+
+                        if (stack.elementAt(index) == id) {
+                            count++;
+                        }
+                    }
+                }
+            }
+
+            switch (count) {
+                default:
+                    System.out.println("fucked up, found " + count
+                            + " instances of id " + stack.elementAt(index));
+                    /* fall through */
+                case 0:
+                case 1:
+                    index++;
+            }
+        }
+
+        for (int i = 0; i < stack.size(); i++) {
+            for (int row = 0; row < MAX_ROWS; row++) {
+                for (int col = 0; col < MAX_COLS; col++) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS
+                            && stack.elementAt(i) == YokelBlockEval.getID(cells[row][col])) {
+
+                        cells[row][col] = YokelBlockEval.addBrokenFlag(cells[row][col]);
+                    }
+                }
+            }
+        }
+
+        //updateBoard();
+    }
+
+
+/* Possible UI Function
     public Vector getCellsToBeDropped() {
         Vector<CellMove> vector = new Vector<CellMove>();
 
@@ -1196,13 +1255,13 @@ public class YokelGameBoard extends YokelObject {
             targetRows[i] = 0;
         }
 
-        for (int y = 0; y < 16; y++) {
-            for (int x = 0; x < 6; x++) {
+        for (int y = 0; y < MAX_ROWS; y++) {
+            for (int x = 0; x < MAX_COLS; x++) {
                 // The imporant thing to note is that the targetRow will not get
                 // incremented when a cell is to be broken.
                 if (isCellBroken(x, y) == false) {
                     if (targetRows[x] != y
-                            && getPieceValue(x, y) != 6) {
+                            && getPieceValue(x, y) != MAX_COLS) {
 
                         vector.addElement(new CellMove(x, y, targetRows[x]));
                     }
@@ -1216,8 +1275,8 @@ public class YokelGameBoard extends YokelObject {
     }*/
 
     public void checkBoardForPartnerBreaks(YokelGameBoard partner, boolean isPartnerOnRight) {
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 checkCellForPartnerBreak(partner, isPartnerOnRight, col, row);
             }
         }
@@ -1232,7 +1291,7 @@ public class YokelGameBoard extends YokelObject {
         else
             colOffset = -1;
 
-        if (getCell(col, row) < 6) {
+        if (getCell(col, row) < MAX_COLS) {
             checkCellForNonVerticalPartnerBreaks(board, col, row, colOffset, -1);
             checkCellForNonVerticalPartnerBreaks(board, col, row, colOffset, 0);
             checkCellForNonVerticalPartnerBreaks(board, col, row, colOffset, 1);
@@ -1336,79 +1395,3 @@ public class YokelGameBoard extends YokelObject {
         return result;
     }
 }
-
-
-/*
-
-
-public class BoardEvaluator implements IDataIO
-{
-
-    Board brd;
-
-
-    public void setBoard(Board board) {
-        brd = board;
-    }
-
-    public void readIn(DataInputStream datainputstream) throws IOException {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++)
-                cells[i][j] = datainputstream.readInt();
-        }
-        for (int i = 0; i < ids.length; i++) {
-            byte byteVal = datainputstream.readByte();
-            switch (byteVal) {
-                case 0:
-                    ids[i] = false;
-                    break;
-                case 1:
-                    ids[i] = true;
-                    break;
-                default:
-                    throw new IOException();
-            }
-        }
-        idIndex = datainputstream.readInt();
-        updateBoard();
-    }
-
-    public void printOut(DataOutputStream dataoutputstream) throws IOException {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++)
-                dataoutputstream.writeInt(cells[i][j]);
-        }
-        for (int i = 0; i < ids.length; i++)
-            dataoutputstream.writeByte(ids[i] ? 1 : 0);
-        dataoutputstream.writeInt(idIndex);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void updateBoard() {
-        if ( brd != null )
-            brd.update();
-    }
-}
-
-
-
-
-
-
-
-
-
- */
