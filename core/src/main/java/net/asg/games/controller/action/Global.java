@@ -120,32 +120,27 @@ public class Global implements ActionContainer {
     private YokelGameBoard getTestBoard(){
 
         YokelGameBoard board = new YokelGameBoard();
-        for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
-            for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
-                board.setCels(r, c, 0);
-            }
-        }
 
-        board.setCels(0,0, getRandomBlockId());
-        board.setCels(0,1, getRandomBlockId());
-        board.setCels(0,2, getRandomBlockId());
-        board.setCels(0,3, getRandomBlockId());
-        board.setCels(0,4, getRandomBlockId());
-        board.setCels(0,5, getRandomBlockId());
+        board.setCell(0,0, getRandomBlockId());
+        board.setCell(0,1, getRandomBlockId());
+        board.setCell(0,2, getRandomBlockId());
+        board.setCell(0,3, getRandomBlockId());
+        board.setCell(0,4, getRandomBlockId());
+        board.setCell(0,5, getRandomBlockId());
 
-        board.setCels(1,0, getRandomBlockId());
-        board.setCels(1,1, getRandomBlockId());
-        board.setCels(1,2, getRandomBlockId());
-        board.setCels(1,3, getRandomBlockId());
-        board.setCels(1,4, getRandomBlockId());
-        board.setCels(1,5, getRandomBlockId());
+        board.setCell(1,0, getRandomBlockId());
+        board.setCell(1,1, getRandomBlockId());
+        board.setCell(1,2, getRandomBlockId());
+        board.setCell(1,3, getRandomBlockId());
+        board.setCell(1,4, getRandomBlockId());
+        board.setCell(1,5, getRandomBlockId());
 
-        board.setCels(2,0, getRandomBlockId());
-        board.setCels(2,1, getRandomBlockId());
-        board.setCels(2,2, getRandomBlockId());
-        board.setCels(2,3, getRandomBlockId());
-        board.setCels(2,4, getRandomBlockId());
-        board.setCels(2,5, getRandomBlockId());
+        board.setCell(2,0, getRandomBlockId());
+        board.setCell(2,1, getRandomBlockId());
+        board.setCell(2,2, getRandomBlockId());
+        board.setCell(2,3, getRandomBlockId());
+        board.setCell(2,4, getRandomBlockId());
+        board.setCell(2,5, getRandomBlockId());
         return board;
     }
 

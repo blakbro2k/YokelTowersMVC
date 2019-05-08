@@ -3,7 +3,6 @@ package net.asg.games.provider.actors;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -206,7 +205,7 @@ public class GameBlockArea extends Stack {
     }
 
     private void drawSprites(Batch batch, float alpha){
-        if(!Util.isArrayEmpty(actors)){
+        if(Util.isArrayEmpty(actors)){
             for(Actor actor : actors){
                if(actor != null){
                    actor.draw(batch, alpha);

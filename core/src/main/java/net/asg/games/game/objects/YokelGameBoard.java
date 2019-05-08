@@ -1,15 +1,20 @@
 package net.asg.games.game.objects;
 
+import com.badlogic.gdx.math.Vector;
+
+import net.asg.games.utils.IntStack;
+import net.asg.games.utils.RandomUtil;
+
 public class YokelGameBoard extends YokelObject {
     public static final int MAX_COLS = 6;
     public static final int MAX_ROWS = 16;
 
-    public int[][] cells;
-    boolean[] ids;
-    int idIndex;
-    static int[] targetRows = new int[MAX_COLS];
-    int[] randomColumnIndices = new int[MAX_COLS];
-    boolean[][] colorBlastGrid
+    private int[][] cells;
+    private boolean[] ids;
+    private int idIndex;
+    private static int[] targetRows = new int[MAX_COLS];
+    private int[] randomColumnIndices = new int[MAX_COLS];
+    private boolean[][] colorBlastGrid
             = { new boolean[MAX_COLS],
             new boolean[MAX_COLS],
             new boolean[MAX_COLS],
@@ -26,16 +31,16 @@ public class YokelGameBoard extends YokelObject {
             new boolean[MAX_COLS],
             new boolean[MAX_COLS],
             new boolean[MAX_COLS] };
-    int[] pushRowOrder = { 0, 1, 2, 2, 1, 0 };
-    int[] pushColumnOrder = { 2, 3, 1, 4, 0, 5 };
-    int[] countOfPieces = new int[MAX_COLS];
+    private int[] pushRowOrder = { 0, 1, 2, 2, 1, 0};
+    private int[] pushColumnOrder = { 2, 3, 1, 4, 0, 5};
+    private int[] countOfPieces = new int[MAX_COLS];
 
-    boolean[] cellMatches = new boolean[7];
-    int[] cellIndices = { 0,  1, 2,  3,  4,  5,  6 };
-    int[] cellHashes = { 5, 25, 7, 49, 35, 19, 23 };
+    private boolean[] cellMatches = new boolean[7];
+    private int[] cellIndices = { 0, 1, 2,  3,  4,  5, 6};
+    private int[] cellHashes = { 5, 25, 7, 49, 35, 19, 23};
 
-    int[] columnMatchLookup = { -1, -1, 0, 1, 1, 1, 0, -1 };
-    int[] rowMatchLookup = { 0, 1, 1, 1, 0, -1, -1, -1 };
+    private int[] columnMatchLookup = { -1, -1, 0, 1, 1, 1, 0, -1};
+    private int[] rowMatchLookup = { 0, 1, 1, 1, 0, -1, -1, -1};
 
     public YokelGameBoard(){
         cells = new int[MAX_ROWS][MAX_COLS];
@@ -44,21 +49,22 @@ public class YokelGameBoard extends YokelObject {
     }
 
     @Override
-    public void dispose() {
-
-    }
+    public void dispose() {}
 
     public int[][] getCells(){
         return cells;
     }
 
-    public void setCels(int row, int col, int cell){
+    public void setCell(int row, int col, int cell){
         cells[row][col] = cell;
     }
 
+    public int getCell(int r, int c){
+        return YokelBlockEval.getCellFlag(cells[r][c]);
+        //return cells[row][col];
+    }
+
     public void clearBoard() {
-        //Util.invokeMethodOnMatrix(MAX_COLS, MAX_ROWS, this, );
-        //invokeMethodOnMatrix
         for (int c = 0; c < MAX_COLS; c++) {
             for (int r = 0; r < MAX_ROWS; r++){
                 clearCell(r,c);
@@ -73,99 +79,22 @@ public class YokelGameBoard extends YokelObject {
     private void clearCell(int r, int c){
         cells[r][c] = YokelBlock.CLEAR;
     }
-}
 
-/*
-
-
-public class BoardEvaluator implements IDataIO
-{
-    public int[][] cells;
-    boolean[] ids;
-    int idIndex;
-    static int[] targetRows = new int[6];
-    int[] randomColumnIndices = new int[6];
-    boolean[][] colorBlastGrid
-            = { new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6],
-            new boolean[6] };
-    int[] pushRowOrder = { 0, 1, 2, 2, 1, 0 };
-    int[] pushColumnOrder = { 2, 3, 1, 4, 0, 5 };
-    int[] countOfPieces = new int[6];
-
-    boolean[] cellMatches = new boolean[7];
-    int[] cellIndices = { 0,  1, 2,  3,  4,  5,  6 };
-    int[] cellHashes = { 5, 25, 7, 49, 35, 19, 23 };
-
-    int[] columnMatchLookup = { -1, -1, 0, 1, 1, 1, 0, -1 };
-    int[] rowMatchLookup = { 0, 1, 1, 1, 0, -1, -1, -1 };
-
-    Board brd;
-
-    public BoardEvaluator() {
-        cells = new int[16][6];
-        ids = new boolean[128];
-        clearBoard();
+    static boolean isCellInBoard(int c, int r) {
+        return c >= 0 && c < MAX_COLS && r >= 0 && r < MAX_ROWS;
     }
 
-    public void setBoard(Board board) {
-        brd = board;
-    }
+    public int getSafeCell(int c, int r) {
+        if (!isCellInBoard(c, r))
+            return MAX_COLS;
 
-    public void readIn(DataInputStream datainputstream) throws IOException {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++)
-                cells[i][j] = datainputstream.readInt();
-        }
-        for (int i = 0; i < ids.length; i++) {
-            byte byteVal = datainputstream.readByte();
-            switch (byteVal) {
-                case 0:
-                    ids[i] = false;
-                    break;
-                case 1:
-                    ids[i] = true;
-                    break;
-                default:
-                    throw new IOException();
-            }
-        }
-        idIndex = datainputstream.readInt();
-        updateBoard();
-    }
+        int value = getCell(c, r);
 
-    public void printOut(DataOutputStream dataoutputstream) throws IOException {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++)
-                dataoutputstream.writeInt(cells[i][j]);
+        if (value >= MAX_COLS) {
+            value = MAX_COLS;
         }
-        for (int i = 0; i < ids.length; i++)
-            dataoutputstream.writeByte(ids[i] ? 1 : 0);
-        dataoutputstream.writeInt(idIndex);
-    }
 
-    public void clearBoard() {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++)
-                cells[i][j] = 6;
-        }
-        for (int i = 0; i < 128; i++)
-            ids[i] = false;
-        idIndex = 0;
-        updateBoard();
+        return value;
     }
 
     int incrementID() {
@@ -174,22 +103,18 @@ public class BoardEvaluator implements IDataIO
 
             if (idIndex == ids.length)
                 idIndex = 0;
-        } while (ids[idIndex] != false);
+        } while (ids[idIndex]);
 
         ids[idIndex] = true;
         return idIndex;
     }
 
     void releaseID(int index) {
-        if (ids[index] == false)
+        if (!ids[index])
             System.out.println("Assertion failure: id " + index
                     + " released but not held");
 
         ids[index] = false;
-    }
-
-    public int getPieceValue(int column, int row) {
-        return CellEval.getCellFlag(cells[row][column]);
     }
 
     public int getBlockValueAt(int column, int row) {
@@ -197,681 +122,15 @@ public class BoardEvaluator implements IDataIO
     }
 
     public boolean isArtificiallyAdded(int column, int row) {
-        return CellEval.hasAddedByYahooFlag(cells[row][column]);
+        return YokelBlockEval.hasAddedByYahooFlag(cells[row][column]);
     }
 
     public boolean isCellBroken(int column, int row) {
-        return CellEval.hasBrokenFlag(cells[row][column]);
+        return YokelBlockEval.hasBrokenFlag(cells[row][column]);
     }
 
     public void setValueWithID(int column, int row, int value) {
-        cells[row][column] = CellEval.setIDFlag(value, incrementID());
-    }
-
-    public int getColumnWithPossiblePieceMatch(GameBoardBlock piece) {
-        shuffleColumnIndices();
-
-        for (int i = 0; i < 6; i++) {
-            int x = randomColumnIndices[i];
-            int y = getColumnFill(x);
-
-            if (y < 12) {
-                for (int j = 0; j < 3; j++) {
-                    cells[y][x] = piece.getValueAt(j % 3);
-                    cells[y + 1][x] = piece.getValueAt((1 + j) % 3);
-                    cells[y + 2][x] = piece.getValueAt((2 + j) % 3);
-
-                    boolean hasFullMatch =
-                            (hasFullMatchInProximity(x, y)
-                                    || hasFullMatchInProximity(x, y + 1)
-                                    || hasFullMatchInProximity(x, y + 2));
-
-                    cells[y][x] = 6;
-                    cells[y + 1][x] = 6;
-                    cells[y + 2][x] = 6;
-
-                    updateBoard();
-
-                    if (hasFullMatch)
-                        return j << 8 | x;
-                }
-            }
-        }
-
-        int column = getBoardMakeupHash() % 6;
-
-        for (int col = 0; col < 6; col++) {
-            if (getColumnFill(col) < getColumnFill(column)) {
-                column = col;
-            }
-        }
-
-        return column;
-    }
-
-    public int getColumnToPlaceYahooCell(int value) {
-        // pick "random" column to start
-        int x = getBoardMakeupHash() % 6;
-
-        // loop through columns
-        for (int i = 0; i < 6; i++) {
-            // get the height of the column
-            int y = getColumnFill(x);
-
-            // if the height fits in visible rows
-            if (y < 12) {
-                // put the pending piece in that spot
-                cells[y][x] = value;
-
-                // check for a near match
-                boolean match = hasMatchingCellInProximity(x, y);
-
-                // reset the cell
-                cells[y][x] = 6;
-
-                // if there is no match, return the column
-                if (match == false)
-                    return x;
-            }
-
-            // move to next column wrapped around column count
-            x = (x + 1) % 6;
-        }
-
-        // If unable to find a column without piece like this nearby,
-        // get less picky and only ensure that the piece won't make a break
-
-        // loop through columns again
-        for (int i = 0; i < 6; i++) {
-            // get height of column
-            int y = getColumnFill(x);
-
-            if (y < 12) {
-                cells[y][x] = value;
-                boolean bool = hasFullMatchInProximity(x, y);
-                cells[y][x] = 6;
-
-                if (bool == false)
-                    return x;
-            }
-
-            x = (x + 1) % 6;
-        }
-
-        return -1;
-    }
-
-    public boolean canPlacePieceAt(int column, int row) {
-        if (column < 0 || column >= 6 || row < 0)
-            return false;
-        if (row < 13 && getPieceValue(column, row) != 6)
-            return false;
-        if (row + 1 < 13 && getPieceValue(column, row + 1) != 6)
-            return false;
-        if (row + 2 < 13 && getPieceValue(column, row + 2) != 6)
-            return false;
-        return true;
-    }
-
-    public int getColumnFill(int column) {
-        int row;
-        for (row = 16; row > 0; row--) {
-            if (getPieceValue(column, row - 1) != 6)
-                break;
-        }
-        return row;
-    }
-
-    public boolean isCellFree(int column, int row) {
-
-        if (row < 0 || row > 13)
-            return false;
-
-        if (row == 0)
-            return true;
-
-        if (getPieceValue(column, row - 1) == 6)
-            return false;
-
-        return true;
-    }
-
-    public void placeBlockAt(GameBoardBlock block, int x, int y) {
-        int index = block.getIndex();
-
-        int v0 = block.getValueAt(index % 3);
-        v0 = CellEval.setIDFlag(v0, incrementID());
-
-        int v1 = block.getValueAt((1 + index) % 3);
-        v1 = CellEval.setIDFlag(v1, incrementID());
-        int v2 = block.getValueAt((2 + index) % 3);
-        v2 = CellEval.setIDFlag(v2, incrementID());
-        if (CellEval.getCellFlag(cells[y][x]) != 6) {
-            Thread.dumpStack();
-            System.out.println("Assertion failure: grid at " + x + "," + y
-                    + " isn't empty for piece placement");
-        }
-        if (CellEval.getCellFlag(cells[y + 1][x]) != 6) {
-            Thread.dumpStack();
-            System.out.println("Assertion failure: grid at " + x + "," + y
-                    + " isn't empty for piece placement");
-        }
-        if (CellEval.getCellFlag(cells[y + 2][x]) != 6) {
-            Thread.dumpStack();
-            System.out.println("Assertion failure: grid at " + x + "," + y
-                    + " isn't empty for piece placement");
-        }
-        cells[y][x] = v0;
-        cells[y + 1][x] = v1;
-        cells[y + 2][x] = v2;
-
-        updateBoard();
-    }
-
-    public void handlePlacedPowerBlock(int type) {
-        for (int y = 0; y < 16; y++) {
-            for (int x = 0; x < 6; x++) {
-                if (CellEval.hasPowerBlockFlag(cells[y][x])) {
-                    if (isCellInBoard(x - 1, y - 1))
-                        applyPowerBlockAt(type, x - 1, y - 1);
-                    if (isCellInBoard(x, y - 1))
-                        applyPowerBlockAt(type, x, y - 1);
-                    if (isCellInBoard(x + 1, y - 1))
-                        applyPowerBlockAt(type, x + 1, y - 1);
-                    if (isCellInBoard(x - 1, y))
-                        applyPowerBlockAt(type, x - 1, y);
-                    if (isCellInBoard(x, y))
-                        applyPowerBlockAt(type, x, y);
-                    if (isCellInBoard(x + 1, y))
-                        applyPowerBlockAt(type, x + 1, y);
-                    if (isCellInBoard(x - 1, y + 1))
-                        applyPowerBlockAt(type, x - 1, y + 1);
-                    if (isCellInBoard(x, y + 1))
-                        applyPowerBlockAt(type, x, y + 1);
-                    if (isCellInBoard(x + 1, y + 1))
-                        applyPowerBlockAt(type, x + 1, y + 1);
-                }
-            }
-        }
-    }
-
-    void applyPowerBlockAt(int value, int col, int row) {
-        if (CellEval.hasPowerBlockFlag(value) == false) {
-            System.out.println("Assertion failure:  cell isn't weird " + value);
-        } else if (CellEval.getCellFlag(value) != 4) {
-            System.out
-                    .println("Assertion failure:  cell isn't weird type " + value);
-        } else if (!CellEval.hasPowerBlockFlag(cells[row][col])) {
-            boolean isAttack = CellEval.isOffensive(value);
-
-            if (isAttack) {
-                if (CellEval.getCellFlag(cells[row][col]) < 6) {
-                    releaseID(CellEval.getID(cells[row][col]));
-                }
-
-                if (CellEval.getCellFlag(cells[row][col]) != 6) {
-                    cells[row][col] = 7;
-                }
-            } else if (CellEval.getCellFlag(cells[row][col]) < 6)
-                cells[row][col] = CellEval.addArtificialFlag(CellEval.setValueFlag(cells[row][col], 4));
-
-            updateBoard();
-        }
-    }
-
-    public void setValueAt(int value, int column, int row) {
-        if (CellEval.getCellFlag(cells[row][column]) != 6)
-            System.out.println("Assertion failure: grid at " + column + ","
-                    + row + " isn't empty for cell placement");
-        value = CellEval.setIDFlag(value, incrementID());
-        cells[row][column] = value;
-        updateBoard();
-    }
-
-    static boolean isCellInBoard(int column, int row) {
-        if (column < 0 || column >= 6 || row < 0 || row >= 16)
-            return false;
-        return true;
-    }
-
-    public boolean hasPlayerDied() {
-        for (int row = 13; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
-                if (getPieceValue(col, row) != 6)
-                    return true;
-            }
-        }
-
-        if (getPieceValue(2, 12) != 6)
-            return true;
-
-        return false;
-    }
-
-    public void handleBrokenCellDrops() {
-        for (int col = 0; col < 6; col++) {
-            int index = 0;
-
-            for (int row = 0; row < 16; row++) {
-                if (isCellBroken(col, row)) {
-                    if (CellEval.getCellFlag(cells[row][col]) < 6)
-                        releaseID(CellEval.getID(cells[row][col]));
-                } else {
-                    cells[index][col] = cells[row][col];
-                    index++;
-                }
-            }
-
-            for (; index < 16; index++)
-                cells[index][col] = 6;
-        }
-        updateBoard();
-    }
-
-    public int getBrokenCellCount() {
-        int count = 0;
-
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++) {
-                if (CellEval.hasBrokenFlag(cells[i][j]))
-                    count++;
-            }
-        }
-
-        return count;
-    }
-
-    public Vector<Cell> getBrokenCells() {
-        Vector<Cell> vector = new Vector<Cell>();
-
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++) {
-                if (CellEval.hasBrokenFlag(cells[i][j]))
-                    vector.addElement(new Cell(j, i));
-            }
-        }
-        return vector;
-    }
-
-    public ByteStack getBrokenByPartnerCellIDs() {
-        ByteStack stack = new ByteStack();
-
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
-                if (CellEval.hasPartnerBreakFlag(cells[row][col])) {
-                    stack.push(CellEval.getID(cells[row][col]));
-                }
-            }
-        }
-
-        return stack;
-    }
-
-    public void flagBrokenCells(ByteStack stack) {
-        int index = 0;
-
-        while (index < stack.length()) {
-            int count = 0;
-
-            for (int row = 0; row < 16; row++) {
-                for (int col = 0; col < 6; col++) {
-                    if (CellEval.getCellFlag(cells[row][col]) < 6) {
-                        int id = CellEval.getID(cells[row][col]);
-
-                        if (stack.getValueAt(index) == id) {
-                            count++;
-                        }
-                    }
-                }
-            }
-
-            switch (count) {
-                default:
-                    System.out.println("fucked up, found " + count
-                            + " instances of id " + stack.getValueAt(index));
-                    /* fall through *//*
-                case 0:
-                case 1:
-                    index++;
-            }
-        }
-
-        for (int i = 0; i < stack.length(); i++) {
-            for (int row = 0; row < 16; row++) {
-                for (int col = 0; col < 6; col++) {
-                    if (CellEval.getCellFlag(cells[row][col]) < 6
-                            && stack.getValueAt(i) == CellEval.getID(cells[row][col])) {
-
-                        cells[row][col] = CellEval.addBrokenFlag(cells[row][col]);
-                    }
-                }
-            }
-        }
-
-        updateBoard();
-    }
-
-    public Vector getCellsToBeDropped() {
-        Vector<CellMove> vector = new Vector<CellMove>();
-
-        for (int i = 0; i < targetRows.length; i++) {
-            targetRows[i] = 0;
-        }
-
-        for (int y = 0; y < 16; y++) {
-            for (int x = 0; x < 6; x++) {
-                // The imporant thing to note is that the targetRow will not get
-                // incremented when a cell is to be broken.
-                if (isCellBroken(x, y) == false) {
-                    if (targetRows[x] != y
-                            && getPieceValue(x, y) != 6) {
-
-                        vector.addElement(new CellMove(x, y, targetRows[x]));
-                    }
-
-                    targetRows[x]++;
-                }
-            }
-        }
-
-        return vector;
-    }
-
-    public void checkBoardForPartnerBreaks(BoardEvaluator partner, boolean isPartnerOnRight) {
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
-                checkCellForPartnerBreak(partner, isPartnerOnRight, col, row);
-            }
-        }
-    }
-
-    void checkCellForPartnerBreak(BoardEvaluator board, boolean isPartnerOnRight, int col, int row) {
-        //boolean bool_53_ = true;
-        int colOffset;
-
-        if (isPartnerOnRight == true)
-            colOffset = 1;
-        else
-            colOffset = -1;
-
-        if (getPieceValue(col, row) < 6) {
-            checkCellForNonVerticalPartnerBreaks(board, col, row, colOffset, -1);
-            checkCellForNonVerticalPartnerBreaks(board, col, row, colOffset, 0);
-            checkCellForNonVerticalPartnerBreaks(board, col, row, colOffset, 1);
-        }
-    }
-
-    void checkCellForNonVerticalPartnerBreaks(BoardEvaluator partner, int col, int row, int _x, int _y) {
-        int value = getPieceValue(col, row);
-
-        int matchCount;
-
-        // Tally up matches on this board
-        for (matchCount = 1;
-             (isCellInBoard(col + matchCount * _x, row + matchCount * _y)
-                     && getPieceValue(col + matchCount * _x, row + matchCount * _y) == value
-                     && CellEval.hasPowerBlockFlag(cells[row + matchCount * _y][col + matchCount * _x]) == false);
-             matchCount++) {
-            /* empty *//*
-        }
-
-        // If we're moving to partner side
-        if (isCellInBoard(col + matchCount * _x, row + matchCount * _y) != true) {
-            int partnerMatchCount = 0;
-            int pX;
-
-            if (_x > 0)
-                pX = -(matchCount * _x);
-            else
-                pX = 5 - matchCount * _x;
-
-            for (/**/;/*
-                     (isCellInBoard(pX + matchCount * _x, row + matchCount * _y)
-                             && partner.getPieceValue(pX + matchCount * _x, row + matchCount * _y) == value
-                             && CellEval.hasPowerBlockFlag(partner.cells[row + matchCount * _y][pX + matchCount * _x]) == false);
-                     matchCount++) {
-                partnerMatchCount++;
-            }
-
-
-            if (partnerMatchCount != 0) {
-                if (matchCount >= 3) {
-                    for (int i = 0; i < matchCount; i++) {
-                        int y = row + i * _y;
-                        int x = col + i * _x;
-
-                        if (isCellInBoard(x, y)) {
-                            int copy = cells[y][x];
-                            copy = CellEval.addPartnerBreakFlag(copy);
-                            cells[y][x] = copy;
-                        } else {
-                            x = pX + i * _x;
-                            int copy = partner.cells[y][x];
-                            copy = CellEval.addPartnerBreakFlag(copy);
-                            partner.cells[y][x] = copy;
-                        }
-                    }
-                    updateBoard();
-                }
-            }
-        }
-    }
-
-    int getYahooDuration() {
-        int duration = 0;
-        int horizontal = 2;
-        int vertical = 4;
-        int diagonal = 3;
-
-        for (int row = 0; row < 13; row++) {
-            if (checkForNonVerticalYahoo(row, 0)) {
-                duration += horizontal;
-
-                for (int column = 0; column < 6; column++) {
-                    cells[row][column] = CellEval.addBrokenFlag(cells[row][column]);
-                }
-            }
-        }
-
-        for (int column = 0; column < 6; column++) {
-            for (int row = 0; row < 10; row++) {
-                if (CellEval.getCellFlag(cells[row][column]) == 5) {
-                    if (CellEval.getCellFlag(cells[row + 1][column]) == 4) {
-                        if (CellEval.getCellFlag(cells[row + 2][column]) != 3) {
-                            continue;
-                        }
-                    } else if (CellEval.getCellFlag(cells[row + 1][column]) != 3
-                            || CellEval.getCellFlag(cells[row + 2][column]) != 4) {
-                        continue;
-                    }
-
-                    if (CellEval.getCellFlag(cells[row + 3][column]) == 2
-                            && CellEval.getCellFlag(cells[row + 4][column]) == 1
-                            && CellEval.getCellFlag(cells[row + 5][column]) == 0) {
-
-                        duration += vertical;
-
-                        for (int i = 0; i < 6; i++) {
-                            cells[row + i][column] = CellEval.addBrokenFlag(cells[row + i][column]);
-                        }
-                    }
-                }
-            }
-        }
-
-        for (int row = 0; row < 8; row++) {
-            if (checkForNonVerticalYahoo(row, 1)) {
-                duration += diagonal;
-
-                for (int col = 0; col < 6; col++) {
-                    cells[row + col][col] = CellEval.addBrokenFlag(cells[row + col][col]);
-                }
-            }
-        }
-
-        for (int row = 5; row < 13; row++) {
-            if (checkForNonVerticalYahoo(row, -1)) {
-                duration += diagonal;
-
-                for (int col = 0; col < 6; col++) {
-                    cells[row - col][col] = CellEval.addBrokenFlag(cells[row - col][col]);
-                }
-            }
-        }
-
-        updateBoard();
-        return duration;
-    }
-
-    boolean checkForNonVerticalYahoo(int y, int _y) {
-        boolean result = true;
-
-        int row = y;
-
-        if (CellEval.getCellFlag(cells[row][0]) != 0) {
-            result = false;
-        }
-
-        row += _y;
-
-        if (CellEval.getCellFlag(cells[row][1]) != 1) {
-            result = false;
-        }
-
-        row += _y;
-
-        if (CellEval.getCellFlag(cells[row][2]) != 2) {
-            result = false;
-        }
-
-        row += _y;
-
-        if (CellEval.getCellFlag(cells[row][3]) == 3) {
-            if (CellEval.getCellFlag(cells[row + _y][4]) != 4)
-                result = false;
-        } else {
-            if (CellEval.getCellFlag(cells[row][3]) != 4)
-                result = false;
-            if (CellEval.getCellFlag(cells[row + _y][4]) != 3)
-                result = false;
-        }
-        row += 2 * _y;
-        if (CellEval.getCellFlag(cells[row][5]) != 5)
-            result = false;
-
-        return result;
-    }
-
-    public void flagPowerBlockCells() {
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
-                if (CellEval.hasPowerBlockFlag(cells[row][col])) {
-                    cells[row][col] = CellEval.addBrokenFlag(cells[row][col]);
-                }
-            }
-        }
-        updateBoard();
-    }
-
-    public void flagBoardMatches() {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 6; j++)
-                flagCellForMatches(j, i);
-        }
-    }
-
-    void flagCellForMatches(int column, int row) {
-        if (getPieceValue(column, row) < 6) {
-            flagCellForMatches(column, row, -1, 1);
-            flagCellForMatches(column, row, 0, 1);
-            flagCellForMatches(column, row, 1, 1);
-            flagCellForMatches(column, row, 1, 0);
-        }
-    }
-
-    void flagCellForMatches(int x, int y, int _x, int _y) {
-        int cell = getPieceValue(x, y);
-
-        int count;
-        for (count = 1;
-             (isCellInBoard(x + count * _x, y + count * _y)
-                     && getPieceValue(x + count * _x, y + count * _y) == cell
-                     && CellEval.hasPowerBlockFlag(cells[y + count * _y][x + count * _x]) == false);
-             count++) {
-            /* empty *//*
-        }
-
-        if (count >= 3) {
-            for (int i = 0; i < count; i++) {
-                int copy = cells[y + i * _y][x + i * _x];
-                copy = CellEval.addBrokenFlag(copy);
-                cells[y + i * _y][x + i * _x] = copy;
-            }
-        }
-    }
-
-    public void handlePower(int i) {
-        if (CellEval.getPowerFlag(i) == 0) {
-            switch (i) {
-                case 1024:
-                    removeAllPowersFromBoard();
-                    break;
-                case 1026:
-                    removeAllStonesFromBoard();
-                    break;
-                default:
-                    System.out			    .println("Assertion failure: invalid rare attack " + i);
-                    break;
-            }
-        } else {
-            boolean isOffensive = CellEval.isOffensive(i);
-            int level = CellEval.getPowerLevel(i);
-
-            switch (CellEval.getCellFlag(i)) {
-                case 0:
-                    if (isOffensive) {
-                        addRow(1);
-                    } else {
-                        removeRow(1);
-                    }
-
-                    break;
-                case 1:
-                    if (isOffensive) {
-                        dither(2 * Math.min(level, 3));
-                    } else {
-                        clump(2 * Math.min(level, 3));
-                    }
-
-                    break;
-                case 2:
-                    if (isOffensive) {
-                        addStone(Math.min(level, 3));
-                    } else {
-                        dropStone(Math.min(level, 3));
-                    }
-
-                    break;
-                case 3:
-                    if (isOffensive) {
-                        defuse(Math.min(level, 3));
-                    } else {
-                        colorBlast();
-                        break;
-                    }
-
-                    break;
-                case 4:
-                    System.out.println
-                            ("Assertion failure: invalid CELL5 board attack " + i);
-                    break;
-                case 5:
-                    removeColorFromBoard();
-                    break;
-                default:
-                    System.out.println("Assertion failure: invalid attack" + i);
-            }
-        }
+        cells[row][column] = YokelBlockEval.setIDFlag(value, incrementID());
     }
 
     void addRow(int amount) {
@@ -891,7 +150,7 @@ public class BoardEvaluator implements IDataIO
             for (int col = 0; col < 6; col++) {
                 int value = getNonAdjacentCell(col, i, hash + i + col);
 
-                value = CellEval.setIDFlag(value, incrementID());
+                value = YokelBlockEval.setIDFlag(value, incrementID());
 
                 if (value < 0) {
                     System.out.println
@@ -902,14 +161,14 @@ public class BoardEvaluator implements IDataIO
                 cells[i][col] = value;
             }
         }
-        updateBoard();
+       //updateBoard();
     }
 
     void removeRow(int amount) {
         for (int row = 0; row < 13 - amount; row++) {
             for (int col = 0; col < 6; col++) {
-                if (row < amount && CellEval.getCellFlag(cells[row][col]) < 6)
-                    releaseID(CellEval.getID(cells[row][col]));
+                if (row < amount && YokelBlockEval.getCellFlag(cells[row][col]) < 6)
+                    releaseID(YokelBlockEval.getID(cells[row][col]));
 
                 cells[row][col] = cells[row + amount][col];
             }
@@ -921,7 +180,7 @@ public class BoardEvaluator implements IDataIO
             }
         }
 
-        updateBoard();
+        //updateBoard();
     }
 
     void shuffleColumnIndices() {
@@ -929,7 +188,7 @@ public class BoardEvaluator implements IDataIO
             randomColumnIndices[i] = i;
         }
 
-        RandomNumber generator = new RandomNumber((long) getBoardMakeupHash());
+        RandomUtil.RandomNumber generator = new RandomUtil.RandomNumber((long) getBoardMakeupHash());
 
         for (int i = 0; i < 10; i++) {
             int first = generator.next(6);
@@ -947,14 +206,14 @@ public class BoardEvaluator implements IDataIO
             int x = randomColumnIndices[i];
 
             for (int y = 0; y < 13; y++) {
-                if (getPieceValue(x, y) == 6) {
+                if (getCell(x, y) == 6) {
                     cells[y][x] = 7;
                     break;
                 }
             }
         }
 
-        updateBoard();
+        //updateBoard();
     }
 
     void dropStone(int amount) {
@@ -962,7 +221,7 @@ public class BoardEvaluator implements IDataIO
 
         for (int y = 12; y >= 0; y--) {
             for (int x = 0; x < 6; x++) {
-                if (getPieceValue(x, y) == 7) {
+                if (getCell(x, y) == 7) {
                     for (int i = y; i >= 1; i--) {
                         cells[i][x] = cells[i - 1][x];
                     }
@@ -976,13 +235,13 @@ public class BoardEvaluator implements IDataIO
             }
         }
 
-        updateBoard();
+        //updateBoard();
     }
 
     void markColorBlast() {
         // Clear the grid
-        for (int row = 0; row < 16; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 colorBlastGrid[row][col] = false;
             }
         }
@@ -992,9 +251,9 @@ public class BoardEvaluator implements IDataIO
             for (int col = 0; col < 6; col++) {
 
                 // if the piece is purple
-                if (CellEval.getCellFlag(cells[row][col]) == 3
+                if (YokelBlockEval.getCellFlag(cells[row][col]) == 3
                         // And the piece is a power
-                        && CellEval.getPowerFlag(cells[row][col]) != 0) {
+                        && YokelBlockEval.getPowerFlag(cells[row][col]) != 0) {
 
                     if (isCellInBoard(col - 1, row - 1))
                         colorBlastGrid[row - 1][col - 1] = true;
@@ -1043,34 +302,34 @@ public class BoardEvaluator implements IDataIO
                 int col = pushColumnOrder[x];
                 int row = y + pushRowOrder[col];
 
-                if (row >= 0 && CellEval.getCellFlag(cells[row][col]) != 7) {
-                    if (CellEval.getCellFlag(cells[row][col]) < 6) {
-                        releaseID(CellEval.getID(cells[row][col]));
+                if (row >= 0 && YokelBlockEval.getCellFlag(cells[row][col]) != 7) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < 6) {
+                        releaseID(YokelBlockEval.getID(cells[row][col]));
                     }
 
-                    cells[row][col] = CellEval.setIDFlag(value, incrementID());
+                    cells[row][col] = YokelBlockEval.setIDFlag(value, incrementID());
                     return;
                 }
             }
         }
 
-        updateBoard();
+        //updateBoard();
     }
 
     void colorBlast() {
         markColorBlast();
 
         if (isColorBlastGridEmpty())
-            pushCellToBottomOfBoard(CellEval.setPowerFlag(3, 2));
+            pushCellToBottomOfBoard(YokelBlockEval.setPowerFlag(3, 2));
         else {
             for (int row = 0; row < 16; row++) {
                 for (int col = 0; col < 6; col++) {
                     if (colorBlastGrid[row][col]) {
-                        if (CellEval.getCellFlag(cells[row][col]) < 6) {
-                            releaseID(CellEval.getID(cells[row][col]));
+                        if (YokelBlockEval.getCellFlag(cells[row][col]) < 6) {
+                            releaseID(YokelBlockEval.getID(cells[row][col]));
                         }
 
-                        cells[row][col] = CellEval.setIDFlag(3, incrementID());
+                        cells[row][col] = YokelBlockEval.setIDFlag(3, incrementID());
                     }
                 }
             }
@@ -1079,9 +338,9 @@ public class BoardEvaluator implements IDataIO
                 boolean bool = false;
 
                 for (int row = 15; row >= 0; row--) {
-                    if (CellEval.getCellFlag(cells[row][col]) == 6) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) == 6) {
                         if (bool) {
-                            cells[row][col] = CellEval.setIDFlag(3, incrementID());
+                            cells[row][col] = YokelBlockEval.setIDFlag(3, incrementID());
                         }
                     } else {
                         bool = true;
@@ -1089,7 +348,7 @@ public class BoardEvaluator implements IDataIO
                 }
             }
         }
-        updateBoard();
+        //updateBoard();
     }
 
     void defuse(int intensity) {
@@ -1097,13 +356,13 @@ public class BoardEvaluator implements IDataIO
 
         for (int row = 0; row < 16; row++) {
             for (int col = 0; col < 6; col++) {
-                if (CellEval.getCellFlag(cells[row][col]) == 3
-                        && CellEval.getPowerFlag(cells[row][col]) != 0) {
+                if (YokelBlockEval.getCellFlag(cells[row][col]) == 3
+                        && YokelBlockEval.getPowerFlag(cells[row][col]) != 0) {
 
-                    if (CellEval.getCellFlag(cells[row][col]) < 6)
-                        releaseID(CellEval.getID(cells[row][col]));
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < 6)
+                        releaseID(YokelBlockEval.getID(cells[row][col]));
 
-                    if (CellEval.getCellFlag(cells[row][col]) != 6)
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) != 6)
                         cells[row][col] = 7;
 
                     if (++cellsDefused == intensity)
@@ -1112,10 +371,10 @@ public class BoardEvaluator implements IDataIO
             }
         }
 
-        updateBoard();
+        //updateBoard();
 
         for (int i = cellsDefused; i < intensity; i++) {
-            pushCellToBottomOfBoard(CellEval.setPowerFlag(3, 3));
+            pushCellToBottomOfBoard(YokelBlockEval.setPowerFlag(3, 3));
         }
     }
 
@@ -1128,7 +387,7 @@ public class BoardEvaluator implements IDataIO
         // Loop through the board and tally up count of cells
         for (int row = 0; row < 16; row++) {
             for (int col = 0; col < 6; col++) {
-                int value = CellEval.getCellFlag(cells[row][col]);
+                int value = YokelBlockEval.getCellFlag(cells[row][col]);
 
                 if (value < 6) {
                     countOfPieces[value]++;
@@ -1158,16 +417,148 @@ public class BoardEvaluator implements IDataIO
 
         for (int row = 0; row < 16; row++) {
             for (int col = 0; col < 6; col++) {
-                if (CellEval.getCellFlag(cells[row][col]) == index) {
-                    cells[row][col] = CellEval.addBrokenFlag(cells[row][col]);
+                if (YokelBlockEval.getCellFlag(cells[row][col]) == index) {
+                    cells[row][col] = YokelBlockEval.addBrokenFlag(cells[row][col]);
                     colorRemoved = true;
                 }
             }
         }
 
         if (colorRemoved) {
-            updateBoard();
+            //updateBoard();
             handleBrokenCellDrops();
+        }
+    }
+
+    public void handleBrokenCellDrops() {
+        for (int col = 0; col < 6; col++) {
+            int index = 0;
+
+            for (int row = 0; row < 16; row++) {
+                if (isCellBroken(col, row)) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < 6)
+                        releaseID(YokelBlockEval.getID(cells[row][col]));
+                } else {
+                    cells[index][col] = cells[row][col];
+                    index++;
+                }
+            }
+
+            for (; index < 16; index++)
+                cells[index][col] = 6;
+        }
+        //updateBoard();
+    }
+
+    public void flagPowerBlockCells() {
+        for (int row = 0; row < 16; row++) {
+            for (int col = 0; col < 6; col++) {
+                if (YokelBlockEval.hasPowerBlockFlag(cells[row][col])) {
+                    cells[row][col] = YokelBlockEval.addBrokenFlag(cells[row][col]);
+                }
+            }
+        }
+        //updateBoard();
+    }
+
+    public void flagBoardMatches() {
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 6; j++)
+                flagCellForMatches(j, i);
+        }
+    }
+
+    void flagCellForMatches(int column, int row) {
+        if (getCell(column, row) < 6) {
+            flagCellForMatches(column, row, -1, 1);
+            flagCellForMatches(column, row, 0, 1);
+            flagCellForMatches(column, row, 1, 1);
+            flagCellForMatches(column, row, 1, 0);
+        }
+    }
+
+    void flagCellForMatches(int x, int y, int _x, int _y) {
+        int cell = getCell(x, y);
+
+        int count;
+        for (count = 1;
+             (isCellInBoard(x + count * _x, y + count * _y)
+                     && getCell(x + count * _x, y + count * _y) == cell
+                     && !YokelBlockEval.hasPowerBlockFlag(cells[y + count * _y][x + count * _x]));
+             count++) {
+            /* empty */
+        }
+
+        if (count >= 3) {
+            for (int i = 0; i < count; i++) {
+                int copy = cells[y + i * _y][x + i * _x];
+                copy = YokelBlockEval.addBrokenFlag(copy);
+                cells[y + i * _y][x + i * _x] = copy;
+            }
+        }
+    }
+
+    public void handlePower(int i) {
+        if (YokelBlockEval.getPowerFlag(i) == 0) {
+            switch (i) {
+                case 1024:
+                    removeAllPowersFromBoard();
+                    break;
+                case 1026:
+                    removeAllStonesFromBoard();
+                    break;
+                default:
+                    System.out.println("Assertion failure: invalid rare attack " + i);
+                    break;
+            }
+        } else {
+            boolean isOffensive = YokelBlockEval.isOffensive(i);
+            int level = YokelBlockEval.getPowerLevel(i);
+
+            switch (YokelBlockEval.getCellFlag(i)) {
+                case 0:
+                    if (isOffensive) {
+                        addRow(1);
+                    } else {
+                        removeRow(1);
+                    }
+
+                    break;
+                case 1:
+                    if (isOffensive) {
+                        dither(2 * Math.min(level, 3));
+                    } else {
+                        clump(2 * Math.min(level, 3));
+                    }
+
+                    break;
+                case 2:
+                    if (isOffensive) {
+                        addStone(Math.min(level, 3));
+                    } else {
+                        dropStone(Math.min(level, 3));
+                    }
+
+                    break;
+                case 3:
+                    if (isOffensive) {
+                        defuse(Math.min(level, 3));
+                    } else {
+                        colorBlast();
+                        break;
+                    }
+
+                    break;
+                case 4:
+                    System.out.println
+                            ("Assertion failure: invalid CELL5 board attack " + i);
+                    break;
+                case 5:
+                    removeColorFromBoard();
+                    break;
+                default:
+                    System.out.println("Assertion failure: invalid attack" + i);
+            }
         }
     }
 
@@ -1177,9 +568,9 @@ public class BoardEvaluator implements IDataIO
         int count = 0;
 
         while (powers.length() > 0) {
-            int value = powers.getValueAt(0);
+            int value = powers.pop();
 
-            powers.removeAt(0);
+            //powers.removeAt(0);
 
             int i;
 
@@ -1193,8 +584,8 @@ public class BoardEvaluator implements IDataIO
 
                     cells[0][col] = value;
 
-                    if (hasFullMatchInProximity(col, 0) == false) {
-                        cells[0][col] = CellEval.setIDFlag(value, incrementID());
+                    if (!hasFullMatchInProximity(col, 0)) {
+                        cells[0][col] = YokelBlockEval.setIDFlag(value, incrementID());
                         break;
                     }
 
@@ -1209,7 +600,7 @@ public class BoardEvaluator implements IDataIO
             count = (i + 1) % 6;
         }
 
-        updateBoard();
+        //updateBoard();
     }
 
     void dither(int intensity) {
@@ -1233,7 +624,7 @@ public class BoardEvaluator implements IDataIO
             // Loop through the board
             for (int r = 0; r < 13 && !successfulSwap; r++) {
                 for (int c = 0; c < 6; c++) {
-                    if (getPieceValue(c, r) < 6) {
+                    if (getCell(c, r) < 6) {
                         int swap = cells[r][c];
 
                         // Swap passed cell with another on board
@@ -1241,8 +632,8 @@ public class BoardEvaluator implements IDataIO
                         cells[row][col] = swap;
 
                         // If both no longer have cells nearby, it's success
-                        if (hasMatchingCellInProximity(col, row) == false
-                                && hasMatchingCellInProximity(c, r) == false) {
+                        if (!hasMatchingCellInProximity(col, row)
+                                && !hasMatchingCellInProximity(c, r)) {
                             successfulSwap = true;
                             break;
                         }
@@ -1256,7 +647,7 @@ public class BoardEvaluator implements IDataIO
             }
         }
 
-        updateBoard();
+        //updateBoard();
         return successfulSwap;
     }
 
@@ -1265,16 +656,16 @@ public class BoardEvaluator implements IDataIO
         // start from the top and work way down
         for (int row = 12; row >= 0; row--) {
             for (int col = 0; col < 6; col++) {
-                if (getPieceValue(col, row) < 6
+                if (getCell(col, row) < 6
                         // If there's not a matching cell nearby
-                        && hasMatchingCellInProximity(col, row) == false) {
+                        && !hasMatchingCellInProximity(col, row)) {
 
                     boolean successfulSwap = false;
 
                     // Start from the bottom and work up
                     for (int y = 0; y < 13 && !successfulSwap; y++) {
                         for (int x = 0; x < 6; x++) {
-                            if (getPieceValue(x, y) < 6) {
+                            if (getCell(x, y) < 6) {
                                 int copy = cells[y][x];
 
                                 // swap the two cells
@@ -1284,8 +675,8 @@ public class BoardEvaluator implements IDataIO
                                 // If one of the cells now has a matching cell nearby
                                 if ((hasMatchingCellInProximity(col, row) || hasMatchingCellInProximity(x, y))
                                         // and not a full match, since that would be too significant of a change
-                                        && hasFullMatchInProximity(col, row) == false
-                                        && hasFullMatchInProximity(x, y) == false) {
+                                        && !hasFullMatchInProximity(col, row)
+                                        && !hasFullMatchInProximity(x, y)) {
                                     // the swap is then successful then break and add to changed pieces
                                     successfulSwap = true;
                                     break;
@@ -1299,7 +690,7 @@ public class BoardEvaluator implements IDataIO
                         }
                     }
 
-                    updateBoard();
+                    //updateBoard();
 
                     if (successfulSwap && ++swapCount == numberOfCellsToChange)
                         return;
@@ -1326,7 +717,7 @@ public class BoardEvaluator implements IDataIO
         int value = cellHashes[id];
 
         for (int col = 0; col < 6; col++) {
-            if (cellMatches[(cellIndices[id] + value * col) % 6] == false) {
+            if (!cellMatches[(cellIndices[id] + value * col) % 6]) {
                 return (cellIndices[id] + value * col) % 6;
             }
         }
@@ -1338,7 +729,7 @@ public class BoardEvaluator implements IDataIO
     //int[] rowS = {  0,  1, 1, 1, 0, -1, -1, -1 };
 
     boolean hasMatchingCellInProximity(int col, int row) {
-        int value = getPieceValue(col, row);
+        int value = getCell(col, row);
 
         if (value >= 6) return false;
 
@@ -1351,7 +742,7 @@ public class BoardEvaluator implements IDataIO
     }
 
     boolean hasFullMatchInProximity(int x, int y) {
-        int value = getPieceValue(x, y);
+        int value = getCell(x, y);
 
         if (value < 6) {
             // x = 2, y = 4
@@ -1383,31 +774,17 @@ public class BoardEvaluator implements IDataIO
         return false;
     }
 
-    public int getSafeCell(int col, int row) {
-        if (isCellInBoard(col, row) == false)
-            return 6;
-
-        int value = getPieceValue(col, row);
-
-        if (value >= 6) {
-            value = 6;
-        }
-
-        return value;
-    }
-
     void removeAllPowersFromBoard() {
-        for (int row = 0; row < 13; row++) {
-            for (int col = 0; col < 6; col++) {
+        for (int row = 0; row < MAX_ROWS - 3; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
                 int value = cells[row][col];
 
-                if (CellEval.getPowerFlag(value) != 0) {
-                    cells[row][col] = CellEval.setPowerFlag(value, 0);
+                if (YokelBlockEval.getPowerFlag(value) != 0) {
+                    cells[row][col] = YokelBlockEval.setPowerFlag(value, 0);
                 }
             }
         }
-
-        updateBoard();
+        //updateBoard();
     }
 
     void removeAllStonesFromBoard() {
@@ -1415,7 +792,7 @@ public class BoardEvaluator implements IDataIO
             int row = 0;
 
             for (int y = 0; y < 16; y++) {
-                if (CellEval.getCellFlag(cells[y][x]) != 7) {
+                if (YokelBlockEval.getCellFlag(cells[y][x]) != 7) {
                     cells[row][x] = cells[y][x];
                     row++;
                 }
@@ -1424,7 +801,7 @@ public class BoardEvaluator implements IDataIO
             for (; row < 16; row++)
                 cells[row][x] = 6;
         }
-        updateBoard();
+        //updateBoard();
     }
 
     int getBoardMakeupHash() {
@@ -1432,12 +809,593 @@ public class BoardEvaluator implements IDataIO
 
         for (int row = 0; row < 13; row++) {
             for (int col = 0; col < 6; col++) {
-                num += CellEval.removePartnerBreakFlag(cells[row][col]) * (row * 6 + col);
+                num += YokelBlockEval.removePartnerBreakFlag(cells[row][col]) * (row * 6 + col);
             }
         }
 
         return num;
     }
+
+    public int getColumnFill(int column) {
+        int row;
+        for (row = 16; row > 0; row--) {
+            if (getCell(column, row - 1) != 6)
+                break;
+        }
+        return row;
+    }
+
+    public boolean isCellFree(int column, int row) {
+
+        if (row < 0 || row > 13)
+            return false;
+
+        if (row == 0)
+            return true;
+
+        if (getCell(column, row - 1) == 6)
+            return false;
+
+        return true;
+    }
+
+    /*
+    public int getColumnWithPossiblePieceMatch(GameBoardBlock piece) {
+        shuffleColumnIndices();
+
+        for (int i = 0; i < 6; i++) {
+            int x = randomColumnIndices[i];
+            int y = getColumnFill(x);
+
+            if (y < 12) {
+                for (int j = 0; j < 3; j++) {
+                    cells[y][x] = piece.getValueAt(j % 3);
+                    cells[y + 1][x] = piece.getValueAt((1 + j) % 3);
+                    cells[y + 2][x] = piece.getValueAt((2 + j) % 3);
+
+                    boolean hasFullMatch =
+                            (hasFullMatchInProximity(x, y)
+                                    || hasFullMatchInProximity(x, y + 1)
+                                    || hasFullMatchInProximity(x, y + 2));
+
+                    cells[y][x] = 6;
+                    cells[y + 1][x] = 6;
+                    cells[y + 2][x] = 6;
+
+                    //updateBoard();
+
+                    if (hasFullMatch)
+                        return j << 8 | x;
+                }
+            }
+        }
+
+        int column = getBoardMakeupHash() % 6;
+
+        for (int col = 0; col < 6; col++) {
+            if (getColumnFill(col) < getColumnFill(column)) {
+                column = col;
+            }
+        }
+
+        return column;
+    }*/
+
+    public int getColumnToPlaceYahooCell(int value) {
+        // pick "random" column to start
+        int x = getBoardMakeupHash() % 6;
+
+        // loop through columns
+        for (int i = 0; i < 6; i++) {
+            // get the height of the column
+            int y = getColumnFill(x);
+
+            // if the height fits in visible rows
+            if (y < 12) {
+                // put the pending piece in that spot
+                cells[y][x] = value;
+
+                // check for a near match
+                boolean match = hasMatchingCellInProximity(x, y);
+
+                // reset the cell
+                cells[y][x] = 6;
+
+                // if there is no match, return the column
+                if (!match)
+                    return x;
+            }
+
+            // move to next column wrapped around column count
+            x = (x + 1) % 6;
+        }
+
+        // If unable to find a column without piece like this nearby,
+        // get less picky and only ensure that the piece won't make a break
+
+        // loop through columns again
+        for (int i = 0; i < 6; i++) {
+            // get height of column
+            int y = getColumnFill(x);
+
+            if (y < 12) {
+                cells[y][x] = value;
+                boolean bool = hasFullMatchInProximity(x, y);
+                cells[y][x] = 6;
+
+                if (!bool)
+                    return x;
+            }
+
+            x = (x + 1) % 6;
+        }
+
+        return -1;
+    }
+
+    int getYahooDuration() {
+        int duration = 0;
+        int horizontal = 2;
+        int vertical = 4;
+        int diagonal = 3;
+
+        for (int row = 0; row < 13; row++) {
+            if (checkForNonVerticalYahoo(row, 0)) {
+                duration += horizontal;
+
+                for (int column = 0; column < 6; column++) {
+                    cells[row][column] = YokelBlockEval.addBrokenFlag(cells[row][column]);
+                }
+            }
+        }
+
+        for (int column = 0; column < 6; column++) {
+            for (int row = 0; row < 10; row++) {
+                if (YokelBlockEval.getCellFlag(cells[row][column]) == 5) {
+                    if (YokelBlockEval.getCellFlag(cells[row + 1][column]) == 4) {
+                        if (YokelBlockEval.getCellFlag(cells[row + 2][column]) != 3) {
+                            continue;
+                        }
+                    } else if (YokelBlockEval.getCellFlag(cells[row + 1][column]) != 3
+                            || YokelBlockEval.getCellFlag(cells[row + 2][column]) != 4) {
+                        continue;
+                    }
+
+                    if (YokelBlockEval.getCellFlag(cells[row + 3][column]) == 2
+                            && YokelBlockEval.getCellFlag(cells[row + 4][column]) == 1
+                            && YokelBlockEval.getCellFlag(cells[row + 5][column]) == 0) {
+
+                        duration += vertical;
+
+                        for (int i = 0; i < 6; i++) {
+                            cells[row + i][column] = YokelBlockEval.addBrokenFlag(cells[row + i][column]);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int row = 0; row < 8; row++) {
+            if (checkForNonVerticalYahoo(row, 1)) {
+                duration += diagonal;
+
+                for (int col = 0; col < 6; col++) {
+                    cells[row + col][col] = YokelBlockEval.addBrokenFlag(cells[row + col][col]);
+                }
+            }
+        }
+
+        for (int row = 5; row < 13; row++) {
+            if (checkForNonVerticalYahoo(row, -1)) {
+                duration += diagonal;
+
+                for (int col = 0; col < 6; col++) {
+                    cells[row - col][col] = YokelBlockEval.addBrokenFlag(cells[row - col][col]);
+                }
+            }
+        }
+
+        //updateBoard();
+        return duration;
+    }
+/*
+    public void placeBlockAt(GameBoardBlock block, int x, int y) {
+        int index = block.getIndex();
+
+        int v0 = block.getValueAt(index % 3);
+        v0 = YokelBlockEval.setIDFlag(v0, incrementID());
+
+        int v1 = block.getValueAt((1 + index) % 3);
+        v1 = YokelBlockEval.setIDFlag(v1, incrementID());
+        int v2 = block.getValueAt((2 + index) % 3);
+        v2 = YokelBlockEval.setIDFlag(v2, incrementID());
+        if (YokelBlockEval.getCellFlag(cells[y][x]) != 6) {
+            Thread.dumpStack();
+            System.out.println("Assertion failure: grid at " + x + "," + y
+                    + " isn't empty for piece placement");
+        }
+        if (YokelBlockEval.getCellFlag(cells[y + 1][x]) != 6) {
+            Thread.dumpStack();
+            System.out.println("Assertion failure: grid at " + x + "," + y
+                    + " isn't empty for piece placement");
+        }
+        if (YokelBlockEval.getCellFlag(cells[y + 2][x]) != 6) {
+            Thread.dumpStack();
+            System.out.println("Assertion failure: grid at " + x + "," + y
+                    + " isn't empty for piece placement");
+        }
+        cells[y][x] = v0;
+        cells[y + 1][x] = v1;
+        cells[y + 2][x] = v2;
+
+        //updateBoard();
+    }*/
+
+    public void handlePlacedPowerBlock(int type) {
+        for (int y = 0; y < 16; y++) {
+            for (int x = 0; x < 6; x++) {
+                if (YokelBlockEval.hasPowerBlockFlag(cells[y][x])) {
+                    if (isCellInBoard(x - 1, y - 1))
+                        applyPowerBlockAt(type, x - 1, y - 1);
+                    if (isCellInBoard(x, y - 1))
+                        applyPowerBlockAt(type, x, y - 1);
+                    if (isCellInBoard(x + 1, y - 1))
+                        applyPowerBlockAt(type, x + 1, y - 1);
+                    if (isCellInBoard(x - 1, y))
+                        applyPowerBlockAt(type, x - 1, y);
+                    if (isCellInBoard(x, y))
+                        applyPowerBlockAt(type, x, y);
+                    if (isCellInBoard(x + 1, y))
+                        applyPowerBlockAt(type, x + 1, y);
+                    if (isCellInBoard(x - 1, y + 1))
+                        applyPowerBlockAt(type, x - 1, y + 1);
+                    if (isCellInBoard(x, y + 1))
+                        applyPowerBlockAt(type, x, y + 1);
+                    if (isCellInBoard(x + 1, y + 1))
+                        applyPowerBlockAt(type, x + 1, y + 1);
+                }
+            }
+        }
+    }
+
+    void applyPowerBlockAt(int value, int col, int row) {
+        if (!YokelBlockEval.hasPowerBlockFlag(value)) {
+            System.out.println("Assertion failure:  cell isn't weird " + value);
+        } else if (YokelBlockEval.getCellFlag(value) != 4) {
+            System.out
+                    .println("Assertion failure:  cell isn't weird type " + value);
+        } else if (!YokelBlockEval.hasPowerBlockFlag(cells[row][col])) {
+            boolean isAttack = YokelBlockEval.isOffensive(value);
+
+            if (isAttack) {
+                if (YokelBlockEval.getCellFlag(cells[row][col]) < 6) {
+                    releaseID(YokelBlockEval.getID(cells[row][col]));
+                }
+
+                if (YokelBlockEval.getCellFlag(cells[row][col]) != 6) {
+                    cells[row][col] = 7;
+                }
+            } else if (YokelBlockEval.getCellFlag(cells[row][col]) < 6)
+                cells[row][col] = YokelBlockEval.addArtificialFlag(YokelBlockEval.setValueFlag(cells[row][col], 4));
+
+            //updateBoard();
+        }
+    }
+
+    public void setValueAt(int value, int column, int row) {
+        if (YokelBlockEval.getCellFlag(cells[row][column]) != 6)
+            System.out.println("Assertion failure: grid at " + column + ","
+                    + row + " isn't empty for cell placement");
+        value = YokelBlockEval.setIDFlag(value, incrementID());
+        cells[row][column] = value;
+        //updateBoard();
+    }
+
+    public boolean hasPlayerDied() {
+        for (int row = 13; row < 16; row++) {
+            for (int col = 0; col < 6; col++) {
+                if (getCell(col, row) != 6)
+                    return true;
+            }
+        }
+
+        if (getCell(2, 12) != 6)
+            return true;
+
+        return false;
+    }
+
+    public int getBrokenCellCount() {
+        int count = 0;
+
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 6; j++) {
+                if (YokelBlockEval.hasBrokenFlag(cells[i][j]))
+                    count++;
+            }
+        }
+
+        return count;
+    }
+
+    /*
+    public Vector<Cell> getBrokenCells() {
+        Vector<Cell> vector = new Vector<Cell>();
+
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 6; j++) {
+                if (CellEval.hasBrokenFlag(cells[i][j]))
+                    vector.addElement(new Cell(j, i));
+            }
+        }
+        return vector;
+    }*/
+
+    public ByteStack getBrokenByPartnerCellIDs() {
+        ByteStack stack = new ByteStack();
+
+        for (int row = 0; row < 16; row++) {
+            for (int col = 0; col < 6; col++) {
+                if (YokelBlockEval.hasPartnerBreakFlag(cells[row][col])) {
+                    stack.push(YokelBlockEval.getID(cells[row][col]));
+                }
+            }
+        }
+
+        return stack;
+    }
+
+    public void flagBrokenCells(ByteStack stack) {
+        int index = 0;
+
+        while (index < stack.length()) {
+            int count = 0;
+
+            for (int row = 0; row < 16; row++) {
+                for (int col = 0; col < 6; col++) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < 6) {
+                        int id = YokelBlockEval.getID(cells[row][col]);
+
+                        if (stack.getValueAt(index) == id) {
+                            count++;
+                        }
+                    }
+                }
+            }
+
+            switch (count) {
+                default:
+                    System.out.println("fucked up, found " + count
+                            + " instances of id " + stack.getValueAt(index));
+                    /* fall through */
+                case 0:
+                case 1:
+                    index++;
+            }
+        }
+
+        for (int i = 0; i < stack.length(); i++) {
+            for (int row = 0; row < 16; row++) {
+                for (int col = 0; col < 6; col++) {
+                    if (YokelBlockEval.getCellFlag(cells[row][col]) < 6
+                            && stack.getValueAt(i) == YokelBlockEval.getID(cells[row][col])) {
+
+                        cells[row][col] = YokelBlockEval.addBrokenFlag(cells[row][col]);
+                    }
+                }
+            }
+        }
+
+        //updateBoard();
+    }
+/*
+    public Vector getCellsToBeDropped() {
+        Vector<CellMove> vector = new Vector<CellMove>();
+
+        for (int i = 0; i < targetRows.length; i++) {
+            targetRows[i] = 0;
+        }
+
+        for (int y = 0; y < 16; y++) {
+            for (int x = 0; x < 6; x++) {
+                // The imporant thing to note is that the targetRow will not get
+                // incremented when a cell is to be broken.
+                if (isCellBroken(x, y) == false) {
+                    if (targetRows[x] != y
+                            && getPieceValue(x, y) != 6) {
+
+                        vector.addElement(new CellMove(x, y, targetRows[x]));
+                    }
+
+                    targetRows[x]++;
+                }
+            }
+        }
+
+        return vector;
+    }*/
+
+    public void checkBoardForPartnerBreaks(YokelGameBoard partner, boolean isPartnerOnRight) {
+        for (int row = 0; row < 16; row++) {
+            for (int col = 0; col < 6; col++) {
+                checkCellForPartnerBreak(partner, isPartnerOnRight, col, row);
+            }
+        }
+    }
+
+    void checkCellForPartnerBreak(YokelGameBoard board, boolean isPartnerOnRight, int col, int row) {
+        //boolean bool_53_ = true;
+        int colOffset;
+
+        if (isPartnerOnRight)
+            colOffset = 1;
+        else
+            colOffset = -1;
+
+        if (getCell(col, row) < 6) {
+            checkCellForNonVerticalPartnerBreaks(board, col, row, colOffset, -1);
+            checkCellForNonVerticalPartnerBreaks(board, col, row, colOffset, 0);
+            checkCellForNonVerticalPartnerBreaks(board, col, row, colOffset, 1);
+        }
+    }
+
+    void checkCellForNonVerticalPartnerBreaks(YokelGameBoard partner, int col, int row, int _x, int _y) {
+        int value = getCell(col, row);
+
+        int matchCount;
+
+        // Tally up matches on this board
+        for (matchCount = 1;
+             (isCellInBoard(col + matchCount * _x, row + matchCount * _y)
+                     && getCell(col + matchCount * _x, row + matchCount * _y) == value
+                     && !YokelBlockEval.hasPowerBlockFlag(cells[row + matchCount * _y][col + matchCount * _x]));
+             matchCount++) {
+            /* empty */
+        }
+
+        // If we're moving to partner side
+        if (!isCellInBoard(col + matchCount * _x, row + matchCount * _y)) {
+            int partnerMatchCount = 0;
+            int pX;
+
+            if (_x > 0)
+                pX = -(matchCount * _x);
+            else
+                pX = 5 - matchCount * _x;
+
+            for (/**/;
+                     (isCellInBoard(pX + matchCount * _x, row + matchCount * _y)
+                             && partner.getCell(pX + matchCount * _x, row + matchCount * _y) == value
+                             && !YokelBlockEval.hasPowerBlockFlag(partner.cells[row + matchCount * _y][pX + matchCount * _x]));
+                     matchCount++) {
+                partnerMatchCount++;
+            }
+
+
+            if (partnerMatchCount != 0) {
+                if (matchCount >= 3) {
+                    for (int i = 0; i < matchCount; i++) {
+                        int y = row + i * _y;
+                        int x = col + i * _x;
+
+                        if (isCellInBoard(x, y)) {
+                            int copy = cells[y][x];
+                            copy = YokelBlockEval.addPartnerBreakFlag(copy);
+                            cells[y][x] = copy;
+                        } else {
+                            x = pX + i * _x;
+                            int copy = partner.cells[y][x];
+                            copy = YokelBlockEval.addPartnerBreakFlag(copy);
+                            partner.cells[y][x] = copy;
+                        }
+                    }
+                    //updateBoard();
+                }
+            }
+        }
+    }
+
+
+
+    boolean checkForNonVerticalYahoo(int y, int _y) {
+        boolean result = true;
+
+        int row = y;
+
+        if (YokelBlockEval.getCellFlag(cells[row][0]) != 0) {
+            result = false;
+        }
+
+        row += _y;
+
+        if (YokelBlockEval.getCellFlag(cells[row][1]) != 1) {
+            result = false;
+        }
+
+        row += _y;
+
+        if (YokelBlockEval.getCellFlag(cells[row][2]) != 2) {
+            result = false;
+        }
+
+        row += _y;
+
+        if (YokelBlockEval.getCellFlag(cells[row][3]) == 3) {
+            if (YokelBlockEval.getCellFlag(cells[row + _y][4]) != 4)
+                result = false;
+        } else {
+            if (YokelBlockEval.getCellFlag(cells[row][3]) != 4)
+                result = false;
+            if (YokelBlockEval.getCellFlag(cells[row + _y][4]) != 3)
+                result = false;
+        }
+        row += 2 * _y;
+        if (YokelBlockEval.getCellFlag(cells[row][5]) != 5)
+            result = false;
+
+        return result;
+    }
+}
+
+
+/*
+
+
+public class BoardEvaluator implements IDataIO
+{
+
+    Board brd;
+
+
+    public void setBoard(Board board) {
+        brd = board;
+    }
+
+    public void readIn(DataInputStream datainputstream) throws IOException {
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 6; j++)
+                cells[i][j] = datainputstream.readInt();
+        }
+        for (int i = 0; i < ids.length; i++) {
+            byte byteVal = datainputstream.readByte();
+            switch (byteVal) {
+                case 0:
+                    ids[i] = false;
+                    break;
+                case 1:
+                    ids[i] = true;
+                    break;
+                default:
+                    throw new IOException();
+            }
+        }
+        idIndex = datainputstream.readInt();
+        updateBoard();
+    }
+
+    public void printOut(DataOutputStream dataoutputstream) throws IOException {
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 6; j++)
+                dataoutputstream.writeInt(cells[i][j]);
+        }
+        for (int i = 0; i < ids.length; i++)
+            dataoutputstream.writeByte(ids[i] ? 1 : 0);
+        dataoutputstream.writeInt(idIndex);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void updateBoard() {
         if ( brd != null )

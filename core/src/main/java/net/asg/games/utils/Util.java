@@ -144,11 +144,11 @@ public class Util {
     }
 
     public static <T> boolean isArrayEmpty(Array<T> collection){
-        return collection == null || collection.size < 1;
+        return collection != null && collection.size > 0;
     }
 
     public static boolean isStaticArrayEmpty(Object[] array){
-        return array == null || array.length < 1;
+        return array != null && array.length > 0;
     }
 
     public static <T> String[] toStringArray(Array<T> collection) {
@@ -164,7 +164,7 @@ public class Util {
             }
             return c2;
         }
-        return null;
+        return new String[1];
     }
 
     /**
@@ -175,7 +175,7 @@ public class Util {
      */
     @NotNull
     public static <T> Array.ArrayIterable<T> toIterable(Array<T> array){
-        if(!isArrayEmpty(array)){
+        if(isArrayEmpty(array)){
             return new Array.ArrayIterable<>(array);
         }
         return new Array.ArrayIterable<>(GdxArrays.newArray());

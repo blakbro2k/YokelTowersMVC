@@ -2,14 +2,14 @@ package net.asg.games.utils;
 
 import com.badlogic.gdx.utils.Queue;
 
-//import net.asg.games.yokel.core.enums.YokelBlockType;
-
 import net.asg.games.utils.enums.YokelBlockType;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
+
+//import net.asg.games.yokel.core.enums.YokelBlockType;
 
 /**
  * Created by Blakbro2k on 12/29/2017.
@@ -44,13 +44,13 @@ public class RandomUtil {
         return randomEnum.random(DEFENSE_SECTION);
     }
 
-    public static Queue<YokelBlockType> getRandomBlockArray(){
+    public static Queue<YokelBlockType> getRandomBlockArray() {
         return getRandomBlockArray(1024);
     }
 
-    private static Queue<YokelBlockType> getRandomBlockArray(int maxIndex){
+    private static Queue<YokelBlockType> getRandomBlockArray(int maxIndex) {
         Queue<YokelBlockType> ret = new Queue<YokelBlockType>(maxIndex);
-        for(int i = 0; i < maxIndex; i++){
+        for (int i = 0; i < maxIndex; i++) {
             ret.addFirst(getRandomNormalYokelBlockType());
         }
         return ret;
@@ -68,7 +68,7 @@ public class RandomUtil {
             values = token.getEnumConstants();
         }
 
-         /**
+        /**
          * @return a random value for the given enums
          */
         public E random() {
@@ -83,7 +83,7 @@ public class RandomUtil {
         }
     }
 
-    public final class RandomNumber {
+    public static final class RandomNumber {
         private long seed;
         //private boolean c = false;
         //private static final long f = (1L << 48) - 1L;
@@ -124,8 +124,7 @@ public class RandomUtil {
         }
     }
 
-    public class RandomNumberArray
-    {
+    public static class RandomNumberArray {
         int[] randomNumbers;
 
         public RandomNumberArray(int byteLength, long seed, int maxValue) {
