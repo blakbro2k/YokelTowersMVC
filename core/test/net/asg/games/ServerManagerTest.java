@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.websocket.WebSocket;
 
+import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.managers.ServerManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
@@ -270,9 +271,56 @@ public class ServerManagerTest {
 
     @Test
     public void tempTester() throws Exception {
-System.out.println(daemon.testPlayersToJSON());
-//throw new Exception("Whut?");
+        System.out.println(daemon.testPlayersToJSON());
+        //throw new Exception("Whut?");
+        GameRunner testGame = new GameRunner(daemon);
+        testGame.setRunning(true);
+        testGame.setRunning(false);
+
     }
 
+    private class GameRunner implements Runnable{
+        ServerManager serverManager;
+        GameManager gameManager;
+
+        public GameRunner(ServerManager manager){
+            this.serverManager = manager;
+            this.gameManager = new GameManager();
+        }
+        boolean running = true;
+
+        public void setRunning(boolean b){
+            this.running = b;
+        }
+
+        public void run() {
+            /**
+             * while(true)
+             *     check for client commands
+             *     sanity check client commands
+             *     move all entities
+             *     resolve collisions
+             *     sanity check world data
+             *     send updates about the game to the clients
+             *     handle client disconnects
+             * end while
+             */
+            double ns = 1000000000.0 / 60.0;
+            double delta = 0;
+
+            long lastTime = System.nanoTime();
+            long timer = System.currentTimeMillis();
+
+
+            while(running){
+                long now = System.nanoTime();
+                delta += (now - lastTime) / ns;
+
+                while(running){
+
+                }
+            }
+        }
+    }
 
 }

@@ -45,6 +45,9 @@ public class ServerManager {
     private OrderedMap<String, YokelPlayer> registeredPlayers;
     //<"player id", player object>
     private OrderedMap<String, YokelPlayer> testPlayers;
+    //<"room id", gameManager>
+    private OrderedMap<String, GameRunner> games;
+
     private int maxNumberOfRooms;
     private int timeOut;
     private int port = 8000;
