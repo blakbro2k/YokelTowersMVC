@@ -17,6 +17,7 @@ public class YokelRoom extends YokelObject {
     //private Chat chatRoom;
     private Array<YokelPlayer> players;
     private OrderedMap<Integer, YokelTable> tables;
+    private int curTableNum = 0;
 
     //Empty Contructor required for Json.Serializable
     public YokelRoom(){}
@@ -54,12 +55,13 @@ public class YokelRoom extends YokelObject {
             players.removeValue(player, false);
     }
 
-    public void addTable(int num){
-        tables.put(num, new YokelTable(num));
-    }
-
     public void addTable(int num, OrderedMap<String, Object> attributes){
-        tables.put(num, new YokelTable(num, attributes));
+        //TODO: Make table counts self contained
+        if(attributes == null){
+            tables.put(num, new YokelTable(num, attributes));
+        } else {
+            tables.put(num, new YokelTable(num));
+        }
     }
 
     public YokelTable getTable(int t){

@@ -686,7 +686,7 @@ public class ServerManager {
 
                     if(room != null){
                         //TODO: generate next table Number
-                        room.addTable(1, arguments);
+                        room.addTable(arguments);
                         ret[0] = "true";
                     }
                 }

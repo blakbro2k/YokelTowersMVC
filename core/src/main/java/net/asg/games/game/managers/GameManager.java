@@ -19,7 +19,7 @@ public class GameManager {
 
     @SuppressWarnings("unchecked")
     private void loadGameData() {}
-    public void update(){}
+    public void update(){ System.out.println("Updated Game State");}
     public void handleMoveRight(){}
     public void handleMoveLeft(){}
     public void handleSetPiece(){}

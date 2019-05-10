@@ -274,7 +274,7 @@ public class ServerManagerTest {
         System.out.println(daemon.testPlayersToJSON());
         //throw new Exception("Whut?");
         GameRunner testGame = new GameRunner(daemon);
-        testGame.setRunning(true);
+        //testGame.start();
         testGame.setRunning(false);
 
     }
@@ -282,15 +282,20 @@ public class ServerManagerTest {
     private class GameRunner implements Runnable{
         ServerManager serverManager;
         GameManager gameManager;
+        boolean running;
+
 
         public GameRunner(ServerManager manager){
             this.serverManager = manager;
             this.gameManager = new GameManager();
         }
-        boolean running = true;
 
         public void setRunning(boolean b){
             this.running = b;
+        }
+
+        private void tick(){
+            gameManager.update();
         }
 
         public void run() {
@@ -310,14 +315,16 @@ public class ServerManagerTest {
 
             long lastTime = System.nanoTime();
             long timer = System.currentTimeMillis();
-
+            setRunning(true);
 
             while(running){
                 long now = System.nanoTime();
                 delta += (now - lastTime) / ns;
+                lastTime = now;
 
-                while(running){
-
+                while(delta >= 1){
+                    tick();
+                    delta--;
                 }
             }
         }

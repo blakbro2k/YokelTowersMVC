@@ -117,9 +117,10 @@ public class YokelTowersObjectsTest {
         room = new YokelRoom("Effel Tower");
         Assert.assertNotNull(room.getRoomId());
         Assert.assertEquals(GdxMaps.newObjectMap(), room.getAllTables());
-        room.addTable(1);
+        room.addTable(1, null);
         Assert.assertEquals(1, room.getAllTables().size);
-        room.addTable(11);
+        room.addTable(11, null
+        );
         Assert.assertEquals(2, room.getAllTables().size);
         Assert.assertNull(room.getTable(2));
         Assert.assertNotNull(room.getTable(1));
