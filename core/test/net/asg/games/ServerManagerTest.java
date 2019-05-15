@@ -273,7 +273,9 @@ public class ServerManagerTest {
     public void tempTester() throws Exception {
         System.out.println(daemon.testPlayersToJSON());
         //throw new Exception("Whut?");
-        GameRunner testGame = new GameRunner(daemon);
+        YokelRoom room = new YokelRoom();
+
+        GameRunner testGame = new GameRunner(daemon, room);
         //testGame.start();
         testGame.setRunning(false);
 
@@ -283,11 +285,13 @@ public class ServerManagerTest {
         ServerManager serverManager;
         GameManager gameManager;
         boolean running;
+        float tickRate;
 
 
-        public GameRunner(ServerManager manager){
+        public GameRunner(ServerManager manager, YokelRoom room){
             this.serverManager = manager;
-            this.gameManager = new GameManager();
+            this.gameManager = new GameManager(room);
+            tickRate = daemon.getTickRate();
         }
 
         public void setRunning(boolean b){
@@ -322,7 +326,7 @@ public class ServerManagerTest {
                 delta += (now - lastTime) / ns;
                 lastTime = now;
 
-                while(delta >= 1){
+                while(delta >= tickRate){
                     tick();
                     delta--;
                 }

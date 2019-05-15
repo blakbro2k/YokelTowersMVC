@@ -35,7 +35,7 @@
                 <label row="true">Drop\t:Down Arrow</label>
                 <label row="true">Cycle Colors\t:R</label>
                 <label row="true">Use Item\t:Space Bar</label>
-                <label row="true">Clock</label>
+                <gameclock id="gameClock" row="true"/>
             </table>
             <table>
                 <label>1</label>

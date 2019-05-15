@@ -11,7 +11,6 @@ import org.apache.commons.lang.StringUtils;
 public class YokelPlayer extends YokelObject {
     private final static int DEFAULT_RATING_NUMBER = 1500;
     private String name;
-    private String playerId;
     private int rating;
     private String logo;
     private String sessionId;
@@ -21,7 +20,7 @@ public class YokelPlayer extends YokelObject {
 
     public YokelPlayer(String name){
         this.name = name;
-        playerId = Util.IDGenerator.getID();
+        setId(Util.IDGenerator.getID());
         rating = DEFAULT_RATING_NUMBER;
     }
 
@@ -50,7 +49,7 @@ public class YokelPlayer extends YokelObject {
     }
 
     public String getPlayerId() {
-        return playerId;
+        return getId();
     }
 
     @Override

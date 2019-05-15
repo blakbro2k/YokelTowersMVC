@@ -39,19 +39,19 @@ public class ServerManager {
     private final static Array<String> PLAYER_NAMES = ImmutableArray.of("Hector","Lenny","Cullen","Kinsley","Tylor","Doug","Spring","Danica","Bekki",
             "Spirit","Harmony","Shelton","Philip","Liana","Joyce","Tucker","Jo","Cora","Philadelphia","Leyton");
 
-    //<"room id", room object>
+    //<"lounge name", room object>
     private OrderedMap<String, YokelLounge> lounges;
     //<"player id", player object>
     private OrderedMap<String, YokelPlayer> registeredPlayers;
     //<"player id", player object>
     private OrderedMap<String, YokelPlayer> testPlayers;
-    //<"room id", gameManager>
+    //<"table name", gameManager>
     private OrderedMap<String, GameRunner> games;
 
     private int maxNumberOfRooms;
     private int timeOut;
     private int port = 8000;
-    private float tickRate = 1000;
+    private float tickRate = 100;
     private boolean isDebug = true;
     private Level logLevel = Level.INFO;
     private StorageInterface storageInterface;
@@ -285,13 +285,13 @@ public class ServerManager {
         return idCounter.get();
     }
 
-    private class GameRunner implements Runnable{
+    private class GameRunner implements Runnable {
         ServerManager serverManager;
         GameManager gameManager;
 
-        public GameRunner(ServerManager manager){
+        public GameRunner(ServerManager manager, YokelRoom room){
             this.serverManager = manager;
-            this.gameManager = new GameManager();
+            this.gameManager = new GameManager(room);
         }
 
         public void run() {
@@ -685,8 +685,8 @@ public class ServerManager {
                     Logger.debug("room={}", room);
 
                     if(room != null){
-                        //TODO: generate next table Number
                         room.addTable(arguments);
+                        //TODO: Add Game Manager + Table to an array
                         ret[0] = "true";
                     }
                 }

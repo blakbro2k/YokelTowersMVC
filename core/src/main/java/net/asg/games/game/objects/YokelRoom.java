@@ -13,7 +13,6 @@ import org.apache.commons.lang.StringUtils;
 
 public class YokelRoom extends YokelObject {
     private String name;
-    private String roomId;
     //private Chat chatRoom;
     private Array<YokelPlayer> players;
     private OrderedMap<Integer, YokelTable> tables;
@@ -28,13 +27,13 @@ public class YokelRoom extends YokelObject {
     }
 
     private void initialize(){
-        roomId = Util.IDGenerator.getID();
+        setId(Util.IDGenerator.getID());
         tables = new OrderedMap<>();
         players = new Array<>();
     }
 
     public String getRoomId() {
-        return roomId;
+        return getId();
     }
 
     public OrderedMap<Integer, YokelTable> getAllTables(){
@@ -55,15 +54,20 @@ public class YokelRoom extends YokelObject {
             players.removeValue(player, false);
     }
 
-    public void addTable(int num, OrderedMap<String, Object> attributes){
+    public void addTable(OrderedMap<String, Object> attributes){
         //TODO: Make table counts self contained
-        if(attributes == null){
+        //TODO: Generate next empty table number
+        int num = getNextTableNumber();
+        if(attributes != null){
             tables.put(num, new YokelTable(num, attributes));
         } else {
             tables.put(num, new YokelTable(num));
         }
     }
 
+    private int getNextTableNumber(){
+        return ++curTableNum;
+    }
     public YokelTable getTable(int t){
         return tables.get(t);
     }

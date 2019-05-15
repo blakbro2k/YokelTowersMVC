@@ -1,5 +1,7 @@
 package net.asg.games.game.objects;
 
+import net.asg.games.utils.Util;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -11,11 +13,14 @@ public class YokelSeat extends YokelObject {
     private YokelPlayer seatedPlayer;
 
     //Empty Contructor required for Json.Serializable
-    public YokelSeat(){}
+    public YokelSeat(){
+        setId(Util.IDGenerator.getID());
+    }
 
     public YokelSeat(int seatNumber){
         if(seatNumber < 1 || seatNumber > 8) throw new IllegalArgumentException("Seat number must be between 1 - 8.");
         this.seatNumber = seatNumber;
+        setId(Util.IDGenerator.getID());
     }
 
     public void sitDown(YokelPlayer player){

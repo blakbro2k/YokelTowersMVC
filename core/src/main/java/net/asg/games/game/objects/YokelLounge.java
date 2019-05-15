@@ -21,6 +21,7 @@ public class YokelLounge extends YokelObject {
     public YokelLounge(String name) {
         if(name == null) throw new IllegalArgumentException("GameLounge name cannot be null.");
         setName(name);
+        setId(Util.IDGenerator.getID());
         this.rooms = new OrderedMap<>();
     }
 

@@ -1,6 +1,7 @@
 package net.asg.games.game.objects;
 
 import net.asg.games.utils.RandomUtil;
+import net.asg.games.utils.Util;
 
 import java.util.Stack;
 
@@ -45,6 +46,7 @@ public class YokelGameBoard extends YokelObject {
     public YokelGameBoard(){
         cells = new int[MAX_ROWS][MAX_COLS];
         ids = new boolean[128];
+        setId(Util.IDGenerator.getID());
         clearBoard();
     }
 

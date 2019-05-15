@@ -10,14 +10,17 @@ import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 
 import net.asg.games.controller.UITestController;
+import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.service.UserInterfaceService;
 
 @Component
 public class GameManager {
     @Inject private UserInterfaceService uiService;
     @Inject private UITestController uiView;
+    YokelRoom room;
 
-    @SuppressWarnings("unchecked")
+    public GameManager(YokelRoom room){this.room = room;}
+
     private void loadGameData() {}
     public void update(){ System.out.println("Updated Game State");}
     public void handleMoveRight(){}

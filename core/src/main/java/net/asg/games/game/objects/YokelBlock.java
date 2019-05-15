@@ -62,7 +62,7 @@ public class YokelBlock extends YokelObject implements Pool.Poolable, Json.Seria
      */
     public YokelBlock(INIT_TYPE initType) {
         blockType = initializeType(initType);
-        isBroken = false;
+        init();
     }
 
     /**
@@ -72,6 +72,11 @@ public class YokelBlock extends YokelObject implements Pool.Poolable, Json.Seria
      */
     public YokelBlock(YokelBlockType type){
         blockType = type;
+        init();
+    }
+
+    private void init(){
+        setId(Util.IDGenerator.getID());
         isBroken = false;
     }
 

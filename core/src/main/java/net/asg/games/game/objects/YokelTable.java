@@ -12,7 +12,6 @@ public class YokelTable extends YokelObject {
 
     static final int MAX_SEATS = 8;
 
-    private String tableId;
     private int tableNumber;
 
     private Array<YokelSeat> seats;
@@ -34,7 +33,7 @@ public class YokelTable extends YokelObject {
 
     private void initialize(int tableNumber, OrderedMap<String, Object> arguments){
         if(tableNumber < 1) throw new IllegalArgumentException("Table number cannot be less than 1.");
-        tableId = Util.IDGenerator.getID();
+        setId(Util.IDGenerator.getID());
         seats = new Array<>();
         this.tableNumber = tableNumber;
 
@@ -68,7 +67,7 @@ public class YokelTable extends YokelObject {
     }
 
     public String getTableId() {
-        return tableId;
+        return getId();
     }
 
     public void setAccessType(ACCESS_TYPE accessType){
