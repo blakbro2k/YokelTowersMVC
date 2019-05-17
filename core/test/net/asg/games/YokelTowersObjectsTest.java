@@ -117,15 +117,14 @@ public class YokelTowersObjectsTest {
         room = new YokelRoom("Effel Tower");
         Assert.assertNotNull(room.getRoomId());
         Assert.assertEquals(GdxMaps.newObjectMap(), room.getAllTables());
-        room.addTable(1, null);
+        room.addTable(null);
         Assert.assertEquals(1, room.getAllTables().size);
-        room.addTable(11, null
-        );
+        room.addTable(null);
         Assert.assertEquals(2, room.getAllTables().size);
-        Assert.assertNull(room.getTable(2));
+        Assert.assertNull(room.getTable(11));
         Assert.assertNotNull(room.getTable(1));
-        Assert.assertNotNull(room.getTable(11));
-        room.removeTable(11);
+        Assert.assertNotNull(room.getTable(2));
+        room.removeTable(2);
         Assert.assertEquals(1, room.getAllTables().size);
         YokelPlayer player1 = new YokelPlayer("blakbro2k");
         YokelPlayer player2 = new YokelPlayer("lholtham");
