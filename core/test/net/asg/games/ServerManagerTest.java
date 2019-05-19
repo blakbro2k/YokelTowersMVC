@@ -9,6 +9,7 @@ import net.asg.games.game.managers.ServerManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
+import net.asg.games.game.objects.YokelTable;
 import net.asg.games.server.serialization.PayloadUtil;
 import net.asg.games.utils.TestingUtils;
 import net.asg.games.utils.Util;
@@ -278,6 +279,7 @@ public class ServerManagerTest {
 
         YokelPlayer player1 = new YokelPlayer("blakbro2k");
         YokelPlayer player2 = new YokelPlayer("lholtham");
+        String roomName = "Eiffel Tower";
 
         System.out.println(Arrays.toString(PayloadUtil.createPlayerRegisterRequest(player1)));
         System.out.println(Arrays.toString(PayloadUtil.createPlayerRegisterRequest(player2)));
@@ -286,16 +288,22 @@ public class ServerManagerTest {
                 buildPayload = new TestingUtils.TestMethod("buildPayload",
                 daemonClass(),
                 new Class[]{String.class, String[].class},
-                new Object[]{ServerRequest.REQUEST_PLAYER_REGISTER +"", PayloadUtil.createPlayerRegisterRequest(player1)},
+                new Object[]{Util.otos(ServerRequest.REQUEST_PLAYER_REGISTER), PayloadUtil.createPlayerRegisterRequest(player1)},
                 daemon,
                 true);
 
         System.out.println(buildPayload.invoke());
-        buildPayload.setParameterValues(ServerRequest.REQUEST_PLAYER_REGISTER +"", PayloadUtil.createPlayerRegisterRequest(player2));
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_PLAYER_REGISTER), PayloadUtil.createPlayerRegisterRequest(player2));
         System.out.println(buildPayload.invoke());
-        buildPayload.setParameterValues(ServerRequest.REQUEST_ROOM_JOIN +"",
-                PayloadUtil.createJoinRoomRequest(player1, YokelLounge.SOCIAL_GROUP, "Eiffel Tower"));
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_ROOM_JOIN),
+                PayloadUtil.createJoinRoomRequest(player1, YokelLounge.SOCIAL_GROUP, roomName));
         //System.out.println(Arrays.toString(PayloadUtil.createJoinRoomRequest(player1, YokelLounge.SOCIAL_GROUP, "Eiffel Tower")));
+        System.out.println(buildPayload.invoke());
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_CREATE_GAME),
+                PayloadUtil.createNewGameRequest(YokelLounge.SOCIAL_GROUP, roomName, YokelTable.ACCESS_TYPE.PUBLIC, false));
+        System.out.println(buildPayload.invoke());
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN),
+                PayloadUtil.createTableJoinRequest(player1, YokelLounge.SOCIAL_GROUP, roomName, 1, 1));
         System.out.println(buildPayload.invoke());
 
         //GameRunner testGame = new GameRunner(daemon, room);

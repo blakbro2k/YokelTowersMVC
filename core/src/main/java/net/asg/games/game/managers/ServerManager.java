@@ -378,7 +378,6 @@ public class ServerManager {
                         responsePayload = tableStandRequest(clientPayload);
                         break;
                     case REQUEST_TABLE_JOIN:
-                        break;
                     case REQUEST_TABLE_SIT:
                         responsePayload = tableSitRequest(clientPayload);
                         break;
@@ -550,14 +549,18 @@ public class ServerManager {
     }
 
     private boolean sitAtTable(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
+        Logger.trace("Enter sitAtTable()");
         if(player != null){
             YokelSeat seat = getSeat(loungeName, roomName, tableNumber, seatNumber);
 
             if(seat != null){
                 seat.sitDown(player);
+                Logger.debug("seat=" + seat);
+                Logger.trace("Enter sitAtTable()=true");
                 return true;
             }
         }
+        Logger.trace("Enter sitAtTable()=false");
         return false;
     }
 
@@ -610,7 +613,7 @@ public class ServerManager {
         YokelPlayer player = getRegisterPlayerFromPayload(clientPayload);
         if(player != null){
             Logger.info("Attempting to register player={}", player.toString());
-            ret[0] = "" + registerPlayer(player);
+            ret[0] = Util.otos(registerPlayer(player));
         }
         Logger.trace("Exit registerPlayerRequest()");
         return ret;
@@ -686,7 +689,7 @@ public class ServerManager {
 
                     if(room != null){
                         room.addTable(arguments);
-                        //TODO: Add Game Manager + Table to an array
+                        Logger.debug("room={}", room);
                         ret[0] = "true";
                     }
                 }
@@ -773,6 +776,7 @@ public class ServerManager {
             int seatNumber = Util.otoi(clientPayload[4]);
 
             YokelPlayer player = getRegisteredPlayer(playerId);
+            Logger.debug("player=" + player);
 
             ret[0] = "" + sitAtTable(player, loungeName, roomName, tableNumber, seatNumber);
         }

@@ -35,9 +35,9 @@ public class YokelTable extends YokelObject {
         if(tableNumber < 1) throw new IllegalArgumentException("Table number cannot be less than 1.");
         setId(Util.IDGenerator.getID());
         seats = new Array<>();
-        this.tableNumber = tableNumber;
 
         setUpSeats();
+        setTableNumber(tableNumber);
         setAccessType(ACCESS_TYPE.PUBLIC);
         setRated(false);
         setSound(true);
@@ -69,6 +69,10 @@ public class YokelTable extends YokelObject {
     public String getTableId() {
         return getId();
     }
+
+    public void setTableNumber(int number){this.tableNumber = number;}
+
+    public int getTableNumber(){ return this.tableNumber;}
 
     public void setAccessType(ACCESS_TYPE accessType){
         this.accessType = accessType;
