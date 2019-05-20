@@ -1,4 +1,4 @@
-package net.asg.games.server.serialization;
+package net.asg.games.utils;
 
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
@@ -9,6 +9,7 @@ import net.asg.games.utils.Util;
 
 public class PayloadUtil {
     private static final String[] EMPTY_ARRAY = {""};
+
     public static String[] createPlayerRegisterRequest(YokelPlayer player){
         if(validatedInputs(player)){
             return new String[]{player.toString()};
@@ -33,6 +34,13 @@ public class PayloadUtil {
     public static String[] createTableJoinRequest(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber){
         if(validatedInputs(player, loungeName, roomName)){
             return new String[]{player.getId(), loungeName, roomName, Util.otos(tableNumber), Util.otos(seatNumber)};
+        }
+        return EMPTY_ARRAY;
+    }
+
+    public static String[] createGameStartRequest(String loungeName, String roomName, int tableNumber){
+        if(validatedInputs(loungeName, roomName)){
+            return new String[]{loungeName, roomName, Util.otos(tableNumber)};
         }
         return EMPTY_ARRAY;
     }

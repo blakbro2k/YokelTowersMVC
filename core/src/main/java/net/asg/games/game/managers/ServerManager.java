@@ -373,6 +373,7 @@ public class ServerManager {
                         responsePayload = createGameRequest(clientPayload);
                         break;
                     case REQUEST_PLAY_GAME:
+                        responsePayload = startGameRequest(clientPayload);
                         break;
                     case REQUEST_TABLE_STAND:
                         responsePayload = tableStandRequest(clientPayload);
@@ -415,7 +416,7 @@ public class ServerManager {
         try{
             Logger.trace("Enter getLounge()");
             validateLounges();
-            Logger.info("Attempting to get {} lounge.",key);
+            Logger.info("Attempting to get {} lounge.", key);
             YokelLounge lounge = null;
 
             if(key != null){
@@ -511,6 +512,9 @@ public class ServerManager {
     }
 
     private YokelTable getTable(String loungeName, String roomName, int tableNumber) throws Exception {
+        Logger.trace("Enter getTable()");
+        Logger.debug("Attempting to get Table(" + tableNumber + ")@" + roomName + " in " + loungeName);
+
         YokelTable table = null;
 
         YokelRoom room = getRoom(loungeName, roomName);
@@ -518,6 +522,7 @@ public class ServerManager {
         if(room != null){
             table = room.getTable(tableNumber);
         }
+        Logger.trace("Exit getTable()");
         return table;
     }
 
@@ -550,18 +555,18 @@ public class ServerManager {
 
     private boolean sitAtTable(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
         Logger.trace("Enter sitAtTable()");
+        boolean success = false;
         if(player != null){
             YokelSeat seat = getSeat(loungeName, roomName, tableNumber, seatNumber);
 
-            if(seat != null){
+            if(seat != null && !seat.isOccupied()){
                 seat.sitDown(player);
                 Logger.debug("seat=" + seat);
-                Logger.trace("Enter sitAtTable()=true");
-                return true;
+                success = true;
             }
         }
-        Logger.trace("Enter sitAtTable()=false");
-        return false;
+        Logger.trace("Exit sitAtTable()=" + success);
+        return success;
     }
 
     private boolean standAtTable(String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
@@ -572,6 +577,21 @@ public class ServerManager {
             return true;
         }
         return false;
+    }
+
+    private boolean startGameAtTable(String loungeName, String roomName, int tableNumber) throws Exception {
+        Logger.trace("Enter startGameAtTable()");
+        YokelTable table = getTable(loungeName, roomName, tableNumber);
+
+        boolean isRunning = false;
+        if(table != null){
+            Logger.info("attempting to start game at " + table.getId() + ":" + table.getTableNumber());
+
+            table.startGame();
+            isRunning = table.isGameRunning();
+        }
+        Logger.trace("Exit startGameAtTable()=" + isRunning);
+        return isRunning;
     }
 
     private boolean registerPlayer(YokelPlayer player){
@@ -644,6 +664,8 @@ public class ServerManager {
     //1 = roomName
     private String[] getRoomRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter getRoomRequest()");
+        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
+
         String[] ret = new String[1];
         if(Util.isValidPayload(clientPayload, 2)){
             String loungeName = clientPayload[0];
@@ -661,6 +683,7 @@ public class ServerManager {
     //3 = isRated
     private String[] createGameRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter createGameRequest()");
+        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
         try{
             String[] ret = new String[1];
             ret[0] = "false";
@@ -707,6 +730,7 @@ public class ServerManager {
     //2 = Room Name
     private String[] joinRoomRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter joinRoomRequest()");
+        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
         String[] ret = new String[1];
         ret[0] = "false";
 
@@ -728,6 +752,7 @@ public class ServerManager {
     //2 = Room Name
     private String[] leaveRoomRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter leaveRoomRequest()");
+        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
         String[] ret = new String[1];
         ret[0] = "false";
 
@@ -748,6 +773,7 @@ public class ServerManager {
     //1 = Room Name
     private String[] getTablesRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter getTablesRequest()");
+        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
 
         if(Util.isValidPayload(clientPayload, 2)){
             String loungeName = clientPayload[0];
@@ -766,6 +792,7 @@ public class ServerManager {
     //4 = Seat Number
     private String[] tableSitRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter tableSitRequest()");
+        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
         String[] ret = new String[1];
 
         if(Util.isValidPayload(clientPayload, 5)){
@@ -790,9 +817,10 @@ public class ServerManager {
     //3 = Seat Number
     private String[] tableStandRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter tableStandRequest()");
+        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
         String[] ret = new String[1];
 
-        if(Util.isValidPayload(clientPayload, 5)){
+        if(Util.isValidPayload(clientPayload, 4)){
             String loungeName = clientPayload[0];
             String roomName = clientPayload[1];
             int tableNumber = Util.otoi(clientPayload[2]);
@@ -801,6 +829,25 @@ public class ServerManager {
             ret[0] = "" + standAtTable(loungeName, roomName, tableNumber, seatNumber);
         }
         Logger.trace("Exit tableStandRequest()");
+        return ret;
+    }
+
+    //0 = GameLounge Name
+    //1 = Room Name
+    //2 = Table Number
+    private String[] startGameRequest(String[] clientPayload) throws Exception {
+        Logger.trace("Enter startGameRequest()");
+        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
+        String[] ret = new String[1];
+
+        if(Util.isValidPayload(clientPayload, 3)){
+            String loungeName = clientPayload[0];
+            String roomName = clientPayload[1];
+            int tableNumber = Util.otoi(clientPayload[2]);
+
+            ret[0] = "" + startGameAtTable(loungeName, roomName, tableNumber);
+        }
+        Logger.trace("Exit startGameRequest()");
         return ret;
     }
 
