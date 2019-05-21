@@ -55,9 +55,6 @@ public class YokelRoom extends YokelObject {
     }
 
     public void addTable(OrderedMap<String, Object> attributes){
-
-        //TODO: Make table counts self contained
-        //TODO: Generate next empty table number
         int num = getNextTableNumber();
         if(attributes != null){
             tables.put(num, new YokelTable(num, attributes));
