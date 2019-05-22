@@ -24,6 +24,7 @@ import org.pmw.tinylog.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class ServerManagerTest {
     private WebSocket socket;
@@ -275,15 +276,15 @@ public class ServerManagerTest {
 
     @Test
     public void serverRequestsTest() throws Exception {
-        //System.out.println(daemon.testPlayersToJSON());
-
+        daemon.setLogLevel("trace");
+        System.out.println("log=" + daemon.getLogLevel());
         YokelPlayer player1 = new YokelPlayer("blakbro2k");
         YokelPlayer player2 = new YokelPlayer("lholtham");
         String roomName = "Eiffel Tower";
 
         //Assert String contains names
-        System.out.println(Arrays.toString(PayloadUtil.createPlayerRegisterRequest(player1)));
-        System.out.println(Arrays.toString(PayloadUtil.createPlayerRegisterRequest(player2)));
+        //System.out.println(Arrays.toString(PayloadUtil.createPlayerRegisterRequest(player1)));
+        //System.out.println(Arrays.toString(PayloadUtil.createPlayerRegisterRequest(player2)));
 
         TestingUtils.TestMethod
                 buildPayload = new TestingUtils.TestMethod("buildPayload",
@@ -293,32 +294,33 @@ public class ServerManagerTest {
                 daemon,
                 true);
 
-        System.out.println(buildPayload.invoke());
+        printInvocationResult(buildPayload.invoke());
+
         buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_PLAYER_REGISTER), PayloadUtil.createPlayerRegisterRequest(player2));
-        System.out.println(buildPayload.invoke());
+        printInvocationResult(buildPayload.invoke());
         buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_ROOM_JOIN),
                 PayloadUtil.createJoinRoomRequest(player1, YokelLounge.SOCIAL_GROUP, roomName));
         //System.out.println(Arrays.toString(PayloadUtil.createJoinRoomRequest(player1, YokelLounge.SOCIAL_GROUP, "Eiffel Tower")));
-        System.out.println(buildPayload.invoke());
-        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_CREATE_GAME),
+        printInvocationResult(buildPayload.invoke());
+         buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_CREATE_GAME),
                 PayloadUtil.createNewGameRequest(YokelLounge.SOCIAL_GROUP, roomName, YokelTable.ACCESS_TYPE.PUBLIC, false));
-        System.out.println(buildPayload.invoke());
+        printInvocationResult(buildPayload.invoke());
         buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN),
                 PayloadUtil.createTableJoinRequest(player1, YokelLounge.SOCIAL_GROUP, roomName, 1, 1));
-        System.out.println(buildPayload.invoke());
+        printInvocationResult(buildPayload.invoke());
         buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_PLAY_GAME),
                 PayloadUtil.createGameStartRequest(YokelLounge.SOCIAL_GROUP, roomName, 1));
-        System.out.println(buildPayload.invoke());
+        printInvocationResult(buildPayload.invoke());
         buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN),
                 PayloadUtil.createTableJoinRequest(player2, YokelLounge.SOCIAL_GROUP, roomName, 1, 1));
-        System.out.println(buildPayload.invoke());
+        printInvocationResult(buildPayload.invoke());
         buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN),
                 PayloadUtil.createTableJoinRequest(player2, YokelLounge.SOCIAL_GROUP, roomName, 1, 3));
-        System.out.println(buildPayload.invoke());
+        printInvocationResult(buildPayload.invoke());
 
         buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN),
                 PayloadUtil.createTableJoinRequest(player2, YokelLounge.SOCIAL_GROUP, roomName, 1, 3));
-        System.out.println(buildPayload.invoke());
+        printInvocationResult(buildPayload.invoke());
         //GameRunner testGame = new GameRunner(daemon, room);
         //testGame.start();
         //testGame.setRunning(false);
@@ -378,4 +380,11 @@ public class ServerManagerTest {
         }
     }
 
+    private void printInvocationResult(Object o){
+        if(o instanceof String[]){
+            System.out.println(Arrays.toString((String[]) o));
+        } else {
+            System.out.println(o);
+        }
+    }
 }
