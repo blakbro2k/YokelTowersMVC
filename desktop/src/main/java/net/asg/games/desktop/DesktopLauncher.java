@@ -43,6 +43,7 @@ public class DesktopLauncher {
         }
 
         createApplication();
+
         //LwjglApplication app = createApplication();
         //app.exit();
     }
@@ -60,6 +61,7 @@ public class DesktopLauncher {
         for (int size : new int[] { 128, 64, 32, 16 }) {
             configuration.addIcon("ui/icons/libgdx" + size + ".png", FileType.Internal);
         }
+
         // Initiating web sockets module:
         CommonWebSockets.initiate();
         return configuration;

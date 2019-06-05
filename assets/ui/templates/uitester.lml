@@ -1,7 +1,7 @@
 <window defaultPad="2" width="480">
-    <:inputListener keys="Space">
+    <!--<:inputListener keys="Space">
         <:evaluate method="toggleGameStart" id="gameClock"/>
-    </:inputListener>
+    </:inputListener>-->
     <image width="16" height="16" id="Y_block"/>
     <image width="16" height="16" id="O_block"/>
     <image width="16" height="16" id="K_block"/>
