@@ -45,6 +45,20 @@ public class PayloadUtil {
         return EMPTY_ARRAY;
     }
 
+    public static String[] createTableStandRequest(String loungeName, String roomName, int tableNumber, int seatNumber){
+        if(validatedInputs(loungeName, roomName)){
+            return new String[]{loungeName, roomName, Util.otos(tableNumber), Util.otos(seatNumber)};
+        }
+        return EMPTY_ARRAY;
+    }
+
+    public static String[] createTableInfoRequest(String loungeName, String roomName){
+        if(validatedInputs(loungeName, roomName)){
+            return new String[]{loungeName, roomName};
+        }
+        return EMPTY_ARRAY;
+    }
+
     private static boolean validatedInputs(Object... objects){
         boolean isValid = objects != null;
 

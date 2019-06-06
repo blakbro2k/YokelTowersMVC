@@ -65,7 +65,7 @@ public class NetworkUtil {
     REQUEST_ROOM_JOIN,
     REQUEST_ROOM_LEAVE,
     REQUEST_LOUNGE,
-    REQUEST_TABLES_ALL,
+    REQUEST_TABLE_INFO,
     REQUEST_LOUNGE_ALL
      */
 }

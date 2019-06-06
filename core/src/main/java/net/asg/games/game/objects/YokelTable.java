@@ -163,7 +163,7 @@ public class YokelTable extends YokelObject {
     }
 
     public YokelSeat getSeat(int seatNum){
-        return seats.get(seatNum);
+        return seats.get(seatNum - 1);
     }
 
     @Override

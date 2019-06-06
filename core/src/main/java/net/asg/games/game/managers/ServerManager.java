@@ -83,6 +83,7 @@ public class ServerManager {
 
             //storageInterface =
 
+            games = new OrderedMap<>();
             validateLounges();
             validateRegisteredPlayers();
 
@@ -289,9 +290,9 @@ public class ServerManager {
         ServerManager serverManager;
         GameManager gameManager;
 
-        public GameRunner(ServerManager manager, YokelRoom room){
+        public GameRunner(ServerManager manager, YokelTable table){
             this.serverManager = manager;
-            this.gameManager = new GameManager(room);
+            this.gameManager = new GameManager(table);
         }
 
         public void run() {
@@ -391,7 +392,7 @@ public class ServerManager {
                     case REQUEST_ROOM_LEAVE:
                         responsePayload = leaveRoomRequest(clientPayload);
                         break;
-                    case REQUEST_TABLES_ALL:
+                    case REQUEST_TABLE_INFO:
                         responsePayload = getTablesRequest(clientPayload);
                         break;
                     case REQUEST_LOUNGE:
@@ -585,14 +586,17 @@ public class ServerManager {
 
         boolean isRunning = false;
         if(table != null){
-            Logger.info("attempting to start game at " + table.getId() + ":" + table.getTableNumber());
-
+            Logger.info("attempting to start game at " + roomName + ":table:" + table.getTableNumber());
+            GameRunner game = new GameRunner(this, table);
+            games.put(loungeName + ":" + roomName + ":" + tableNumber, game);
             table.startGame();
             isRunning = table.isGameRunning();
         }
         Logger.trace("Exit startGameAtTable()=" + isRunning);
         return isRunning;
     }
+
+
 
     private boolean registerPlayer(YokelPlayer player){
         if(player != null){

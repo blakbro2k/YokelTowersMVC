@@ -11,20 +11,43 @@ import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 
 import net.asg.games.controller.UITestController;
 import net.asg.games.game.objects.YokelRoom;
+import net.asg.games.game.objects.YokelTable;
 import net.asg.games.service.UserInterfaceService;
 
 @Component
 public class GameManager {
     @Inject private UserInterfaceService uiService;
     @Inject private UITestController uiView;
-    YokelRoom room;
+    YokelTable table;
+    int thresh = 0;
 
-    public GameManager(YokelRoom room){this.room = room;}
+    public GameManager(YokelTable table){this.table = table;}
 
     private void loadGameData() {}
-    public void update(){ System.out.println("Updated Game State");}
+    public void update(){
+        System.out.println(thresh);
+        thresh++;
+        if(thresh > 100){
+            table.stopGame();
+        }
+    }
     public void handleMoveRight(){}
     public void handleMoveLeft(){}
     public void handleSetPiece(){}
     public String[] getBoardState(){ return null;}
+
+    public boolean startGame() {
+        if(!table.isGameRunning()){
+            table.startGame();
+        }
+        return table.isGameRunning();
+    }
+
+    public boolean isRunning() {
+        return table.isGameRunning();
+    }
+
+    public int thresh() {
+        return thresh;
+    }
 }

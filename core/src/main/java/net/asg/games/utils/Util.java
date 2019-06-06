@@ -42,6 +42,16 @@ public class Util {
         }
     }
 
+    public static Array<String> arrayToList(String[] o) {
+        int size = o.length;
+        Array<String> array = new Array<>(size);
+
+        for(int i = 0; i < size; i++){
+            array.add(o[i]);
+        }
+        return array;
+    }
+
 
     public static class IDGenerator {
         private IDGenerator(){}

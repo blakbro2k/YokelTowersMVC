@@ -24,7 +24,6 @@ import org.pmw.tinylog.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class ServerManagerTest {
     private WebSocket socket;
@@ -294,33 +293,81 @@ public class ServerManagerTest {
                 daemon,
                 true);
 
-        printInvocationResult(buildPayload.invoke());
+        /*
+                    case REQUEST_LOGIN:
+                    case REQUEST_ALL_DEBUG_PLAYERS:
+                    #case REQUEST_PLAYER_REGISTER:
+                    #case REQUEST_CREATE_GAME:
+                    #case REQUEST_PLAY_GAME:
+                    #case REQUEST_TABLE_STAND:
+                    #case REQUEST_TABLE_JOIN:
+                    #case REQUEST_TABLE_SIT:
+                    case REQUEST_ROOM:
+                    #case REQUEST_ROOM_JOIN:
+                    case REQUEST_ROOM_LEAVE:
+                    #case REQUEST_TABLE_INFO:
+                    case REQUEST_LOUNGE:
+                    case REQUEST_LOUNGE_ALL:
+         */
+        Object result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertTrue(getInvocationBoolean(result));
 
         buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_PLAYER_REGISTER), PayloadUtil.createPlayerRegisterRequest(player2));
-        printInvocationResult(buildPayload.invoke());
-        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_ROOM_JOIN),
-                PayloadUtil.createJoinRoomRequest(player1, YokelLounge.SOCIAL_GROUP, roomName));
-        //System.out.println(Arrays.toString(PayloadUtil.createJoinRoomRequest(player1, YokelLounge.SOCIAL_GROUP, "Eiffel Tower")));
-        printInvocationResult(buildPayload.invoke());
-         buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_CREATE_GAME),
-                PayloadUtil.createNewGameRequest(YokelLounge.SOCIAL_GROUP, roomName, YokelTable.ACCESS_TYPE.PUBLIC, false));
-        printInvocationResult(buildPayload.invoke());
-        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN),
-                PayloadUtil.createTableJoinRequest(player1, YokelLounge.SOCIAL_GROUP, roomName, 1, 1));
-        printInvocationResult(buildPayload.invoke());
-        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_PLAY_GAME),
-                PayloadUtil.createGameStartRequest(YokelLounge.SOCIAL_GROUP, roomName, 1));
-        printInvocationResult(buildPayload.invoke());
-        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN),
-                PayloadUtil.createTableJoinRequest(player2, YokelLounge.SOCIAL_GROUP, roomName, 1, 1));
-        printInvocationResult(buildPayload.invoke());
-        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN),
-                PayloadUtil.createTableJoinRequest(player2, YokelLounge.SOCIAL_GROUP, roomName, 1, 3));
-        printInvocationResult(buildPayload.invoke());
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertTrue(getInvocationBoolean(result));
 
-        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN),
-                PayloadUtil.createTableJoinRequest(player2, YokelLounge.SOCIAL_GROUP, roomName, 1, 3));
-        printInvocationResult(buildPayload.invoke());
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_ROOM_JOIN), PayloadUtil.createJoinRoomRequest(player1, YokelLounge.SOCIAL_GROUP, roomName));
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertTrue(getInvocationBoolean(result));
+
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_CREATE_GAME), PayloadUtil.createNewGameRequest(YokelLounge.SOCIAL_GROUP, roomName, YokelTable.ACCESS_TYPE.PUBLIC, false));
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertTrue(getInvocationBoolean(result));
+
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN), PayloadUtil.createTableJoinRequest(player1, YokelLounge.SOCIAL_GROUP, roomName, 1, 1));
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertTrue(getInvocationBoolean(result));
+
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_PLAY_GAME), PayloadUtil.createGameStartRequest(YokelLounge.SOCIAL_GROUP, roomName, 1));
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertFalse(getInvocationBoolean(result));
+
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN), PayloadUtil.createTableJoinRequest(player2, YokelLounge.SOCIAL_GROUP, roomName, 1, 1));
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertFalse(getInvocationBoolean(result));
+
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_JOIN), PayloadUtil.createTableJoinRequest(player2, YokelLounge.SOCIAL_GROUP, roomName, 1, 2));
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertTrue(getInvocationBoolean(result));
+
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_STAND), PayloadUtil.createTableStandRequest(YokelLounge.SOCIAL_GROUP, roomName, 1, 2));
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertTrue(getInvocationBoolean(result));
+
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_SIT), PayloadUtil.createTableJoinRequest(player2, YokelLounge.SOCIAL_GROUP, roomName, 1, 3));
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertTrue(getInvocationBoolean(result));
+
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_TABLE_INFO), PayloadUtil.createTableInfoRequest(YokelLounge.SOCIAL_GROUP, roomName));
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        //Assert.assertTrue(getInvocationBoolean(result));
+
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_PLAY_GAME), PayloadUtil.createGameStartRequest(YokelLounge.SOCIAL_GROUP, roomName, 1));
+        result = buildPayload.invoke();
+        printInvocationResult(result);
+        Assert.assertFalse(getInvocationBoolean(result));
+
         //GameRunner testGame = new GameRunner(daemon, room);
         //testGame.start();
         //testGame.setRunning(false);
@@ -334,9 +381,9 @@ public class ServerManagerTest {
         float tickRate;
 
 
-        public GameRunner(ServerManager manager, YokelRoom room){
+        public GameRunner(ServerManager manager, YokelTable table){
             this.serverManager = manager;
-            this.gameManager = new GameManager(room);
+            this.gameManager = new GameManager(table);
             tickRate = daemon.getTickRate();
         }
 
@@ -385,6 +432,15 @@ public class ServerManagerTest {
             System.out.println(Arrays.toString((String[]) o));
         } else {
             System.out.println(o);
+        }
+    }
+
+    private boolean getInvocationBoolean(Object o){
+        if(o instanceof String[]){
+            Array<String> a = Util.arrayToList((String[]) o);
+            return Boolean.parseBoolean(a.get(0));
+        } else {
+            return Boolean.parseBoolean(o.toString());
         }
     }
 }
