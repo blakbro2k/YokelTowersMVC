@@ -24,7 +24,7 @@ public class GameManager {
     public GameManager(YokelTable table){this.table = table;}
 
     private void loadGameData() {}
-    public void update(){
+    public void update(double delta){
         System.out.println(thresh);
         thresh++;
         if(thresh > 100){
@@ -49,5 +49,9 @@ public class GameManager {
 
     public int thresh() {
         return thresh;
+    }
+
+    private class GameState{
+
     }
 }

@@ -135,9 +135,10 @@ public class DesktopLauncher {
         }
 
         private void tick(){
-            gameManager.update();
+            System.out.println("tick() Called =" + 1);
+
+            gameManager.update(1);
             setRunning(gameManager.isRunning());
-            System.out.println("FPS: " + fps);
         }
 
         public void run() {
@@ -153,28 +154,52 @@ public class DesktopLauncher {
              * end while
              */
 
-            running = gameManager.startGame();
+            setRunning(gameManager.startGame());
 
-            double ns = 1000000000.0 / 60.0;
-            double delta = 0;
+            double accumulator = 0.0;
+            //The timestep
+            final double dt = 1/(double) tickRate;
+            long previousTime = System.currentTimeMillis();
 
-            long lastTime = System.nanoTime();
-            long timer = System.currentTimeMillis();
-            setRunning(true);
+            System.out.println("accumulator=" + accumulator);
+            System.out.println("dt=" + dt);
+            System.out.println("previousTime=" + previousTime);
 
+
+            //State previous;
+            //State current;
+            int count = 0;
             while(running){
-                long now = System.nanoTime();
-                delta += (now - lastTime) / ns;
-                lastTime = now;
+                long currentTime = System.currentTimeMillis();
+                double frameTime = (currentTime - previousTime)/1000.0;
 
-                fps++;
-
-                while(delta >= tickRate){
-                    tick();
-                    delta--;
-                    fps = 0;
-
+                if(frameTime > 0.25){
+                    frameTime = 0.25;
                 }
+                previousTime = currentTime;
+                accumulator += frameTime;
+/*
+                System.out.println("accumulator=" + accumulator);
+                System.out.println("dt=" + dt);
+                System.out.println("currentTime=" + currentTime);
+                System.out.println("previousTime=" + previousTime);
+                System.out.println("frameTime=" + frameTime);
+                System.out.println("bottom---=");*/
+
+                while(accumulator >= dt){
+
+                    //previousState = currentState;
+                    //this.gamePanel.update(dt);
+                    tick();
+                    accumulator -= dt;
+                }
+
+                //Interpolation
+                // final double alpha = currentState * alpha +
+                //               previousState * (1.0 - alpha);
+
+                //This is the draw call. Not yet using interpolation
+                //this.gamePanel.postInvalidate();
             }
         }
     }
