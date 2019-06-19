@@ -50,4 +50,8 @@ public class GameManager {
     public int thresh() {
         return thresh;
     }
+
+    private class GameState{
+
+    }
 }
