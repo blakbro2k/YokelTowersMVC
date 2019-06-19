@@ -25,7 +25,7 @@ public class GameManager {
 
     private void loadGameData() {}
     public void update(){
-        System.out.println(thresh);
+        //System.out.println(thresh);
         thresh++;
         if(thresh > 100){
             table.stopGame();

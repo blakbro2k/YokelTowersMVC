@@ -76,7 +76,8 @@ public class DesktopLauncher {
             System.out.println("table=" + table);
 
             GameRunner game = new GameRunner(daemon, table);
-            game.run();
+            Thread thread = new Thread(game);
+            thread.start();
 
             while(game.isRunning()){
                 System.out.println(game.gameManager.thresh());
@@ -137,7 +138,6 @@ public class DesktopLauncher {
         private void tick(){
             gameManager.update();
             setRunning(gameManager.isRunning());
-            System.out.println("FPS: " + fps);
         }
 
         public void run() {
@@ -156,7 +156,7 @@ public class DesktopLauncher {
             running = gameManager.startGame();
 
             double ns = 1000000000.0 / 60.0;
-            double delta = 0;
+            double delta = tickRate;
 
             long lastTime = System.nanoTime();
             long timer = System.currentTimeMillis();
@@ -166,14 +166,16 @@ public class DesktopLauncher {
                 long now = System.nanoTime();
                 delta += (now - lastTime) / ns;
                 lastTime = now;
+                System.out.println("FPS: " + fps);
 
-                fps++;
-
+                //fps = 0;
                 while(delta >= tickRate){
                     tick();
                     delta--;
-                    fps = 0;
-
+                    ++fps;
+                    System.out.println("FPS: " + fps);
+                    System.out.println("tickRate: " + tickRate);
+                    System.out.println("delta: " + delta);
                 }
             }
         }
