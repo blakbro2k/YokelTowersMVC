@@ -70,18 +70,22 @@ public class DesktopLauncher {
 
             YokelTable table = new YokelTable(1);
 
-            table.getSeat(1).sitDown(player1);
-            table.getSeat(3).sitDown(player2);
+            table.getSeat(0).sitDown(player1);
+            table.getSeat(2).sitDown(player2);
 
             System.out.println("table=" + table);
+            System.out.println("is Ready=" + table.isTableStartReady());
 
-            GameRunner game = new GameRunner(daemon, table);
-            Thread thread = new Thread(game);
-            thread.start();
+            if(table.isTableStartReady()){
+                GameRunner game = new GameRunner(daemon, table);
+                Thread thread = new Thread(game);
+                thread.start();
 
-            while(game.isRunning()){
-                System.out.println(game.gameManager.thresh());
+                while(game.isRunning()){
+                    System.out.println(game.gameManager.thresh());
+                }
             }
+
             daemon.shutDownServer(-1);
         } catch (Exception e) {
             System.err.println(e);
@@ -138,7 +142,7 @@ public class DesktopLauncher {
         private void tick(){
             gameManager.update();
             setRunning(gameManager.isRunning());
-            System.out.println("FPS: " + fps);
+            System.out.println(gameManager.printTables());
         }
 
         public void run() {

@@ -392,7 +392,7 @@ public class ServerManagerTest {
         }
 
         private void tick(){
-            gameManager.update(1);
+            gameManager.update();
         }
 
         public void run() {

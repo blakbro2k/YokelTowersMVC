@@ -5,11 +5,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Queue;
 
-public class PowersQueue extends Table {
+public class GamePowersQueue extends Table {
     private Queue<GameBlock> powers;
     private VerticalGroup powersDisplay;
 
-    public PowersQueue(){
+    public GamePowersQueue(){
         initialize();
     }
 

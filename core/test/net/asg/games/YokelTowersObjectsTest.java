@@ -231,6 +231,15 @@ public class YokelTowersObjectsTest {
         table1.getSeat(1).standUp();
         Assert.assertFalse(table1.isGroupReady(0));
 
+        Assert.assertFalse(table1.isGroupReady(0));
+        table1.getSeat(1).sitDown(player1);
+        table1.getSeat(0).sitDown(player2);
+        Assert.assertTrue(table1.isGroupReady(0));
+        table1.getSeat(1).standUp();
+        Assert.assertTrue(table1.isGroupReady(0));
+        table1.getSeat(0).standUp();
+        Assert.assertFalse(table1.isGroupReady(0));
+
         Assert.assertFalse(table1.isGroupReady(1));
         table1.getSeat(2).sitDown(player1);
         Assert.assertTrue(table1.isGroupReady(1));
@@ -243,6 +252,15 @@ public class YokelTowersObjectsTest {
         table1.getSeat(3).standUp();
         Assert.assertFalse(table1.isGroupReady(1));
 
+        Assert.assertFalse(table1.isGroupReady(1));
+        table1.getSeat(3).sitDown(player1);
+        table1.getSeat(2).sitDown(player2);
+        Assert.assertTrue(table1.isGroupReady(1));
+        table1.getSeat(3).standUp();
+        Assert.assertTrue(table1.isGroupReady(1));
+        table1.getSeat(2).standUp();
+        Assert.assertFalse(table1.isGroupReady(1));
+
         Assert.assertFalse(table1.isGroupReady(2));
         table1.getSeat(4).sitDown(player1);
         Assert.assertTrue(table1.isGroupReady(2));
@@ -251,6 +269,15 @@ public class YokelTowersObjectsTest {
 
         Assert.assertFalse(table1.isGroupReady(2));
         table1.getSeat(5).sitDown(player1);
+        Assert.assertTrue(table1.isGroupReady(2));
+        table1.getSeat(5).standUp();
+        Assert.assertFalse(table1.isGroupReady(2));
+
+        Assert.assertFalse(table1.isGroupReady(2));
+        table1.getSeat(4).sitDown(player1);
+        table1.getSeat(5).sitDown(player2);
+        Assert.assertTrue(table1.isGroupReady(2));
+        table1.getSeat(4).standUp();
         Assert.assertTrue(table1.isGroupReady(2));
         table1.getSeat(5).standUp();
         Assert.assertFalse(table1.isGroupReady(2));
@@ -267,10 +294,18 @@ public class YokelTowersObjectsTest {
         table1.getSeat(7).standUp();
         Assert.assertFalse(table1.isGroupReady(3));
 
+        Assert.assertFalse(table1.isGroupReady(3));
+        table1.getSeat(6).sitDown(player1);
+        table1.getSeat(7).sitDown(player2);
+        Assert.assertTrue(table1.isGroupReady(3));
+        table1.getSeat(6).standUp();
+        Assert.assertTrue(table1.isGroupReady(3));
+        table1.getSeat(7).standUp();
+        Assert.assertFalse(table1.isGroupReady(3));
+
         /**
          * Test table ready
          */
-        table1.startGame();
         Assert.assertFalse(table1.isGameRunning());
         Assert.assertFalse(table1.isTableStartReady());
         table1.getSeat(0).sitDown(player2);

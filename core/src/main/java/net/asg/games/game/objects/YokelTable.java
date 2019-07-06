@@ -153,7 +153,7 @@ public class YokelTable extends YokelObject {
     }
 
     private void setUpSeats(){
-        for(int i = 1; i <= MAX_SEATS; i++){
+        for(int i = 0; i < MAX_SEATS; i++){
             seats.add(new YokelSeat(i));
         }
     }
@@ -163,7 +163,7 @@ public class YokelTable extends YokelObject {
     }
 
     public YokelSeat getSeat(int seatNum){
-        return seats.get(seatNum - 1);
+        return seats.get(seatNum);
     }
 
     @Override

@@ -18,15 +18,17 @@ public class YokelSeat extends YokelObject {
     }
 
     public YokelSeat(int seatNumber){
-        if(seatNumber < 1 || seatNumber > 8) throw new IllegalArgumentException("Seat number must be between 1 - 8.");
+        if(seatNumber < 0 || seatNumber > 7) throw new IllegalArgumentException("Seat number must be between 0 - 7.");
         this.seatNumber = seatNumber;
         setId(Util.IDGenerator.getID());
     }
 
-    public void sitDown(YokelPlayer player){
+    public boolean sitDown(YokelPlayer player){
         if(!isOccupied()){
             seatedPlayer = player;
+            return true;
         }
+        return false;
     }
 
     public void standUp(){

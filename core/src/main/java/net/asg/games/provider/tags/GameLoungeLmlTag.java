@@ -14,10 +14,10 @@ import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.provider.actors.GameLounge;
 import net.asg.games.utils.Util;
 
-public class LoungeLmlTag extends TableLmlTag {
+public class GameLoungeLmlTag extends TableLmlTag {
     private final static OnChangeLmlAttribute onChange = new OnChangeLmlAttribute();
 
-    public LoungeLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
+    public GameLoungeLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
         super(parser, parentTag, rawTagData);
     }
 

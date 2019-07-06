@@ -35,8 +35,8 @@ public class GameBoard extends Table {
         gameTable.setDebug(true);
         sidePanel.setDebug(true);
 
-        //next = new NextPeiceQueue(app);
-        //powers = new PowersQueue();
+        //next = new GameNextPeiceQueue(app);
+        //powers = new GamePowersQueue();
         //blockArea = new GameBlockArea(board, app);
 
         Image playerIcon = new Image(app.getAssetsManager().getImageProvider().getPlayerIcon(7));
@@ -64,8 +64,8 @@ public class GameBoard extends Table {
 
     //UI
     private GamePiece currentPiece;
-    private NextPeiceQueue next;
-    private PowersQueue powers;
+    private GameNextPeiceQueue next;
+    private GamePowersQueue powers;
     private GameBlockArea blockArea;
 
     private boolean isLeftKeyPressed = false;

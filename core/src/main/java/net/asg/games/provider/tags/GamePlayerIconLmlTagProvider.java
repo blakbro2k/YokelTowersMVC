@@ -4,9 +4,9 @@ import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 import com.github.czyzby.lml.parser.tag.LmlTagProvider;
 
-public class LoungeLmlTagProvider implements LmlTagProvider {
+public class GamePlayerIconLmlTagProvider implements LmlTagProvider {
     @Override
     public LmlTag create(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
-        return new LoungeLmlTag(parser, parentTag, rawTagData);
+        return new GamePlayerIconLmlTag(parser, parentTag, rawTagData);
     }
 }

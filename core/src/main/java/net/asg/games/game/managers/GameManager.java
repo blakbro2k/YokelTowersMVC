@@ -11,6 +11,7 @@ import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 
 import net.asg.games.controller.UITestController;
 import net.asg.games.game.objects.YokelRoom;
+import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.service.UserInterfaceService;
 
@@ -35,6 +36,19 @@ public class GameManager {
     public void handleMoveLeft(){}
     public void handleSetPiece(){}
     public String[] getBoardState(){ return null;}
+    public String printTables(){
+        StringBuilder sbSeats = new StringBuilder();
+//String t = "";
+        if(table != null){
+            Array<YokelSeat> seats = table.getSeats();
+
+            for(YokelSeat seat : seats){
+                sbSeats.append(seats.toString());
+            }
+        }
+        //return sbSeats.toString();
+        return table.getSeat(1).toString();
+    }
 
     public boolean startGame() {
         if(!table.isGameRunning()){

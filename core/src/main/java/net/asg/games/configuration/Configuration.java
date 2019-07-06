@@ -34,8 +34,8 @@ import net.asg.games.provider.tags.GameBoardLmlTagProvider;
 import net.asg.games.provider.tags.GameClockLmlTagProvider;
 import net.asg.games.provider.tags.GamePieceDataLmlAttribute;
 import net.asg.games.provider.tags.GamePieceLmlTagProvider;
-import net.asg.games.provider.tags.LoungeLmlTagProvider;
-import net.asg.games.provider.tags.PlayerIconLmlTagProvider;
+import net.asg.games.provider.tags.GameLoungeLmlTagProvider;
+import net.asg.games.provider.tags.GamePlayerIconLmlTagProvider;
 import net.asg.games.service.ScaleService;
 
 /** Thanks to the Component annotation, this class will be automatically found and processed.
@@ -104,10 +104,10 @@ import net.asg.games.service.ScaleService;
         }
 
         private void addCustomLmlTags(){
-            syntax.addTagProvider(new LoungeLmlTagProvider(), "lounge");
+            syntax.addTagProvider(new GameLoungeLmlTagProvider(), "lounge");
             syntax.addTagProvider(new GameBoardLmlTagProvider(), "gameboard");
             syntax.addTagProvider(new GameClockLmlTagProvider(), "gameclock");
-            syntax.addTagProvider(new PlayerIconLmlTagProvider(), "playericon");
+            syntax.addTagProvider(new GamePlayerIconLmlTagProvider(), "playericon");
             syntax.addTagProvider(new GameBlockAreaLmlTagProvider(), "gameblockarea");
             syntax.addTagProvider(new GameBlockLmlTagProvider(), "gameblock");
             syntax.addTagProvider(new GamePieceLmlTagProvider(), "gamepiece");

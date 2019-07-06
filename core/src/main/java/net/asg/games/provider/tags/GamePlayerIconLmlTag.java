@@ -15,8 +15,8 @@ import com.github.czyzby.lml.parser.tag.LmlTag;
 import net.asg.games.provider.actors.GameClock;
 import net.asg.games.provider.actors.GameIcon;
 
-public class PlayerIconLmlTag extends ImageButtonLmlTag {
-    public PlayerIconLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
+public class GamePlayerIconLmlTag extends ImageButtonLmlTag {
+    public GamePlayerIconLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
         super(parser, parentTag, rawTagData);
     }
 

@@ -560,10 +560,9 @@ public class ServerManager {
         if(player != null){
             YokelSeat seat = getSeat(loungeName, roomName, tableNumber, seatNumber);
 
-            if(seat != null && !seat.isOccupied()){
-                seat.sitDown(player);
+            if(seat != null){
+                success = seat.sitDown(player);
                 Logger.debug("seat=" + seat);
-                success = true;
             }
         }
         Logger.trace("Exit sitAtTable()=" + success);

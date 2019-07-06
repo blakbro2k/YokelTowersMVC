@@ -4,12 +4,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-public class NextPeiceQueue extends Table {
+public class GameNextPeiceQueue extends Table {
     /*
     private Drawable background;
     private Rectangle bounds = new Rectangle();
 
-    public NextPeiceQueue(YokelTowersGame app){
+    public GameNextPeiceQueue(YokelTowersGame app){
         this.background = app.getAssetsManager().getImageProvider().getNextBackground();
         setBackground(this.background);
         add(app.getAssetsManager().getGameObjectFactory().getClearGameObject());
