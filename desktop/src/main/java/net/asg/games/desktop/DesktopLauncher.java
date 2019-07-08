@@ -88,13 +88,11 @@ public class DesktopLauncher {
 
             daemon.shutDownServer(-1);
         } catch (Exception e) {
-            System.err.println(e);
+            //System.err.println(e);
+            e.printStackTrace();
         } finally {
             daemon.shutDownServer(-1);
         }
-
-
-
     }
 
     private static LwjglApplication createApplication() {

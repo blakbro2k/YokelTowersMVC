@@ -78,6 +78,29 @@ public class YokelGameBoard extends YokelObject {
         idIndex = 0;
     }
 
+    public String toString(){
+        StringBuilder out = new StringBuilder();
+
+        out.append('+');
+        for(int a = 0; a < MAX_COLS; a++){
+            out.append("--");
+        }
+        out.append('\n');
+
+        for (int r = MAX_ROWS - 1; r > 0; r--){
+            for (int c = 0; c < MAX_COLS; c++) {
+                out.append('|').append(cells[r][c]);
+            }
+            out.append("|\n");
+        }
+
+        for(int a = 0; a < MAX_COLS; a++){
+            out.append("+-");
+        }
+
+        return out.toString();
+    }
+
     private void clearCell(int r, int c){
         cells[r][c] = YokelBlock.CLEAR;
     }

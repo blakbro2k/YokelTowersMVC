@@ -21,6 +21,8 @@ import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerManager {
@@ -47,6 +49,8 @@ public class ServerManager {
     private OrderedMap<String, YokelPlayer> testPlayers;
     //<"table name", gameManager>
     private OrderedMap<String, GameRunner> games;
+
+    ExecutorService threadPool;
 
     private int maxNumberOfRooms;
     private int timeOut;
@@ -93,6 +97,9 @@ public class ServerManager {
             if(isDebug){
                 generateTestPlayers();
             }
+
+            //threadPool = new Executors.newCachedThreadPool();
+
             Logger.trace("Exit initialize()");
         } catch (Exception e) {
             Logger.error(e,"Error during initialization: ");
@@ -264,6 +271,10 @@ public class ServerManager {
         if(testPlayers != null){
             testPlayers.clear();
             testPlayers = null;
+        }
+
+        if(threadPool != null){
+            threadPool.shutdown();
         }
         Logger.trace("Exit shutDownServer()");
         //System.exit(errorCode);

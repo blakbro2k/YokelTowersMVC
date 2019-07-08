@@ -10,6 +10,7 @@ import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 
 import net.asg.games.controller.UITestController;
+import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
@@ -20,9 +21,15 @@ public class GameManager {
     @Inject private UserInterfaceService uiService;
     @Inject private UITestController uiView;
     YokelTable table;
+    Array<YokelGameBoard> boards;
+
     int thresh = 0;
 
-    public GameManager(YokelTable table){this.table = table;}
+    public GameManager(YokelTable table){
+        this.table = table;
+        boards = new Array<>();
+        init();
+    }
 
     private void loadGameData() {}
     public void update(){
@@ -32,22 +39,26 @@ public class GameManager {
             table.stopGame();
         }
     }
+    public void init(){
+        for(int i = 0; i < 8; i++){
+            boards.add(new YokelGameBoard());
+        }
+    }
     public void handleMoveRight(){}
     public void handleMoveLeft(){}
     public void handleSetPiece(){}
     public String[] getBoardState(){ return null;}
+
     public String printTables(){
         StringBuilder sbSeats = new StringBuilder();
 //String t = "";
         if(table != null){
-            Array<YokelSeat> seats = table.getSeats();
-
-            for(YokelSeat seat : seats){
-                sbSeats.append(seats.toString());
+            for(YokelGameBoard board : boards){
+                sbSeats.append(board.toString());
             }
         }
-        //return sbSeats.toString();
-        return table.getSeat(1).toString();
+        return sbSeats.toString();
+        //return table.getSeat(1).toString();
     }
 
     public boolean startGame() {
