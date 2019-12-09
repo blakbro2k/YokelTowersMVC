@@ -321,7 +321,7 @@ public class ServerManager {
         }
     }
 
-    public ServerResponse handleClientRequest(ClientRequest request) throws Exception {
+    public ServerResponse handleClientRequest(ClientRequest request){
         Logger.trace("Enter handleClientRequest()");
 
         String sessionId = null;

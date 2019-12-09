@@ -33,8 +33,8 @@ public class ServerLauncher {
         try{
             new ServerLauncher().launch(args);
         } catch (Exception e) {
-            Logger.error(e,"Error in main: ");
-            throw new Exception("Error in main: ", e);
+            Logger.error(e,"Failed to launch server: ");
+            throw new Exception("Failed to launch server: ", e);
         }
     }
 
@@ -97,12 +97,17 @@ public class ServerLauncher {
 
     private void sendServerResponse(ServerWebSocket webSocket, ServerResponse response) throws Exception{
         Logger.trace("Enter sendServerResponse()");
-        if(response == null) throw new Exception("Server response was null");
-        if(webSocket == null) throw new Exception("WebSocket is null, was it initialized?");
+        if(response == null) throw new Exception("Unable to send Server Response: Server response was null");
+        if(webSocket == null) throw new Exception("Unable to send Server Response: WebSocket is null, was it initialized?");
 
-        final byte[] serialized = serializer.serialize(response);
-        webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
-        Logger.trace("Exit sendServerResponse()");
+        try{
+            final byte[] serialized = serializer.serialize(response);
+            webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
+            Logger.trace("Exit sendServerResponse()");
+        } catch (Exception e){
+            Logger.error(e,"Unable to send Server Response: ");
+            throw new Exception("Unable to send Server Response: ", e);
+        }
     }
 
     private void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
@@ -110,11 +115,21 @@ public class ServerLauncher {
             Logger.trace("Enter handleFrame()");
             final byte[] packet = frame.binaryData().getBytes();
             final long start = System.nanoTime();
+            Logger.info("Deserializing packet recieved");
             final Object deserialized = serializer.deserialize(packet);
-            Logger.trace("Deserializing packet recieved");
             Logger.trace("deserialized: {}", deserialized);
             final long time = System.nanoTime() - start;
+            sendResponse(deserialized, webSocket);
+            Logger.trace("Exit handleFrame()");
+        } catch (Exception e){
+            Logger.error(e,"Error handling websocket frame.");
+            throw new Exception("Error handling websocket frame.", e);
+        }
+    }
 
+    private void sendResponse(Object deserialized, ServerWebSocket webSocket) throws Exception{
+        try{
+            Logger.trace("Enter sendResponse()");
             if(deserialized instanceof ClientRequest){
                 ClientRequest request = (ClientRequest) deserialized;
                 clientRepsonse(webSocket, request);
@@ -124,10 +139,10 @@ public class ServerLauncher {
                 AdminClientRequest request = (AdminClientRequest) deserialized;
                 adminResponse(webSocket, request);
             }
-            Logger.trace("Exit handleFrame()");
+            Logger.trace("Exit sendResponse()");
         } catch (Exception e){
-            Logger.error("Error handling websocket frame.");
-            throw new Exception("Error handling websocket frame.");
+            Logger.error(e, "Error in sendResponse.");
+            throw new Exception("Error handling websocket frame.", e);
         }
     }
 
@@ -144,8 +159,7 @@ public class ServerLauncher {
         Logger.trace("Exit adminResponse()");
     }
 
-    private ServerResponse handleAdminRequest(AdminClientRequest request) throws Exception {
-        try{
+    private ServerResponse handleAdminRequest(AdminClientRequest request) {
             Logger.trace("Enter handleAdminRequest()");
             ServerResponse response = null;
 
@@ -165,10 +179,6 @@ public class ServerLauncher {
             }
             Logger.trace("Exit handleAdminRequest()");
             return response;
-        } catch (Exception e){
-            Logger.error("Error handling AdminRequest frame.");
-            throw new Exception("Error handling AdminRequest frame.");
-        }
     }
 
     private int getServerId() {
