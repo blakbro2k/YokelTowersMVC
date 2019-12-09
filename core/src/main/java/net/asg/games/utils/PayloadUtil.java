@@ -7,6 +7,8 @@ import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.utils.Util;
 
+import org.pmw.tinylog.Logger;
+
 public class PayloadUtil {
     private static final String[] EMPTY_ARRAY = {""};
 
@@ -15,6 +17,14 @@ public class PayloadUtil {
             return new String[]{player.toString()};
         }
         return EMPTY_ARRAY;
+    }
+
+    //0 = Player JSON
+    public static YokelPlayer getRegisterPlayerFromPayload(String[] clientPayload){
+        if(Util.isValidPayload(clientPayload, 1)){
+            return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[0]);
+        }
+        return null;
     }
 
     public static String[] createJoinRoomRequest(YokelPlayer player, String loungeName, String roomName){

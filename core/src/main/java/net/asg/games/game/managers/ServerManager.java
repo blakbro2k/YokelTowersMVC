@@ -12,6 +12,7 @@ import net.asg.games.game.objects.YokelTable;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.storage.StorageInterface;
+import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
 
@@ -643,21 +644,13 @@ public class ServerManager {
         String[] ret = new String[1];
         ret[0] = "false";
 
-        YokelPlayer player = getRegisterPlayerFromPayload(clientPayload);
+        YokelPlayer player = PayloadUtil.getRegisterPlayerFromPayload(clientPayload);
         if(player != null){
             Logger.info("Attempting to register player={}", player.toString());
             ret[0] = Util.otos(registerPlayer(player));
         }
         Logger.trace("Exit registerPlayerRequest()");
         return ret;
-    }
-
-    //0 = Player JSON
-    private YokelPlayer getRegisterPlayerFromPayload(String[] clientPayload){
-        if(Util.isValidPayload(clientPayload, 1)){
-            return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[0]);
-        }
-        return null;
     }
 
     //0 = GameLounge Name
