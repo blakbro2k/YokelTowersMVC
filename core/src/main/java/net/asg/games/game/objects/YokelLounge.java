@@ -6,7 +6,7 @@ import net.asg.games.utils.Util;
 
 import org.apache.commons.lang.StringUtils;
 
-public class YokelLounge extends YokelObject {
+public class YokelLounge extends AbstractYokelObject {
     public static final String SOCIAL_GROUP = "Social";
     public static final String BEGINNER_GROUP = "Beginner";
     public static final String INTERMEDIATE_GROUP = "Intermediate";
@@ -21,7 +21,6 @@ public class YokelLounge extends YokelObject {
     public YokelLounge(String name) {
         if(name == null) throw new IllegalArgumentException("GameLounge name cannot be null.");
         setName(name);
-        setId(Util.IDGenerator.getID());
         this.rooms = new OrderedMap<>();
     }
 

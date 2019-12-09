@@ -7,7 +7,7 @@ import net.asg.games.utils.Util;
 
 import org.apache.commons.lang.StringUtils;
 
-public class YokelTable extends YokelObject {
+public class YokelTable extends AbstractYokelObject {
     public enum ACCESS_TYPE {PRIVATE, PUBLIC, PROTECTED}
 
     static final int MAX_SEATS = 8;
@@ -33,7 +33,6 @@ public class YokelTable extends YokelObject {
 
     private void initialize(int tableNumber, OrderedMap<String, Object> arguments){
         if(tableNumber < 1) throw new IllegalArgumentException("Table number cannot be less than 1.");
-        setId(Util.IDGenerator.getID());
         seats = new Array<>();
 
         setUpSeats();

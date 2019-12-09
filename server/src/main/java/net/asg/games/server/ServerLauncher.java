@@ -1,5 +1,6 @@
 package net.asg.games.server;
 
+import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
 import net.asg.games.game.managers.ServerManager;
@@ -94,16 +95,17 @@ public class ServerLauncher {
         }
     }
 
-    private void sendServerResponse(ServerWebSocket webSocket, ServerResponse response){
+    private void sendServerResponse(ServerWebSocket webSocket, ServerResponse response) throws Exception{
         Logger.trace("Enter sendServerResponse()");
-        if(response != null && webSocket != null){
-            final byte[] serialized = serializer.serialize(response);
-            webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
-        }
+        if(response == null) throw new Exception("Server response was null");
+        if(webSocket == null) throw new Exception("WebSocket is null, was it initialized?");
+
+        final byte[] serialized = serializer.serialize(response);
+        webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
         Logger.trace("Exit sendServerResponse()");
     }
 
-    public void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
+    private void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
         try {
             Logger.trace("Enter handleFrame()");
             final byte[] packet = frame.binaryData().getBytes();
@@ -115,22 +117,31 @@ public class ServerLauncher {
 
             if(deserialized instanceof ClientRequest){
                 ClientRequest request = (ClientRequest) deserialized;
-
-                if(serverDaemon != null){
-                    sendServerResponse(webSocket, serverDaemon.handleClientRequest(request));
-                }
+                clientRepsonse(webSocket, request);
             }
 
             if(deserialized instanceof AdminClientRequest){
                 AdminClientRequest request = (AdminClientRequest) deserialized;
-
-                sendServerResponse(webSocket, handleAdminRequest(request));
+                adminResponse(webSocket, request);
             }
             Logger.trace("Exit handleFrame()");
         } catch (Exception e){
             Logger.error("Error handling websocket frame.");
             throw new Exception("Error handling websocket frame.");
         }
+    }
+
+    private void clientRepsonse(ServerWebSocket webSocket, ClientRequest request) throws Exception{
+        Logger.trace("Enter clientRepsonse()");
+        if(serverDaemon == null) throw new Exception("Server Deamon is not running.");
+        sendServerResponse(webSocket, serverDaemon.handleClientRequest(request));
+        Logger.trace("Exit clientRepsonse()");
+    }
+
+    private void adminResponse(ServerWebSocket webSocket, AdminClientRequest request) throws Exception{
+        Logger.trace("Enter adminResponse()");
+        sendServerResponse(webSocket, handleAdminRequest(request));
+        Logger.trace("Exit adminResponse()");
     }
 
     private ServerResponse handleAdminRequest(AdminClientRequest request) throws Exception {
@@ -150,7 +161,7 @@ public class ServerLauncher {
                 sessionId = request.getSessionId();
                 requestSequence = request.getRequestSequence();
                 //serverPayload = null; //buildPayload(message, request.getPayload());
-                response = new ServerResponse(requestSequence, sessionId, message, serverDaemon.getServerId(), serverPayload);
+                response = new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
             }
             Logger.trace("Exit handleAdminRequest()");
             return response;
@@ -158,5 +169,15 @@ public class ServerLauncher {
             Logger.error("Error handling AdminRequest frame.");
             throw new Exception("Error handling AdminRequest frame.");
         }
+    }
+
+    private int getServerId() {
+        Logger.trace("Enter getServerId()");
+        int serverId = -1;
+        if(serverDaemon != null){
+            serverId = serverDaemon.getServerId();
+        }
+        Logger.trace("Exit getServerId()");
+        return serverId;
     }
 }

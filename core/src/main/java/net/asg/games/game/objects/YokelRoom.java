@@ -11,7 +11,7 @@ import org.apache.commons.lang.StringUtils;
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class YokelRoom extends YokelObject {
+public class YokelRoom extends AbstractYokelObject {
     private String name;
     //private Chat chatRoom;
     private Array<YokelPlayer> players;
@@ -27,7 +27,6 @@ public class YokelRoom extends YokelObject {
     }
 
     private void initialize(){
-        setId(Util.IDGenerator.getID());
         tables = new OrderedMap<>();
         players = new Array<>();
     }

@@ -119,8 +119,6 @@ public class DesktopLauncher {
         GameManager gameManager;
         boolean running;
         float tickRate;
-        int fps = 0;
-
 
         public GameRunner(ServerManager manager, YokelTable table){
             this.serverManager = manager;
@@ -170,7 +168,6 @@ public class DesktopLauncher {
 
             //State previous;
             //State current;
-            int count = 0;
             while(running){
                 long currentTime = System.currentTimeMillis();
                 double frameTime = (currentTime - previousTime)/1000.0;
@@ -180,7 +177,7 @@ public class DesktopLauncher {
                 }
                 previousTime = currentTime;
                 accumulator += frameTime;
-/*
+                /*
                 System.out.println("accumulator=" + accumulator);
                 System.out.println("dt=" + dt);
                 System.out.println("currentTime=" + currentTime);
@@ -189,7 +186,6 @@ public class DesktopLauncher {
                 System.out.println("bottom---=");*/
 
                 while(accumulator >= dt){
-
                     //previousState = currentState;
                     //this.gamePanel.update(dt);
                     tick();
@@ -198,7 +194,7 @@ public class DesktopLauncher {
 
                 //Interpolation
                 // final double alpha = currentState * alpha +
-                //               previousState * (1.0 - alpha);
+                // previousState * (1.0 - alpha);
 
                 //This is the draw call. Not yet using interpolation
                 //this.gamePanel.postInvalidate();

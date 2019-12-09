@@ -2,13 +2,11 @@ package net.asg.games.game.objects;
 
 import net.asg.games.utils.Util;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class YokelSeat extends YokelObject {
+public class YokelSeat extends AbstractYokelObject {
     private int seatNumber;
     private YokelPlayer seatedPlayer;
 
@@ -20,7 +18,6 @@ public class YokelSeat extends YokelObject {
     public YokelSeat(int seatNumber){
         if(seatNumber < 0 || seatNumber > 7) throw new IllegalArgumentException("Seat number must be between 0 - 7.");
         this.seatNumber = seatNumber;
-        setId(Util.IDGenerator.getID());
     }
 
     public boolean sitDown(YokelPlayer player){

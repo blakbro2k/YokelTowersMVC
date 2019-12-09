@@ -50,7 +50,7 @@ public class ServerManager {
     //<"table name", gameManager>
     private OrderedMap<String, GameRunner> games;
 
-    ExecutorService threadPool;
+    private ExecutorService threadPool;
 
     private int maxNumberOfRooms;
     private int timeOut;
@@ -224,6 +224,11 @@ public class ServerManager {
         this.port = port;
     }
 
+    public int getPort(){
+        Logger.info("setting port to: {}", port);
+        return port;
+    }
+
     public void setDebug(boolean b){
         Logger.info("setting debug to: {}", b);
         this.isDebug = b;
@@ -240,19 +245,14 @@ public class ServerManager {
         Configurator.defaultConfig().level(this.logLevel).activate();
     }
 
-    public int getPort(){
-        Logger.info("setting port to: {}", port);
-        return port;
+    public Level getLogLevel(){
+        Logger.info("getting log level");
+        return logLevel;
     }
 
     private void setMaxRooms(int rooms){
         Logger.info("setting max lounges to: {}", rooms);
         this.maxNumberOfRooms = rooms;
-    }
-
-    public Level getLogLevel(){
-        Logger.info("getting log level");
-        return logLevel;
     }
 
     public void shutDownServer(int errorCode){
@@ -467,6 +467,7 @@ public class ServerManager {
     }
 
     private Array<YokelLounge> getAllLounges(){
+        validateLounges();
         return Util.getValuesArray(lounges.values());
     }
 
@@ -605,8 +606,6 @@ public class ServerManager {
         Logger.trace("Exit startGameAtTable()=" + isRunning);
         return isRunning;
     }
-
-
 
     private boolean registerPlayer(YokelPlayer player){
         if(player != null){
@@ -866,6 +865,5 @@ public class ServerManager {
     }
 
     //No payload from lient
-
     //private void playGameRequest();
 }

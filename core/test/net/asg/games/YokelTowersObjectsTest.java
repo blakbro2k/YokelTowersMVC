@@ -482,11 +482,11 @@ public class YokelTowersObjectsTest {
         YokelBlock exp3 = new YokelBlock(YokelBlockType.DefenseE);
         String str = "block";
 
-        Assert.assertNotEquals(null, exp1);
-        Assert.assertNotEquals(exp1, exp2);
+        Assert.assertNotSame(null, exp1);
+        Assert.assertNotSame("Test Block", exp1, exp2);
         Assert.assertEquals(exp1, exp3);
         Assert.assertEquals(exp1.getType(), YokelBlockType.DefenseE);
-        Assert.assertNotEquals(exp1, str);
+        Assert.assertNotSame(exp1, str);
 
         Array<YokelBlock> expectedBlocks = createAllBlockArray();
         Array<YokelBlock> testingBlocks = createAllBlockArray();
@@ -502,9 +502,9 @@ public class YokelTowersObjectsTest {
         YokelLounge testing2 = new YokelLounge("testing2");
 
         Assert.assertEquals(expected, testing);
-        Assert.assertNotEquals(expected2, testing);
+        Assert.assertNotSame(expected2, testing);
         expected2.addRoom(new YokelRoom("room"));
-        Assert.assertNotEquals(expected2, testing);
+        Assert.assertNotSame(expected2, testing);
         expected.addRoom(new YokelRoom("room"));
         testing.addRoom(new YokelRoom("room"));
         Assert.assertEquals(expected, testing);
@@ -516,7 +516,7 @@ public class YokelTowersObjectsTest {
         YokelPlayer player3 = new YokelPlayer("ReadyPlwyer1");
         YokelPlayer player4 = new YokelPlayer("ReadyPlwyer2");
         Assert.assertEquals(player1, player3);
-        Assert.assertNotEquals(player1, player2);
+        Assert.assertNotSame(player1, player2);
         Assert.assertEquals(player4, player2);
 
 
@@ -532,7 +532,7 @@ public class YokelTowersObjectsTest {
         YokelSeat seat3 = new YokelSeat(1);
         YokelSeat seat4 = new YokelSeat(2);
         Assert.assertEquals(seat1, seat3);
-        Assert.assertNotEquals(seat1, seat2);
+        Assert.assertNotSame(seat1, seat2);
         seat2.standUp();
         Assert.assertEquals(seat1, seat2);
         seat2.sitDown(player1);
@@ -540,11 +540,11 @@ public class YokelTowersObjectsTest {
         seat3.sitDown(player1);
 
         Assert.assertEquals(seat2, seat3);
-        Assert.assertNotEquals(player2, player1);
-        Assert.assertNotEquals(seat1, seat2);
-        Assert.assertNotEquals(seat1, seat4);
+        Assert.assertNotSame(player2, player1);
+        Assert.assertNotSame(seat1, seat2);
+        Assert.assertNotSame(seat1, seat4);
         seat4.sitDown(player2);
-        Assert.assertNotEquals(seat1, seat4);
+        Assert.assertNotSame(seat1, seat4);
 
         //YokelTable
         throw new AssertionError("YokelTable not finished.");

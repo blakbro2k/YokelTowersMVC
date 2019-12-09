@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
  * Created by Blakbro2k on 1/28/2018.
  */
 
-public class YokelPlayer extends YokelObject {
+public class YokelPlayer extends AbstractYokelObject {
     private final static int DEFAULT_RATING_NUMBER = 1500;
     private String name;
     private int rating;
@@ -20,7 +20,6 @@ public class YokelPlayer extends YokelObject {
 
     public YokelPlayer(String name){
         this.name = name;
-        setId(Util.IDGenerator.getID());
         rating = DEFAULT_RATING_NUMBER;
     }
 

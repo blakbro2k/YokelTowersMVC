@@ -30,5 +30,6 @@ dependencies {
     testCompile "org.mockito:mockito-core:$mockitoVersion"
     testCompile "org.jetbrains:annotations-java5:$jetbrainsVersion"
     testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+    implementation 'org.testng:testng:6.9.6'
 }
         
