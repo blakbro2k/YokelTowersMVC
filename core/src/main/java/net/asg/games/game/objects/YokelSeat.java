@@ -11,9 +11,7 @@ public class YokelSeat extends AbstractYokelObject {
     private YokelPlayer seatedPlayer;
 
     //Empty Contructor required for Json.Serializable
-    public YokelSeat(){
-        setId(Util.IDGenerator.getID());
-    }
+    public YokelSeat(){}
 
     public YokelSeat(int seatNumber){
         if(seatNumber < 0 || seatNumber > 7) throw new IllegalArgumentException("Seat number must be between 0 - 7.");

@@ -13,7 +13,7 @@ import net.asg.games.utils.enums.YokelBlockType;
  * Created by Blakbro2k on 12/29/2017.
  */
 
-public class YokelBlock extends AbstractYokelObject implements Pool.Poolable, Json.Serializable {
+public class YokelBlock extends AbstractYokelObject implements Pool.Poolable{
     public enum INIT_TYPE {DEFENSE, POWER, ANY, NORMAL}
 
     public static final int CLEAR = 0;

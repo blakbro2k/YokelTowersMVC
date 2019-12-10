@@ -10,7 +10,7 @@ import org.apache.commons.lang.StringUtils;
 public class YokelTable extends AbstractYokelObject {
     public enum ACCESS_TYPE {PRIVATE, PUBLIC, PROTECTED}
 
-    static final int MAX_SEATS = 8;
+    public static final int MAX_SEATS = 8;
 
     private int tableNumber;
 

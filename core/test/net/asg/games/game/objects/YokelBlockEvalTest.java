@@ -24,44 +24,38 @@ public class YokelBlockEvalTest {
     public void yokelblock_Y_Test() throws Exception {
         System.out.println("Start yokelblock_Y_Test()");
         int y_block = YokelBlockEval.Y_BLOCK;
-        int block = 0;
+        int block;
         Assert.assertEquals(YokelBlockEval.Y_BLOCK, y_block);
 
-        System.out.println("Y Block Flag: " + y_block);
+        System.out.println("Y Block: " + YokelBlockEval.Y_BLOCK);
         //OFFENSIVE_MINOR = 3;
-        block = YokelBlockEval.setPowerFlag(y_block, YokelBlockEval.OFFENSIVE_MINOR);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.Y_BLOCK, YokelBlockEval.OFFENSIVE_MINOR);
         System.out.println("OFFENSIVE_MINOR: " + block);
-        System.out.println("POWER_BLOCK: " + YokelBlockEval.addPowerBlockFlag(block));
         printBlockLabel(block);
 
         //OFFENSIVE_REGULAR = 5;
-        block = YokelBlockEval.setPowerFlag(y_block, YokelBlockEval.OFFENSIVE_REGULAR);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.Y_BLOCK, YokelBlockEval.OFFENSIVE_REGULAR);
         System.out.println("OFFENSIVE_REGULAR: " + block);
-        System.out.println("POWER_BLOCK: " + YokelBlockEval.addPowerBlockFlag(block));
         printBlockLabel(block);
 
         //OFFENSIVE_MEGA = 7;
-        block = YokelBlockEval.setPowerFlag(y_block, YokelBlockEval.OFFENSIVE_MEGA);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.Y_BLOCK, YokelBlockEval.OFFENSIVE_MEGA);
         System.out.println("OFFENSIVE_MEGA: " + block);
-        System.out.println("POWER_BLOCK: " + YokelBlockEval.addPowerBlockFlag(block));
         printBlockLabel(block);
 
         //DEFENSIVE_MINOR = 2;
-        block = YokelBlockEval.setPowerFlag(y_block, YokelBlockEval.DEFENSIVE_MINOR);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.Y_BLOCK, YokelBlockEval.DEFENSIVE_MINOR);
         System.out.println("DEFENSIVE_MINOR: " + block);
-        System.out.println("POWER_BLOCK: " + YokelBlockEval.addPowerBlockFlag(block));
         printBlockLabel(block);
 
         //DEFENSIVE_REGULAR = 4;
-        block = YokelBlockEval.setPowerFlag(y_block, YokelBlockEval.DEFENSIVE_REGULAR);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.Y_BLOCK, YokelBlockEval.DEFENSIVE_REGULAR);
         System.out.println("DEFENSIVE_REGULAR: " + block);
-        System.out.println("POWER_BLOCK: " + YokelBlockEval.addPowerBlockFlag(block));
         printBlockLabel(block);
 
         //DEFENSIVE_MEGA = 6;
-        block = YokelBlockEval.setPowerFlag(y_block, YokelBlockEval.DEFENSIVE_MEGA);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.Y_BLOCK, YokelBlockEval.DEFENSIVE_MEGA);
         System.out.println("DEFENSIVE_MEGA: " + block);
-        System.out.println("POWER_BLOCK: " + YokelBlockEval.addPowerBlockFlag(block));
         printBlockLabel(block);
 
         Assert.assertFalse(YokelBlockEval.hasBrokenFlag(y_block));
@@ -77,34 +71,39 @@ public class YokelBlockEvalTest {
     public void yokelblock_O_Test() throws Exception {
         System.out.println("Start yokelblock_O_Test()");
         int o_block = YokelBlockEval.O_BLOCK;
-        int block = 0;
+        int block;
         Assert.assertEquals(YokelBlockEval.O_BLOCK, o_block);
 
-        System.out.println("O Block Flag: " + o_block);
+        System.out.println("O Block: " + YokelBlockEval.O_BLOCK);
         //OFFENSIVE_MINOR = 3;
-        block = YokelBlockEval.setPowerFlag(o_block, YokelBlockEval.OFFENSIVE_MINOR);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.O_BLOCK, YokelBlockEval.OFFENSIVE_MINOR);
         System.out.println("OFFENSIVE_MINOR: " + block);
-        System.out.println("POWER_LEVEL: " + YokelBlockEval.getPowerLevel(block));
+        printBlockLabel(block);
 
         //OFFENSIVE_REGULAR = 5;
-        block = YokelBlockEval.setPowerFlag(o_block, YokelBlockEval.OFFENSIVE_REGULAR);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.O_BLOCK, YokelBlockEval.OFFENSIVE_REGULAR);
         System.out.println("OFFENSIVE_REGULAR: " + block);
+        printBlockLabel(block);
 
         //OFFENSIVE_MEGA = 7;
-        block = YokelBlockEval.setPowerFlag(o_block, YokelBlockEval.OFFENSIVE_MEGA);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.O_BLOCK, YokelBlockEval.OFFENSIVE_MEGA);
         System.out.println("OFFENSIVE_MEGA: " + block);
+        printBlockLabel(block);
 
         //DEFENSIVE_MINOR = 2;
-        block = YokelBlockEval.setPowerFlag(o_block, YokelBlockEval.DEFENSIVE_MINOR);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.O_BLOCK, YokelBlockEval.DEFENSIVE_MINOR);
         System.out.println("DEFENSIVE_MINOR: " + block);
+        printBlockLabel(block);
 
         //DEFENSIVE_REGULAR = 4;
-        block = YokelBlockEval.setPowerFlag(o_block, YokelBlockEval.DEFENSIVE_REGULAR);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.O_BLOCK, YokelBlockEval.DEFENSIVE_REGULAR);
         System.out.println("DEFENSIVE_REGULAR: " + block);
+        printBlockLabel(block);
 
         //DEFENSIVE_MEGA = 6;
-        block = YokelBlockEval.setPowerFlag(o_block, YokelBlockEval.DEFENSIVE_MEGA);
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.O_BLOCK, YokelBlockEval.DEFENSIVE_MEGA);
         System.out.println("DEFENSIVE_MEGA: " + block);
+        printBlockLabel(block);
 
         Assert.assertFalse(YokelBlockEval.hasBrokenFlag(o_block));
         o_block = YokelBlockEval.addBrokenFlag(o_block);
@@ -119,44 +118,184 @@ public class YokelBlockEvalTest {
     public void yokelblock_K_Test() throws Exception {
         System.out.println("Start yokelblock_K_Test()");
         int k_block = YokelBlockEval.K_BLOCK;
+        int block;
         Assert.assertEquals(YokelBlockEval.K_BLOCK, k_block);
 
-        System.out.println(YokelBlockEval.setValueFlag(k_block, 4));
+        System.out.println("K Block: " + YokelBlockEval.K_BLOCK);
+        //OFFENSIVE_MINOR = 3;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.K_BLOCK, YokelBlockEval.OFFENSIVE_MINOR);
+        System.out.println("OFFENSIVE_MINOR: " + block);
+        printBlockLabel(block);
+
+        //OFFENSIVE_REGULAR = 5;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.K_BLOCK, YokelBlockEval.OFFENSIVE_REGULAR);
+        System.out.println("OFFENSIVE_REGULAR: " + block);
+        printBlockLabel(block);
+
+        //OFFENSIVE_MEGA = 7;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.K_BLOCK, YokelBlockEval.OFFENSIVE_MEGA);
+        System.out.println("OFFENSIVE_MEGA: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_MINOR = 2;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.K_BLOCK, YokelBlockEval.DEFENSIVE_MINOR);
+        System.out.println("DEFENSIVE_MINOR: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_REGULAR = 4;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.K_BLOCK, YokelBlockEval.DEFENSIVE_REGULAR);
+        System.out.println("DEFENSIVE_REGULAR: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_MEGA = 6;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.K_BLOCK, YokelBlockEval.DEFENSIVE_MEGA);
+        System.out.println("DEFENSIVE_MEGA: " + block);
+        printBlockLabel(block);
+
+        Assert.assertFalse(YokelBlockEval.hasBrokenFlag(k_block));
+        k_block = YokelBlockEval.addBrokenFlag(k_block);
+        Assert.assertTrue(YokelBlockEval.hasBrokenFlag(k_block));
+        k_block = YokelBlockEval.removeBrokenFlag(k_block);
+        Assert.assertFalse(YokelBlockEval.hasBrokenFlag(k_block));
         System.out.println("End yokelblock_K_Test()");
-        throw new Exception("Test is not complete.");
     }
 
     @Test
     public void yokelblock_E_Test() throws Exception {
         System.out.println("Start yokelblock_E_Test()");
         int e_block = YokelBlockEval.E_BLOCK;
+        int block;
         Assert.assertEquals(YokelBlockEval.E_BLOCK, e_block);
 
-        System.out.println(YokelBlockEval.setValueFlag(e_block, 4));
+        System.out.println("E Block: " + YokelBlockEval.E_BLOCK);
+        //OFFENSIVE_MINOR = 3;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.E_BLOCK, YokelBlockEval.OFFENSIVE_MINOR);
+        System.out.println("OFFENSIVE_MINOR: " + block);
+        printBlockLabel(block);
+
+        //OFFENSIVE_REGULAR = 5;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.E_BLOCK, YokelBlockEval.OFFENSIVE_REGULAR);
+        System.out.println("OFFENSIVE_REGULAR: " + block);
+        printBlockLabel(block);
+
+        //OFFENSIVE_MEGA = 7;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.E_BLOCK, YokelBlockEval.OFFENSIVE_MEGA);
+        System.out.println("OFFENSIVE_MEGA: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_MINOR = 2;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.E_BLOCK, YokelBlockEval.DEFENSIVE_MINOR);
+        System.out.println("DEFENSIVE_MINOR: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_REGULAR = 4;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.E_BLOCK, YokelBlockEval.DEFENSIVE_REGULAR);
+        System.out.println("DEFENSIVE_REGULAR: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_MEGA = 6;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.E_BLOCK, YokelBlockEval.DEFENSIVE_MEGA);
+        System.out.println("DEFENSIVE_MEGA: " + block);
+        printBlockLabel(block);
+
+        Assert.assertFalse(YokelBlockEval.hasBrokenFlag(e_block));
+        e_block = YokelBlockEval.addBrokenFlag(e_block);
+        Assert.assertTrue(YokelBlockEval.hasBrokenFlag(e_block));
+        e_block = YokelBlockEval.removeBrokenFlag(e_block);
+        Assert.assertFalse(YokelBlockEval.hasBrokenFlag(e_block));
         System.out.println("End yokelblock_E_Test()");
-        throw new Exception("Test is not complete.");
     }
 
     @Test
     public void yokelblock_L_Test() throws Exception {
         System.out.println("Start yokelblock_L_Test()");
         int l_block = YokelBlockEval.L_BLOCK;
+        int block;
         Assert.assertEquals(YokelBlockEval.L_BLOCK, l_block);
 
-        System.out.println(YokelBlockEval.setValueFlag(l_block, 4));
+        System.out.println("L Block: " + YokelBlockEval.L_BLOCK);
+        //OFFENSIVE_MINOR = 3;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.L_BLOCK, YokelBlockEval.OFFENSIVE_MINOR);
+        System.out.println("OFFENSIVE_MINOR: " + block);
+        printBlockLabel(block);
+
+        //OFFENSIVE_REGULAR = 5;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.L_BLOCK, YokelBlockEval.OFFENSIVE_REGULAR);
+        System.out.println("OFFENSIVE_REGULAR: " + block);
+        printBlockLabel(block);
+
+        //OFFENSIVE_MEGA = 7;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.L_BLOCK, YokelBlockEval.OFFENSIVE_MEGA);
+        System.out.println("OFFENSIVE_MEGA: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_MINOR = 2;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.L_BLOCK, YokelBlockEval.DEFENSIVE_MINOR);
+        System.out.println("DEFENSIVE_MINOR: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_REGULAR = 4;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.L_BLOCK, YokelBlockEval.DEFENSIVE_REGULAR);
+        System.out.println("DEFENSIVE_REGULAR: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_MEGA = 6;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.L_BLOCK, YokelBlockEval.DEFENSIVE_MEGA);
+        System.out.println("DEFENSIVE_MEGA: " + block);
+        printBlockLabel(block);
+
+        Assert.assertFalse(YokelBlockEval.hasBrokenFlag(l_block));
+        l_block = YokelBlockEval.addBrokenFlag(l_block);
+        Assert.assertTrue(YokelBlockEval.hasBrokenFlag(l_block));
+        l_block = YokelBlockEval.removeBrokenFlag(l_block);
+        Assert.assertFalse(YokelBlockEval.hasBrokenFlag(l_block));
         System.out.println("End yokelblock_L_Test()");
-        throw new Exception("Test is not complete.");
     }
 
     @Test
-    public void yokelblock_EX_Test() throws Exception {
+    public void yokelblock_EX_Test() {
         System.out.println("Start yokelblock_EX_Test()");
         int ex_block = YokelBlockEval.EX_BLOCK;
+        int block;
         Assert.assertEquals(YokelBlockEval.EX_BLOCK, ex_block);
 
-        System.out.println(YokelBlockEval.setValueFlag(ex_block, 4));
+        System.out.println("EX Block: " + YokelBlockEval.EX_BLOCK);
+        //OFFENSIVE_MINOR = 3;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.EX_BLOCK, YokelBlockEval.OFFENSIVE_MINOR);
+        System.out.println("OFFENSIVE_MINOR: " + block);
+        printBlockLabel(block);
+
+        //OFFENSIVE_REGULAR = 5;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.EX_BLOCK, YokelBlockEval.OFFENSIVE_REGULAR);
+        System.out.println("OFFENSIVE_REGULAR: " + block);
+        printBlockLabel(block);
+
+        //OFFENSIVE_MEGA = 7;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.EX_BLOCK, YokelBlockEval.OFFENSIVE_MEGA);
+        System.out.println("OFFENSIVE_MEGA: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_MINOR = 2;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.EX_BLOCK, YokelBlockEval.DEFENSIVE_MINOR);
+        System.out.println("DEFENSIVE_MINOR: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_REGULAR = 4;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.EX_BLOCK, YokelBlockEval.DEFENSIVE_REGULAR);
+        System.out.println("DEFENSIVE_REGULAR: " + block);
+        printBlockLabel(block);
+
+        //DEFENSIVE_MEGA = 6;
+        block = YokelBlockEval.setPowerFlag(YokelBlockEval.EX_BLOCK, YokelBlockEval.DEFENSIVE_MEGA);
+        System.out.println("DEFENSIVE_MEGA: " + block);
+        printBlockLabel(block);
+
+        Assert.assertFalse(YokelBlockEval.hasBrokenFlag(ex_block));
+        ex_block = YokelBlockEval.addBrokenFlag(ex_block);
+        Assert.assertTrue(YokelBlockEval.hasBrokenFlag(ex_block));
+        ex_block = YokelBlockEval.removeBrokenFlag(ex_block);
+        Assert.assertFalse(YokelBlockEval.hasBrokenFlag(ex_block));
         System.out.println("End yokelblock_EX_Test()");
-        throw new Exception("Test is not complete.");
     }
 
     @Test
@@ -195,17 +334,21 @@ public class YokelBlockEvalTest {
     }
 
     @Test
-    public void testPartnerBreakFlags() throws Exception {
+    public void testPartnerBreakFlags() {
         System.out.println("Start testPartnerBreakFlag()");
-        //Normal Blocks
+        int block;
+        int actual;
 
-        int block = YokelBlockEval.Y_BLOCK;
-        int actual = YokelBlockEval.removePartnerBreakFlag(block);
+        //Normal Blocks
+        block = YokelBlockEval.Y_BLOCK;
+        actual = YokelBlockEval.removePartnerBreakFlag(block);
         Assert.assertEquals(false, YokelBlockEval.hasPartnerBreakFlag(actual));
         actual = YokelBlockEval.addPartnerBreakFlag(block);
         Assert.assertEquals(true, YokelBlockEval.hasPartnerBreakFlag(actual));
         actual = YokelBlockEval.removePartnerBreakFlag(block);
         Assert.assertEquals(false, YokelBlockEval.hasPartnerBreakFlag(actual));
+
+        //block = YokelBlockEval.addPowerBlockFlag(block, YokelBlockEval.OFFENSIVE_MINOR);
 
         block = YokelBlockEval.O_BLOCK;
         Assert.assertEquals(false, YokelBlockEval.hasPartnerBreakFlag(actual));
@@ -325,6 +468,14 @@ public class YokelBlockEvalTest {
 
     @Test
     public void testAddPowerBlockFlag() throws Exception {
+        System.out.println("Start testAddPowerBlockFlag()");
+
+        System.out.println("BLOCK: " + YokelBlockEval.Y_BLOCK);
+        System.out.println("POWER_BLOCK: " + YokelBlockEval.addPowerBlockFlag(YokelBlockEval.Y_BLOCK));
+        System.out.println("BLOCK: " + YokelBlockEval.O_BLOCK);
+        System.out.println("POWER_BLOCK: " + YokelBlockEval.addPowerBlockFlag(YokelBlockEval.O_BLOCK));
+
+        System.out.println("End testAddPowerBlockFlag()");
         throw new Exception("Test not implemented.");
     }
 
@@ -335,16 +486,6 @@ public class YokelBlockEvalTest {
 
     @Test
     public void testGetPowerLevel() throws Exception {
-        throw new Exception("Test not implemented.");
-    }
-
-    @Test
-    public void testGetPowerLabel() throws Exception {
-        throw new Exception("Test not implemented.");
-    }
-
-    @Test
-    public void testGetPowerUseDescriptionLabel() throws Exception {
         throw new Exception("Test not implemented.");
     }
 }

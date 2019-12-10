@@ -25,7 +25,9 @@ public class YokelBlockEval {
     public static final int MINOR_POWER_LEVEL = 0;
     public static final int NORMAL_POWER_LEVEL = 1;
     public static final int MEGA_POWER_LEVEL = 2;
-
+    public static final int SPECIAL_BLOCK_1 = 1024;
+    public static final int SPECIAL_BLOCK_2 = 1026;
+    public static final int SPECIAL_BLOCK_3 = 1024;
 
     public static int getCellFlag(int value) {
         return value & 0xf;
