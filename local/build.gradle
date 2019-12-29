@@ -1,0 +1,38 @@
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+mainClassName = 'net.asg.games.local'
+eclipse.project.name = appName + '-local'
+
+dependencies {
+    implementation project(path: ':core')
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.github.czyzby:gdx-websocket-serialization:$websocketSerializationVersion"
+    implementation "com.github.czyzby:gdx-websocket-common:$websocketVersion"
+    implementation "com.github.czyzby:gdx-websocket:$websocketVersion"
+    implementation "com.github.czyzby:gdx-kiwi:$kiwiVersion"
+    implementation "io.vertx:vertx-core:$vertxVersion"
+    implementation "commons-lang:commons-lang:$apacheCommonsLangVer"
+    implementation "org.tinylog:tinylog:$tinyLogVersion"
+    implementation "org.mockito:mockito-core:$mockitoVersion"
+    implementation "junit:junit:$junitVersion"
+    implementation "org.assertj:assertj-core:$assertjVersion"
+    implementation "org.jetbrains:annotations-java5:$jetbrainsVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
+    // Test dependencies :
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.assertj:assertj-core:$assertjVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.jetbrains:annotations-java5:$jetbrainsVersion"
+}
+
+jar {
+  from { configurations.compile.collect { zipTree(it) } }
+  manifest {
+    attributes 'Main-Class': project.mainClassName
+  }
+}
+

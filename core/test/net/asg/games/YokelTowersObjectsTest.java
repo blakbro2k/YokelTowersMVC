@@ -10,12 +10,9 @@ import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.utils.Util;
-import net.asg.games.utils.enums.YokelBlockType;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import jdk.nashorn.internal.runtime.ECMAException;
 
 public class YokelTowersObjectsTest {
     @Test
@@ -341,7 +338,7 @@ public class YokelTowersObjectsTest {
     private String getJSON(Object o){
         return Util.getJsonString(o);
     }
-
+/*
     @Test
     public void getType() {
         YokelBlock exp1 = new YokelBlock();
@@ -685,5 +682,5 @@ public class YokelTowersObjectsTest {
         array.add(YokelBlockType.Medusa);
         array.add(YokelBlockType.Stone);
         return array;
-    }
+    }*/
 }

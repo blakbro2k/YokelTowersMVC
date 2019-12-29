@@ -81,7 +81,7 @@ super.setDebug(enabled);    }
     }
 
     private GameBlock getClearBlock(){
-        return UIUtil.getInstance().getGameBlock(YokelBlock.CLEAR);
+        return UIUtil.getInstance().getGameBlock(YokelBlock.CLEAR_BLOCK);
     }
 
     public GameBlock getTopBlock() {

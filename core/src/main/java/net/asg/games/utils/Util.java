@@ -19,7 +19,6 @@ import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.provider.actors.GameBlock;
-import net.asg.games.utils.enums.YokelBlockType;
 
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -317,7 +316,7 @@ public class Util {
         }
         return fileNames;
     }
-
+/*
     public static boolean isPowerBlock(YokelBlock block) throws GdxRuntimeException {
         return block.matchesType(YokelBlockType.AttackY)
                 || block.matchesType(YokelBlockType.AttackO)
@@ -526,7 +525,7 @@ public class Util {
             return YokelBlockType.BrokenEx;
         }
         throw new GdxRuntimeException("Cannot get Broken Block Type, block is unknown");
-    }
+    }*/
 
     public static TextureRegion get2DAnimationFrame(Animation animation, int keyFrame) throws GdxRuntimeException{
         if(animation == null){

@@ -2,8 +2,6 @@ package net.asg.games.utils;
 
 import com.badlogic.gdx.utils.Queue;
 
-import net.asg.games.utils.enums.YokelBlockType;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -21,9 +19,9 @@ public class RandomUtil {
     private static final int DEFENSE_SECTION = 12;
 
     /**
-     * @return a random {@link YokelBlockType}
+     * @return a random {@link }
      */
-
+/*
     public static YokelBlockType getRandomYokelBlockType() {
         RandomEnum<YokelBlockType> randomEnum = new RandomEnum<YokelBlockType>(YokelBlockType.class);
         return randomEnum.random();

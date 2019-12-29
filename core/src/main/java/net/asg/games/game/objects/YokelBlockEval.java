@@ -1,34 +1,6 @@
 package net.asg.games.game.objects;
 
 public class YokelBlockEval {
-    /* Retrieves power "level"
-     * - Even represents defensive powers ( 2, 4, 6 )
-     * - Odd represents attack powers ( 3, 5, 7 )
-     * ( MINOR, REGULAR, MEGA )*/
-
-    public static final int CLEAR_BLOCK = 6;
-    public static final int Y_BLOCK = 0;
-    public static final int O_BLOCK = 1;
-    public static final int K_BLOCK = 2;
-    public static final int E_BLOCK = 3;
-    public static final int L_BLOCK = 4;
-    public static final int EX_BLOCK = 5;
-    public static final int STONE = 7;
-    public static final int MIDAS = 8;
-    public static final int MEDUSA = 9;
-    public static final int OFFENSIVE_MINOR = 3;
-    public static final int OFFENSIVE_REGULAR = 5;
-    public static final int OFFENSIVE_MEGA = 7;
-    public static final int DEFENSIVE_MINOR = 2;
-    public static final int DEFENSIVE_REGULAR = 4;
-    public static final int DEFENSIVE_MEGA = 6;
-    public static final int MINOR_POWER_LEVEL = 0;
-    public static final int NORMAL_POWER_LEVEL = 1;
-    public static final int MEGA_POWER_LEVEL = 2;
-    public static final int SPECIAL_BLOCK_1 = 1024;
-    public static final int SPECIAL_BLOCK_2 = 1026;
-    public static final int SPECIAL_BLOCK_3 = 1024;
-
     public static int getCellFlag(int value) {
         return value & 0xf;
     }
@@ -148,18 +120,18 @@ public class YokelBlockEval {
             case 1: // A powers
                 if (isOffensive) {
                     switch (severity) {
-                        case NORMAL_POWER_LEVEL: // regular
+                        case YokelBlock.NORMAL_POWER_LEVEL: // regular
                             return 174;
-                        case MEGA_POWER_LEVEL: // mega
+                        case YokelBlock.MEGA_POWER_LEVEL: // mega
                             return 199;
                         default: // minor
                             return 169;
                     }
                 }
                 switch (severity) {
-                    case NORMAL_POWER_LEVEL:
+                    case YokelBlock.NORMAL_POWER_LEVEL:
                         return 111;
-                    case MEGA_POWER_LEVEL:
+                    case YokelBlock.MEGA_POWER_LEVEL:
                         return 216;
                     default:
                         return 79;
@@ -167,18 +139,18 @@ public class YokelBlockEval {
             case 2: // H powers
                 if (isOffensive) {
                     switch (severity) {
-                        case NORMAL_POWER_LEVEL:
+                        case YokelBlock.NORMAL_POWER_LEVEL:
                             return 163;
-                        case MEGA_POWER_LEVEL:
+                        case YokelBlock.MEGA_POWER_LEVEL:
                             return 254;
                         default:
                             return 222;
                     }
                 }
                 switch (severity) {
-                    case NORMAL_POWER_LEVEL:
+                    case YokelBlock.NORMAL_POWER_LEVEL:
                         return 107;
-                    case MEGA_POWER_LEVEL:
+                    case YokelBlock.MEGA_POWER_LEVEL:
                         return 75;
                     default:
                         return 181;
@@ -186,9 +158,9 @@ public class YokelBlockEval {
             case 3:
                 if (isOffensive) {
                     switch (severity) {
-                        case NORMAL_POWER_LEVEL:
+                        case YokelBlock.NORMAL_POWER_LEVEL:
                             return 69;
-                        case MEGA_POWER_LEVEL:
+                        case YokelBlock.MEGA_POWER_LEVEL:
                             return 203;
                         default:
                             return 201;
@@ -226,18 +198,18 @@ public class YokelBlockEval {
             case 1: // A powers
                 if (isOffensive) {
                     switch (severity) {
-                        case NORMAL_POWER_LEVEL: // regular
+                        case YokelBlock.NORMAL_POWER_LEVEL: // regular
                             return "Power O";
-                        case MEGA_POWER_LEVEL: // mega
+                        case YokelBlock.MEGA_POWER_LEVEL: // mega
                             return "Mega Power O";
                         default: // minor
                             return "Minor Power O";
                     }
                 }
                 switch (severity) {
-                    case NORMAL_POWER_LEVEL:
+                    case YokelBlock.NORMAL_POWER_LEVEL:
                         return "Defensive O";
-                    case MEGA_POWER_LEVEL:
+                    case YokelBlock.MEGA_POWER_LEVEL:
                         return "Mega Defensive O";
                     default:
                         return "Minor Defensive O";
@@ -245,18 +217,18 @@ public class YokelBlockEval {
             case 2: // H powers
                 if (isOffensive) {
                     switch (severity) {
-                        case NORMAL_POWER_LEVEL:
+                        case YokelBlock.NORMAL_POWER_LEVEL:
                             return "Power K";
-                        case MEGA_POWER_LEVEL:
+                        case YokelBlock.MEGA_POWER_LEVEL:
                             return "Mega Power K";
                         default:
                             return "Minor Power K";
                     }
                 }
                 switch (severity) {
-                    case NORMAL_POWER_LEVEL:
+                    case YokelBlock.NORMAL_POWER_LEVEL:
                         return "Defensive K";
-                    case MEGA_POWER_LEVEL:
+                    case YokelBlock.MEGA_POWER_LEVEL:
                         return "Mega Defensive K";
                     default:
                         return "Minor Defensive K";
@@ -264,9 +236,9 @@ public class YokelBlockEval {
             case 3:
                 if (isOffensive) {
                     switch (severity) {
-                        case NORMAL_POWER_LEVEL:
+                        case YokelBlock.NORMAL_POWER_LEVEL:
                             return "Power E";
-                        case MEGA_POWER_LEVEL:
+                        case YokelBlock.MEGA_POWER_LEVEL:
                             return "Mega Power E";
                         default:
                             return "Minor Power E";

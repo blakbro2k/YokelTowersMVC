@@ -33,6 +33,6 @@ public class GamePieceLmlTag extends AbstractNonParentalActorLmlTag {
     }
 
     private GameBlock getClearBlock(){
-        return UIUtil.getInstance().getFactory().getGameBlock(YokelBlock.CLEAR);
+        return UIUtil.getInstance().getFactory().getGameBlock(YokelBlock.CLEAR_BLOCK);
     }
 }

@@ -56,7 +56,7 @@ public class YokelObjectFactory {
     public GameBlock getGameBlock(int blockType){
         GameBlock block = yokelGameBlockPool.obtain();
         block.setImage(blockType);
-        if(blockType != YokelBlock.CLEAR){
+        if(blockType != YokelBlock.CLEAR_BLOCK){
             block.setActive(true);
         }
         //System.out.println("blockType:" + blockType);
@@ -73,60 +73,24 @@ public class YokelObjectFactory {
 
     public String getBlockImageName(int blockValue){
         switch (blockValue){
-            case YokelBlock.CLEAR:
+            case YokelBlock.CLEAR_BLOCK:
                 return "clear_block";
-            case YokelBlock.NORMAL_Y:
+            case YokelBlock.Y_BLOCK:
                 return "Y_block";
-            case YokelBlock.NORMAL_O:
+            case YokelBlock.O_BLOCK:
                 return "O_block";
-            case YokelBlock.NORMAL_K:
+            case YokelBlock.K_BLOCK:
                 return "K_block";
-            case YokelBlock.NORMAL_E:
+            case YokelBlock.E_BLOCK:
                 return "E_block";
-            case YokelBlock.NORMAL_L:
+            case YokelBlock.L_BLOCK:
                 return "L_block";
-            case YokelBlock.NORMAL_EX:
+            case YokelBlock.EX_BLOCK:
                 return "Bash_block";
-            case YokelBlock.ATTACK_Y:
-                return "power_Y_block";
-            case YokelBlock.ATTACK_O:
-                return "power_O_block";
-            case YokelBlock.ATTACK_K:
-                return "power_K_block";
-            case YokelBlock.ATTACK_E:
-                return "power_E_block";
-            case YokelBlock.ATTACK_L:
-                return "power_L_block";
-            case YokelBlock.ATTACK_EX:
-                return "power_bash_block";
-            case YokelBlock.DEFENSE_Y:
-                return "defense_Y_block";
-            case YokelBlock.DEFENSE_O:
-                return "defense_O_block";
-            case YokelBlock.DEFENSE_K:
-                return "defense_K_block";
-            case YokelBlock.DEFENSE_E:
-                return "defense_E_block";
-            case YokelBlock.DEFENSE_L:
-                return "defense_L_block";
-            case YokelBlock.DEFENSE_EX:
-                return "defense_Bash_block";
             case YokelBlock.MIDAS:
                 return "stone";
             case YokelBlock.MEDUSA:
                 return "stone";
-            case YokelBlock.BROKEN_Y:
-                return "Y_block_Broken";
-            case YokelBlock.BROKEN_O:
-                return "O_block_Broken";
-            case YokelBlock.BROKEN_K:
-                return "K_block_Broken";
-            case YokelBlock.BROKEN_E:
-                return "E_block_Broken";
-            case YokelBlock.BROKEN_L:
-                return "L_block_Broken";
-            case YokelBlock.BROKEN_EX:
-                return "Bash_block_Broken";
             case YokelBlock.STONE:
                 return "stone";
             default:

@@ -78,7 +78,7 @@ public class GameBlockArea extends Stack {
     private void initializeGrid(){
         for(int r = YokelGameBoard.MAX_ROWS - 1; r >= 0; r--){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
-                GameBlock uiBlock = factory.getGameBlock(YokelBlock.CLEAR);
+                GameBlock uiBlock = factory.getGameBlock(YokelBlock.CLEAR_BLOCK);
 
                 uiBlocks.put(getCellAttrName(r,c), uiBlock);
                 if(c + 1 == YokelGameBoard.MAX_COLS){

@@ -145,7 +145,7 @@ public class Global implements ActionContainer {
     }
 
     private int getRandomBlockId(){
-        return MathUtils.random(YokelBlock.DEFENSE_EX);
+        return MathUtils.random(YokelBlock.EX_BLOCK);
     }
 
     @LmlAction("getTimerSeconds")
