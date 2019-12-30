@@ -119,7 +119,7 @@ public class Global implements ActionContainer {
     @LmlAction("getTestBoard")
     private YokelGameBoard getTestBoard(){
 
-        YokelGameBoard board = new YokelGameBoard();
+        YokelGameBoard board = new YokelGameBoard(1L);
 
         board.setCell(0,0, getRandomBlockId());
         board.setCell(0,1, getRandomBlockId());

@@ -41,7 +41,7 @@ public class GameManager {
     }
     public void init(){
         for(int i = 0; i < 8; i++){
-            boards.add(new YokelGameBoard());
+            boards.add(new YokelGameBoard(1L));
         }
     }
     public void handleMoveRight(){}

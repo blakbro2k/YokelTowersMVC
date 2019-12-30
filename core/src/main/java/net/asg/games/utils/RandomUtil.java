@@ -19,42 +19,6 @@ public class RandomUtil {
     private static final int DEFENSE_SECTION = 12;
 
     /**
-     * @return a random {@link }
-     */
-/*
-    public static YokelBlockType getRandomYokelBlockType() {
-        RandomEnum<YokelBlockType> randomEnum = new RandomEnum<YokelBlockType>(YokelBlockType.class);
-        return randomEnum.random();
-    }
-
-    public static YokelBlockType getRandomNormalYokelBlockType() {
-        RandomEnum<YokelBlockType> randomEnum = new RandomEnum<YokelBlockType>(YokelBlockType.class);
-        return randomEnum.random(0);
-    }
-
-    public static YokelBlockType getRandomOffensiveYokelBlockType() {
-        RandomEnum<YokelBlockType> randomEnum = new RandomEnum<YokelBlockType>(YokelBlockType.class);
-        return randomEnum.random(ATTACK_SECTION);
-    }
-
-    public static YokelBlockType getRandomDefensiveYokelBlockType() {
-        RandomEnum<YokelBlockType> randomEnum = new RandomEnum<YokelBlockType>(YokelBlockType.class);
-        return randomEnum.random(DEFENSE_SECTION);
-    }
-
-    public static Queue<YokelBlockType> getRandomBlockArray() {
-        return getRandomBlockArray(1024);
-    }
-
-    private static Queue<YokelBlockType> getRandomBlockArray(int maxIndex) {
-        Queue<YokelBlockType> ret = new Queue<YokelBlockType>(maxIndex);
-        for (int i = 0; i < maxIndex; i++) {
-            ret.addFirst(getRandomNormalYokelBlockType());
-        }
-        return ret;
-    }
-
-    /**
      * @see <a href="http://stackoverflow.com/a/1973018">Stack Overflow</a>
      */
     private static class RandomEnum<E extends Enum> {

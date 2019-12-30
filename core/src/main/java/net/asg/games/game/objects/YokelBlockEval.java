@@ -103,8 +103,30 @@ public class YokelBlockEval {
         return getPowerFlag(i) >> 1;
     }
 
+    public static char getNormalLabel(int i){
+        switch(i){
+            case YokelBlock.Y_BLOCK:
+                return 'Y';
+            case YokelBlock.O_BLOCK:
+                return 'O';
+            case YokelBlock.K_BLOCK:
+                return 'K';
+            case YokelBlock.E_BLOCK:
+                return 'E';
+            case YokelBlock.L_BLOCK:
+                return 'L';
+            case YokelBlock.EX_BLOCK:
+                return '!';
+            case YokelBlock.CLEAR_BLOCK:
+                return ' ';
+            default:
+                return 159;
+        }
+    }
+
     public static char getPowerLabel(int i) {
         //TowersUtils.print( "this deally called" );
+        System.out.println("Evaluating int = " + i);
         if (hasSpecialFlag(i)) {
             //TowersUtils.print( "this one is okay " + dwi.getStringFromDict(1716519979) );
             //return dwi.getStringFromDict(1716519979);

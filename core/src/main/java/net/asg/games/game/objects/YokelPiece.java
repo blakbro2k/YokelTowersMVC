@@ -5,23 +5,25 @@ import java.util.Arrays;
 public class YokelPiece extends AbstractYokelObject {
     private int index;
     private int[] cells;
-
-    public YokelPiece(int index){
-        this(index, YokelBlock.Y_BLOCK, YokelBlock.O_BLOCK, YokelBlock.K_BLOCK);
-    }
+    public int row;
+    public int column;
 
     public YokelPiece(int index, int block1, int block2, int block3){
+        init();
         this.index = index;
-        cells = new int[3];
-        cells[0] = block1;
-        cells[1] = block2;
-        cells[2] = block3;
+        this.cells[0] = block3;
+        this.cells[1] = block2;
+        this.cells[2] = block1;
     }
 
     public int getValueAt(int i) {
-        System.out.println("getting i=" + i);
-        System.out.println(cells[0]);
         return cells[i];
+    }
+
+    private void init(){
+        if(this.cells == null){
+            this.cells = new int[3];
+        }
     }
 
     public int getIndex() {
@@ -31,5 +33,12 @@ public class YokelPiece extends AbstractYokelObject {
     @Override
     public void dispose() {
 
+    }
+
+    public void setPosition(int r, int c) {
+        if(r < 0) throw new RuntimeException("Row value cannot be less than zero!");
+        if(c < 0) throw new RuntimeException("Column value cannot be less than zero!");
+        this.row = r;
+        this.column = c;
     }
 }
