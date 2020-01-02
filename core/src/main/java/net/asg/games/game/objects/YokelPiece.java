@@ -41,4 +41,8 @@ public class YokelPiece extends AbstractYokelObject {
         this.row = r;
         this.column = c;
     }
+
+    public String toString(){
+        return Arrays.toString(cells);
+    }
 }

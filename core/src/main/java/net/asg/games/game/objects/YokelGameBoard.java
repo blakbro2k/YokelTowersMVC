@@ -2,6 +2,7 @@ package net.asg.games.game.objects;
 
 import net.asg.games.utils.RandomUtil;
 
+import java.util.Arrays;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -1108,7 +1109,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     public boolean hasPlayerDied() {
         for (int row = MAX_PLAYABLE_ROWS; row < MAX_ROWS; row++) {
             for (int col = 0; col < MAX_COLS; col++) {
-                if (getPieceValue(col, row) != MAX_COLS) {
+                if (getPieceValue(col, row) != YokelBlock.CLEAR_BLOCK) {
                     return true;
                 }
             }
@@ -1420,7 +1421,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         addPrintLine(out);
         for (int r = MAX_ROWS - 1; r > -1; r--){
             for (int c = 0; c < MAX_COLS; c++) {
-                int block = getPieceValue(c,r);
+                int block = getBoardBlock(r,c);
                 if(block == YokelBlock.CLEAR_BLOCK){
                     out.append('|').append(' ');
                 } else {
@@ -1432,12 +1433,26 @@ public class YokelGameBoard extends AbstractYokelObject {
                 }
             }
             out.append("|\n");
-            //addPrintLine(out);
         }
 
         addPrintLine(out);
 
         return out.toString();
+    }
+
+    private int getBoardBlock(int r, int c) {
+        if(c == piece.column){
+            if(piece.row == r) {
+                return piece.getValueAt(0);
+            }
+            if(piece.row + 1 == r){
+                return piece.getValueAt(1);
+            }
+            if(piece.row + 2 == r){
+                return piece.getValueAt(2);
+            }
+        }
+        return getPieceValue(c,r);
     }
 
     private void addPrintLine(StringBuilder sb){
@@ -1454,9 +1469,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     public void update(float delta){
         this.fallNumber -= getCurrentFallRate();
         if(this.fallNumber < 0){
-            System.out.println("fallNumber:" + fallNumber);
             movePieceDown();
-            System.out.println("after fallNumber:" + fallNumber);
         }
         updateBoard();
     }
@@ -1472,16 +1485,13 @@ public class YokelGameBoard extends AbstractYokelObject {
     public void updateBoard(){
     }
 
-    private void movePieceDown(){System.out.println("!!!!Move Piece Down!!!!!!");
+    private void movePieceDown(){
         if(!isCellFree(piece.column, piece.row)){
-            clearCell(piece.row, piece.column);
-            clearCell(piece.row + 1, piece.column);
-            clearCell(piece.row + 2, piece.column);
-            placeBlockAt(piece, piece.column, piece.row - 1);
             piece.setPosition(piece.row - 1, piece.column);
             this.fallNumber = MAX_FALL_VALUE;
         } else {
-            setNextPiece();
+            placeBlockAt(piece, piece.column, piece.row);
+            addNextPiece();
         }
     }
 
@@ -1489,7 +1499,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         return nextBlocks.getRandomNumberAt(++currentBlockPointer);
     }
 
-    public void setNextPiece() {
+    public void addNextPiece() {
         int block1 = getNextBlock();
         int block2 = getNextBlock();
         int block3 = getNextBlock();
@@ -1497,6 +1507,5 @@ public class YokelGameBoard extends AbstractYokelObject {
         int r = MAX_PLAYABLE_ROWS;
         int c = 3;
         this.piece.setPosition(r,c);
-        placeBlockAt(piece, c, r);
     }
 }
