@@ -391,11 +391,11 @@ public class ServerManager {
             if(frame == null) throw new Exception("Incoming packet was null.");
             Logger.trace("Enter handleFrame()");
             final byte[] packet = frame.binaryData().getBytes();
-            final long start = System.nanoTime();
+            //final long start = System.nanoTime();
             Logger.info("Deserializing packet recieved");
             final Object deserialized = serializer.deserialize(packet);
             Logger.trace("deserialized: {}", deserialized);
-            final long time = System.nanoTime() - start;
+            //final long time = System.nanoTime() - start;
             sendResponse(serializer, deserialized, webSocket);
             Logger.trace("Exit handleFrame()");
         } catch (Exception e){
@@ -691,13 +691,26 @@ public class ServerManager {
 
         if(table != null){
             Logger.info("attempting to start game at " + roomName + ":table:" + table.getTableNumber());
-            GameRunner game = new GameRunner(this, table);
-            games.put(loungeName + ":" + roomName + ":" + tableNumber, game);
-            //table.startGame();
-            //isRunning = true;
+            GameRunner game = getGameFromTable(loungeName, roomName, table);
+            //store thead id for runner
+            //if(){
+
+            //}
         }
         Logger.trace("Exit startGameAtTable()=" + false);
         return false;
+    }
+
+    private GameRunner getGameFromTable(String loungeName, String roomName, YokelTable table) throws Exception{
+        if(loungeName == null) throw new Exception("Error getting game from table: Lounge is null.");
+        if(roomName == null) throw new Exception("Error getting game from table: Room is null.");
+        int tableNumber = table.getTableNumber();
+        GameRunner game = games.get(loungeName+roomName+tableNumber);
+        if(game == null){
+            game = new GameRunner(this, table);
+            games.put(loungeName + ":" + roomName + ":" + tableNumber, game);
+        }
+        return game;
     }
 
     private boolean registerPlayer(YokelPlayer player){

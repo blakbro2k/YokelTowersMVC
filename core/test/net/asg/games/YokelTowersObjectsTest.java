@@ -201,7 +201,7 @@ public class YokelTowersObjectsTest {
         Assert.assertEquals(YokelTable.ACCESS_TYPE.PUBLIC, table1.getAccessType());
 
         Assert.assertEquals(8, table1.getSeats().size);
-        Assert.assertFalse(table1.isGameRunning());
+        //Assert.assertFalse(table1.isGameRunning());
         Assert.assertFalse(table1.isTableStartReady());
         Assert.assertFalse(table1.isGroupReady(-1));
         Assert.assertFalse(table1.isGroupReady(5));
@@ -303,16 +303,16 @@ public class YokelTowersObjectsTest {
         /**
          * Test table ready
          */
-        Assert.assertFalse(table1.isGameRunning());
+        //Assert.assertFalse(table1.isGameRunning());
         Assert.assertFalse(table1.isTableStartReady());
         table1.getSeat(0).sitDown(player2);
         Assert.assertFalse(table1.isTableStartReady());
         table1.getSeat(2).sitDown(player3);
         Assert.assertTrue(table1.isTableStartReady());
-        table1.startGame();
-        Assert.assertTrue(table1.isGameRunning());
-        table1.stopGame();
-        Assert.assertFalse(table1.isGameRunning());
+        //table1.startGame();
+        //Assert.assertTrue(table1.isGameRunning());
+        //table1.stopGame();
+        //Assert.assertFalse(table1.isGameRunning());
         table1.getSeat(0).standUp();
         table1.getSeat(2).standUp();
 

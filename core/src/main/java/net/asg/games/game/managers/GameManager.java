@@ -97,9 +97,9 @@ public class GameManager {
 
     public boolean startGame() {
         if(!isGameRunning){
-            table.isTableStartReady();
+            isGameRunning = table.isTableStartReady();
         }
-        return isGameRunning = true;
+        return isGameRunning;
     }
 
     public boolean stopGame(){
