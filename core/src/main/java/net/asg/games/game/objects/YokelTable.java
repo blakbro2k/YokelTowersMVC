@@ -16,7 +16,6 @@ public class YokelTable extends AbstractYokelObject {
 
     private Array<YokelSeat> seats;
     private ACCESS_TYPE accessType;
-    private boolean isStarted;
     private boolean isRated;
     private boolean isSoundOn;
 
@@ -41,7 +40,6 @@ public class YokelTable extends AbstractYokelObject {
         setRated(false);
         setSound(true);
         setUpArguments(arguments);
-        stopGame();
     }
 
     private void setUpArguments(OrderedMap<String, Object> arguments){
@@ -91,16 +89,6 @@ public class YokelTable extends AbstractYokelObject {
         return accessType;
     }
 
-    public void startGame(){
-        if(isTableStartReady()) {
-            isStarted = true;
-        }
-    }
-
-    public void stopGame(){
-        isStarted = false;
-    }
-
     public void setRated(boolean rated){
         this.isRated = rated;
     }
@@ -115,10 +103,6 @@ public class YokelTable extends AbstractYokelObject {
 
     public boolean isSoundOn() {
         return isSoundOn;
-    }
-
-    public boolean isGameRunning(){
-        return isStarted;
     }
 
     public boolean isGroupReady(int g){

@@ -3,12 +3,15 @@ package net.asg.games.game.managers;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
+import com.github.czyzby.websocket.serialization.Serializer;
+import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
+import net.asg.games.server.serialization.AdminClientRequest;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.storage.StorageInterface;
@@ -25,6 +28,10 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.ServerWebSocket;
+import io.vertx.core.http.WebSocketFrame;
 
 public class ServerManager {
     private final AtomicInteger idCounter = new AtomicInteger();
@@ -342,6 +349,92 @@ public class ServerManager {
         return new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
     }
 
+    private ServerResponse handleAdminRequest(AdminClientRequest request) {
+        Logger.trace("Enter handleAdminRequest()");
+        ServerResponse response = null;
+
+        if(request != null){
+            String sessionId = null;
+            String message = null;
+            int requestSequence = -1;
+            String[] serverPayload = null;
+
+            Logger.debug("request: {}", request.getMessage());
+
+            message = request.getMessage();
+            sessionId = request.getSessionId();
+            requestSequence = request.getRequestSequence();
+            //serverPayload = null; //buildPayload(message, request.getPayload());
+            response = new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
+        }
+        Logger.trace("Exit handleAdminRequest()");
+        return response;
+    }
+
+    private void sendServerResponse(Serializer serializer, ServerWebSocket webSocket, ServerResponse response) throws Exception{
+        Logger.trace("Enter sendServerResponse()");
+        try{
+            if(response == null) throw new Exception("Server response was null");
+            if(webSocket == null) throw new Exception("WebSocket is null, was it initialized?");
+            final byte[] serialized = serializer.serialize(response);
+            webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
+            Logger.trace("Exit sendServerResponse()");
+        } catch (Exception e){
+            Logger.error(e,"Unable to send Server Response: ");
+            throw new Exception("Unable to send Server Response: ", e);
+        }
+    }
+
+    public void handleFrame(Serializer serializer, final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
+        try {
+            if(serializer == null) throw new Exception("No Serializer. Cannot deserialize websocket packet.");
+            if(frame == null) throw new Exception("Incoming packet was null.");
+            Logger.trace("Enter handleFrame()");
+            final byte[] packet = frame.binaryData().getBytes();
+            final long start = System.nanoTime();
+            Logger.info("Deserializing packet recieved");
+            final Object deserialized = serializer.deserialize(packet);
+            Logger.trace("deserialized: {}", deserialized);
+            final long time = System.nanoTime() - start;
+            sendResponse(serializer, deserialized, webSocket);
+            Logger.trace("Exit handleFrame()");
+        } catch (Exception e){
+            Logger.error(e,"Error handling websocket frame.");
+            throw new Exception("Error handling websocket frame.", e);
+        }
+    }
+
+    private void sendResponse(Serializer serializer, Object deserialized, ServerWebSocket webSocket) throws Exception{
+        try{
+            Logger.trace("Enter sendResponse()");
+            if(deserialized instanceof ClientRequest){
+                ClientRequest request = (ClientRequest) deserialized;
+                clientRepsonse(serializer, webSocket, request);
+            }
+
+            if(deserialized instanceof AdminClientRequest){
+                AdminClientRequest request = (AdminClientRequest) deserialized;
+                adminResponse(serializer, webSocket, request);
+            }
+            Logger.trace("Exit sendResponse()");
+        } catch (Exception e){
+            Logger.error(e, "Error in sendResponse.");
+            throw new Exception("Error handling websocket frame.", e);
+        }
+    }
+
+    private void clientRepsonse(Serializer serializer, ServerWebSocket webSocket, ClientRequest request) throws Exception{
+        Logger.trace("Enter clientRepsonse()");
+        sendServerResponse(serializer, webSocket, handleClientRequest(request));
+        Logger.trace("Exit clientRepsonse()");
+    }
+
+    private void adminResponse(Serializer serializer, ServerWebSocket webSocket, AdminClientRequest request) throws Exception{
+        Logger.trace("Enter adminResponse()");
+        sendServerResponse(serializer, webSocket, handleAdminRequest(request));
+        Logger.trace("Exit adminResponse()");
+    }
+
     public Array<String> testPlayersToJSON(){
         Array<String> jsonPlayers = new Array<>();
 
@@ -596,16 +689,15 @@ public class ServerManager {
         Logger.trace("Enter startGameAtTable()");
         YokelTable table = getTable(loungeName, roomName, tableNumber);
 
-        boolean isRunning = false;
         if(table != null){
             Logger.info("attempting to start game at " + roomName + ":table:" + table.getTableNumber());
             GameRunner game = new GameRunner(this, table);
             games.put(loungeName + ":" + roomName + ":" + tableNumber, game);
-            table.startGame();
-            isRunning = table.isGameRunning();
+            //table.startGame();
+            //isRunning = true;
         }
-        Logger.trace("Exit startGameAtTable()=" + isRunning);
-        return isRunning;
+        Logger.trace("Exit startGameAtTable()=" + false);
+        return false;
     }
 
     private boolean registerPlayer(YokelPlayer player){

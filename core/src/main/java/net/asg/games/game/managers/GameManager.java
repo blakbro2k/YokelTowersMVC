@@ -27,6 +27,7 @@ public class GameManager {
     YokelTable table;
     Array<YokelGameBoard> gameBoards;
     int thresh = 0;
+    private boolean isGameRunning;
 
     public GameManager(YokelTable table){
         this.table = table;
@@ -47,7 +48,7 @@ public class GameManager {
 
         thresh++;
         if(thresh > 100){
-            table.stopGame();
+            stopGame();
         }
     }
 
@@ -67,6 +68,7 @@ public class GameManager {
 
     public void init(){
         long seed = getSeed();
+        isGameRunning = false;
         for(int i = 0; i < 8; i++){
             gameBoards.add(new YokelGameBoard(seed));
         }
@@ -83,25 +85,29 @@ public class GameManager {
 
     public String printTables(){
         StringBuilder sbSeats = new StringBuilder();
-//String t = "";
+        //String t = "";
         if(table != null){
             for(YokelGameBoard board : gameBoards){
                 sbSeats.append(board.toString());
             }
         }
         return sbSeats.toString();
-        //return table.getSeat(1).toString();
+        //return table.getSeat(1).toString();.
     }
 
     public boolean startGame() {
-        if(!table.isGameRunning()){
-            table.startGame();
+        if(!isGameRunning){
+            table.isTableStartReady();
         }
-        return table.isGameRunning();
+        return isGameRunning = true;
+    }
+
+    public boolean stopGame(){
+        return isGameRunning = false;
     }
 
     public boolean isRunning() {
-        return table.isGameRunning();
+        return isGameRunning;
     }
 
     public int thresh() {

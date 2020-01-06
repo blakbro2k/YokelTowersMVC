@@ -21,7 +21,6 @@ public class LocalLauncher {
                 System.out.println(board);
                 index++;
             }
-
         } catch (Exception e) {
             Logger.error(e,"Failed to launch server: ");
             throw new Exception("Failed to launch server: ", e);

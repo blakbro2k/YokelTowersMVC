@@ -68,7 +68,7 @@ public class ServerLauncher {
                 // Printing received packets to console, sending response:
                 webSocket.frameHandler(frame -> {
                     try {
-                        handleFrame(webSocket, frame);
+                        serverDaemon.handleFrame(serializer, webSocket, frame);
                     } catch (Exception e) {
                         Logger.error(e, "There was an error handling client request");
                         Logger.error(e);
@@ -93,101 +93,5 @@ public class ServerLauncher {
             Logger.error(e,"Error during initialization: ");
             throw new Exception("Error during initialization: ", e);
         }
-    }
-
-    private void sendServerResponse(ServerWebSocket webSocket, ServerResponse response) throws Exception{
-        Logger.trace("Enter sendServerResponse()");
-        if(response == null) throw new Exception("Unable to send Server Response: Server response was null");
-        if(webSocket == null) throw new Exception("Unable to send Server Response: WebSocket is null, was it initialized?");
-
-        try{
-            final byte[] serialized = serializer.serialize(response);
-            webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
-            Logger.trace("Exit sendServerResponse()");
-        } catch (Exception e){
-            Logger.error(e,"Unable to send Server Response: ");
-            throw new Exception("Unable to send Server Response: ", e);
-        }
-    }
-
-    private void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
-        try {
-            Logger.trace("Enter handleFrame()");
-            final byte[] packet = frame.binaryData().getBytes();
-            final long start = System.nanoTime();
-            Logger.info("Deserializing packet recieved");
-            final Object deserialized = serializer.deserialize(packet);
-            Logger.trace("deserialized: {}", deserialized);
-            final long time = System.nanoTime() - start;
-            sendResponse(deserialized, webSocket);
-            Logger.trace("Exit handleFrame()");
-        } catch (Exception e){
-            Logger.error(e,"Error handling websocket frame.");
-            throw new Exception("Error handling websocket frame.", e);
-        }
-    }
-
-    private void sendResponse(Object deserialized, ServerWebSocket webSocket) throws Exception{
-        try{
-            Logger.trace("Enter sendResponse()");
-            if(deserialized instanceof ClientRequest){
-                ClientRequest request = (ClientRequest) deserialized;
-                clientRepsonse(webSocket, request);
-            }
-
-            if(deserialized instanceof AdminClientRequest){
-                AdminClientRequest request = (AdminClientRequest) deserialized;
-                adminResponse(webSocket, request);
-            }
-            Logger.trace("Exit sendResponse()");
-        } catch (Exception e){
-            Logger.error(e, "Error in sendResponse.");
-            throw new Exception("Error handling websocket frame.", e);
-        }
-    }
-
-    private void clientRepsonse(ServerWebSocket webSocket, ClientRequest request) throws Exception{
-        Logger.trace("Enter clientRepsonse()");
-        if(serverDaemon == null) throw new Exception("Server Deamon is not running.");
-        sendServerResponse(webSocket, serverDaemon.handleClientRequest(request));
-        Logger.trace("Exit clientRepsonse()");
-    }
-
-    private void adminResponse(ServerWebSocket webSocket, AdminClientRequest request) throws Exception{
-        Logger.trace("Enter adminResponse()");
-        sendServerResponse(webSocket, handleAdminRequest(request));
-        Logger.trace("Exit adminResponse()");
-    }
-
-    private ServerResponse handleAdminRequest(AdminClientRequest request) {
-            Logger.trace("Enter handleAdminRequest()");
-            ServerResponse response = null;
-
-            if(request != null){
-                String sessionId = null;
-                String message = null;
-                int requestSequence = -1;
-                String[] serverPayload = null;
-
-                Logger.debug("request: {}", request.getMessage());
-
-                message = request.getMessage();
-                sessionId = request.getSessionId();
-                requestSequence = request.getRequestSequence();
-                //serverPayload = null; //buildPayload(message, request.getPayload());
-                response = new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
-            }
-            Logger.trace("Exit handleAdminRequest()");
-            return response;
-    }
-
-    private int getServerId() {
-        Logger.trace("Enter getServerId()");
-        int serverId = -1;
-        if(serverDaemon != null){
-            serverId = serverDaemon.getServerId();
-        }
-        Logger.trace("Exit getServerId()");
-        return serverId;
     }
 }
