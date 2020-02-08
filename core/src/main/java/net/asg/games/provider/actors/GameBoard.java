@@ -91,12 +91,12 @@ public class GameBoard extends Table {
 
     public YokelPiece getNextPiece(){
         if (nextPieceBuffer.size < 1){
-            setNextPiece(fetchNextYokelPiece());
+            addNextPiece(fetchNextYokelPiece());
         }
         return nextPieceBuffer.removeFirst();
     }
 
-    public void setNextPiece(YokelPiece piece){
+    public void addNextPiece(YokelPiece piece){
         if(piece != null){
             this.nextPieceBuffer.addFirst(piece);
 
@@ -241,7 +241,7 @@ public class GameBoard extends Table {
         if(!needsReset){
             isBoardRunning = true;
             needsReset = true;
-            setNextPiece(fetchNextYokelPiece());
+            addNextPiece(fetchNextYokelPiece());
             setCurrentPiece();
         } else {
             throw new GdxRuntimeException("You must reset the table RND before starting this board.");
@@ -251,7 +251,7 @@ public class GameBoard extends Table {
     private void setCurrentPiece(){
         if(canSetCurrentPiece()){
             blockArea.setCurrentPiece(createGamePiece(getNextPiece()));
-            setNextPiece(fetchNextYokelPiece());
+            addNextPiece(fetchNextYokelPiece());
         }
     }
 

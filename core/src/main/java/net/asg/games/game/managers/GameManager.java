@@ -10,40 +10,74 @@ import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 
 import net.asg.games.controller.UITestController;
+import net.asg.games.game.objects.YokelBoardPair;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.service.UserInterfaceService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class GameManager {
     @Inject private UserInterfaceService uiService;
     @Inject private UITestController uiView;
     YokelTable table;
-    Array<YokelGameBoard> boards;
-
+    Array<YokelGameBoard> gameBoards;
     int thresh = 0;
+    private boolean isGameRunning;
 
     public GameManager(YokelTable table){
         this.table = table;
-        boards = new Array<>();
+        gameBoards = new Array<>();
         init();
     }
 
     private void loadGameData() {}
     public void update(){
         //System.out.println(thresh);
+        for(int i = 0; i < 8; i++){
+            YokelSeat seat = table.getSeat(i);
+            YokelGameBoard board = gameBoards.get(i);
+            if(isOccupied(seat) && !isPlayerDead(board)){
+                board.update(1);
+            }
+        }
+
         thresh++;
         if(thresh > 100){
-            table.stopGame();
+            stopGame();
         }
     }
+
+    private boolean isOccupied(YokelSeat seat){
+        if(seat != null){
+            return seat.isOccupied();
+        }
+        return false;
+    }
+
+    private boolean isPlayerDead(YokelGameBoard board){
+        if(board != null){
+            return board.hasPlayerDied();
+        }
+        return true;
+    }
+
     public void init(){
+        long seed = getSeed();
+        isGameRunning = false;
         for(int i = 0; i < 8; i++){
-            boards.add(new YokelGameBoard(1L));
+            gameBoards.add(new YokelGameBoard(seed));
         }
     }
+
+    private long getSeed() {
+        return 1L;
+    }
+
     public void handleMoveRight(){}
     public void handleMoveLeft(){}
     public void handleSetPiece(){}
@@ -51,25 +85,29 @@ public class GameManager {
 
     public String printTables(){
         StringBuilder sbSeats = new StringBuilder();
-//String t = "";
+        //String t = "";
         if(table != null){
-            for(YokelGameBoard board : boards){
+            for(YokelGameBoard board : gameBoards){
                 sbSeats.append(board.toString());
             }
         }
         return sbSeats.toString();
-        //return table.getSeat(1).toString();
+        //return table.getSeat(1).toString();.
     }
 
     public boolean startGame() {
-        if(!table.isGameRunning()){
-            table.startGame();
+        if(!isGameRunning){
+            isGameRunning = table.isTableStartReady();
         }
-        return table.isGameRunning();
+        return isGameRunning;
+    }
+
+    public boolean stopGame(){
+        return isGameRunning = false;
     }
 
     public boolean isRunning() {
-        return table.isGameRunning();
+        return isGameRunning;
     }
 
     public int thresh() {
