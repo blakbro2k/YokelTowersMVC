@@ -14,15 +14,19 @@ public class LocalLauncher {
         try{
             YokelGameBoard board = new YokelGameBoard(2L);
             //System.out.println("cells do be dropped: " + board.getCellsToBeDropped());
-            board.setNextPiece();
+            board.getNextPiece();
            // 165
             //System.out.println(board);
             //System.out.println("cells do be dropped: " + board.getCellsToBeDropped());
+            boolean isRunning = true;
             int index = 0;
-            while(index < 200){
+            while(isRunning || index > 200){
                 board.update(1);
                 System.out.println(("is Dead?=" + board.hasPlayerDied()));
                 System.out.println(board);
+                if(board.hasPlayerDied()){
+                    isRunning = false;
+                }
                 index++;
             }
 

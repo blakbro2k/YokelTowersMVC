@@ -37,20 +37,24 @@ public class YokelBlock extends AbstractYokelObject implements Pool.Poolable{
 
     public int x;
     public int y;
-    private boolean active;
+    private int type;
 
-    public YokelBlock(int x, int y){
+    public YokelBlock(int x, int y, int type){
         reset();
         this.x = x;
         this.y = y;
-        this.active = true;
+        this.type = type;
+    }
+
+    public YokelBlock(int x, int y){
+        this(x,y,CLEAR_BLOCK);
     }
 
     @Override
     public void reset() {
         this.x = 0;
         this.y = 0;
-        this.active = false;
+        this.type = CLEAR_BLOCK;
     }
 
     @Override

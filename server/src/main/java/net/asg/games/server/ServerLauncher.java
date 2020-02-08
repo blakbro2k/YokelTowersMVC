@@ -174,7 +174,6 @@ public class ServerLauncher {
                 message = request.getMessage();
                 sessionId = request.getSessionId();
                 requestSequence = request.getRequestSequence();
-                //serverPayload = null; //buildPayload(message, request.getPayload());
                 response = new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
             }
             Logger.trace("Exit handleAdminRequest()");
