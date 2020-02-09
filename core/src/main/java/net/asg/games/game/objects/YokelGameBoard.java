@@ -511,10 +511,10 @@ public class YokelGameBoard extends AbstractYokelObject {
     public void handlePower(int i) {
         if (YokelBlockEval.getPowerFlag(i) == 0) {
             switch (i) {
-                case 1024:
+                case YokelBlock.SPECIAL_BLOCK_1:
                     removeAllPowersFromBoard();
                     break;
-                case 1026:
+                case YokelBlock.SPECIAL_BLOCK_2:
                     removeAllStonesFromBoard();
                     break;
                 default:
@@ -1368,8 +1368,6 @@ public class YokelGameBoard extends AbstractYokelObject {
         }
     }
 
-
-
     boolean checkForNonVerticalYahoo(int y, int _y) {
         boolean result = true;
 
@@ -1420,39 +1418,30 @@ public class YokelGameBoard extends AbstractYokelObject {
         addPrintLine(out);
         for (int r = MAX_ROWS - 1; r > -1; r--){
             for (int c = 0; c < MAX_COLS; c++) {
-                int block = getPieceValue(c,r);
+                int block = isPieceBlock(r, c) ? getPieceBlock(r) : getPieceValue(c,r);
+
                 if(block == YokelBlock.CLEAR_BLOCK){
                     out.append('|').append(' ');
                 } else {
-                    if(isPieceBlock(r, c)){
-                        out.append('|').append(YokelBlockEval.getPowerLabel(getPieceBlock(r, c)));
+                    if (YokelBlockEval.hasPowerBlockFlag(block)) {
+                        out.append('|').append(YokelBlockEval.getPowerLabel(block));
                     } else {
-                        if(YokelBlockEval.hasPowerBlockFlag(block)){
-                            out.append('|').append(YokelBlockEval.getPowerLabel(block));
-                        } else {
-                            out.append('|').append(YokelBlockEval.getNormalLabel(block));
-                        }
+                        out.append('|').append(YokelBlockEval.getNormalLabel(block));
                     }
                 }
             }
             out.append("|\n");
-            //addPrintLine(out);
         }
-
         addPrintLine(out);
-
         return out.toString();
     }
 
     private boolean isPieceBlock(int row, int col){
-        if(piece.column == col){
-            System.out.println();
-        }
-        return false;
+        return piece.column == col && (piece.row == row || piece.row + 1 == row || piece.row + 2 == row);
     }
 
-    private int getPieceBlock(int row, int col){
-        return 0;
+    private int getPieceBlock(int row){
+        return piece.getValueAt(row - piece.row);
     }
 
     private void addPrintLine(StringBuilder sb){
@@ -1488,16 +1477,13 @@ public class YokelGameBoard extends AbstractYokelObject {
     public void updateBoard(){
     }
 
-    private void movePieceDown(){System.out.println("!!!!Move Piece Down!!!!!!");
+    private void movePieceDown(){
         if(!isCellFree(piece.column, piece.row)){
-            //clearCell(piece.row, piece.column);
-            //clearCell(piece.row + 1, piece.column);
-            //clearCell(piece.row + 2, piece.column);
-            //placeBlockAt(piece, piece.column, piece.row - 1);
             piece.setPosition(piece.row - 1, piece.column);
             this.fallNumber = MAX_FALL_VALUE;
         } else {
             setNextPiece();
+            getNextPiece();
         }
     }
 
@@ -1516,6 +1502,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         int block2 = getNextBlock();
         int block3 = getNextBlock();
         this.piece = new YokelPiece(getIdIndex(), block1, block2, block3);
+        System.out.println("next available col=" + 3);
         this.piece.setPosition(MAX_PLAYABLE_ROWS, 3);
     }
 }
