@@ -1,5 +1,7 @@
 package net.asg.games;
 
+import com.badlogic.gdx.math.MathUtils;
+
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelGameBoard;
@@ -19,20 +21,21 @@ public class LocalLauncher {
             //System.out.println(board);
             //System.out.println("cells do be dropped: " + board.getCellsToBeDropped());
             boolean isRunning = true;
-            int index = 0;
-            while(isRunning || index > 200){
+            while(isRunning){
                 board.update(1);
                 System.out.println(("is Dead?=" + board.hasPlayerDied()));
                 System.out.println(board);
+
+                if(MathUtils.random(10) == 3)  board.attemptMovePieceRight();
+                if(MathUtils.random(10) == 1)  board.attemptMovePieceLeft();
+
                 if(board.hasPlayerDied()){
                     isRunning = false;
                 }
-                index++;
             }
-
         } catch (Exception e) {
-            Logger.error(e,"Failed to launch server: ");
-            throw new Exception("Failed to launch server: ", e);
+            Logger.error(e,"Local Launcher Failed: ");
+            throw new Exception("Local Launcher Failed: ", e);
         }
     }
 }

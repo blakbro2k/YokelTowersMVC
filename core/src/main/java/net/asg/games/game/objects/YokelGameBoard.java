@@ -50,6 +50,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     private int[] rowMatchLookup = { 0, 1, 1, 1, 0, -1, -1, -1};
 
     private YokelPiece piece;
+    private YokelPiece nextPiece;
     private float fallNumber;
     private RandomUtil.RandomNumberArray nextBlocks;
     private int currentBlockPointer = -1;
@@ -837,22 +838,17 @@ public class YokelGameBoard extends AbstractYokelObject {
         return row;
     }
 
-    public boolean isCellFree(int column, int row) {
-
-        if (row < 0 || row > MAX_PLAYABLE_ROWS){
-            return false;
-        }
-
-        if (row == 0){
-            return true;
-        }
-
-        if (getPieceValue(column, row - 1) == YokelBlock.CLEAR_BLOCK)
-            return false;
-
-        return true;
+    public boolean isDownCellFree(int column, int row) {
+        return row > 0 && row < MAX_PLAYABLE_ROWS + 1 && getPieceValue(column, row - 1) == YokelBlock.CLEAR_BLOCK;
     }
 
+    public boolean isRightCellFree(int column, int row) {
+        return column < MAX_COLS - 1 && getPieceValue(column + 1, row) == YokelBlock.CLEAR_BLOCK;
+    }
+
+    public boolean isLeftCellFree(int column, int row) {
+        return column > 0 && getPieceValue(column - 1, row) == YokelBlock.CLEAR_BLOCK;
+    }
 
     public int getColumnWithPossiblePieceMatch(YokelPiece piece) {
         shuffleColumnIndices();
@@ -1475,15 +1471,28 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void updateBoard(){
+        //Check P
     }
 
     private void movePieceDown(){
-        if(!isCellFree(piece.column, piece.row)){
+        if(isDownCellFree(piece.column, piece.row)){
             piece.setPosition(piece.row - 1, piece.column);
             this.fallNumber = MAX_FALL_VALUE;
         } else {
             setNextPiece();
             getNextPiece();
+        }
+    }
+
+    public void attemptMovePieceRight(){
+        if(isRightCellFree(piece.column, piece.row)){
+            piece.setPosition(piece.row, piece.column + 1);
+        }
+    }
+
+    public void attemptMovePieceLeft(){
+        if(isLeftCellFree(piece.column, piece.row)){
+            piece.setPosition(piece.row, piece.column - 1);
         }
     }
 
@@ -1498,11 +1507,19 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void getNextPiece() {
+        if(nextPiece == null){
+            this.nextPiece = newPieceBock();
+        }
+        this.piece = nextPiece;
+        this.nextPiece = newPieceBock();
+    }
+
+    private YokelPiece newPieceBock(){
         int block1 = getNextBlock();
         int block2 = getNextBlock();
         int block3 = getNextBlock();
-        this.piece = new YokelPiece(getIdIndex(), block1, block2, block3);
-        System.out.println("next available col=" + 3);
-        this.piece.setPosition(MAX_PLAYABLE_ROWS, 3);
+        YokelPiece piece = new YokelPiece(getIdIndex(), block1, block2, block3);
+        piece.setPosition(MAX_PLAYABLE_ROWS, 2);
+        return piece;
     }
 }
