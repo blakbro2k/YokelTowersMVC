@@ -1,5 +1,6 @@
 package net.asg.games.game.managers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
@@ -24,9 +25,9 @@ import java.util.Map;
 public class GameManager {
     @Inject private UserInterfaceService uiService;
     @Inject private UITestController uiView;
-    YokelTable table;
-    Array<YokelGameBoard> gameBoards;
-    int thresh = 0;
+
+    private YokelTable table;
+    private Array<YokelGameBoard> gameBoards;
     private boolean isGameRunning;
 
     public GameManager(YokelTable table){
@@ -36,18 +37,24 @@ public class GameManager {
     }
 
     private void loadGameData() {}
-    public void update(){
-        //System.out.println(thresh);
+
+    public void update(float delta){
+        if(!isGameRunning) return;
+
         for(int i = 0; i < 8; i++){
             YokelSeat seat = table.getSeat(i);
             YokelGameBoard board = gameBoards.get(i);
-            if(isOccupied(seat) && !isPlayerDead(board)){
-                board.update(1);
+
+            System.out.println(board);
+
+            if(isOccupied(seat)){
+                if(board != null){
+                    board.update(delta);
+                }
             }
         }
 
-        thresh++;
-        if(thresh > 100){
+        if(isGameOver()){
             stopGame();
         }
     }
@@ -66,7 +73,7 @@ public class GameManager {
         return true;
     }
 
-    public void init(){
+    private void init(){System.out.println("init Ran");
         long seed = getSeed();
         isGameRunning = false;
         for(int i = 0; i < 8; i++){
@@ -76,12 +83,26 @@ public class GameManager {
 
     private long getSeed() {
         return 1L;
+        //return System.currentTimeMillis();
     }
 
-    public void handleMoveRight(){}
-    public void handleMoveLeft(){}
+    public void resetGameBoards(){
+
+    }
+
+    public void handleMoveRight(int player){
+        gameBoards.get(player).attemptMovePieceRight();
+    }
+
+    public void handleMoveLeft(int player){
+        gameBoards.get(player).attemptMovePieceLeft();
+    }
+
     public void handleSetPiece(){}
-    public String[] getBoardState(){ return null;}
+
+    public String[] getBoardState(){
+        return null;
+    }
 
     public String printTables(){
         StringBuilder sbSeats = new StringBuilder();
@@ -92,7 +113,6 @@ public class GameManager {
             }
         }
         return sbSeats.toString();
-        //return table.getSeat(1).toString();.
     }
 
     public boolean startGame() {
@@ -110,8 +130,27 @@ public class GameManager {
         return isGameRunning;
     }
 
-    public int thresh() {
-        return thresh;
+    private boolean isGameOver(){
+        boolean player1 = isPlayerDead(gameBoards.get(0));
+        boolean player2 = isPlayerDead(gameBoards.get(1));
+        boolean player3 = isPlayerDead(gameBoards.get(2));
+        boolean player4 = isPlayerDead(gameBoards.get(3));
+        boolean player5 = isPlayerDead(gameBoards.get(4));
+        boolean player6 = isPlayerDead(gameBoards.get(5));
+        boolean player7 = isPlayerDead(gameBoards.get(6));
+        boolean player8 = isPlayerDead(gameBoards.get(7));
+
+        boolean isGroup1Dead = player1 && player2;
+        boolean isGroup2Dead = player3 && player4;
+        boolean isGroup3Dead = player5 && player6;
+        boolean isGroup4Dead = player7 && player8;
+
+        boolean group1won = !isGroup1Dead && isGroup2Dead && isGroup3Dead && isGroup4Dead;
+        boolean group2won = isGroup1Dead && !isGroup2Dead && isGroup3Dead && isGroup4Dead;
+        boolean group3won = isGroup1Dead && isGroup2Dead && !isGroup3Dead && isGroup4Dead;
+        boolean group4won = isGroup1Dead && isGroup2Dead && isGroup3Dead && !isGroup4Dead;
+
+        return group1won || group2won || group3won || group4won;
     }
 
     private class GameState{

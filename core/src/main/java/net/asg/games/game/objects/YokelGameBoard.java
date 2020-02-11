@@ -61,6 +61,10 @@ public class YokelGameBoard extends AbstractYokelObject {
         ids = new boolean[128];
         piece = null;
         fallNumber = MAX_FALL_VALUE;
+        reset(seed);
+    }
+
+    public void reset(long seed){
         nextBlocks = new RandomUtil.RandomNumberArray(1024, seed, 6);
         clearBoard();
     }
@@ -1409,7 +1413,7 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     public String toString(){
         StringBuilder out = new StringBuilder();
-
+//System.out.println("out = " + out);
         out.append("piece pos(").append(piece.column).append(",").append(piece.row).append(")").append("\n");
         addPrintLine(out);
         for (int r = MAX_ROWS - 1; r > -1; r--){
@@ -1452,12 +1456,14 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void update(float delta){
-        this.fallNumber -= getCurrentFallRate();
-        System.out.println("fallNumber:" + fallNumber);
+        if(!hasPlayerDied()){
+            this.fallNumber -= getCurrentFallRate();
+            System.out.println("fallNumber:" + fallNumber);
 
-        if(this.fallNumber < 0){
-            movePieceDown();
-            System.out.println("after fallNumber:" + fallNumber);
+            if(this.fallNumber < 0){
+                movePieceDown();
+                System.out.println("after fallNumber:" + fallNumber);
+            }
         }
         updateBoard();
     }

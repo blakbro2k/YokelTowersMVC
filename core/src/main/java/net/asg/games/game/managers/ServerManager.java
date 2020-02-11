@@ -123,6 +123,7 @@ public class ServerManager {
             if(testPlayers == null){
                 testPlayers = new OrderedMap<>();
             }
+
             int numPlayers = 8;
             while(numPlayers > 0){
                 YokelPlayer player = new YokelPlayer(getRandomName());
@@ -315,6 +316,7 @@ public class ServerManager {
         }
 
         public void run() {
+            this.gameManager.startGame();
             /**
              * while(true)
              *     check for client commands

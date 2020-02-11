@@ -57,42 +57,10 @@ public class DesktopLauncher {
             }
         }
 
-        //createApplication();
+        createApplication();
 
         //LwjglApplication app = createApplication();
         //app.exit();
-
-
-        try {
-            YokelPlayer player1 = new YokelPlayer("blakbro2k");
-            YokelPlayer player2 = new YokelPlayer("lholtham");
-            String roomName = "Eiffel Tower";
-
-            YokelTable table = new YokelTable(1);
-
-            table.getSeat(0).sitDown(player1);
-            table.getSeat(2).sitDown(player2);
-
-            System.out.println("table=" + table);
-            System.out.println("is Ready=" + table.isTableStartReady());
-
-            if(table.isTableStartReady()){
-                GameRunner game = new GameRunner(daemon, table);
-                Thread thread = new Thread(game);
-                thread.start();
-
-                while(game.isRunning()){
-                    System.out.println(game.gameManager.thresh());
-                }
-            }
-
-            daemon.shutDownServer(-1);
-        } catch (Exception e) {
-            //System.err.println(e);
-            e.printStackTrace();
-        } finally {
-            daemon.shutDownServer(-1);
-        }
     }
 
     private static LwjglApplication createApplication() {
@@ -113,92 +81,5 @@ public class DesktopLauncher {
         CommonWebSockets.initiate();
         return configuration;
     }
-
-    private static class GameRunner implements Runnable{
-        ServerManager serverManager;
-        GameManager gameManager;
-        boolean running;
-        float tickRate;
-
-        public GameRunner(ServerManager manager, YokelTable table){
-            this.serverManager = manager;
-            this.gameManager = new GameManager(table);
-            //tickRate = daemon.getTickRate();
-            tickRate = 60;
-
-        }
-
-        public void setRunning(boolean b){
-            this.running = b;
-        }
-        public boolean isRunning(){
-            return this.running;
-        }
-
-        private void tick(){
-            gameManager.update();
-            setRunning(gameManager.isRunning());
-            System.out.println(gameManager.printTables());
-        }
-
-        public void run() {
-            /**
-             * while(true)
-             *     check for client commands
-             *     sanity check client commands
-             *     move all entities
-             *     resolve collisions
-             *     sanity check world data
-             *     send updates about the game to the clients
-             *     handle client disconnects
-             * end while
-             */
-
-            setRunning(gameManager.startGame());
-
-            double accumulator = 0.0;
-            //The timestep
-            final double dt = 1/(double) tickRate;
-            long previousTime = System.currentTimeMillis();
-
-            System.out.println("accumulator=" + accumulator);
-            System.out.println("dt=" + dt);
-            System.out.println("previousTime=" + previousTime);
-
-
-            //State previous;
-            //State current;
-            while(running){
-                long currentTime = System.currentTimeMillis();
-                double frameTime = (currentTime - previousTime)/1000.0;
-
-                if(frameTime > 0.25){
-                    frameTime = 0.25;
-                }
-                previousTime = currentTime;
-                accumulator += frameTime;
-                /*
-                System.out.println("accumulator=" + accumulator);
-                System.out.println("dt=" + dt);
-                System.out.println("currentTime=" + currentTime);
-                System.out.println("previousTime=" + previousTime);
-                System.out.println("frameTime=" + frameTime);
-                System.out.println("bottom---=");*/
-
-                while(accumulator >= dt){
-                    //previousState = currentState;
-                    //this.gamePanel.update(dt);
-                    tick();
-                    accumulator -= dt;
-                }
-
-                //Interpolation
-                // final double alpha = currentState * alpha +
-                // previousState * (1.0 - alpha);
-
-                //This is the draw call. Not yet using interpolation
-                //this.gamePanel.postInvalidate();
-            }
-        }
-    }
 }
+
