@@ -35,7 +35,7 @@ public class GameLoungeLmlTag extends TableLmlTag {
 
         OrderedMap<String, YokelRoom> iter = obj.getAllRooms();
         if(iter != null){
-            for(String roomName : Util.toIterable(iter.orderedKeys())){
+            for(String roomName : iter.orderedKeys()){
                 addChild(buildRoomButton(iter.get(roomName)));
                 gameLounge.row();
             }

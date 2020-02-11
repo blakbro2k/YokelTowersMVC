@@ -124,7 +124,7 @@ public class Util {
     public static boolean containsAny(Array<Object> c1, Array<Object> c2, boolean identity){
         boolean containsAny = false;
         if(null != c1 && null != c2){
-            for(Object o : toIterable(c2)){
+            for(Object o : c2){
                 if (!c1.contains(o, identity)) {
                     continue;
                 }
@@ -626,7 +626,7 @@ public class Util {
     public static Array<Drawable> getAniImageFrames(AnimatedImage image){
         Array<Drawable> drawables = new Array<>();
         if(image != null){
-            for(Drawable frame : Util.toIterable(image.getFrames())){
+            for(Drawable frame : image.getFrames()){
                 if(frame != null){
                     drawables.add(frame);
                 }
