@@ -28,8 +28,8 @@ public class DesktopLauncher {
     private static ServerManager daemon;
 
     public static void main(String[] args) {
-        String[] args2 = {ServerManager.LOG_LEVEL_ATTR, "trace", ServerManager.DEBUG_ATTR};
-        daemon = new ServerManager(args2);
+        //String[] args2 = {ServerManager.LOG_LEVEL_ATTR, "trace", ServerManager.DEBUG_ATTR};
+        //daemon = new ServerManager(args2);
 
         if(args != null){
             for (String arg : args) {
