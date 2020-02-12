@@ -61,7 +61,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private void loadGameData() {}
 
     public void initiateGame() {
-        uiService.loadDrawable(yBlockImage);
+        System.out.print("initiateGame");
+       /* uiService.loadDrawable(yBlockImage);
         uiService.loadDrawable(this.oBlockImage);
         uiService.loadDrawable(this.kBlockImage);
         uiService.loadDrawable(this.eBlockImage);
@@ -86,7 +87,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         uiService.loadDrawable(this.brokenLBlockImage);
         uiService.loadDrawable(this.brokenBashBlockImage);
         uiService.loadDrawable(this.stoneBlockImage);
-        uiService.loadDrawable(this.clearBlock);
+        uiService.loadDrawable(this.clearBlock);*/
     }
 
     @Override

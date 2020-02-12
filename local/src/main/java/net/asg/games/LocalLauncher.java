@@ -61,7 +61,7 @@ public class LocalLauncher {
                     delta--;
                 }
 
-                if(++hardOut > 4){
+                if(++hardOut > 10){
                     isRunning = false;
                 }
             }
