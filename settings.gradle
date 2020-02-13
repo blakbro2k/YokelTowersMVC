@@ -1,1 +1,1 @@
-include 'server', 'desktop', 'core', 'admin', 'local', 'headless'
+include 'server', 'desktop', 'core', 'admin', 'local'

@@ -8,8 +8,12 @@ import net.asg.games.server.serialization.AdminClientRequest;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
+import net.asg.games.storage.MemoryStorage;
+import net.asg.games.storage.StorageInterface;
 
 import org.pmw.tinylog.Logger;
+
+import java.util.concurrent.ExecutorService;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
@@ -22,8 +26,10 @@ public class ServerLauncher {
     private final static String SERVER_BUILD = "0.0.1";
 
     private ServerManager serverDaemon;
-    private final Vertx vertx = Vertx.vertx();
-    private final ManualSerializer serializer = new ManualSerializer();
+    private final static Vertx vertx = Vertx.vertx();
+    private final static ManualSerializer serializer = new ManualSerializer();
+    private final static StorageInterface storage = new MemoryStorage();
+    //private ExecutorService threadPool;
 
     private ServerLauncher() {
         registerSerializer();
@@ -35,6 +41,10 @@ public class ServerLauncher {
         } catch (Exception e) {
             Logger.error(e,"Failed to launch server: ");
             throw new Exception("Failed to launch server: ", e);
+        } finally {
+            storage.dispose();
+            //serializer = null;
+            vertx.close();
         }
     }
 
@@ -86,7 +96,7 @@ public class ServerLauncher {
         try {
             Logger.trace("Enter initialize()");
             Logger.info("Initializing server arguments: ");
-            serverDaemon = new ServerManager(args);
+            serverDaemon = new ServerManager(storage, args);
             Logger.info("Server daemon started..");
             Logger.trace("Exit initialize()");
         } catch (Exception e) {
@@ -119,6 +129,7 @@ public class ServerLauncher {
             final Object deserialized = serializer.deserialize(packet);
             Logger.trace("deserialized: {}", deserialized);
             final long time = System.nanoTime() - start;
+            webSocket.binaryHandlerID();
             sendResponse(deserialized, webSocket);
             Logger.trace("Exit handleFrame()");
         } catch (Exception e){

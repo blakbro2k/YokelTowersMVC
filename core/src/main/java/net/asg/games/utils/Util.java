@@ -176,19 +176,29 @@ public class Util {
         return new String[1];
     }
 
+    public static <T> String[] toStringArray(ObjectMap.Values<T> values) {
+        Array<T> array = new Array<>();
+        if(values != null){
+            while(values.hasNext){
+                array.add(values.next());
+            }
+        }
+        return toStringArray(array);
+    }
+
     /**
      * Creates a new Iterable Array object.
-     * @param array
-     * @param <T>
+     * @param //array
+     * @param //<T>
      * @return
      */
     @NotNull
-    public static <T> Array.ArrayIterable<T> toIterable(Array<T> array){
+   /* public static <T> Array.ArrayIterable<T> toIterable(Array<T> array){
         if(isArrayEmpty(array)){
             return new Array.ArrayIterable<>(array);
         }
         return new Array.ArrayIterable<>(GdxArrays.newArray());
-    }
+    }*/
 
     public static String getJsonString(Object o){
         return json.toJson(o);
@@ -220,12 +230,12 @@ public class Util {
         return false;
     }
 
-    public static<T> Array<T> getValuesArray(ObjectMap.Values<T> values) {
+    /*public static<T> Array<T> getValuesArray(ObjectMap.Values<T> values) {
         if(values != null){
             return values.toArray();
         }
         return GdxArrays.newArray();
-    }
+    }*/
 
     public static String getLoungeName(String key) {
         if(StringUtils.equalsIgnoreCase(key, "Beginner")){

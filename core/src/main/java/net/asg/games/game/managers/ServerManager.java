@@ -1,6 +1,7 @@
 package net.asg.games.game.managers;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
 import com.github.czyzby.websocket.serialization.Serializer;
@@ -49,16 +50,6 @@ public class ServerManager {
     private final static Array<String> PLAYER_NAMES = ImmutableArray.of("Hector","Lenny","Cullen","Kinsley","Tylor","Doug","Spring","Danica","Bekki",
             "Spirit","Harmony","Shelton","Philip","Liana","Joyce","Tucker","Jo","Cora","Philadelphia","Leyton");
 
-    //<"lounge name", room object>
-    private OrderedMap<String, YokelLounge> lounges;
-    //<"player id", player object>
-    private OrderedMap<String, YokelPlayer> registeredPlayers;
-    //<"player id", player object>
-    private OrderedMap<String, YokelPlayer> testPlayers;
-    //<"table name", gameManager>
-    private OrderedMap<String, GameRunner> games;
-
-    private ExecutorService threadPool;
 
     private int maxNumberOfRooms;
     private int timeOut;
@@ -67,24 +58,14 @@ public class ServerManager {
     private boolean isDebug = true;
     private Level logLevel = Level.INFO;
     private StorageInterface storageInterface;
+    private OrderedMap<String, YokelPlayer> testPlayers;
 
-    public ServerManager(String... args){
+    public ServerManager(StorageInterface storageInterface, String... args){
         try {
             initialize(args);
+            this.storageInterface = storageInterface;
         } catch (Exception e) {
             Logger.error(e,"Error during ServerManager initialization: ");
-        }
-    }
-
-    private void validateLounges(){
-        if(lounges == null){
-            lounges = new OrderedMap<>();
-        }
-    }
-
-    private void validateRegisteredPlayers(){
-        if(registeredPlayers == null){
-            registeredPlayers = new OrderedMap<>();
         }
     }
 
@@ -93,11 +74,8 @@ public class ServerManager {
             Logger.trace("Enter initialize()");
             Logger.info("Initializing server arguments: ");
 
-            //storageInterface =
-
-            games = new OrderedMap<>();
-            validateLounges();
-            validateRegisteredPlayers();
+            //validateLounges();
+            //validateRegisteredPlayers();
 
             initializeParams(args);
             initializeGameRooms();
@@ -115,11 +93,15 @@ public class ServerManager {
         }
     }
 
+    public ObjectMap.Values<GameManager> getAllGames(){
+        return storageInterface.getAllGames();
+    }
+
     private void generateTestPlayers() throws Exception{
         try {
             Logger.trace("Exit generateTestPlayers()");
             Logger.debug("Generating Debugable Players...");
-            validateRegisteredPlayers();
+            //validateRegisteredPlayers();
             if(testPlayers == null){
                 testPlayers = new OrderedMap<>();
             }
@@ -267,24 +249,15 @@ public class ServerManager {
     public void shutDownServer(int errorCode){
         Logger.trace("Enter shutDownServer()");
         Logger.info("Shutting server down...");
-        if(lounges != null){
-            lounges.clear();
-            lounges = null;
-        }
-
-        if(registeredPlayers != null){
-            registeredPlayers.clear();
-            registeredPlayers = null;
-        }
 
         if(testPlayers != null){
             testPlayers.clear();
             testPlayers = null;
         }
 
-        if(threadPool != null){
+       /* if(threadPool != null){
             threadPool.shutdown();
-        }
+        }*/
         Logger.trace("Exit shutDownServer()");
         //System.exit(errorCode);
     }
@@ -304,31 +277,6 @@ public class ServerManager {
 
     public int getServerId(){
         return idCounter.get();
-    }
-
-    private class GameRunner implements Runnable {
-        ServerManager serverManager;
-        GameManager gameManager;
-
-        public GameRunner(ServerManager manager, YokelTable table){
-            this.serverManager = manager;
-            this.gameManager = new GameManager(table);
-        }
-
-        public void run() {
-            this.gameManager.startGame();
-            /**
-             * while(true)
-             *     check for client commands
-             *     sanity check client commands
-             *     move all entities
-             *     resolve collisions
-             *     sanity check world data
-             *     send updates about the game to the clients
-             *     handle client disconnects
-             * end while
-             */
-        }
     }
 
     public ServerResponse handleClientRequest(ClientRequest request){
@@ -387,60 +335,10 @@ public class ServerManager {
         }
     }
 
-    public void handleFrame(Serializer serializer, final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
-        try {
-            if(serializer == null) throw new Exception("No Serializer. Cannot deserialize websocket packet.");
-            if(frame == null) throw new Exception("Incoming packet was null.");
-            Logger.trace("Enter handleFrame()");
-            final byte[] packet = frame.binaryData().getBytes();
-            //final long start = System.nanoTime();
-            Logger.info("Deserializing packet recieved");
-            final Object deserialized = serializer.deserialize(packet);
-            Logger.trace("deserialized: {}", deserialized);
-            //final long time = System.nanoTime() - start;
-            sendResponse(serializer, deserialized, webSocket);
-            Logger.trace("Exit handleFrame()");
-        } catch (Exception e){
-            Logger.error(e,"Error handling websocket frame.");
-            throw new Exception("Error handling websocket frame.", e);
-        }
-    }
-
-    private void sendResponse(Serializer serializer, Object deserialized, ServerWebSocket webSocket) throws Exception{
-        try{
-            Logger.trace("Enter sendResponse()");
-            if(deserialized instanceof ClientRequest){
-                ClientRequest request = (ClientRequest) deserialized;
-                clientRepsonse(serializer, webSocket, request);
-            }
-
-            if(deserialized instanceof AdminClientRequest){
-                AdminClientRequest request = (AdminClientRequest) deserialized;
-                adminResponse(serializer, webSocket, request);
-            }
-            Logger.trace("Exit sendResponse()");
-        } catch (Exception e){
-            Logger.error(e, "Error in sendResponse.");
-            throw new Exception("Error handling websocket frame.", e);
-        }
-    }
-
-    private void clientRepsonse(Serializer serializer, ServerWebSocket webSocket, ClientRequest request) throws Exception{
-        Logger.trace("Enter clientRepsonse()");
-        sendServerResponse(serializer, webSocket, handleClientRequest(request));
-        Logger.trace("Exit clientRepsonse()");
-    }
-
-    private void adminResponse(Serializer serializer, ServerWebSocket webSocket, AdminClientRequest request) throws Exception{
-        Logger.trace("Enter adminResponse()");
-        sendServerResponse(serializer, webSocket, handleAdminRequest(request));
-        Logger.trace("Exit adminResponse()");
-    }
-
     public Array<String> testPlayersToJSON(){
         Array<String> jsonPlayers = new Array<>();
 
-        for(String playerName : Util.toIterable(testPlayers.orderedKeys())){
+        for(String playerName : testPlayers.orderedKeys()){
             if(!StringUtils.isEmpty(playerName)){
                 YokelPlayer player = testPlayers.get(playerName);
                 if(player != null){
@@ -453,7 +351,7 @@ public class ServerManager {
 
     private Array<String> loungesToJSON(){
         Array<String> jsonLounge = new Array<>();
-        for(YokelLounge lounge : Util.toIterable(getAllLounges())){
+        for(YokelLounge lounge : getAllLounges()){
             if(lounge != null){
                 jsonLounge.add(lounge.toString());
             }
@@ -523,12 +421,12 @@ public class ServerManager {
     private YokelLounge getLounge(String key) throws Exception {
         try{
             Logger.trace("Enter getLounge()");
-            validateLounges();
+            //validateLounges();
             Logger.info("Attempting to get {} lounge.", key);
             YokelLounge lounge = null;
 
             if(key != null){
-                lounge = lounges.get(key);
+                lounge = storageInterface.getLounge(key);
             }
             Logger.debug("GameLounge({})={}", key,lounge);
             Logger.trace("Exit getLounge()");
@@ -557,39 +455,42 @@ public class ServerManager {
         }
     }
 
-    private void addLounge(YokelLounge lounge){
-        validateLounges();
-        lounges.put(lounge.getName(), lounge);
+    private void addLounge(YokelLounge lounge) throws Exception {
+        //validateLounges();
+       // lounges.put(lounge.getName(), lounge);
+        storageInterface.putLounge(lounge);
     }
 
-    private Array<YokelLounge> getAllLounges(){
-        validateLounges();
-        return Util.getValuesArray(lounges.values());
+    private OrderedMap.Values<YokelLounge> getAllLounges(){
+        //validateLounges();
+        //return Util.getValuesArray(lounges.values());
+        return storageInterface.getAllLounges();
     }
 
-    private Array<YokelRoom> getAllRooms(String loungeName) throws Exception {
+    private OrderedMap.Values<YokelRoom> getAllRooms(String loungeName) throws Exception {
         YokelLounge lounge = getLounge(loungeName);
-        Array<YokelRoom> rooms = null;
+        OrderedMap.Values<YokelRoom> rooms = null;
         if(lounge != null){
             OrderedMap<String, YokelRoom> roomsMap = lounge.getAllRooms();
 
             if(roomsMap != null){
-                rooms = Util.getValuesArray(roomsMap.values());
+                //rooms = Util.getValuesArray(roomsMap.values());
+                rooms = roomsMap.values();
             }
         }
         return rooms;
     }
 
-    private Array<YokelTable> getAllTables(String loungeName, String roomName) throws Exception {
+    private OrderedMap.Values<YokelTable> getAllTables(String loungeName, String roomName) throws Exception {
         YokelLounge lounge = getLounge(loungeName);
-        Array<YokelTable> tables = null;
+        OrderedMap.Values<YokelTable> tables = null;
         if(lounge != null){
             YokelRoom room = getRoom(lounge.getName(), roomName);
 
             if(room != null){
                 OrderedMap<Integer, YokelTable> tableMap = room.getAllTables();
 
-                tables = Util.getValuesArray(tableMap.values());
+                tables = tableMap.values();
             }
         }
         return tables;
@@ -609,7 +510,7 @@ public class ServerManager {
     }
 
     private YokelRoom getRoom(String loungeName, String roomName) throws Exception {
-        validateLounges();
+        //validateLounges();
         YokelRoom room = null;
 
         YokelLounge lounge = getLounge(loungeName);
@@ -693,7 +594,7 @@ public class ServerManager {
 
         if(table != null){
             Logger.info("attempting to start game at " + roomName + ":table:" + table.getTableNumber());
-            GameRunner game = getGameFromTable(loungeName, roomName, table);
+            GameManager game = getGameFromTable(loungeName, roomName, table);
             //store thead id for runner
             //if(){
 
@@ -703,49 +604,28 @@ public class ServerManager {
         return false;
     }
 
-    private GameRunner getGameFromTable(String loungeName, String roomName, YokelTable table) throws Exception{
+    private GameManager getGameFromTable(String loungeName, String roomName, YokelTable table) throws Exception{
         if(loungeName == null) throw new Exception("Error getting game from table: Lounge is null.");
         if(roomName == null) throw new Exception("Error getting game from table: Room is null.");
         int tableNumber = table.getTableNumber();
-        GameRunner game = games.get(loungeName+roomName+tableNumber);
-        if(game == null){
-            game = new GameRunner(this, table);
-            games.put(loungeName + ":" + roomName + ":" + tableNumber, game);
-        }
-        return game;
+
+        return storageInterface.getGame(loungeName+roomName+tableNumber);
     }
 
-    private boolean registerPlayer(YokelPlayer player){
+    private boolean registerPlayer(YokelPlayer player) throws Exception {
         if(player != null){
-            validateRegisteredPlayers();
-            String playerId = player.getPlayerId();
-            if(!registeredPlayers.containsKey(playerId)){
-                registeredPlayers.put(playerId, player);
-                Logger.info("Player={} registered successfully.", player.toString());
-                return true;
-            } else {
-                YokelPlayer regPlayer = registeredPlayers.get(playerId);
-                boolean doesExist = StringUtils.equalsIgnoreCase(player.getName(), regPlayer.getName());
-
-                if(doesExist){
-                    Logger.warn("Player={} already registered.", player.toString());
-                } else {
-                    Logger.warn("Player={} already registered with a different ID!", player.toString());
-                }
-            }
+            //validateRegisteredPlayers();
+            storageInterface.putRegisteredPlayer(player);
         }
-        return false;
+        return true;
     }
 
     private YokelPlayer getRegisteredPlayer(String playerId){
-        if(playerId != null){
-            return registeredPlayers.get(playerId);
-        }
-        return null;
+        return storageInterface.getRegisteredPlayer(playerId);
     }
 
     //0 = Player Name
-    private String[] registerPlayerRequest(String[] clientPayload){
+    private String[] registerPlayerRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter registerPlayerRequest()");
 
         String[] ret = new String[1];
