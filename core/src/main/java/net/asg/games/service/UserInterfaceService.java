@@ -133,11 +133,11 @@ public class UserInterfaceService {
         return uiAssetMap.get(name);
     }
 
-    public Array<Actor> getAssets(){
+    public ObjectMap.Values<Actor> getAssets(){
         if(this.uiAssetMap != null){
-            return Util.getValuesArray(uiAssetMap.values());
+            return uiAssetMap.values();
         } else {
-            return Util.getValuesArray(GdxMaps.<String, Actor>newObjectMap().values());
+            return GdxMaps.<String, Actor>newObjectMap().values();
         }
     }
 }

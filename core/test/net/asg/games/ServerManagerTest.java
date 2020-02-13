@@ -10,6 +10,8 @@ import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.game.objects.YokelTable;
+import net.asg.games.storage.MemoryStorage;
+import net.asg.games.storage.StorageInterface;
 import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.TestingUtils;
 import net.asg.games.utils.Util;
@@ -32,7 +34,8 @@ public class ServerManagerTest {
     @BeforeClass
     public static void startDaemon() {
         String[] args = {ServerManager.LOG_LEVEL_ATTR, "trace", ServerManager.DEBUG_ATTR};
-        daemon = new ServerManager(args);
+        StorageInterface storage = new MemoryStorage();
+        daemon = new ServerManager(storage, args);
     }
 
     @AfterClass
@@ -108,7 +111,7 @@ public class ServerManagerTest {
         Object[] params = new Object[0];
         //params[0] = "getAllLounges";
         System.out.println(TestingUtils.printTestMethod(daemonClass(),testingMethod,args,params,daemon, true));
-        Assert.assertEquals(Util.getValuesArray(lounges.values()), TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon, true));
+        Assert.assertEquals(lounges.values(), TestingUtils.invokeStaticMethod(daemonClass(),testingMethod,args,params,daemon, true));
     }
 
     private Class<?> daemonClass(){
