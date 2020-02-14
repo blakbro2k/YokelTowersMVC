@@ -75,9 +75,7 @@ public class GameManager {
         //return System.currentTimeMillis();
     }
 
-    public void resetGameBoards(){
-
-    }
+    public void resetGameBoards(){}
 
     public void handleMoveRight(int player){
         gameBoards.get(player).attemptMovePieceRight();
@@ -142,7 +140,5 @@ public class GameManager {
         return group1won || group2won || group3won || group4won;
     }
 
-    private class GameState{
-
-    }
+    private class GameState{}
 }

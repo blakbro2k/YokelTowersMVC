@@ -62,8 +62,8 @@ public class ServerManager {
 
     public ServerManager(StorageInterface storageInterface, String... args){
         try {
-            initialize(args);
             this.storageInterface = storageInterface;
+            initialize(args);
         } catch (Exception e) {
             Logger.error(e,"Error during ServerManager initialization: ");
         }
@@ -74,17 +74,8 @@ public class ServerManager {
             Logger.trace("Enter initialize()");
             Logger.info("Initializing server arguments: ");
 
-            //validateLounges();
-            //validateRegisteredPlayers();
-
             initializeParams(args);
             initializeGameRooms();
-
-            if(isDebug){
-                generateTestPlayers();
-            }
-
-            //threadPool = new Executors.newCachedThreadPool();
 
             Logger.trace("Exit initialize()");
         } catch (Exception e) {
@@ -95,29 +86,6 @@ public class ServerManager {
 
     public ObjectMap.Values<GameManager> getAllGames(){
         return storageInterface.getAllGames();
-    }
-
-    private void generateTestPlayers() throws Exception{
-        try {
-            Logger.trace("Exit generateTestPlayers()");
-            Logger.debug("Generating Debugable Players...");
-            //validateRegisteredPlayers();
-            if(testPlayers == null){
-                testPlayers = new OrderedMap<>();
-            }
-
-            int numPlayers = 8;
-            while(numPlayers > 0){
-                YokelPlayer player = new YokelPlayer(getRandomName());
-                Logger.debug("Creating {}", player.getName());
-                testPlayers.put(player.getName(), player);
-                numPlayers--;
-            }
-            Logger.trace("Exit generateTestPlayers()");
-        } catch (Exception e) {
-            Logger.error(e,"Error generating test players: ");
-            throw new Exception("Error generating test players: ", e);
-        }
     }
 
     private void initializeGameRooms() throws Exception {
@@ -165,7 +133,6 @@ public class ServerManager {
             Logger.info("Evaluating input parameters...");
             if(!Util.isStaticArrayEmpty(args)){
                 for(int i = 0; i < args.length; i++){
-                    //System.out.println("Param: " + args[i]);
                     String param = args[i];
                     String paramValue = validateArumentParameterValue(i, args) ? args[i + 1] : null;
 
@@ -456,14 +423,10 @@ public class ServerManager {
     }
 
     private void addLounge(YokelLounge lounge) throws Exception {
-        //validateLounges();
-       // lounges.put(lounge.getName(), lounge);
         storageInterface.putLounge(lounge);
     }
 
     private OrderedMap.Values<YokelLounge> getAllLounges(){
-        //validateLounges();
-        //return Util.getValuesArray(lounges.values());
         return storageInterface.getAllLounges();
     }
 

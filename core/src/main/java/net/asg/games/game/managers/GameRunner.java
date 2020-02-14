@@ -7,7 +7,10 @@ import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.OrderedMap;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.sun.security.ntlm.Server;
+
+import net.asg.games.utils.Util;
 
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -35,6 +38,8 @@ import java.util.Map;
  ******************************************************************************/
 public class GameRunner implements ApplicationListener {
     private ServerManager daemon;
+    private float now = TimeUtils.millis();
+
     public GameRunner(ServerManager manager) {
         //super(klass);
         this.daemon = manager;
@@ -56,10 +61,14 @@ public class GameRunner implements ApplicationListener {
 
     @Override
     public void render() {
+        float delta = now - TimeUtils.millis();
+        now = TimeUtils.millis();
+        System.out.println("delta = " + delta);
+
         final ObjectMap.Values<GameManager> games = daemon.getAllGames();
         for(GameManager game : games){
             if(game != null){
-                game.update(1);
+                game.update(delta);
             }
         }
     }

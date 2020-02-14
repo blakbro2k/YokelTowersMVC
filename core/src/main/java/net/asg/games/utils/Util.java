@@ -153,11 +153,11 @@ public class Util {
     }
 
     public static <T> boolean isArrayEmpty(Array<T> collection){
-        return collection != null && collection.size > 0;
+        return collection != null && collection.isEmpty();
     }
 
     public static boolean isStaticArrayEmpty(Object[] array){
-        return array != null && array.length > 0;
+        return array != null && array.length < 1;
     }
 
     public static <T> String[] toStringArray(Array<T> collection) {

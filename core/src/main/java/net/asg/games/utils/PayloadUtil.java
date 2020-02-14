@@ -12,19 +12,26 @@ import org.pmw.tinylog.Logger;
 public class PayloadUtil {
     private static final String[] EMPTY_ARRAY = {""};
 
+    private static boolean validatedInputs(Object... objects){
+        boolean isValid = objects != null;
+
+        if(isValid){
+            for(Object object : objects){
+                if(object == null){
+                    isValid = false;
+                    break;
+                }
+            }
+        }
+        return isValid;
+    }
+
+    //Create Payload
     public static String[] createPlayerRegisterRequest(YokelPlayer player){
         if(validatedInputs(player)){
             return new String[]{player.toString()};
         }
         return EMPTY_ARRAY;
-    }
-
-    //0 = Player JSON
-    public static YokelPlayer getRegisterPlayerFromPayload(String[] clientPayload){
-        if(Util.isValidPayload(clientPayload, 1)){
-            return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[0]);
-        }
-        return null;
     }
 
     public static String[] createJoinRoomRequest(YokelPlayer player, String loungeName, String roomName){
@@ -69,17 +76,26 @@ public class PayloadUtil {
         return EMPTY_ARRAY;
     }
 
-    private static boolean validatedInputs(Object... objects){
-        boolean isValid = objects != null;
+    //From payload
 
-        if(isValid){
-            for(Object object : objects){
-                if(object == null){
-                    isValid = false;
-                    break;
-                }
-            }
+    //0 = Player JSON
+    public static YokelPlayer getRegisterPlayerFromPayload(String[] clientPayload){
+        if(Util.isValidPayload(clientPayload, 1)){
+            return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[0]);
         }
-        return isValid;
+        return null;
+    }
+
+    //0 = GameLounge Name
+    public static String[] getAllLoungesRequest(String[] clientPayload) {
+        Logger.trace("Enter getLoungesRequest()");
+        String[] ret = new String[1];
+        if(Util.isValidPayload(clientPayload, 1)){
+            String loungeName = clientPayload[0];
+            //YokelLounge lounge = getLounge(loungeName);
+            //ret[0] = lounge == null ? null : lounge.toString();
+        }
+        Logger.trace("Exit getLoungesRequest()");
+        return ret;
     }
 }

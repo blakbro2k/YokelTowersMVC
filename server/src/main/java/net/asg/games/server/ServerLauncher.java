@@ -13,6 +13,7 @@ import net.asg.games.storage.StorageInterface;
 
 import org.pmw.tinylog.Logger;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 
 import io.vertx.core.Vertx;
@@ -42,9 +43,10 @@ public class ServerLauncher {
             Logger.error(e,"Failed to launch server: ");
             throw new Exception("Failed to launch server: ", e);
         } finally {
-            storage.dispose();
+            System.out.println("!!!!!!finally!!!!!");
+            //storage.dispose();
             //serializer = null;
-            vertx.close();
+            //vertx.close();
         }
     }
 
@@ -73,6 +75,7 @@ public class ServerLauncher {
             if(serverDaemon == null) throw new Exception("Server daemon was not started!");
 
             final HttpServer server = vertx.createHttpServer();
+            int port = serverDaemon.getPort();
             server.websocketHandler(webSocket -> {
 
                 // Printing received packets to console, sending response:
@@ -84,7 +87,7 @@ public class ServerLauncher {
                         Logger.error(e);
                     }
                 });
-            }).listen(serverDaemon.getPort());
+            }).listen(port);
             Logger.trace("Exit initializeNetwork()");
         } catch(Exception e) {
             Logger.error(e,"Error Setting up Network Listener: ");
@@ -129,7 +132,7 @@ public class ServerLauncher {
             final Object deserialized = serializer.deserialize(packet);
             Logger.trace("deserialized: {}", deserialized);
             final long time = System.nanoTime() - start;
-            webSocket.binaryHandlerID();
+            System.out.println("socket id = " + webSocket.binaryHandlerID());
             sendResponse(deserialized, webSocket);
             Logger.trace("Exit handleFrame()");
         } catch (Exception e){
