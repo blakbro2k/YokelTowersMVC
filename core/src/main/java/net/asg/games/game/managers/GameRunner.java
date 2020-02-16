@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.sun.security.ntlm.Server;
 
 import net.asg.games.utils.Util;
 
