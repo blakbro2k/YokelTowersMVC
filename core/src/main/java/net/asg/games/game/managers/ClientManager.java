@@ -47,10 +47,8 @@ public class ClientManager implements Disposable {
     }
 
     private boolean initializeSockets() throws WebSocketException {
-        //
         System.out.println("initializeSockets called");
         socket = ExtendedNet.getNet().newWebSocket("localhost", 8080);
-        //socket.addListener(getListener());
         // Creating a new ManualSerializer - this replaces the default JsonSerializer and allows to use the
         // serialization mechanism from gdx-websocket-serialization library.
         final ManualSerializer serializer = new ManualSerializer();

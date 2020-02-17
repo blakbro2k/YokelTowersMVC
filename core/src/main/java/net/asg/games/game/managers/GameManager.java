@@ -10,11 +10,7 @@ import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.service.UserInterfaceService;
 
-@Component
 public class GameManager {
-    @Inject private UserInterfaceService uiService;
-    @Inject private UITestController uiView;
-
     private YokelTable table;
     private Array<YokelGameBoard> gameBoards;
     private boolean isGameRunning;

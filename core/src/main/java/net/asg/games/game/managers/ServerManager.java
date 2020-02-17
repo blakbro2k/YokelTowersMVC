@@ -73,10 +73,8 @@ public class ServerManager {
         try {
             Logger.trace("Enter initialize()");
             Logger.info("Initializing server arguments: ");
-
             initializeParams(args);
             initializeGameRooms();
-
             Logger.trace("Exit initialize()");
         } catch (Exception e) {
             Logger.error(e,"Error during initialization: ");
@@ -560,6 +558,7 @@ public class ServerManager {
         return false;
     }
 
+    //TODO:Complete
     private boolean startGameAtTable(String loungeName, String roomName, int tableNumber) throws Exception {
         Logger.trace("Enter startGameAtTable()");
         YokelTable table = getTable(loungeName, roomName, tableNumber);
