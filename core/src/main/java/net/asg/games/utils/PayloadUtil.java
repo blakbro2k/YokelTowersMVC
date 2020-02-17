@@ -1,5 +1,7 @@
 package net.asg.games.utils;
 
+import com.badlogic.gdx.utils.Array;
+
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
@@ -8,6 +10,8 @@ import net.asg.games.game.objects.YokelTable;
 import net.asg.games.utils.Util;
 
 import org.pmw.tinylog.Logger;
+
+import java.util.Arrays;
 
 public class PayloadUtil {
     private static final String[] EMPTY_ARRAY = {""};
@@ -87,14 +91,17 @@ public class PayloadUtil {
     }
 
     //0 = GameLounge Name
-    public static String[] getAllLoungesRequest(String[] clientPayload) {
+    public static Array<YokelLounge> getAllLoungesRequest(String[] clientPayload) {
         Logger.trace("Enter getLoungesRequest()");
-        String[] ret = new String[1];
-        if(Util.isValidPayload(clientPayload, 1)){
-            String loungeName = clientPayload[0];
-            //YokelLounge lounge = getLounge(loungeName);
-            //ret[0] = lounge == null ? null : lounge.toString();
+
+        Array<YokelLounge> ret = new Array<>();
+        if(validatedInputs(clientPayload)){
+            for(String payload : clientPayload){
+                ret.add(Util.getObjectFromJsonString(YokelLounge.class, payload));
+            }
         }
+        System.out.println("ret=" + ret);
+
         Logger.trace("Exit getLoungesRequest()");
         return ret;
     }

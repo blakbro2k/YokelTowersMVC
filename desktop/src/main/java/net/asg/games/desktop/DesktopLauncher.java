@@ -57,10 +57,10 @@ public class DesktopLauncher {
             }
         }
 
-        createApplication();
+        //createApplication();
 
-        //LwjglApplication app = createApplication();
-        //app.exit();
+        LwjglApplication app = createApplication();
+        app.exit();
     }
 
     private static LwjglApplication createApplication() {

@@ -1,5 +1,8 @@
 package net.asg.games.game.objects;
 
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
+
 import net.asg.games.utils.RandomUtil;
 
 import java.util.Stack;
@@ -1521,11 +1524,23 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     private YokelPiece newPieceBock(){
-        int block1 = getNextBlock();
-        int block2 = getNextBlock();
-        int block3 = getNextBlock();
+        int block1 = powerUpBlock(getNextBlock());
+        int block2 = powerUpBlock(getNextBlock());
+        int block3 = powerUpBlock(getNextBlock());
+
         YokelPiece piece = new YokelPiece(getIdIndex(), block1, block2, block3);
         piece.setPosition(MAX_PLAYABLE_ROWS, 2);
         return piece;
+    }
+
+    private int powerUpBlock(int block){
+        if(countOfPieces[block] > 3){
+            countOfPieces[block] = 0;
+            //powerUp
+            return block;
+        } else {
+            ++countOfPieces[block];
+            return block;
+        }
     }
 }

@@ -42,11 +42,6 @@ public class ServerLauncher {
         } catch (Exception e) {
             Logger.error(e,"Failed to launch server: ");
             throw new Exception("Failed to launch server: ", e);
-        } finally {
-            System.out.println("!!!!!!finally!!!!!");
-            //storage.dispose();
-            //serializer = null;
-            //vertx.close();
         }
     }
 
@@ -84,7 +79,6 @@ public class ServerLauncher {
                         handleFrame(webSocket, frame);
                     } catch (Exception e) {
                         Logger.error(e, "There was an error handling client request");
-                        Logger.error(e);
                     }
                 });
             }).listen(port);
@@ -129,10 +123,11 @@ public class ServerLauncher {
             final byte[] packet = frame.binaryData().getBytes();
             final long start = System.nanoTime();
             Logger.info("Deserializing packet recieved");
+            Logger.trace("packet: {}", packet);
             final Object deserialized = serializer.deserialize(packet);
             Logger.trace("deserialized: {}", deserialized);
             final long time = System.nanoTime() - start;
-            System.out.println("socket id = " + webSocket.binaryHandlerID());
+            Logger.trace("packet took {} seconds to deserialze.", time);
             sendResponse(deserialized, webSocket);
             Logger.trace("Exit handleFrame()");
         } catch (Exception e){

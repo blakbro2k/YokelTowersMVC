@@ -107,19 +107,27 @@ public class ServerManager {
             Logger.info("Creating Social: Eiffel Tower");
             YokelLounge socialLounge = createLounge(YokelLounge.SOCIAL_GROUP);
             YokelRoom room1 = new YokelRoom("Eiffel Tower");
+            Logger.debug("room1=" + room1);
             socialLounge.addRoom(room1);
 
             Logger.info("Creating Social: Leaning Tower of Pisa");
             YokelRoom room3 = new YokelRoom("Leaning Tower of Pisa");
+            Logger.debug("room3=" + room3);
             socialLounge.addRoom(room3);
 
             Logger.info("Creating Beginning: Chang Tower");
             YokelLounge beginningLounge = createLounge(YokelLounge.BEGINNER_GROUP);
             YokelRoom room2 = new YokelRoom("Chang Tower");
+            Logger.debug("room2=" + room2);
+
             beginningLounge.addRoom(room2);
 
             addLounge(socialLounge);
+            Logger.debug("socialLounge=" + socialLounge);
+
             addLounge(beginningLounge);
+            Logger.debug("beginningLounge=" + beginningLounge);
+
             Logger.trace("Exit generateDefaultLounges()");
         } catch (Exception e){
             Logger.error(e, "Error generating default game lounges: ");
@@ -320,6 +328,7 @@ public class ServerManager {
         Array<String> jsonLounge = new Array<>();
         for(YokelLounge lounge : getAllLounges()){
             if(lounge != null){
+                System.out.println("Lounge=" + lounge);
                 jsonLounge.add(lounge.toString());
             }
         }
@@ -395,7 +404,7 @@ public class ServerManager {
             if(key != null){
                 lounge = storageInterface.getLounge(key);
             }
-            Logger.debug("GameLounge({})={}", key,lounge);
+            Logger.debug("GameLounge({})={}", key, lounge);
             Logger.trace("Exit getLounge()");
             return lounge;
         } catch (Exception e){

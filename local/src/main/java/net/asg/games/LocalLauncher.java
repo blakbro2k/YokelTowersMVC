@@ -28,6 +28,7 @@ import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.storage.MemoryStorage;
 import net.asg.games.storage.StorageInterface;
+import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +36,7 @@ import org.pmw.tinylog.Logger;
 
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import static net.asg.games.utils.enums.ServerRequest.REQUEST_ALL_DEBUG_PLAYERS;
 import static net.asg.games.utils.enums.ServerRequest.REQUEST_LOUNGE_ALL;
@@ -44,32 +46,32 @@ import static net.asg.games.utils.enums.ServerRequest.REQUEST_LOUNGE_ALL;
  */
 public class LocalLauncher {
     private static WebSocket socket;
-private static boolean isConnected;
-    private static ClientManager client = new ClientManager();
+    private static boolean isConnected;
 
     public static void main(final String... args) throws Exception {
         CommonWebSockets.initiate();
         Scanner scanner = new Scanner(System.in);
-        boolean isRunning = true;
+        ClientManager client = new ClientManager();
 
         try{
             // Input from player
             Logger.trace("Local Launcher Failed: ");
-            initializeSockets();
+            boolean isRunning = client.isRunning();
 
             // Input from player
             // The game logic starts here
             while (isRunning) {
                 //screen.PrintScreen();
                 // Get input from player and do something
-                System.out.println("Queue=" + client.getRequests());
+
                 System.out.println("Enter command:");
                 char input = scanner.nextLine().charAt(0);
 
                 switch (input) {
                     case 'a':
-                        requestLounges();
-                        //printStream("requestLounges");
+                        client.requestLounges();
+                        client.waitForRequest(6);
+                        System.out.println(PayloadUtil.getAllLoungesRequest(client.getRequests().removeFirst()));
                         break;
                     case 'd':
                         System.out.println("request=");
@@ -77,7 +79,6 @@ private static boolean isConnected;
                         break;
                     case 'w':
                         System.out.println("requedfdst=");
-
                         //snake.moveUp(screen, snake);
                         break;
                     case 's':
@@ -87,7 +88,6 @@ private static boolean isConnected;
                     case 'q':
                         isRunning = false;
                         break;
-
                 }
             }
         } catch(Exception e){
@@ -95,71 +95,7 @@ private static boolean isConnected;
             e.printStackTrace();
         } finally {
             scanner.close();
-            socket.close();
+            client.dispose();
         }
-    }
-
-    //private static Object
-
-    private static void printStream(String out) {
-        System.out.println(out);
-    }
-
-    private static boolean initializeSockets() throws WebSocketException {
-        //
-        System.out.println("initializeSockets called");
-        socket = ExtendedNet.getNet().newWebSocket("localhost", 8000);
-        //socket.addListener(getListener());
-        // Creating a new ManualSerializer - this replaces the default JsonSerializer and allows to use the
-        // serialization mechanism from gdx-websocket-serialization library.
-        final ManualSerializer serializer = new ManualSerializer();
-        socket.setSerializer(serializer);
-        // Registering all expected packets:
-        // Connecting with the server.
-
-        try {
-            socket.connect();
-            //clientId = "1";
-            isConnected = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Packets.register(serializer);
-        return isConnected;
-    }
-
-
-    private static WebSocketListener getListener() {
-        final WebSocketHandler handler = new WebSocketHandler();
-        // Registering ServerResponse handler:
-        System.out.println("adding listener");
-
-        handler.registerHandler(ServerResponse.class, (WebSocketHandler.Handler<ServerResponse>) (webSocket, packet) -> {
-            try {
-
-                client.handleServerResponse(packet);
-            } catch (Exception e) {
-                System.out.println("3packet=" + packet);
-                e.printStackTrace();
-            }
-            return true;
-        });
-        return handler;
-    }
-
-
-
-    public static boolean isAlive() {
-        return isConnected;
-    }
-
-    public static void requestLounges() {
-        if (!isAlive()) {
-            initializeSockets();
-        }
-        final ClientRequest request = new ClientRequest(-1, "1", REQUEST_LOUNGE_ALL + "", null);
-        System.out.println("Starting requestLounges" + request);
-
-        socket.send(request);
     }
 }
