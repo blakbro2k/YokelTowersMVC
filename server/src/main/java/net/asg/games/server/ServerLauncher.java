@@ -78,6 +78,8 @@ public class ServerLauncher {
                     try {
                         if(frame.isBinary()){
                             handleFrame(webSocket, frame);
+                        } else if(frame.isText()){
+                            webSocket.writeFinalTextFrame("");
                         } else if(frame.isClose()){
                             Logger.info("Client closing connection");
                         } else {

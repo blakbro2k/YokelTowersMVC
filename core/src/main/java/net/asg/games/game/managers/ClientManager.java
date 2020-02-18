@@ -69,6 +69,10 @@ public class ClientManager implements Disposable {
     }
 
     public boolean isAlive() {
+        //TODO: Implement ping test interval
+        //internal interval, if hit.
+        //do a test connection
+        //
         return isConnected;
     }
 
@@ -166,5 +170,6 @@ public class ClientManager implements Disposable {
     private void sendClientRequest(String message, String[] payload) {
         final ClientRequest request = new ClientRequest(++requestId, "1", message, payload);
         socket.send(request);
+        //socket.sendKeepAlivePacket();
     }
 }
