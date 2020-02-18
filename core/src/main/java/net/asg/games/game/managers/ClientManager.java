@@ -9,6 +9,7 @@ import com.github.czyzby.websocket.data.WebSocketException;
 import com.github.czyzby.websocket.net.ExtendedNet;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
+import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
@@ -17,17 +18,16 @@ import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-
-import static net.asg.games.utils.enums.ServerRequest.REQUEST_LOUNGE_ALL;
 
 public class ClientManager implements Disposable {
     private static WebSocket socket;
-    private static boolean isConnected = false;
+    private static boolean isConnected;
     private static String clientId;
     private static int requestId = 0;
-    private static Queue<String[]> requests = new Queue<>();
+    private static Queue<String[]> requests;
+    private final String host;
+    private final int port;
 
     public Queue<String[]> getRequests() {
         return requests;
@@ -42,13 +42,17 @@ public class ClientManager implements Disposable {
         return isConnected;
     }
 
-    public ClientManager(){
+    public ClientManager(String host, int port){
+        isConnected = false;
+        requests = new Queue<>();
+        this.host = host;
+        this.port = port;
         initializeSockets();
     }
 
     private boolean initializeSockets() throws WebSocketException {
         System.out.println("initializeSockets called");
-        socket = ExtendedNet.getNet().newWebSocket("localhost", 8080);
+        socket = ExtendedNet.getNet().newWebSocket(host, port);
         // Creating a new ManualSerializer - this replaces the default JsonSerializer and allows to use the
         // serialization mechanism from gdx-websocket-serialization library.
         final ManualSerializer serializer = new ManualSerializer();
@@ -69,14 +73,21 @@ public class ClientManager implements Disposable {
     }
 
     public void requestLounges() {
-        if (!isAlive()) {
-            initializeSockets();
-        }
-        final ClientRequest request = new ClientRequest(++requestId, "1", REQUEST_LOUNGE_ALL + "", null);
-        socket.send(request);
+        checkConnection();
+        sendClientRequest(ServerRequest.REQUEST_LOUNGE_ALL + "", null);
     }
 
-    public void handleServerResponse(ServerResponse request) throws Exception {
+    public void requestPlayerRegister(YokelPlayer player) {
+        checkConnection();
+        sendClientRequest(ServerRequest.REQUEST_PLAYER_REGISTER + "", PayloadUtil.createPlayerRegisterRequest(player));
+    }
+
+    public void requestJoinRoom(YokelPlayer player, String loungeName, String roomName) {
+        checkConnection();
+        sendClientRequest(ServerRequest.REQUEST_ROOM_JOIN + "", PayloadUtil.createJoinRoomRequest(player, loungeName, roomName));
+    }
+
+    public void handleServerResponse(ServerResponse request) {
         String sessionId = null;
         String message = null;
         int requestSequence = -1;
@@ -91,20 +102,20 @@ public class ClientManager implements Disposable {
         }
     }
 
-    private void decodePayload(String message, String[] payload) throws Exception {
-        String[] load = null;
+    private void decodePayload(String message, String[] payload) {
         if(!StringUtils.isEmpty(message)){
-            ServerRequest value = ServerRequest.valueOf(message);
+            //ServerRequest value = ServerRequest.valueOf(message);
+            requests.addFirst(payload);
+            /*
             switch (value) {
                 case REQUEST_LOUNGE_ALL:
-                    requests.addFirst(payload);
                     break;
-                case REQUEST_CREATE_GAME:
-                    //createNewGame
+                case REQUEST_PLAYER_REGISTER:
+                    requests.addFirst(payload);
                     break;
                 default:
                     throw new Exception("Unknown Server Response: " + value);
-            }
+            }*/
         }
     }
 
@@ -144,5 +155,16 @@ public class ClientManager implements Disposable {
 
     public void waitForRequest(int maxWait) throws InterruptedException {
         waitForRequest(maxWait, 1);
+    }
+
+    private void checkConnection() {
+        if (!isAlive()) {
+            initializeSockets();
+        }
+    }
+
+    private void sendClientRequest(String message, String[] payload) {
+        final ClientRequest request = new ClientRequest(++requestId, "1", message, payload);
+        socket.send(request);
     }
 }

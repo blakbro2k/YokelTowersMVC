@@ -76,7 +76,14 @@ public class ServerLauncher {
                 // Printing received packets to console, sending response:
                 webSocket.frameHandler(frame -> {
                     try {
-                        handleFrame(webSocket, frame);
+                        if(frame.isBinary()){
+                            handleFrame(webSocket, frame);
+                        } else if(frame.isClose()){
+                            Logger.info("Client closing connection");
+                        } else {
+                            Logger.error("Received Unhandled WebSocket Frame type.");
+                            throw new Exception("Received Unhandled WebSocket Frame type.");
+                        }
                     } catch (Exception e) {
                         Logger.error(e, "There was an error handling client request");
                     }
@@ -120,6 +127,7 @@ public class ServerLauncher {
     private void handleFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
         try {
             Logger.trace("Enter handleFrame()");
+            Logger.trace("Websocket frame: {}", frame);
             final byte[] packet = frame.binaryData().getBytes();
             final long start = System.nanoTime();
             Logger.info("Deserializing packet recieved");

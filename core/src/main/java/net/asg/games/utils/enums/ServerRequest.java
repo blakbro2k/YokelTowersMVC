@@ -3,6 +3,7 @@ package net.asg.games.utils.enums;
 public enum ServerRequest {
     REQUEST_ALL_DEBUG_PLAYERS,
     REQUEST_LOGIN,
+    REQUEST_LOGOFF,
     REQUEST_PLAYER_REGISTER,
     REQUEST_CREATE_GAME,
     REQUEST_PLAY_GAME,

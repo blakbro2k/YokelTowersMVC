@@ -51,7 +51,9 @@ public class LocalLauncher {
     public static void main(final String... args) throws Exception {
         CommonWebSockets.initiate();
         Scanner scanner = new Scanner(System.in);
-        ClientManager client = new ClientManager();
+
+        ClientManager client = new ClientManager("localhost", 8080);
+        YokelPlayer player = new YokelPlayer("blakbro2k");
 
         try{
             // Input from player
@@ -70,16 +72,24 @@ public class LocalLauncher {
                 switch (input) {
                     case 'a':
                         client.requestLounges();
-                        client.waitForRequest(6);
+                        client.waitForRequest(30);
                         System.out.println(PayloadUtil.getAllLoungesRequest(client.getRequests().removeFirst()));
                         break;
-                    case 'd':
-                        System.out.println("request=");
-                        //snake.moveRight(screen, snake);
+                    case 'r':
+                        client.requestPlayerRegister(player);
+                        client.waitForRequest(30);
+                        System.out.println(Arrays.toString(client.getRequests().removeFirst()));
                         break;
-                    case 'w':
-                        System.out.println("requedfdst=");
-                        //snake.moveUp(screen, snake);
+                    case 'l':
+                        System.out.println("Enter Lounge Name:");
+                        String loungeName = scanner.nextLine();
+
+                        System.out.println("Enter Room Name:");
+                        String roomName = scanner.nextLine();
+
+                        client.requestJoinRoom(player, loungeName, roomName);
+                        client.waitForRequest(30);
+                        System.out.println(Arrays.toString(client.getRequests().removeFirst()));
                         break;
                     case 's':
                         System.out.println("reqfdfduest=");

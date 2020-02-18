@@ -100,8 +100,6 @@ public class PayloadUtil {
                 ret.add(Util.getObjectFromJsonString(YokelLounge.class, payload));
             }
         }
-        System.out.println("ret=" + ret);
-
         Logger.trace("Exit getLoungesRequest()");
         return ret;
     }
