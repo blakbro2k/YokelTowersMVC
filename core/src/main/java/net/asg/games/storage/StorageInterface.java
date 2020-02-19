@@ -24,6 +24,9 @@ public interface StorageInterface extends Disposable {
     YokelPlayer getRegisteredPlayer(String playerId);
 
     /** Releases all resources of this object. */
+    ObjectMap.Values<YokelPlayer> getAllRegisteredPlayers();
+
+    /** Puts a lounge into storage. */
     void putLounge(YokelLounge lounge) throws Exception;
 
     /** Releases all resources of this object. */

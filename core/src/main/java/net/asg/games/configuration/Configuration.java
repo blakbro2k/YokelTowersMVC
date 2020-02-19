@@ -95,7 +95,7 @@ import net.asg.games.service.ScaleService;
             // speeding up method look-up:
             Lml.EXTRACT_UNANNOTATED_METHODS = false;
 
-            //addCustomLmlTags();
+            addCustomLmlTags();
         }
 
         @Destroy

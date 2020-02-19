@@ -44,6 +44,11 @@ public class MemoryStorage implements StorageInterface {
     }
 
     @Override
+    public ObjectMap.Values<YokelPlayer> getAllRegisteredPlayers() {
+        return registeredPlayers.values();
+    }
+
+    @Override
     public void putLounge(YokelLounge lounge) throws Exception {
         if(lounge == null) throw new Exception("Lounge was null");
         lounges.put(lounge.getName(), lounge);
@@ -61,7 +66,7 @@ public class MemoryStorage implements StorageInterface {
 
     @Override
     public void addGame(String id, GameManager game) {
-
+        throw new RuntimeException("addGame not implemented.");
     }
 
     @Override

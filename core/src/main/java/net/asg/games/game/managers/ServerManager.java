@@ -290,20 +290,6 @@ public class ServerManager {
         return response;
     }
 
-    private void sendServerResponse(Serializer serializer, ServerWebSocket webSocket, ServerResponse response) throws Exception{
-        Logger.trace("Enter sendServerResponse()");
-        try{
-            if(response == null) throw new Exception("Server response was null");
-            if(webSocket == null) throw new Exception("WebSocket is null, was it initialized?");
-            final byte[] serialized = serializer.serialize(response);
-            webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
-            Logger.trace("Exit sendServerResponse()");
-        } catch (Exception e){
-            Logger.error(e,"Unable to send Server Response: ");
-            throw new Exception("Unable to send Server Response: ", e);
-        }
-    }
-
     public Array<String> testPlayersToJSON(){
         Array<String> jsonPlayers = new Array<>();
 
@@ -322,11 +308,20 @@ public class ServerManager {
         Array<String> jsonLounge = new Array<>();
         for(YokelLounge lounge : getAllLounges()){
             if(lounge != null){
-                System.out.println("Lounge=" + lounge);
                 jsonLounge.add(lounge.toString());
             }
         }
         return jsonLounge;
+    }
+
+    private Array<String> playersToJSON(){
+        Array<String> jsonPlayer = new Array<>();
+        for(YokelPlayer player : getAllRegisteredPlayer()){
+            if(player != null){
+                jsonPlayer.add(player.toString());
+            }
+        }
+        return jsonPlayer;
     }
 
     private String[] buildPayload(String message, String[] clientPayload) {
@@ -339,8 +334,8 @@ public class ServerManager {
                 switch (value) {
                     case REQUEST_LOGIN:
                         break;
-                    case REQUEST_ALL_DEBUG_PLAYERS:
-                        responsePayload = Util.toStringArray(testPlayersToJSON());
+                    case REQUEST_ALL_REGISTERED_PLAYERS:
+                        responsePayload = Util.toStringArray(playersToJSON());
                         break;
                     case REQUEST_LOGOFF:
                         responsePayload = Util.toStringArray(testPlayersToJSON());
@@ -434,6 +429,11 @@ public class ServerManager {
 
     private OrderedMap.Values<YokelLounge> getAllLounges(){
         return storageInterface.getAllLounges();
+    }
+
+
+    public ObjectMap.Values<YokelPlayer> getAllRegisteredPlayer(){
+        return storageInterface.getAllRegisteredPlayers();
     }
 
     private OrderedMap.Values<YokelRoom> getAllRooms(String loungeName) throws Exception {
@@ -672,6 +672,7 @@ public class ServerManager {
         try{
             String[] ret = new String[1];
             ret[0] = "false";
+            //TODO: Cannot create a table in a lounch you are not apart of
             if(Util.isValidPayload(clientPayload, 4)){
                 String loungeName = Util.getStringValue(clientPayload, 0);
                 String roomName = Util.getStringValue(clientPayload, 1);

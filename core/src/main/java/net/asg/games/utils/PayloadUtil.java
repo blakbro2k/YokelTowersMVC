@@ -73,6 +73,13 @@ public class PayloadUtil {
         return EMPTY_ARRAY;
     }
 
+    public static String[] createTableSitRequest(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber){
+        if(validatedInputs(loungeName, roomName)){
+            return new String[]{player.getId(), loungeName, roomName, Util.otos(tableNumber), Util.otos(seatNumber)};
+        }
+        return EMPTY_ARRAY;
+    }
+
     public static String[] createTableInfoRequest(String loungeName, String roomName){
         if(validatedInputs(loungeName, roomName)){
             return new String[]{loungeName, roomName};
@@ -81,8 +88,6 @@ public class PayloadUtil {
     }
 
     //From payload
-
-    //0 = Player JSON
     public static YokelPlayer getRegisterPlayerFromPayload(String[] clientPayload){
         if(Util.isValidPayload(clientPayload, 1)){
             return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[0]);
@@ -90,7 +95,6 @@ public class PayloadUtil {
         return null;
     }
 
-    //0 = GameLounge Name
     public static Array<YokelLounge> getAllLoungesRequest(String[] clientPayload) {
         Logger.trace("Enter getLoungesRequest()");
 
@@ -98,6 +102,19 @@ public class PayloadUtil {
         if(validatedInputs(clientPayload)){
             for(String payload : clientPayload){
                 ret.add(Util.getObjectFromJsonString(YokelLounge.class, payload));
+            }
+        }
+        Logger.trace("Exit getLoungesRequest()");
+        return ret;
+    }
+
+    public static Array<YokelPlayer> getAllRegisteredPlayersRequest(String[] clientPayload) {
+        Logger.trace("Enter getLoungesRequest()");
+
+        Array<YokelPlayer> ret = new Array<>();
+        if(validatedInputs(clientPayload)){
+            for(String payload : clientPayload){
+                ret.add(Util.getObjectFromJsonString(YokelPlayer.class, payload));
             }
         }
         Logger.trace("Exit getLoungesRequest()");

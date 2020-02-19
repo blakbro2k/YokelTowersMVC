@@ -18,6 +18,7 @@ import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelLounge;
+import net.asg.games.game.objects.YokelObject;
 import net.asg.games.provider.actors.GameBlock;
 
 import org.apache.commons.lang.StringUtils;
@@ -51,6 +52,25 @@ public class Util {
         return array;
     }
 
+    public static Array<?> safeIterable(Array<?> collection){
+        if(collection != null){
+            return collection;
+        } else {
+            return new Array<>();
+        }
+    }
+
+    public static String printYokelObject(YokelObject yokelObject) {
+        return json.prettyPrint(yokelObject);
+    }
+
+    public static String printYokelObjects(Array<? extends YokelObject> yokelObjects){
+        StringBuilder sb = new StringBuilder();
+        for(YokelObject yObject : yokelObjects){
+            sb.append(printYokelObject(yObject)).append('\n');
+        }
+        return sb.toString();
+    }
 
     public static class IDGenerator {
         private IDGenerator(){}
@@ -192,7 +212,7 @@ public class Util {
      * @param //<T>
      * @return
      */
-    @NotNull
+    //@NotNull
    /* public static <T> Array.ArrayIterable<T> toIterable(Array<T> array){
         if(isArrayEmpty(array)){
             return new Array.ArrayIterable<>(array);

@@ -1,8 +1,5 @@
 package net.asg.games.game.objects;
 
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
-
 import net.asg.games.utils.RandomUtil;
 
 import java.util.Stack;

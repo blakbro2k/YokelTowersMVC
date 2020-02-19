@@ -67,6 +67,7 @@ public class YokelRoom extends AbstractYokelObject {
     private int getNextTableNumber(){
         return ++curTableNum;
     }
+
     public YokelTable getTable(int t){
         return tables.get(t);
     }

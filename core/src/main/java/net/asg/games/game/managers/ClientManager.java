@@ -10,6 +10,7 @@ import com.github.czyzby.websocket.net.ExtendedNet;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
 import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.game.objects.YokelTable;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
@@ -77,18 +78,27 @@ public class ClientManager implements Disposable {
     }
 
     public void requestLounges() {
-        checkConnection();
-        sendClientRequest(ServerRequest.REQUEST_LOUNGE_ALL + "", null);
+        sendClientRequest(ServerRequest.REQUEST_LOUNGE_ALL, null);
+    }
+
+    public void requestPlayers() {
+        sendClientRequest(ServerRequest.REQUEST_ALL_REGISTERED_PLAYERS, null);
     }
 
     public void requestPlayerRegister(YokelPlayer player) {
-        checkConnection();
-        sendClientRequest(ServerRequest.REQUEST_PLAYER_REGISTER + "", PayloadUtil.createPlayerRegisterRequest(player));
+        sendClientRequest(ServerRequest.REQUEST_PLAYER_REGISTER, PayloadUtil.createPlayerRegisterRequest(player));
     }
 
     public void requestJoinRoom(YokelPlayer player, String loungeName, String roomName) {
-        checkConnection();
-        sendClientRequest(ServerRequest.REQUEST_ROOM_JOIN + "", PayloadUtil.createJoinRoomRequest(player, loungeName, roomName));
+        sendClientRequest(ServerRequest.REQUEST_ROOM_JOIN, PayloadUtil.createJoinRoomRequest(player, loungeName, roomName));
+    }
+
+    public void requestCreateGame(String loungeName, String roomName, YokelTable.ACCESS_TYPE type, boolean isRated) {
+        sendClientRequest(ServerRequest.REQUEST_CREATE_GAME, PayloadUtil.createNewGameRequest(loungeName, roomName, type, isRated));
+    }
+
+    public void requestTableSit(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber) {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_SIT, PayloadUtil.createTableSitRequest(player, loungeName, roomName, tableNumber, seatNumber));
     }
 
     public void handleServerResponse(ServerResponse request) {
@@ -128,7 +138,6 @@ public class ClientManager implements Disposable {
         // Registering ServerResponse handler:
         handler.registerHandler(ServerResponse.class, (WebSocketHandler.Handler<ServerResponse>) (webSocket, packet) -> {
             try {
-
                 handleServerResponse(packet);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -167,9 +176,9 @@ public class ClientManager implements Disposable {
         }
     }
 
-    private void sendClientRequest(String message, String[] payload) {
-        final ClientRequest request = new ClientRequest(++requestId, "1", message, payload);
+    private void sendClientRequest(ServerRequest serverRequest, String[] payload) {
+        checkConnection();
+        final ClientRequest request = new ClientRequest(++requestId, "1", serverRequest + "", payload);
         socket.send(request);
-        //socket.sendKeepAlivePacket();
     }
 }
