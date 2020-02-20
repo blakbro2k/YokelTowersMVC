@@ -71,7 +71,8 @@ public class ClientManager implements Disposable {
         // Connecting with the server.
 
         socket.connect();
-        socket.addListener(getListener());
+        socket.addListener(getServerListener());
+        socket.addListener(getTextListener());
         socket.send(REQUEST_CLIENT_ID + "");
 
         /*
@@ -145,7 +146,7 @@ public class ClientManager implements Disposable {
         }
     }
 
-    private WebSocketListener getListener() {
+    private WebSocketListener getServerListener() {
         Logger.trace("");
         final WebSocketHandler handler = new WebSocketHandler();
         // Registering ServerResponse handler:
@@ -161,6 +162,21 @@ public class ClientManager implements Disposable {
         return handler;
     }
 
+    private WebSocketListener getTextListener() {
+        Logger.trace("");
+        final WebSocketHandler handler = new WebSocketHandler();
+        // Registering ServerResponse handler:
+        handler.registerHandler(String.class, (WebSocketHandler.Handler<String>) (webSocket, packet) -> {
+            try {
+                System.out.println("packet: " + packet);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return true;
+        });
+        return handler;
+    }
+    
     public void waitForRequest(int maxWait, int numberOfRequests) throws InterruptedException {
         int timeout = 0;
         boolean waiting = true;
