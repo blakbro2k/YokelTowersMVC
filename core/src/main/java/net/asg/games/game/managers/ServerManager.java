@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
-import com.github.czyzby.websocket.serialization.Serializer;
 
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
@@ -26,9 +25,6 @@ import org.pmw.tinylog.Logger;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.ServerWebSocket;
 
 public class ServerManager {
     private final AtomicInteger idCounter = new AtomicInteger();
@@ -227,7 +223,7 @@ public class ServerManager {
        /* if(threadPool != null){
             threadPool.shutdown();
         }*/
-        Logger.trace("Exit shutDownServer()");
+        Logger.trace("Exit shutDownServer("+ errorCode + ")");
         //System.exit(errorCode);
     }
 
@@ -582,10 +578,10 @@ public class ServerManager {
         return storageInterface.getGame(loungeName+roomName+tableNumber);
     }
 
-    private boolean registerPlayer(YokelPlayer player) throws Exception {
+    private boolean registerPlayer(String clientId, YokelPlayer player) throws Exception {
         if(player != null){
             //validateRegisteredPlayers();
-            storageInterface.putRegisteredPlayer(player);
+            storageInterface.putRegisteredPlayer(clientId, player);
         }
         return true;
     }
@@ -594,7 +590,8 @@ public class ServerManager {
         return storageInterface.getRegisteredPlayer(playerId);
     }
 
-    //0 = Player Name
+    //0 = Client ID
+    //1 = Player Name
     private String[] registerPlayerRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter registerPlayerRequest()");
 
@@ -602,9 +599,11 @@ public class ServerManager {
         ret[0] = "false";
 
         YokelPlayer player = PayloadUtil.getRegisterPlayerFromPayload(clientPayload);
+        String clientId = PayloadUtil.getClientIDFromPayload(clientPayload);
+
         if(player != null){
             Logger.info("Attempting to register player={}", player.toString());
-            ret[0] = Util.otos(registerPlayer(player));
+            ret[0] = Util.otos(registerPlayer(clientId, player));
         }
         Logger.trace("Exit registerPlayerRequest()");
         return ret;

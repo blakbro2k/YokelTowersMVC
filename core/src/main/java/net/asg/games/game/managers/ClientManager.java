@@ -18,17 +18,20 @@ import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.pmw.tinylog.Logger;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class ClientManager implements Disposable {
     private static WebSocket socket;
     private static boolean isConnected;
-    private static String clientId;
+    private static String clientId = "";
     private static int requestId = 0;
     private static Queue<String[]> requests;
     private final String host;
     private final int port;
+    private YokelPlayer player;
 
     public Queue<String[]> getRequests() {
         return requests;
@@ -48,7 +51,11 @@ public class ClientManager implements Disposable {
         requests = new Queue<>();
         this.host = host;
         this.port = port;
-        initializeSockets();
+    }
+
+    public boolean authenticate(YokelPlayer player){
+        this.player = player;
+        return initializeSockets();
     }
 
     private boolean initializeSockets() throws WebSocketException {
@@ -63,7 +70,17 @@ public class ClientManager implements Disposable {
 
         socket.connect();
         socket.addListener(getListener());
-        //clientId = "1";
+/*
+        requestPlayerRegister(player);
+        try {
+            waitForRequest(30);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        String[] request = getRequests().removeFirst();
+        System.out.println(Arrays.toString(request));*/
+        clientId = "";
         isConnected = true;
         Packets.register(serializer);
         return isConnected;
@@ -86,7 +103,7 @@ public class ClientManager implements Disposable {
     }
 
     public void requestPlayerRegister(YokelPlayer player) {
-        sendClientRequest(ServerRequest.REQUEST_PLAYER_REGISTER, PayloadUtil.createPlayerRegisterRequest(player));
+        sendClientRequest(ServerRequest.REQUEST_PLAYER_REGISTER, PayloadUtil.createPlayerRegisterRequest(clientId, player));
     }
 
     public void requestJoinRoom(YokelPlayer player, String loungeName, String roomName) {
@@ -118,22 +135,12 @@ public class ClientManager implements Disposable {
 
     private void decodePayload(String message, String[] payload) {
         if(!StringUtils.isEmpty(message)){
-            //ServerRequest value = ServerRequest.valueOf(message);
             requests.addFirst(payload);
-            /*
-            switch (value) {
-                case REQUEST_LOUNGE_ALL:
-                    break;
-                case REQUEST_PLAYER_REGISTER:
-                    requests.addFirst(payload);
-                    break;
-                default:
-                    throw new Exception("Unknown Server Response: " + value);
-            }*/
         }
     }
 
     private WebSocketListener getListener() {
+        Logger.trace("");
         final WebSocketHandler handler = new WebSocketHandler();
         // Registering ServerResponse handler:
         handler.registerHandler(ServerResponse.class, (WebSocketHandler.Handler<ServerResponse>) (webSocket, packet) -> {

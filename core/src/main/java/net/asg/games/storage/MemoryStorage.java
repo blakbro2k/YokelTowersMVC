@@ -33,9 +33,9 @@ public class MemoryStorage implements StorageInterface {
     }
 
     @Override
-    public void putRegisteredPlayer(YokelPlayer player) throws Exception {
+    public void putRegisteredPlayer(String clientID, YokelPlayer player) throws Exception {
         if(player == null) throw new Exception("Player was null.");
-        registeredPlayers.put(player.getPlayerId(), player);
+        registeredPlayers.put(clientID, player);
     }
 
     @Override

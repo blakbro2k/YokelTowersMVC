@@ -22,10 +22,14 @@ public class LocalLauncher {
         Scanner scanner = new Scanner(System.in);
 
         ClientManager client = new ClientManager("localhost", 8080);
-        YokelPlayer player = new YokelPlayer("blakbro2k");
+        System.out.println("Enter Player Name: ");
+        YokelPlayer player = new YokelPlayer(scanner.nextLine());
+
         int seatNumber = 0;
 
         try{
+            if(!client.authenticate(player)) throw new Exception("Could not Authenticate.");
+
             // Input from player
             Logger.trace("Local Launcher Failed: ");
             boolean isRunning = client.isRunning();

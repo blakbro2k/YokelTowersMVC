@@ -31,9 +31,9 @@ public class PayloadUtil {
     }
 
     //Create Payload
-    public static String[] createPlayerRegisterRequest(YokelPlayer player){
+    public static String[] createPlayerRegisterRequest(String clientId, YokelPlayer player){
         if(validatedInputs(player)){
-            return new String[]{player.toString()};
+            return new String[]{clientId, player.toString()};
         }
         return EMPTY_ARRAY;
     }
@@ -89,10 +89,17 @@ public class PayloadUtil {
 
     //From payload
     public static YokelPlayer getRegisterPlayerFromPayload(String[] clientPayload){
-        if(Util.isValidPayload(clientPayload, 1)){
-            return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[0]);
+        if(Util.isValidPayload(clientPayload, 2)){
+            return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[1]);
         }
         return null;
+    }
+
+    public static String getClientIDFromPayload(String[] clientPayload){
+        if(Util.isValidPayload(clientPayload, 2)){
+            return Util.otos(clientPayload[0]);
+        }
+        return "";
     }
 
     public static Array<YokelLounge> getAllLoungesRequest(String[] clientPayload) {

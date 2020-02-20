@@ -18,7 +18,7 @@ public interface StorageInterface extends Disposable {
     YokelTable getTableState();
 
     /** Register Player. */
-    void putRegisteredPlayer(YokelPlayer player) throws Exception;
+    void putRegisteredPlayer(String clientId, YokelPlayer player) throws Exception;
 
     /** Get Registered Player. */
     YokelPlayer getRegisteredPlayer(String playerId);

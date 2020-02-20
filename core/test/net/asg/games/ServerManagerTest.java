@@ -292,7 +292,7 @@ public class ServerManagerTest {
                 buildPayload = new TestingUtils.TestMethod("buildPayload",
                 daemonClass(),
                 new Class[]{String.class, String[].class},
-                new Object[]{Util.otos(ServerRequest.REQUEST_PLAYER_REGISTER), PayloadUtil.createPlayerRegisterRequest(player1)},
+                new Object[]{Util.otos(ServerRequest.REQUEST_PLAYER_REGISTER), PayloadUtil.createPlayerRegisterRequest("", player1)},
                 daemon,
                 true);
 
@@ -316,7 +316,7 @@ public class ServerManagerTest {
         printInvocationResult(result);
         Assert.assertTrue(getInvocationBoolean(result));
 
-        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_PLAYER_REGISTER), PayloadUtil.createPlayerRegisterRequest(player2));
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_PLAYER_REGISTER), PayloadUtil.createPlayerRegisterRequest("", player2));
         result = buildPayload.invoke();
         printInvocationResult(result);
         Assert.assertTrue(getInvocationBoolean(result));

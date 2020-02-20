@@ -82,7 +82,7 @@ public class ServerLauncher {
                         } else if(frame.isText()){
                             webSocket.writeFinalTextFrame("");
                         } else if(frame.isClose()){
-                            Logger.info("Client closing connection");
+                            Logger.error("Client [" + webSocket.binaryHandlerID() + "] closing connection");
                         } else {
                             Logger.error("Received Unhandled WebSocket Frame type.");
                             throw new Exception("Received Unhandled WebSocket Frame type.");
@@ -118,12 +118,27 @@ public class ServerLauncher {
         if(webSocket == null) throw new Exception("Unable to send Server Response: WebSocket is null, was it initialized?");
 
         try{
+            //sendClientId(storage, webSocket);
             final byte[] serialized = serializer.serialize(response);
             webSocket.writeFinalBinaryFrame(Buffer.buffer(serialized));
             Logger.trace("Exit sendServerResponse()");
         } catch (Exception e){
             Logger.error(e,"Unable to send Server Response: ");
             throw new Exception("Unable to send Server Response: ", e);
+        }
+    }
+
+    private void sendClientId(StorageInterface storage, ServerWebSocket webSocket) throws Exception {
+        try{
+            Logger.trace("Enter sendClientId()");
+            if(webSocket != null){
+                String clientId = webSocket.binaryHandlerID();
+                webSocket.writeFinalTextFrame(clientId);
+            }
+            Logger.trace("Exit sendClientId()");
+        } catch (Exception e) {
+            Logger.error("Unable to send client id: ", e);
+            throw new Exception("Unable to send client id: ", e);
         }
     }
 
