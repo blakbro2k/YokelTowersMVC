@@ -11,6 +11,7 @@ import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.storage.MemoryStorage;
 import net.asg.games.storage.StorageInterface;
 
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.pmw.tinylog.Logger;
 
@@ -80,9 +81,13 @@ public class ServerLauncher {
                         if(frame.isBinary()){
                             handleFrame(webSocket, frame);
                         } else if(frame.isText()){
-                            webSocket.writeFinalTextFrame("");
+                            final String frameText = frame.textData();
+                            if(StringUtils.equalsIgnoreCase(frameText, "REQUEST_CLIENT_ID")){
+                                Logger.info("Sending Client [" + webSocket.binaryHandlerID() + "]");
+                                webSocket.writeFinalTextFrame(webSocket.binaryHandlerID() + "");
+                            }
                         } else if(frame.isClose()){
-                            Logger.error("Client [" + webSocket.binaryHandlerID() + "] closing connection");
+                            Logger.info("Client [" + webSocket.binaryHandlerID() + "] closing connection");
                         } else {
                             Logger.error("Received Unhandled WebSocket Frame type.");
                             throw new Exception("Received Unhandled WebSocket Frame type.");

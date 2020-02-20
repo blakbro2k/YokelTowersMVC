@@ -23,6 +23,8 @@ import org.pmw.tinylog.Logger;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import static net.asg.games.utils.enums.ServerRequest.REQUEST_CLIENT_ID;
+
 public class ClientManager implements Disposable {
     private static WebSocket socket;
     private static boolean isConnected;
@@ -70,19 +72,21 @@ public class ClientManager implements Disposable {
 
         socket.connect();
         socket.addListener(getListener());
-/*
-        requestPlayerRegister(player);
+        socket.send(REQUEST_CLIENT_ID + "");
+
+        /*
         try {
             waitForRequest(30);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
-        String[] request = getRequests().removeFirst();
-        System.out.println(Arrays.toString(request));*/
-        clientId = "";
+        //String[] request = getRequests().removeFirst();
+        //System.out.println(Arrays.toString(request));
+        //clientId = request[0];
         isConnected = true;
         Packets.register(serializer);
+        System.out.println("initializeSockets ended");
         return isConnected;
     }
 
@@ -119,6 +123,8 @@ public class ClientManager implements Disposable {
     }
 
     public void handleServerResponse(ServerResponse request) {
+        System.out.println("request: " + request);
+
         String sessionId = null;
         String message = null;
         int requestSequence = -1;
@@ -145,6 +151,7 @@ public class ClientManager implements Disposable {
         // Registering ServerResponse handler:
         handler.registerHandler(ServerResponse.class, (WebSocketHandler.Handler<ServerResponse>) (webSocket, packet) -> {
             try {
+
                 handleServerResponse(packet);
             } catch (Exception e) {
                 e.printStackTrace();
