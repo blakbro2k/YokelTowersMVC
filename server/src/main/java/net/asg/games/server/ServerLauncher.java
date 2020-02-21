@@ -3,6 +3,7 @@ package net.asg.games.server;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
+import net.asg.games.game.managers.GameRunner;
 import net.asg.games.game.managers.ServerManager;
 import net.asg.games.server.serialization.AdminClientRequest;
 import net.asg.games.server.serialization.ClientRequest;
@@ -33,6 +34,7 @@ public class ServerLauncher {
     private final static Vertx vertx = Vertx.vertx();
     private final static ManualSerializer serializer = new ManualSerializer();
     private final static StorageInterface storage = new MemoryStorage();
+    private static GameRunner gameRunner;
     //private ExecutorService threadPool;
 
     private ServerLauncher() {
@@ -43,6 +45,7 @@ public class ServerLauncher {
         try{
             new ServerLauncher().launch(args);
         } catch (Exception e) {
+            gameRunner.dispose();
             Logger.error(e,"Failed to launch server: ");
             throw new Exception("Failed to launch server: ", e);
         }
@@ -58,6 +61,9 @@ public class ServerLauncher {
             Logger.info("Launching YokelTowers-server build: {}", SERVER_BUILD);
             initialize(args);
             initializeNetwork();
+
+            //Start GameRunner
+            gameRunner = new GameRunner(serverDaemon);
             Logger.trace("Exit launch()");
         } catch (Exception e) {
             Logger.error(e,"Error Launching Server: ");

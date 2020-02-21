@@ -6,19 +6,9 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.OrderedMap;
 import com.badlogic.gdx.utils.TimeUtils;
 
-import net.asg.games.utils.Util;
-
-import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.InitializationError;
 import org.mockito.Mockito;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /*******************************************************************************
  * Copyright 2015 See AUTHORS file.
@@ -60,14 +50,10 @@ public class GameRunner implements ApplicationListener {
 
     @Override
     public void render() {
-        float delta = now - TimeUtils.millis();
-        now = TimeUtils.millis();
-        System.out.println("delta = " + delta);
-
         final ObjectMap.Values<GameManager> games = daemon.getAllGames();
         for(GameManager game : games){
             if(game != null){
-                game.update(delta);
+                game.update(Gdx.app.getGraphics().getDeltaTime());
             }
         }
     }

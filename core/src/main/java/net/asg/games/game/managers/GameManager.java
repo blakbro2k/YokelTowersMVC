@@ -1,23 +1,20 @@
 package net.asg.games.game.managers;
 
-import com.badlogic.gdx.utils.Array;
-import com.github.czyzby.autumn.annotation.Component;
-import com.github.czyzby.autumn.annotation.Inject;
-
-import net.asg.games.controller.UITestController;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
-import net.asg.games.service.UserInterfaceService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameManager {
     private YokelTable table;
-    private Array<YokelGameBoard> gameBoards;
+    private List<YokelGameBoard> gameBoards;
     private boolean isGameRunning;
 
     public GameManager(YokelTable table){
         this.table = table;
-        gameBoards = new Array<>();
+        gameBoards = new ArrayList<>();
         init();
     }
 
