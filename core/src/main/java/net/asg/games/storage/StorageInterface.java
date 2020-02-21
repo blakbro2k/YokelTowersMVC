@@ -18,10 +18,15 @@ public interface StorageInterface extends Disposable {
     YokelTable getTableState();
 
     /** Register Player. */
+    /** Must link clientID to Player ID to Player Object. */
     void putRegisteredPlayer(String clientId, YokelPlayer player) throws Exception;
 
     /** Get Registered Player. */
     YokelPlayer getRegisteredPlayer(String playerId);
+
+    /** Remove Registered Player. */
+    /** Should remove the from all tables, seats, games and rooms **/
+    void removeRegisteredPlayer(String clientID) throws Exception;
 
     /** Releases all resources of this object. */
     ObjectMap.Values<YokelPlayer> getAllRegisteredPlayers();

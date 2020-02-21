@@ -2,7 +2,6 @@ package net.asg.games.utils.enums;
 
 public enum ServerRequest {
     REQUEST_ALL_DEBUG_PLAYERS,
-    REQUEST_LOGIN,
     REQUEST_ALL_REGISTERED_PLAYERS,
     REQUEST_LOGOFF,
     REQUEST_PLAYER_REGISTER,
@@ -17,5 +16,6 @@ public enum ServerRequest {
     REQUEST_LOUNGE,
     REQUEST_TABLE_INFO,
     REQUEST_LOUNGE_ALL,
-    REQUEST_CLIENT_ID
+    REQUEST_CLIENT_ID,
+    REQUEST_CLIENT_DISCONNECT
 }

@@ -23,8 +23,6 @@ import org.pmw.tinylog.Logger;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-import static net.asg.games.utils.enums.ServerRequest.REQUEST_CLIENT_ID;
-
 public class ClientManager implements Disposable {
     private static WebSocket socket;
     private static boolean isConnected;
@@ -55,12 +53,14 @@ public class ClientManager implements Disposable {
         this.port = port;
     }
 
-    public boolean authenticate(YokelPlayer player){
+    public boolean register(YokelPlayer player) throws InterruptedException {
         this.player = player;
-        return initializeSockets();
+        boolean register = initializeSockets();
+        registerClient();
+        return register;
     }
 
-    private boolean initializeSockets() throws WebSocketException {
+    private boolean initializeSockets() throws WebSocketException, InterruptedException {
         System.out.println("initializeSockets called");
         socket = ExtendedNet.getNet().newWebSocket(host, port);
         // Creating a new ManualSerializer - this replaces the default JsonSerializer and allows to use the
@@ -72,23 +72,23 @@ public class ClientManager implements Disposable {
 
         socket.connect();
         socket.addListener(getServerListener());
-        socket.addListener(getTextListener());
-        socket.send(REQUEST_CLIENT_ID + "");
-
-        /*
-        try {
-            waitForRequest(30);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-
-        //String[] request = getRequests().removeFirst();
-        //System.out.println(Arrays.toString(request));
-        //clientId = request[0];
-        isConnected = true;
         Packets.register(serializer);
+
+        socket.send(ServerRequest.REQUEST_CLIENT_ID + "");
+
+
+        waitForRequest(30);
+        String[] request = getRequests().removeFirst();
+        clientId = request[0];
+
+        isConnected = true;
         System.out.println("initializeSockets ended");
         return isConnected;
+    }
+
+    private void registerClient() throws InterruptedException {
+        requestPlayerRegister(player);
+        waitForRequest(30);
     }
 
     public boolean isAlive() {
@@ -99,33 +99,31 @@ public class ClientManager implements Disposable {
         return isConnected;
     }
 
-    public void requestLounges() {
+    public void requestLounges() throws InterruptedException {
         sendClientRequest(ServerRequest.REQUEST_LOUNGE_ALL, null);
     }
 
-    public void requestPlayers() {
+    public void requestPlayers() throws InterruptedException {
         sendClientRequest(ServerRequest.REQUEST_ALL_REGISTERED_PLAYERS, null);
     }
 
-    public void requestPlayerRegister(YokelPlayer player) {
+    public void requestPlayerRegister(YokelPlayer player) throws InterruptedException {
         sendClientRequest(ServerRequest.REQUEST_PLAYER_REGISTER, PayloadUtil.createPlayerRegisterRequest(clientId, player));
     }
 
-    public void requestJoinRoom(YokelPlayer player, String loungeName, String roomName) {
+    public void requestJoinRoom(YokelPlayer player, String loungeName, String roomName) throws InterruptedException {
         sendClientRequest(ServerRequest.REQUEST_ROOM_JOIN, PayloadUtil.createJoinRoomRequest(player, loungeName, roomName));
     }
 
-    public void requestCreateGame(String loungeName, String roomName, YokelTable.ACCESS_TYPE type, boolean isRated) {
+    public void requestCreateGame(String loungeName, String roomName, YokelTable.ACCESS_TYPE type, boolean isRated) throws InterruptedException {
         sendClientRequest(ServerRequest.REQUEST_CREATE_GAME, PayloadUtil.createNewGameRequest(loungeName, roomName, type, isRated));
     }
 
-    public void requestTableSit(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber) {
+    public void requestTableSit(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber) throws InterruptedException {
         sendClientRequest(ServerRequest.REQUEST_TABLE_SIT, PayloadUtil.createTableSitRequest(player, loungeName, roomName, tableNumber, seatNumber));
     }
 
     public void handleServerResponse(ServerResponse request) {
-        System.out.println("request: " + request);
-
         String sessionId = null;
         String message = null;
         int requestSequence = -1;
@@ -152,7 +150,6 @@ public class ClientManager implements Disposable {
         // Registering ServerResponse handler:
         handler.registerHandler(ServerResponse.class, (WebSocketHandler.Handler<ServerResponse>) (webSocket, packet) -> {
             try {
-
                 handleServerResponse(packet);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -162,21 +159,6 @@ public class ClientManager implements Disposable {
         return handler;
     }
 
-    private WebSocketListener getTextListener() {
-        Logger.trace("");
-        final WebSocketHandler handler = new WebSocketHandler();
-        // Registering ServerResponse handler:
-        handler.registerHandler(String.class, (WebSocketHandler.Handler<String>) (webSocket, packet) -> {
-            try {
-                System.out.println("packet: " + packet);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return true;
-        });
-        return handler;
-    }
-    
     public void waitForRequest(int maxWait, int numberOfRequests) throws InterruptedException {
         int timeout = 0;
         boolean waiting = true;
@@ -200,13 +182,13 @@ public class ClientManager implements Disposable {
         waitForRequest(maxWait, 1);
     }
 
-    private void checkConnection() {
+    private void checkConnection() throws InterruptedException {
         if (!isAlive()) {
             initializeSockets();
         }
     }
 
-    private void sendClientRequest(ServerRequest serverRequest, String[] payload) {
+    private void sendClientRequest(ServerRequest serverRequest, String[] payload) throws InterruptedException {
         checkConnection();
         final ClientRequest request = new ClientRequest(++requestId, "1", serverRequest + "", payload);
         socket.send(request);

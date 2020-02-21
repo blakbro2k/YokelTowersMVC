@@ -49,12 +49,12 @@ public class ServerManager {
     private float tickRate = 100;
     private boolean isDebug = true;
     private Level logLevel = Level.INFO;
-    private StorageInterface storageInterface;
+    private StorageInterface storage;
     private OrderedMap<String, YokelPlayer> testPlayers;
 
-    public ServerManager(StorageInterface storageInterface, String... args){
+    public ServerManager(StorageInterface storage, String... args){
         try {
-            this.storageInterface = storageInterface;
+            this.storage = storage;
             initialize(args);
         } catch (Exception e) {
             Logger.error(e,"Error during ServerManager initialization: ");
@@ -75,7 +75,7 @@ public class ServerManager {
     }
 
     public ObjectMap.Values<GameManager> getAllGames(){
-        return storageInterface.getAllGames();
+        return storage.getAllGames();
     }
 
     private void initializeGameRooms() throws Exception {
@@ -328,7 +328,8 @@ public class ServerManager {
             if (!StringUtils.isEmpty(message)) {
                 ServerRequest value = ServerRequest.valueOf(message);
                 switch (value) {
-                    case REQUEST_LOGIN:
+                    case REQUEST_CLIENT_DISCONNECT:
+                        responsePayload = disconnectPlayer(clientPayload);
                         break;
                     case REQUEST_ALL_REGISTERED_PLAYERS:
                         responsePayload = Util.toStringArray(playersToJSON());
@@ -390,7 +391,7 @@ public class ServerManager {
             YokelLounge lounge = null;
 
             if(key != null){
-                lounge = storageInterface.getLounge(key);
+                lounge = storage.getLounge(key);
             }
             Logger.debug("GameLounge({})={}", key, lounge);
             Logger.trace("Exit getLounge()");
@@ -420,16 +421,16 @@ public class ServerManager {
     }
 
     private void addLounge(YokelLounge lounge) throws Exception {
-        storageInterface.putLounge(lounge);
+        storage.putLounge(lounge);
     }
 
     private OrderedMap.Values<YokelLounge> getAllLounges(){
-        return storageInterface.getAllLounges();
+        return storage.getAllLounges();
     }
 
 
     public ObjectMap.Values<YokelPlayer> getAllRegisteredPlayer(){
-        return storageInterface.getAllRegisteredPlayers();
+        return storage.getAllRegisteredPlayers();
     }
 
     private OrderedMap.Values<YokelRoom> getAllRooms(String loungeName) throws Exception {
@@ -475,14 +476,15 @@ public class ServerManager {
     }
 
     private YokelRoom getRoom(String loungeName, String roomName) throws Exception {
-        //validateLounges();
+        Logger.trace("Enter getRoom()");
+        Logger.debug("Attempting to get Room : " + roomName + " in " + loungeName);
         YokelRoom room = null;
-
         YokelLounge lounge = getLounge(loungeName);
 
         if(lounge != null && roomName != null){
             room = lounge.getRoom(roomName);
         }
+        Logger.trace("Exit getRoom()=" + room);
         return room;
     }
 
@@ -491,24 +493,26 @@ public class ServerManager {
         Logger.debug("Attempting to get Table(" + tableNumber + ")@" + roomName + " in " + loungeName);
 
         YokelTable table = null;
-
         YokelRoom room = getRoom(loungeName, roomName);
 
         if(room != null){
             table = room.getTable(tableNumber);
         }
-        Logger.trace("Exit getTable()");
+        Logger.trace("Exit getTable()=" + table);
         return table;
     }
 
     private YokelSeat getSeat(String loungeName, String roomName, int tableNumber, int seatNumber) throws Exception {
-        YokelSeat seat = null;
+        Logger.trace("Enter getSeat()");
+        Logger.debug("Attempting to get Seat=" + seatNumber +  " (" + tableNumber + ")@" + roomName + " in " + loungeName);
 
+        YokelSeat seat = null;
         YokelTable table = getTable(loungeName, roomName, tableNumber);
 
         if(table != null){
             seat = table.getSeat(seatNumber);
         }
+        Logger.trace("Exit getSeat()=" + seat);
         return seat;
     }
 
@@ -575,19 +579,24 @@ public class ServerManager {
         if(roomName == null) throw new Exception("Error getting game from table: Room is null.");
         int tableNumber = table.getTableNumber();
 
-        return storageInterface.getGame(loungeName+roomName+tableNumber);
+        return storage.getGame(loungeName+roomName+tableNumber);
     }
 
     private boolean registerPlayer(String clientId, YokelPlayer player) throws Exception {
         if(player != null){
             //validateRegisteredPlayers();
-            storageInterface.putRegisteredPlayer(clientId, player);
+            storage.putRegisteredPlayer(clientId, player);
         }
         return true;
     }
 
+    private void unRegisterPlayer(String clientId) throws Exception {
+        //validateRegisteredPlayers();
+        storage.removeRegisteredPlayer(clientId);
+    }
+
     private YokelPlayer getRegisteredPlayer(String playerId){
-        return storageInterface.getRegisteredPlayer(playerId);
+        return storage.getRegisteredPlayer(playerId);
     }
 
     //0 = Client ID
@@ -610,23 +619,28 @@ public class ServerManager {
     }
 
     //0 = Player Name
-    private String[] unRegisterPlayerRequest(String[] clientPayload) throws Exception {
+    //1 = Client ID
+    private String[] disconnectPlayer(String[] clientPayload) throws Exception {
         Logger.trace("Enter registerPlayerRequest()");
-
-        //Remove user from all Seats
-        //Remove user from all tables
-        //Remove user from all Rooms
-        //Remove user from all Lounges
-        //Remove user from registered list
 
         String[] ret = new String[1];
         ret[0] = "false";
 
         YokelPlayer player = PayloadUtil.getRegisterPlayerFromPayload(clientPayload);
-        if(player != null){
-            Logger.info("Removing {} from all Seat.", player.toString());
+        String clientId = PayloadUtil.getClientIDFromPayload(clientPayload);
+
+        //Remove user from all Seats
+        //Remove user from all tables
+        //Remove user from all Rooms
+        //Remove user from all Lounges
+
+       if(player != null){
+            Logger.info("Removing {} from all Seats.", player.toString());
             //ret[0] = Util.otos(registerPlayer(player));
         }
+
+        //Remove user from registered list
+        unRegisterPlayer(clientId);
         Logger.trace("Exit registerPlayerRequest()");
         return ret;
     }
@@ -777,7 +791,7 @@ public class ServerManager {
     //4 = Seat Number
     private String[] tableSitRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter tableSitRequest()");
-        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
+        Logger.trace("Received payload=" + Arrays.toString(clientPayload));
         String[] ret = new String[1];
 
         if(Util.isValidPayload(clientPayload, 5)){

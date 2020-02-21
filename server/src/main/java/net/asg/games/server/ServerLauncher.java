@@ -78,16 +78,19 @@ public class ServerLauncher {
                 // Printing received packets to console, sending response:
                 webSocket.frameHandler(frame -> {
                     try {
+                        String handlerID = webSocket.binaryHandlerID();
                         if(frame.isBinary()){
+                            Logger.trace("is Binary");
                             handleFrame(webSocket, frame);
                         } else if(frame.isText()){
+                            Logger.trace("is Text");
                             final String frameText = frame.textData();
                             if(StringUtils.equalsIgnoreCase(frameText, "REQUEST_CLIENT_ID")){
-                                Logger.info("Sending Client [" + webSocket.binaryHandlerID() + "]");
-                                webSocket.writeFinalTextFrame(webSocket.binaryHandlerID() + "");
+                                Logger.info("Sending Client [" + handlerID + "]");
+                                sendClentId(webSocket, handlerID);
                             }
                         } else if(frame.isClose()){
-                            Logger.info("Client [" + webSocket.binaryHandlerID() + "] closing connection");
+                            Logger.info("Client [" + handlerID + "] closing connection");
                         } else {
                             Logger.error("Received Unhandled WebSocket Frame type.");
                             throw new Exception("Received Unhandled WebSocket Frame type.");
@@ -117,6 +120,22 @@ public class ServerLauncher {
         }
     }
 
+    private void sendClentId(ServerWebSocket webSocket, String handlerID) throws Exception {
+        try{
+            Logger.trace("Enter sendClentId()");
+            ServerResponse response = new ServerResponse(-1,
+                    handlerID,
+                    "REQUEST_CLIENT_ID",
+                    getServerId(),
+                    new String[]{handlerID});
+            sendServerResponse(webSocket, response);
+            Logger.trace("Exit sendClentId()");
+        } catch (Exception e) {
+            Logger.error(e,"Unable to send Client ID: ");
+            throw new Exception("Unable to send Client ID: ", e);
+        }
+    }
+
     private void sendServerResponse(ServerWebSocket webSocket, ServerResponse response) throws Exception{
         Logger.trace("Enter sendServerResponse()");
         if(response == null) throw new Exception("Unable to send Server Response: Server response was null");
@@ -130,20 +149,6 @@ public class ServerLauncher {
         } catch (Exception e){
             Logger.error(e,"Unable to send Server Response: ");
             throw new Exception("Unable to send Server Response: ", e);
-        }
-    }
-
-    private void sendClientId(StorageInterface storage, ServerWebSocket webSocket) throws Exception {
-        try{
-            Logger.trace("Enter sendClientId()");
-            if(webSocket != null){
-                String clientId = webSocket.binaryHandlerID();
-                webSocket.writeFinalTextFrame(clientId);
-            }
-            Logger.trace("Exit sendClientId()");
-        } catch (Exception e) {
-            Logger.error("Unable to send client id: ", e);
-            throw new Exception("Unable to send client id: ", e);
         }
     }
 

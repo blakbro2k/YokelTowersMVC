@@ -10,6 +10,8 @@ import net.asg.games.game.objects.YokelTable;
 
 public class MemoryStorage implements StorageInterface {
     //<"lounge name", room object>
+    private OrderedMap<String, String> clients;
+    //<"lounge name", room object>
     private OrderedMap<String, YokelLounge> lounges;
     //<"player id", player object>
     private OrderedMap<String, YokelPlayer> registeredPlayers;
@@ -35,7 +37,20 @@ public class MemoryStorage implements StorageInterface {
     @Override
     public void putRegisteredPlayer(String clientID, YokelPlayer player) throws Exception {
         if(player == null) throw new Exception("Player was null.");
-        registeredPlayers.put(clientID, player);
+        String playerId = player.getPlayerId();
+        registeredPlayers.put(playerId, player);
+        clients.put(clientID,playerId);
+    }
+
+    @Override
+    public void removeRegisteredPlayer(String clientID) throws Exception {
+        if(clientID == null) throw new Exception("clientID was null.");
+        registeredPlayers.remove(getPlayerIdFromClient(clientID));
+        clients.remove(clientID);
+    }
+
+    private String getPlayerIdFromClient(String clientId){
+        return clients.get(clientId);
     }
 
     @Override
