@@ -74,7 +74,7 @@ public class ClientManager implements Disposable {
         socket.addListener(getServerListener());
         Packets.register(serializer);
 
-        socket.send(ServerRequest.REQUEST_CLIENT_ID + "");
+        socket.send(ServerRequest.REQUEST_CLIENT_ID.toString());
 
 
         waitForRequest(30);
@@ -190,7 +190,7 @@ public class ClientManager implements Disposable {
 
     private void sendClientRequest(ServerRequest serverRequest, String[] payload) throws InterruptedException {
         checkConnection();
-        final ClientRequest request = new ClientRequest(++requestId, "1", serverRequest + "", payload);
+        final ClientRequest request = new ClientRequest(++requestId, "1", serverRequest.toString(), payload);
         socket.send(request);
     }
 }

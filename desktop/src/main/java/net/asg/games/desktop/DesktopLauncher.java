@@ -25,12 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /** Launches the desktop (LWJGL) application. */
 public class DesktopLauncher {
-    private static ServerManager daemon;
-
     public static void main(String[] args) {
-        //String[] args2 = {ServerManager.LOG_LEVEL_ATTR, "trace", ServerManager.DEBUG_ATTR};
-        //daemon = new ServerManager(args2);
-
         if(args != null){
             for (String arg : args) {
                 if ("texturepacker".equalsIgnoreCase((arg))) {
@@ -47,25 +42,18 @@ public class DesktopLauncher {
                     System.exit(0);
                 }
 
-                if("-debugPlayers".equalsIgnoreCase((arg))) {
-                    PostLoader.getInstance().setDebugPreloader();
-                }
-
                 if("-uiTest".equalsIgnoreCase((arg))) {
                     PostLoader.getInstance().setUIPreLoader();
                 }
             }
         }
 
-        //createApplication();
-
         LwjglApplication app = createApplication();
         app.exit();
     }
 
     private static LwjglApplication createApplication() {
-        return new LwjglApplication(new AutumnApplication(new DesktopClassScanner(), YokelTowersMVC.class),
-                getDefaultConfiguration());
+        return new LwjglApplication(new AutumnApplication(new DesktopClassScanner(), YokelTowersMVC.class), getDefaultConfiguration());
     }
 
     private static LwjglApplicationConfiguration getDefaultConfiguration() {

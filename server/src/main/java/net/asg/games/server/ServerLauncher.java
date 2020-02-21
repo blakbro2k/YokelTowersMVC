@@ -10,6 +10,7 @@ import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.storage.MemoryStorage;
 import net.asg.games.storage.StorageInterface;
+import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -125,7 +126,7 @@ public class ServerLauncher {
             Logger.trace("Enter sendClentId()");
             ServerResponse response = new ServerResponse(-1,
                     handlerID,
-                    "REQUEST_CLIENT_ID",
+                    ServerRequest.REQUEST_CLIENT_ID.toString(),
                     getServerId(),
                     new String[]{handlerID});
             sendServerResponse(webSocket, response);
