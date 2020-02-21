@@ -20,7 +20,6 @@ import net.asg.games.utils.enums.ServerRequest;
 import org.apache.commons.lang.StringUtils;
 import org.pmw.tinylog.Logger;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class ClientManager implements Disposable {
@@ -53,8 +52,18 @@ public class ClientManager implements Disposable {
         this.port = port;
     }
 
+    public void setPlayer(YokelPlayer player){
+        if(player != null){
+            this.player = player;
+        }
+    }
+
+    public YokelPlayer getPlayer(){
+        return this.player;
+    }
+
     public boolean register(YokelPlayer player) throws InterruptedException {
-        this.player = player;
+        setPlayer(player);
         boolean register = initializeSockets();
         registerClient();
         return register;

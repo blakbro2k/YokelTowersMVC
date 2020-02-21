@@ -192,7 +192,7 @@ public class Global implements ActionContainer {
         gameOptions.add("private");
         gameOptions.add("true");
 
-        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_CREATE_GAME + "", Util.toStringArray(gameOptions));
+        final ClientRequest request = new ClientRequest(-1, "new", ServerRequest.REQUEST_CREATE_GAME.toString(), Util.toStringArray(gameOptions));
         socket.send(request);
     }
 

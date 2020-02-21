@@ -9,19 +9,8 @@ import com.github.czyzby.autumn.mvc.application.AutumnApplication;
 import com.github.czyzby.websocket.CommonWebSockets;
 
 import net.asg.games.YokelTowersMVC;
-import net.asg.games.game.managers.GameManager;
-import net.asg.games.game.managers.ServerManager;
-import net.asg.games.game.objects.YokelLounge;
-import net.asg.games.game.objects.YokelPlayer;
-import net.asg.games.game.objects.YokelTable;
 import net.asg.games.utils.GlobalConstants;
-import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.PostLoader;
-import net.asg.games.utils.TestingUtils;
-import net.asg.games.utils.Util;
-import net.asg.games.utils.enums.ServerRequest;
-
-import java.lang.reflect.InvocationTargetException;
 
 /** Launches the desktop (LWJGL) application. */
 public class DesktopLauncher {
@@ -49,7 +38,7 @@ public class DesktopLauncher {
         }
 
         LwjglApplication app = createApplication();
-        app.exit();
+        //app.exit();
     }
 
     private static LwjglApplication createApplication() {
