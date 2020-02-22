@@ -99,7 +99,7 @@ public class PayloadUtil {
         if(Util.isValidPayload(clientPayload, 2)){
             return Util.otos(clientPayload[0]);
         }
-        return "";
+        return null;
     }
 
     public static Array<YokelLounge> getAllLoungesRequest(String[] clientPayload) {
