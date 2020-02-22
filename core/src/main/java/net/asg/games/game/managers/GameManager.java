@@ -1,20 +1,18 @@
 package net.asg.games.game.managers;
 
+import com.badlogic.gdx.utils.Array;
+
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GameManager {
     private YokelTable table;
-    private List<YokelGameBoard> gameBoards;
+    private Array<YokelGameBoard> gameBoards = new Array<>();
     private boolean isGameRunning;
 
     public GameManager(YokelTable table){
         this.table = table;
-        gameBoards = new ArrayList<>();
         init();
     }
 
@@ -55,7 +53,7 @@ public class GameManager {
         return true;
     }
 
-    private void init(){System.out.println("init Ran");
+    private void init(){
         long seed = getSeed();
         isGameRunning = false;
         for(int i = 0; i < 8; i++){

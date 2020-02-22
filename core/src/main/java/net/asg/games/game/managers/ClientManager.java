@@ -23,6 +23,8 @@ import org.pmw.tinylog.Logger;
 import java.util.concurrent.TimeUnit;
 
 public class ClientManager implements Disposable {
+    //private static final com.github.czyzby.kiwi.log.Logger LOGGER = LoggerService.forClass(ClientManager.class);
+
     private static WebSocket socket;
     private static boolean isConnected;
     private static String clientId = "";
@@ -121,7 +123,11 @@ public class ClientManager implements Disposable {
     }
 
     public void requestJoinRoom(YokelPlayer player, String loungeName, String roomName) throws InterruptedException {
-        sendClientRequest(ServerRequest.REQUEST_ROOM_JOIN, PayloadUtil.createJoinRoomRequest(player, loungeName, roomName));
+        sendClientRequest(ServerRequest.REQUEST_ROOM_JOIN, PayloadUtil.createJoinLeaveRoomRequest(player, loungeName, roomName));
+    }
+
+    public void requestLeaveRoom(YokelPlayer player, String loungeName, String roomName) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_ROOM_LEAVE, PayloadUtil.createJoinLeaveRoomRequest(player, loungeName, roomName));
     }
 
     public void requestCreateGame(String loungeName, String roomName, YokelTable.ACCESS_TYPE type, boolean isRated) throws InterruptedException {

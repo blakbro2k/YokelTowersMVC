@@ -22,6 +22,7 @@ public class MemoryStorage implements StorageInterface {
         lounges = new OrderedMap<>();
         registeredPlayers = new OrderedMap<>();
         games = new OrderedMap<>();
+        clients = new OrderedMap<>();
     }
 
     @Override
@@ -37,6 +38,7 @@ public class MemoryStorage implements StorageInterface {
     @Override
     public void putRegisteredPlayer(String clientID, YokelPlayer player) throws Exception {
         if(player == null) throw new Exception("Player was null.");
+        if(clientID == null) throw new Exception("clientID was null.");
         String playerId = player.getPlayerId();
         registeredPlayers.put(playerId, player);
         clients.put(clientID,playerId);

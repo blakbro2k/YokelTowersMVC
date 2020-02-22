@@ -72,6 +72,17 @@ public class LocalLauncher {
                         client.waitForRequest(30);
                         System.out.println(Arrays.toString(client.getRequests().removeFirst()));
                         break;
+                    case 'o':
+                        System.out.println("Enter Lounge Name:");
+                        //loungeName = scanner.nextLine();
+
+                        System.out.println("Enter Room Name:");
+                        //roomName = scanner.nextLine();
+
+                        client.requestLeaveRoom(player, loungeName, roomName);
+                        client.waitForRequest(30);
+                        System.out.println(Arrays.toString(client.getRequests().removeFirst()));
+                        break;
                     case 'c':
                         System.out.println("Enter Lounge Name:");
                         //loungeName = scanner.nextLine();

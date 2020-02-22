@@ -1,0 +1,8 @@
+<window defaultPad="2" width="800" height="800">
+    <table oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true">
+        <label>Yokel Test</label>
+        <textField message="Username"/>
+        <textField message="Password" passwordMode="true"/>
+        <textButton onChange="goto:uitest">Login</textButton>
+    </table>
+</window>

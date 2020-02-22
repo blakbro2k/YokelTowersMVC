@@ -321,7 +321,7 @@ public class ServerManagerTest {
         printInvocationResult(result);
         Assert.assertTrue(getInvocationBoolean(result));
 
-        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_ROOM_JOIN), PayloadUtil.createJoinRoomRequest(player1, YokelLounge.SOCIAL_GROUP, roomName));
+        buildPayload.setParameterValues(Util.otos(ServerRequest.REQUEST_ROOM_JOIN), PayloadUtil.createJoinLeaveRoomRequest(player1, YokelLounge.SOCIAL_GROUP, roomName));
         result = buildPayload.invoke();
         printInvocationResult(result);
         Assert.assertTrue(getInvocationBoolean(result));

@@ -8,11 +8,11 @@ import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
-import net.asg.games.service.NetworkService;
+import net.asg.games.service.SessionService;
 
 @View(id = "debug", value = "ui/templates/debug.lml")
 public class DebugController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
-    @Inject private NetworkService networkService;
+    @Inject private SessionService sessionService;
 
     @Override
     public void render(Stage stage, float delta) {
@@ -23,7 +23,5 @@ public class DebugController extends ApplicationAdapter implements ViewRenderer,
     @LmlAction("requestPlayerRegistration")
     public void requestPlayerRegistration(final Object player) {
         System.out.println("Starting requestPlayers");
-
-        //networkService.requestDebugPlayersFromServer();
     }
 }

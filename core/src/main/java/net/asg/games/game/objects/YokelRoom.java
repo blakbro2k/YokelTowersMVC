@@ -16,8 +16,8 @@ import org.apache.commons.lang.StringUtils;
 public class YokelRoom extends AbstractYokelObject {
     private String name;
     //private Chat chatRoom;
-    private Array<YokelPlayer> players;
-    private OrderedMap<Integer, YokelTable> tables;
+    private Array<YokelPlayer> players = new Array<>();
+    private OrderedMap<Integer, YokelTable> tables = new OrderedMap<>();
     private int curTableNum = 0;
 
     //Empty Contructor required for Json.Serializable
@@ -25,12 +25,6 @@ public class YokelRoom extends AbstractYokelObject {
 
     public YokelRoom(String name){
         this.name = name;
-        initialize();
-    }
-
-    private void initialize(){
-        tables = new OrderedMap<>();
-        players = new Array<>();
     }
 
     public String getRoomId() {

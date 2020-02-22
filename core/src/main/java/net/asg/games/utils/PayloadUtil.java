@@ -38,7 +38,7 @@ public class PayloadUtil {
         return EMPTY_ARRAY;
     }
 
-    public static String[] createJoinRoomRequest(YokelPlayer player, String loungeName, String roomName){
+    public static String[] createJoinLeaveRoomRequest(YokelPlayer player, String loungeName, String roomName){
         if(validatedInputs(player, loungeName, roomName)){
             return new String[]{player.getId(), loungeName, roomName};
         }

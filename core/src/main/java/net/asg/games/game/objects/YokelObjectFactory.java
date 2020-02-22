@@ -59,9 +59,6 @@ public class YokelObjectFactory {
         if(blockType != YokelBlock.CLEAR_BLOCK){
             block.setActive(true);
         }
-        //System.out.println("blockType:" + blockType);
-        //System.out.println("block:" + block);
-        //System.out.println("Pool:max:" + yokelGameBlockPool.max);
         return block;
     }
 
@@ -88,11 +85,11 @@ public class YokelObjectFactory {
             case YokelBlock.EX_BLOCK:
                 return "Bash_block";
             case YokelBlock.MIDAS:
-                return "stone";
+                return "Midas";
             case YokelBlock.MEDUSA:
-                return "stone";
+                return "Medusa";
             case YokelBlock.STONE:
-                return "stone";
+                return "Stone";
             default:
                 return "";
         }

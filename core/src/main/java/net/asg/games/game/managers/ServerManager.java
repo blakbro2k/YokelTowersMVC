@@ -609,6 +609,8 @@ public class ServerManager {
 
         YokelPlayer player = PayloadUtil.getRegisterPlayerFromPayload(clientPayload);
         String clientId = PayloadUtil.getClientIDFromPayload(clientPayload);
+        Logger.trace("clientId=" + clientId);
+        Logger.trace("player=" + player);
 
         if(player != null){
             Logger.info("Attempting to register player={}", player.toString());
@@ -618,8 +620,8 @@ public class ServerManager {
         return ret;
     }
 
-    //0 = Player Name
-    //1 = Client ID
+    //0 = Client ID
+    //1 = Player Name
     private String[] disconnectPlayer(String[] clientPayload) throws Exception {
         Logger.trace("Enter registerPlayerRequest()");
 
