@@ -34,7 +34,6 @@ public class SessionService {
     private static final Logger LOGGER = LoggerService.forClass(SessionService.class);
 
     // @Inject-annotated fields will be automatically filled by the context initializer.
-    @Inject private InterfaceService interfaceService;
 
     private String message = "Connecting...";
     private ClientManager client;
@@ -46,10 +45,11 @@ public class SessionService {
 
     @Initiate
     public void initialize() throws WebSocketException {
-        client = new ClientManager("localhost", 8080);
+        client = new ClientManager("localhost", 8000);
         //TODO: Create Unique client ID
         //TODO: Create PHPSESSION token
         //TODO: Create CSRF Token
+
     }
 
     public boolean register(YokelPlayer player) throws InterruptedException {

@@ -1,3 +1,5 @@
+<?xml version="1.0"?>
+<!DOCTYPE table SYSTEM "core/lml.dtd">
 <table oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true" debug="true">
     <:evaluate method="requestAllLounges"/>
     <label>This is the gameLounge screen</label>

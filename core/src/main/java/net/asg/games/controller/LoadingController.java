@@ -1,5 +1,6 @@
 package net.asg.games.controller;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -43,7 +44,7 @@ public class LoadingController implements ViewRenderer {
     @Asset("ui/game/game.atlas") private TextureAtlas gameAtlas;
 
     private boolean regionsAssigned;
-    private boolean dtdSaved;
+    private boolean dtdSaved = true;
 
     // Since this class implements ViewRenderer, it can modify the way its views is drawn. Additionally to drawing the
     // stage, this views also updates assets manager and reads its progress.
@@ -62,10 +63,11 @@ public class LoadingController implements ViewRenderer {
             interfaceService.getSkin().addRegions(gameAtlas);
             UIUtil.getInstance().setFactory(uiService.getFactory());
         }
-        //if(!dtdSaved){
-            //saveDtdSchema(Gdx.files.local("core/lml.dtd"));
-           // dtdSaved = true;
-        //}
+        if(!dtdSaved){
+            System.out.println("save");
+            saveDtdSchema(Gdx.files.local("core/lml.dtd"));
+            dtdSaved = true;
+        }
     }
 
     /** Uses current {@link LmlParser} to generate a DTD schema file with all supported tags, macros and attributes.

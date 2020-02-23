@@ -21,7 +21,7 @@ public class LocalLauncher {
         CommonWebSockets.initiate();
         Scanner scanner = new Scanner(System.in);
 
-        ClientManager client = new ClientManager("localhost", 8080);
+        ClientManager client = new ClientManager("localhost", 8000);
         System.out.println("Enter Player Name: ");
         YokelPlayer player = new YokelPlayer(scanner.nextLine());
 

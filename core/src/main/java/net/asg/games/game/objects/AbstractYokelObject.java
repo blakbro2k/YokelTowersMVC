@@ -18,4 +18,6 @@ public abstract class AbstractYokelObject implements YokelObject {
     public void setId(String id){ this.id = id;}
 
     public String getId(){ return id;}
+
+
 }
