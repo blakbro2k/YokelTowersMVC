@@ -1,6 +1,5 @@
 package net.asg.games.server;
 
-import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
 import net.asg.games.game.managers.GameRunner;
@@ -14,11 +13,7 @@ import net.asg.games.storage.StorageInterface;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.pmw.tinylog.Logger;
-
-import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;

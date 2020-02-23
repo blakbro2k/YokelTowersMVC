@@ -31,7 +31,7 @@ public class AdminClientRequest implements Transferable {
 
     @Override
     public Transferable deserialize(Deserializer deserializer) throws SerializationException {
-        return new ClientRequest(deserializer.deserializeInt(),
+        return new AdminClientRequest(deserializer.deserializeInt(),
                 deserializer.deserializeString(Size.SHORT),
                 deserializer.deserializeString(Size.SHORT),
                 deserializer.deserializeStringArray());

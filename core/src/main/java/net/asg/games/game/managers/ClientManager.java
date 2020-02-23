@@ -72,7 +72,6 @@ public class ClientManager implements Disposable {
     }
 
     private boolean initializeSockets() throws WebSocketException, InterruptedException {
-        System.out.println("initializeSockets called");
         socket = ExtendedNet.getNet().newWebSocket(host, port);
         // Creating a new ManualSerializer - this replaces the default JsonSerializer and allows to use the
         // serialization mechanism from gdx-websocket-serialization library.
@@ -87,13 +86,11 @@ public class ClientManager implements Disposable {
 
         socket.send(ServerRequest.REQUEST_CLIENT_ID.toString());
 
-
         waitForRequest(30);
         String[] request = getRequests().removeFirst();
         clientId = request[0];
 
         isConnected = true;
-        System.out.println("initializeSockets ended");
         return isConnected;
     }
 
@@ -205,7 +202,7 @@ public class ClientManager implements Disposable {
 
     private void sendClientRequest(ServerRequest serverRequest, String[] payload) throws InterruptedException {
         checkConnection();
-        final ClientRequest request = new ClientRequest(++requestId, "1", serverRequest.toString(), payload);
+        final ClientRequest request = new ClientRequest(++requestId, "1", serverRequest.toString(), payload, clientId);
         socket.send(request);
     }
 }

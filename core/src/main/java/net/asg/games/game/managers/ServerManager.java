@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
 
+import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;

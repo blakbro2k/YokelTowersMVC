@@ -13,15 +13,17 @@ import java.util.Arrays;
  * @author MJ */
 public class ClientRequest implements Transferable<ClientRequest> {
     private final String message;
+    private final String clientId;
     private final String sessionId;
     private final int requestSequence;
     private final String[] payload;
 
-    public ClientRequest(final int requestSequence, final String sessionId, final String message, String[] payload) {
+    public ClientRequest(final int requestSequence, final String sessionId, final String message, String[] payload, String clientId) {
         this.requestSequence = requestSequence;
         this.sessionId = sessionId;
         this.message = message;
         this.payload = payload;
+        this.clientId = clientId;
     }
 
     @Override
@@ -30,6 +32,7 @@ public class ClientRequest implements Transferable<ClientRequest> {
         serializer.serializeString(sessionId, Size.SHORT); // Assuming String is no longer than Short#MAX_VALUE.
         serializer.serializeString(message, Size.SHORT); // Assuming String is no longer than Short#MAX_VALUE.
         serializer.serializeStringArray(payload);
+        serializer.serializeString(clientId, Size.SHORT); // Assuming String is no longer than Short#MAX_VALUE.
     }
 
     @Override
@@ -37,7 +40,9 @@ public class ClientRequest implements Transferable<ClientRequest> {
         return new ClientRequest(deserializer.deserializeInt(),
                 deserializer.deserializeString(Size.SHORT),
                 deserializer.deserializeString(Size.SHORT),
-                deserializer.deserializeStringArray());
+                deserializer.deserializeStringArray(),
+                deserializer.deserializeString(Size.SHORT));
+
     }
 
     public String getMessage() {
