@@ -61,6 +61,10 @@ public class ClientRequest implements Transferable<ClientRequest> {
         return payload;
     }
 
+    public String getClientId() {
+        return clientId;
+    }
+
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "[" +

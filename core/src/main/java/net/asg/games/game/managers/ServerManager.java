@@ -252,6 +252,7 @@ public class ServerManager {
         String message = null;
         int requestSequence = -1;
         String[] serverPayload = null;
+        String clientId = null;
 
         if(request != null){
             Logger.debug("request: {}", request.getMessage());
@@ -259,6 +260,7 @@ public class ServerManager {
             message = request.getMessage();
             sessionId = request.getSessionId();
             requestSequence = request.getRequestSequence();
+            clientId = request.getClientId();
             serverPayload = buildPayload(message, request.getPayload());
         }
         Logger.trace("Exit handleClientRequest()");
