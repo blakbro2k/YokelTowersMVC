@@ -43,5 +43,5 @@
     <textButton onChange="setGamePiece">Set</textButton>
 </window>-->
 <window defaultPad="2" title="The One">
-<lounge data="dafdsafdsafd"/>
+    <lounge data="&#123;id:adf75a9eea8348ddb032b6357e5e15cd,name:Beginner,rooms:&#123;Chang Tower:&#123;id:67c8049f3ddb4e2aaaad8d768cfcf9fa,name:Chang Tower&#125;&#125;&#125;"/>
 </window>

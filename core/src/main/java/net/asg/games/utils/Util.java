@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class Util {
+    private final static String LEFT_CURLY_BRACET_HTML = "&#123;";
+    private final static String RIGHTT_CURLY_BRACET_HTML = "&#125;";
     private final static Json json = new Json();
 
     public static void setSizeFromDrawable(Actor actor, Drawable drawable){
@@ -229,11 +231,11 @@ public class Util {
     }
 
     public static String jsonToString(String str){
-        return StringUtils.replace(StringUtils.replace(str, "{","["),"}","]");
+        return StringUtils.replace(StringUtils.replace(str, "{",LEFT_CURLY_BRACET_HTML),"}", RIGHTT_CURLY_BRACET_HTML);
     }
 
     public static String stringToJson(String str){
-        return StringUtils.replace(StringUtils.replace(str, "[","{"),"]","}");
+        return StringUtils.replace(StringUtils.replace(str, LEFT_CURLY_BRACET_HTML,"{"),RIGHTT_CURLY_BRACET_HTML,"}");
     }
 
     public static String getStringValue(String[] objects, int index) {

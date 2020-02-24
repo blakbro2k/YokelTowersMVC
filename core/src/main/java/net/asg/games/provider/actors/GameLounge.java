@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.VisUI;
 
 import net.asg.games.game.objects.YokelLounge;
+import net.asg.games.utils.Util;
 
 import java.util.Arrays;
 
@@ -26,6 +27,8 @@ public class GameLounge extends Table {
     }
 
     public void setData(String data){
-        System.out.println("Data=" + data);
+        System.out.println("Data=" + Util.stringToJson(data));
+        setLounge(Util.getObjectFromJsonString(YokelLounge.class, Util.stringToJson(data)));
+        System.out.println("lounge=" + lounge);
     }
 }

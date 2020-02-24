@@ -19,6 +19,7 @@ import java.util.Scanner;
 public class LocalLauncher {
     public static void main(final String... args) throws Exception {
         CommonWebSockets.initiate();
+        //System.out.println(Util.jsonToString("{id:adf75a9eea8348ddb032b6357e5e15cd,name:Beginner,rooms:{Chang Tower:{id:67c8049f3ddb4e2aaaad8d768cfcf9fa,name:Chang Tower}}}\n"));
         Scanner scanner = new Scanner(System.in);
 
         ClientManager client = new ClientManager("localhost", 8000);
