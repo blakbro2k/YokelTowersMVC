@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.autumn.annotation.Component;
+import com.github.czyzby.autumn.annotation.Destroy;
 import com.github.czyzby.autumn.annotation.Initiate;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.asset.AssetService;
@@ -44,6 +45,11 @@ public class UserInterfaceService {
             factory = new YokelObjectFactory(this);
         }
         return this.factory;
+    }
+
+    @Destroy
+    private void destroy(){
+        uiAssetMap.clear();
     }
 
     //Load actors into asset map

@@ -1,3 +1,5 @@
+<?xml version="1.0"?>
+<!DOCTYPE table SYSTEM "core/lml.dtd">
 <table defaultPad="2" tableAlign="center" fillParent="true" defaultFillX="true">
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
     <image id="banner" style="banner" row="true" colSpan="3"/>

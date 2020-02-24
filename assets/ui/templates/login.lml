@@ -3,8 +3,8 @@
 <window defaultPad="2" width="320" height="460">
     <table width="170" height="220" oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true">
         <label>Yokel Test</label>
-        <textField id=username message=Username/>
-        <textField id=password message=Password passwordMode=true/>
+        <textField id="username" message="Username"/>
+        <textField id="password" message="Password" passwordMode="true"/>
         <textButton onChange="registerUser">Login</textButton>
     </table>
 </window>

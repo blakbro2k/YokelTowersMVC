@@ -6,6 +6,8 @@ import com.kotcrab.vis.ui.VisUI;
 
 import net.asg.games.game.objects.YokelLounge;
 
+import java.util.Arrays;
+
 public class GameLounge extends Table {
     private YokelLounge lounge;
 
@@ -21,5 +23,9 @@ public class GameLounge extends Table {
 
     public YokelLounge getLounge(){
         return this.lounge;
+    }
+
+    public void setData(String data){
+        System.out.println("Data=" + data);
     }
 }

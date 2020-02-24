@@ -1,5 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE window SYSTEM "core/lml.dtd">
 <!-- Going through LML tutorials is suggested before starting with Autumn MVC. If anything is unclear
     in the .lml files, you should go through LML resources first. -->
-<window title="@loadingComplete" titleAlign="center">
-    <label onClose="goto:login"/>
+<window title="Create Session" titleAlign="center">
+    <label onClose="goto:lounge"/>
 </window>

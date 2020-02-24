@@ -40,7 +40,7 @@ public class GameLoungeLmlTag extends TableLmlTag {
                 gameLounge.row();
             }
         }
-
+        System.out.println("lounge=" + plainTextLine);
         /*if (LmlUtilities.isOneColumn(gameLounge)) {
             gameLounge.row();
         }*/

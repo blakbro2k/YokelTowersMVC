@@ -4,9 +4,11 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.autumn.annotation.Component;
+import com.github.czyzby.autumn.annotation.Destroy;
 import com.github.czyzby.autumn.annotation.Initiate;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
+import com.github.czyzby.autumn.mvc.component.ui.action.ScreenTransitionAction;
 import com.github.czyzby.kiwi.log.Logger;
 import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.websocket.WebSocket;
@@ -47,13 +49,23 @@ public class SessionService {
     public void initialize() throws WebSocketException {
         client = new ClientManager("localhost", 8000);
         //TODO: Create Unique client ID
-        //TODO: Create PHPSESSION token
+        //TODO: Create PHPSESSION token6
         //TODO: Create CSRF Token
 
     }
 
+    @Destroy
+    public void destroy() {
+        closeClient();
+    }
+
+    public void closeClient() {
+        client.dispose();
+    }
+
     public boolean register(YokelPlayer player) throws InterruptedException {
         this.player = player;
+        //new ScreenTransitionAction
         return client.register(player);
     }
 

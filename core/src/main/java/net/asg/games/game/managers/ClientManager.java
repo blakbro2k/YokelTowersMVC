@@ -40,7 +40,10 @@ public class ClientManager implements Disposable {
 
     @Override
     public void dispose() {
-        socket.close();
+        isConnected = false;
+        if(socket != null){
+            socket.close();
+        }
     }
 
     public boolean isRunning(){
