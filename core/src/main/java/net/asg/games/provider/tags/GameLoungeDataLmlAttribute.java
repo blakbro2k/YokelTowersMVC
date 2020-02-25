@@ -15,7 +15,6 @@ public class GameLoungeDataLmlAttribute implements LmlAttribute<GameLounge> {
     }
 
     public void process(final LmlParser parser, final LmlTag tag, GameLounge actor, final String rawAttributeData) {
-        System.out.println(rawAttributeData);
         actor.setData(parser.parseString(rawAttributeData));
     }
 }

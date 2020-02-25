@@ -42,6 +42,11 @@
     <gameblockarea id="area2" debug="true" areanumber="2" blockareadata="$getTestBoard"/>
     <textButton onChange="setGamePiece">Set</textButton>
 </window>-->
-<window defaultPad="2" title="The One">
-    <lounge data="&#123;id:adf75a9eea8348ddb032b6357e5e15cd,name:Beginner,rooms:&#123;Chang Tower:&#123;id:67c8049f3ddb4e2aaaad8d768cfcf9fa,name:Chang Tower&#125;&#125;&#125;"/>
+<window defaultPad="2" title="Yokel Lounges">
+    <lounge id="lounge1" row="true">
+        &#123;id:adf75a9eea8348ddb032b6357e5e15cd,name:Beginner,rooms:&#123;Chang Tower:&#123;id:67c8049f3ddb4e2aaaad8d768cfcf9fa,name:Chang Tower&#125;&#125;&#125;
+    </lounge>
+    <lounge id="lounge2" row="true">
+        &#123;id:34507a30e25b4a6b821443451d3d7290,name:Social,rooms:&#123;Eiffel Tower:&#123;id:fa1cbf8f6c7c45a9b3f1029161d66e45,name:Eiffel Tower&#125;,Leaning Tower of Pisa:&#123;id:dc7fb36536bb4787ad8043cc6478300f,name:Leaning Tower of Pisa&#125;&#125;&#125;
+    </lounge>
 </window>

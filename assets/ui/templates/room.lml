@@ -5,8 +5,8 @@
     <image id="banner" style="banner" row="true" colSpan="3"/>
     <table>
         <table oneColumn="true">
-            <textButton row="true" onClick="$requestPrintLounges" fillx="true">Play Now</textButton>
-            <textButton row="true" onClick="show:create">Create Table</textButton>
+            <textButton row="true" onChange="$requestPrintLounges" fillx="true">Play Now</textButton>
+            <textButton row="true" onChange="show:create">Create Table</textButton>
         </table>
         <table row="true">
             <table>
@@ -30,7 +30,7 @@
         </table>
         <table tableAlign="bottom">
             <image style="ratings" row="true" />
-            <textButton row="true" onClick="show:settings" fillx="true">Options</textButton>
+            <textButton row="true" onChange="show:settings" fillx="true">Options</textButton>
             <textButton row="true" onChange="app:exit">Exit Games</textButton>
         </table>
         <table>
