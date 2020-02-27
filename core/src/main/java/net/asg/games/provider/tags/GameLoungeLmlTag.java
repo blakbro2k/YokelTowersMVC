@@ -1,12 +1,6 @@
 package net.asg.games.provider.tags;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.OrderedMap;
-import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
-import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogController;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.attribute.OnChangeLmlAttribute;
 import com.github.czyzby.lml.parser.impl.tag.actor.TableLmlTag;
@@ -21,7 +15,7 @@ import net.asg.games.provider.actors.GameLounge;
 import net.asg.games.utils.Util;
 
 public class GameLoungeLmlTag extends TableLmlTag {
-    public GameLoungeLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
+    GameLoungeLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
         super(parser, parentTag, rawTagData);
     }
 
@@ -33,14 +27,11 @@ public class GameLoungeLmlTag extends TableLmlTag {
     @Override
     protected void handlePlainTextLine(final String plainTextLine) {
         final GameLounge gameLounge = getLounge();
-        System.out.println("plainTextLine=" + plainTextLine);
 
         YokelLounge lounge = Util.getObjectFromJsonString(YokelLounge.class, Util.stringToJson(plainTextLine));
         gameLounge.setLounge(lounge);
         setUpRooms(gameLounge);
 
-
-        //registerController(this, viewController);
         if (LmlUtilities.isOneColumn(gameLounge)) {
             gameLounge.row();
         }
@@ -52,25 +43,14 @@ public class GameLoungeLmlTag extends TableLmlTag {
     }
 
     private GameLounge createGameLounge(final LmlActorBuilder builder){
-        GameLounge lounge = new GameLounge(getSkin(builder));
-        //lounge.setLounge();
-        //lounge.setUpRooms(createNewRoomButton());
-        //TODO: Create buttons to add here and add a viewController
-        //lounge.addRoomListeners();
-        //ViewDialogController vc = new ViewDialogController();
-        //ViewController
-        return lounge;
+        return new GameLounge(getSkin(builder));
     }
 
     public void setUpRooms(GameLounge lounge){
         for(YokelRoom room : lounge.getAllRooms().values()){
-            System.out.println("Setting up : " + room.getName());
-            lounge.add(new Label(room.getName(), lounge.getSkin()));
-            lounge.add(createNewRoomButton()).row();
+            String roomName = getRoomName(room);
+            lounge.add(createNewRoomButton(roomName)).row();
         }
-    }
-    private VisTextButton createNewRoomButton(){
-        return new VisTextButton("Enter Room", "default");
     }
 
     private String getRoomName(YokelRoom room){
@@ -79,5 +59,12 @@ public class GameLoungeLmlTag extends TableLmlTag {
             roomName = room.getName();
         }
         return roomName;
+    }
+
+    private VisTextButton createNewRoomButton(String roomName){
+        VisTextButton button = new VisTextButton(roomName);
+        OnChangeLmlAttribute onChange = new OnChangeLmlAttribute();
+        onChange.process(getParser(), this, button, "goto:room");
+        return button;
     }
 }

@@ -49,7 +49,7 @@ public class LocalLauncher {
                 switch (input) {
                     case 'a':
                         client.requestLounges();
-                        client.waitForRequest(30);
+                        client.waitForOneRequest();
                         System.out.println(Util.printYokelObjects(PayloadUtil.getAllLoungesRequest(client.getRequests().removeFirst())));
                         break;
                     case 'p':

@@ -2,15 +2,11 @@
 <!DOCTYPE table SYSTEM "core/lml.dtd">
 <table oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true" debug="true">
     <!-- <label>$requestAllLounges</label> -->
-    <label>This is the gameLounge screen</label>
+    <label>Choose a lounge to play in</label>
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
     <table>
         <:for gameLounge="$requestAllLounges">
-            <label testalign="">{gameLounge}</label>
-            <!-- <lounge row="true">{gameLounge}</lounge> -->
-            <!--<:for room="$getRooms" id="{gameLounge}">
-                <label>{room}</label>
-            </:for>-->
+            <lounge row="true">{gameLounge}</lounge>
         </:for>
     </table>
     <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->

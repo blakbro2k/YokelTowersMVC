@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ClientManager implements Disposable {
     //private static final com.github.czyzby.kiwi.log.Logger LOGGER = LoggerService.forClass(ClientManager.class);
-
+    private final static int DEFAULT_WAIT = 30;
     private static WebSocket socket;
     private static boolean isConnected;
     private static String clientId = "";
@@ -33,6 +33,8 @@ public class ClientManager implements Disposable {
     private final String host;
     private final int port;
     private YokelPlayer player;
+
+
 
     public Queue<String[]> getRequests() {
         return requests;
@@ -89,7 +91,7 @@ public class ClientManager implements Disposable {
 
         socket.send(ServerRequest.REQUEST_CLIENT_ID.toString());
 
-        waitForRequest(30);
+        waitForRequest(DEFAULT_WAIT);
         String[] request = getRequests().removeFirst();
         clientId = request[0];
 
@@ -99,7 +101,7 @@ public class ClientManager implements Disposable {
 
     private void registerClient() throws InterruptedException {
         requestPlayerRegister(player);
-        waitForRequest(30);
+        waitForRequest(DEFAULT_WAIT);
     }
 
     public boolean isAlive() {
@@ -191,6 +193,10 @@ public class ClientManager implements Disposable {
                 }
             }
         }
+    }
+
+    public void waitForOneRequest() throws InterruptedException {
+        waitForRequest(DEFAULT_WAIT);
     }
 
     public void waitForRequest(int maxWait) throws InterruptedException {

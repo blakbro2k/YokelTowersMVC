@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
+import net.asg.games.game.objects.AbstractYokelObject;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelObject;
@@ -54,7 +55,7 @@ public class Util {
         return array;
     }
 
-    public static Array<?> safeIterable(Array<?> collection){
+    public static Array<? extends Object> safeIterable(Array<? extends Object> collection){
         if(collection != null){
             return collection;
         } else {
@@ -72,6 +73,14 @@ public class Util {
             sb.append(printYokelObject(yObject)).append('\n');
         }
         return sb.toString();
+    }
+
+    public static Array<String> toPlainTextArray(Array<? extends AbstractYokelObject> objects) {
+        Array<String> plainTexts = GdxArrays.newArray();
+        for(AbstractYokelObject yokelObject : objects){
+            plainTexts.add(jsonToString(yokelObject.toString()));
+        }
+        return plainTexts;
     }
 
     public static class IDGenerator {
@@ -235,7 +244,7 @@ public class Util {
     }
 
     public static String stringToJson(String str){
-        return StringUtils.replace(StringUtils.replace(str, LEFT_CURLY_BRACET_HTML,"{"),RIGHTT_CURLY_BRACET_HTML,"}");
+        return StringUtils.replace(StringUtils.replace(str, LEFT_CURLY_BRACET_HTML,"{"), RIGHTT_CURLY_BRACET_HTML,"}");
     }
 
     public static String getStringValue(String[] objects, int index) {
@@ -348,216 +357,6 @@ public class Util {
         }
         return fileNames;
     }
-/*
-    public static boolean isPowerBlock(YokelBlock block) throws GdxRuntimeException {
-        return block.matchesType(YokelBlockType.AttackY)
-                || block.matchesType(YokelBlockType.AttackO)
-                || block.matchesType(YokelBlockType.AttackK)
-                || block.matchesType(YokelBlockType.AttackE)
-                || block.matchesType(YokelBlockType.AttackL)
-                || block.matchesType(YokelBlockType.AttackEx);
-    }
-
-    public static boolean isDefenseBlock(YokelBlock block) throws GdxRuntimeException {
-        return block.matchesType(YokelBlockType.DefenseY)
-                || block.matchesType(YokelBlockType.DefenseO)
-                || block.matchesType(YokelBlockType.DefenseK)
-                || block.matchesType(YokelBlockType.DefenseE)
-                || block.matchesType(YokelBlockType.DefenseL)
-                || block.matchesType(YokelBlockType.DefenseEx);
-    }
-
-    public static boolean isBrokenBlock(YokelBlock block) throws GdxRuntimeException {
-        return block.matchesType(YokelBlockType.BrokenY)
-                || block.matchesType(YokelBlockType.BrokenO)
-                || block.matchesType(YokelBlockType.BrokenK)
-                || block.matchesType(YokelBlockType.BrokenE)
-                || block.matchesType(YokelBlockType.BrokenL)
-                || block.matchesType(YokelBlockType.BrokenEx);
-    }
-
-    public static boolean isPowerUp(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return isDefenseBlock(block) || isPowerBlock(block);
-    }
-
-    public static boolean isYBlock(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return block.matchesType(YokelBlockType.AttackY) ||
-                block.matchesType(YokelBlockType.DefenseY) ||
-                block.matchesType(YokelBlockType.BrokenY) ||
-                block.matchesType(YokelBlockType.NormalY);
-    }
-
-    public static boolean isOBlock(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return block.matchesType(YokelBlockType.AttackO) ||
-                block.matchesType(YokelBlockType.DefenseO) ||
-                block.matchesType(YokelBlockType.BrokenO) ||
-                block.matchesType(YokelBlockType.NormalO);
-    }
-
-    public static boolean isKBlock(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return block.matchesType(YokelBlockType.AttackK) ||
-                block.matchesType(YokelBlockType.DefenseK) ||
-                block.matchesType(YokelBlockType.BrokenK) ||
-                block.matchesType(YokelBlockType.NormalK);
-    }
-
-    public static boolean isEBlock(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return block.matchesType(YokelBlockType.AttackE) ||
-                block.matchesType(YokelBlockType.DefenseE) ||
-                block.matchesType(YokelBlockType.BrokenE) ||
-                block.matchesType(YokelBlockType.NormalE);
-    }
-
-    public static boolean isLBlock(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return block.matchesType(YokelBlockType.AttackL) ||
-                block.matchesType(YokelBlockType.DefenseL) ||
-                block.matchesType(YokelBlockType.BrokenL) ||
-                block.matchesType(YokelBlockType.NormalL);
-    }
-
-    public static boolean isExclamationBlock(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return block.matchesType(YokelBlockType.AttackEx) ||
-                block.matchesType(YokelBlockType.DefenseEx) ||
-                block.matchesType(YokelBlockType.BrokenEx) ||
-                block.matchesType(YokelBlockType.NormalEx);
-    }
-
-    public static boolean isClearBlock(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return block.matchesType(YokelBlockType.Clear);
-    }
-
-    public static boolean isStone(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return block.matchesType(YokelBlockType.Stone);
-    }
-
-    public static boolean isMedusa(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return block.matchesType(YokelBlockType.Medusa);
-    }
-
-    public static boolean isMidas(YokelBlock block) throws GdxRuntimeException {
-        if(block == null){
-            return false;
-        }
-        return block.matchesType(YokelBlockType.Midas);
-    }
-
-    public static YokelBlockType getPowerType(YokelBlock block) throws GdxRuntimeException{
-        if(isYBlock(block)){
-            return YokelBlockType.AttackY;
-        }
-        if(isOBlock(block)){
-            return YokelBlockType.AttackO;
-        }
-        if(isKBlock(block)){
-            return YokelBlockType.AttackK;
-        }
-        if(isEBlock(block)){
-            return YokelBlockType.AttackE;
-        }
-        if(isLBlock(block)){
-            return YokelBlockType.AttackL;
-        }
-        if(isExclamationBlock(block)){
-            return YokelBlockType.AttackEx;
-        }
-        throw new GdxRuntimeException("Cannot get Power Block Type, block is unknown");
-    }
-
-    public static YokelBlockType getDefenseType(YokelBlock block) throws GdxRuntimeException {
-        if(isYBlock(block)){
-            return YokelBlockType.DefenseY;
-        }
-        if(isOBlock(block)){
-            return YokelBlockType.DefenseO;
-        }
-        if(isKBlock(block)){
-            return YokelBlockType.DefenseK;
-        }
-        if(isEBlock(block)){
-            return YokelBlockType.DefenseE;
-        }
-        if(isLBlock(block)){
-            return YokelBlockType.DefenseL;
-        }
-        if(isExclamationBlock(block)){
-            return YokelBlockType.DefenseEx;
-        }
-        throw new GdxRuntimeException("Cannot get Defense Block Type, block is unknown");
-    }
-
-    public static YokelBlockType getNormalType(YokelBlock block) throws GdxRuntimeException {
-        if(isYBlock(block)){
-            return YokelBlockType.NormalY;
-        }
-        if(isOBlock(block)){
-            return YokelBlockType.NormalO;
-        }
-        if(isKBlock(block)){
-            return YokelBlockType.NormalK;
-        }
-        if(isEBlock(block)){
-            return YokelBlockType.NormalE;
-        }
-        if(isLBlock(block)){
-            return YokelBlockType.NormalL;
-        }
-        if(isExclamationBlock(block)){
-            return YokelBlockType.NormalEx;
-        }
-        throw new GdxRuntimeException("Cannot get Normal Block Type, block is unknown");
-    }
-
-    public static YokelBlockType getBrokenType(YokelBlock block) throws GdxRuntimeException {
-        if(isYBlock(block)){
-            return YokelBlockType.BrokenY;
-        }
-        if(isOBlock(block)){
-            return YokelBlockType.BrokenO;
-        }
-        if(isKBlock(block)){
-            return YokelBlockType.BrokenK;
-        }
-        if(isEBlock(block)){
-            return YokelBlockType.BrokenE;
-        }
-        if(isLBlock(block)){
-            return YokelBlockType.BrokenL;
-        }
-        if(isExclamationBlock(block)){
-            return YokelBlockType.BrokenEx;
-        }
-        throw new GdxRuntimeException("Cannot get Broken Block Type, block is unknown");
-    }*/
 
     public static TextureRegion get2DAnimationFrame(Animation animation, int keyFrame) throws GdxRuntimeException{
         if(animation == null){

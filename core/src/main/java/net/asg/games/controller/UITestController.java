@@ -53,7 +53,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @SuppressWarnings("unchecked")
     private void loadGameData() {}
 
-    public void initiateGame() {
+    public void initiateAssets() {
         uiService.loadDrawable(yBlockImage);
         uiService.loadDrawable(this.oBlockImage);
         uiService.loadDrawable(this.kBlockImage);
@@ -92,15 +92,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private void initiate(){
         if(!isInitiated){
             isInitiated = true;
-            initiateGame();
+            initiateAssets();
         }
-    }
-
-    //@LmlAction("requestPlayerRegistration")
-    public void requestPlayerRegistration(final Object player) {
-        System.out.println("Starting requestPlayers");
-
-        //networkService.requestDebugPlayersFromServer();
-        //networkService.requestDebugPlayersFromServer();
     }
 }

@@ -5,5 +5,5 @@
 <window title="@loadingTitle" titleAlign="center">
     <!-- Thanks to "goto:menu" action, postloader.lml will be shown after this bar is fully loaded. -->
     <!-- <progressBar id="loadingBar" animateDuration="0.4" onComplete="goto:login"/> -->
-    <progressBar id="loadingBar" animateDuration="0.4" onComplete="goto:uitest"/>
+    <progressBar id="loadingBar" animateDuration="0.4" onComplete="goto:login"/>
 </window>

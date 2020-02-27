@@ -10,6 +10,7 @@ import com.github.czyzby.lml.parser.action.ActionContainer;
 
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.service.SessionService;
+import net.asg.games.utils.Util;
 
 @View(id = "lounge", value = "ui/templates/lounge.lml")
 public class LoungeController implements ViewRenderer, ActionContainer {
@@ -22,9 +23,7 @@ public class LoungeController implements ViewRenderer, ActionContainer {
     }
 
     @LmlAction("requestAllLounges")
-    public Array<YokelLounge> requestAllLounges() throws InterruptedException {
-        Array<YokelLounge> lounges = sessionService.getAllLounges();
-        System.out.println(lounges);
-        return lounges;
+    public Array<String> requestAllLounges() throws InterruptedException {
+        return Util.toPlainTextArray(sessionService.getAllLounges());
     }
 }

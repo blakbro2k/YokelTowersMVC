@@ -1,15 +1,12 @@
 package net.asg.games.provider.actors;
 
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
-import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelRoom;

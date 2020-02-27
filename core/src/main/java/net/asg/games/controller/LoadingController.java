@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.annotation.OnMessage;
@@ -14,7 +13,6 @@ import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.config.AutumnMessage;
 import com.github.czyzby.autumn.mvc.stereotype.Asset;
 import com.github.czyzby.autumn.mvc.stereotype.View;
-import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.tag.Dtd;
@@ -22,8 +20,6 @@ import com.kotcrab.vis.ui.widget.VisProgressBar;
 
 import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.UIUtil;
-
-import org.lwjgl.opengl.Drawable;
 
 import java.io.Writer;
 
@@ -64,7 +60,6 @@ public class LoadingController implements ViewRenderer {
             UIUtil.getInstance().setFactory(uiService.getFactory());
         }
         if(!dtdSaved){
-            System.out.println("save");
             saveDtdSchema(Gdx.files.local("core/lml.dtd"));
             dtdSaved = true;
         }

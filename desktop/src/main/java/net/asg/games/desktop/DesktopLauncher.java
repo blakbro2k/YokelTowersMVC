@@ -25,8 +25,8 @@ public class DesktopLauncher {
                     TexturePacker.Settings settings = new TexturePacker.Settings();
                     settings.maxWidth = GlobalConstants.MAX_WIDTH;
                     settings.maxHeight = GlobalConstants.MAX_HEIGHT;
-                    TexturePacker.process(settings, GlobalConstants.SOURCE_ASSETS_FOLDER_PATH,
-                            GlobalConstants.TARGET_ASSETS_FOLDER_PATH, GlobalConstants.GAME_ATLAS_NAME);
+                    TexturePacker.process(settings, "../" + GlobalConstants.SOURCE_ASSETS_FOLDER_PATH,
+                            "../" + GlobalConstants.TARGET_ASSETS_FOLDER_PATH, GlobalConstants.GAME_ATLAS_NAME);
 
                     System.exit(0);
                 }
