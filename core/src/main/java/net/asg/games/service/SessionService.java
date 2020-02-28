@@ -11,9 +11,12 @@ import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.action.ScreenTransitionAction;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
+import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogController;
+import com.github.czyzby.autumn.mvc.component.ui.controller.impl.AbstractViewController;
 import com.github.czyzby.kiwi.log.Logger;
 import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
+import com.github.czyzby.lml.parser.LmlView;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketHandler;
 import com.github.czyzby.websocket.WebSocketListener;
@@ -48,6 +51,7 @@ public class SessionService {
     private String userName;
     private YokelPlayer player;
     private ObjectMap<String, ViewController> views = GdxMaps.newObjectMap();
+    private String currentErrorMessage;
 
     @Initiate
     public void initialize() throws WebSocketException {
@@ -123,5 +127,13 @@ public class SessionService {
 
     public String getCurrentLoungeName(){
         return currentLoungeName;
+    }
+
+    public void setCurrentError(Throwable cause, String message) {
+        currentErrorMessage = message;
+    }
+
+    public String getCurrentError() {
+        return currentErrorMessage;
     }
 }

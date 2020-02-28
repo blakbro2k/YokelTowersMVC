@@ -3,6 +3,7 @@ package net.asg.games.controller;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
+import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogController;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.github.czyzby.lml.annotation.LmlAction;
@@ -10,6 +11,7 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.kotcrab.vis.ui.widget.VisTextField;
 
+import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.service.SessionService;
 
@@ -21,7 +23,6 @@ public class LoginController implements ViewRenderer, ActionContainer {
 
     @LmlActor("username") private VisTextField username;
     @LmlActor("password") private VisTextField password;
-
 
     @Override
     public void render(Stage stage, float delta) {
@@ -39,7 +40,8 @@ public class LoginController implements ViewRenderer, ActionContainer {
             }
         } catch (Exception e){
             e.printStackTrace();
-            //interfaceService.show(sessionService.getView("error"));
+            sessionService.setCurrentError(e.getCause(), e.getMessage());
+            interfaceService.showDialog(ErrorController.class);
         }
     }
 }
