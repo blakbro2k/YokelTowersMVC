@@ -22,6 +22,7 @@ public class LoginController implements ViewRenderer, ActionContainer {
     @LmlActor("username") private VisTextField username;
     @LmlActor("password") private VisTextField password;
 
+
     @Override
     public void render(Stage stage, float delta) {
         stage.act(delta);
@@ -29,9 +30,16 @@ public class LoginController implements ViewRenderer, ActionContainer {
     }
 
     @LmlAction("registerUser")
-    public void registerUser() throws InterruptedException {
-        if(sessionService.register(new YokelPlayer(username.getText()))){
-            interfaceService.show(sessionService.getView("lounge"));
+    public void registerUser() {
+        try{
+            if(!username.isEmpty()){
+                if(sessionService.register(new YokelPlayer(username.getText()))){
+                    interfaceService.show(sessionService.getView("uitest"));
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            //interfaceService.show(sessionService.getView("error"));
         }
     }
 }

@@ -18,81 +18,18 @@ import net.asg.games.service.UserInterfaceService;
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
      @Inject private UserInterfaceService uiService;
 
-    @LmlActor("Y_block") public Image yBlockImage;
-    @LmlActor("O_block") public Image oBlockImage;
-    @LmlActor("K_block") public Image kBlockImage;
-    @LmlActor("E_block") public Image eBlockImage;
-    @LmlActor("L_block") public Image lBlockImage;
-    @LmlActor("Bash_block") public Image bashBlockImage;
-    @LmlActor("defense_Y_block") public AnimatedImage defenseYBlockImage;
-    @LmlActor("defense_O_block") public AnimatedImage defenseOBlockImage;
-    @LmlActor("defense_K_block") public AnimatedImage defenseKBlockImage;
-    @LmlActor("defense_E_block") public AnimatedImage defenseEBlockImage;
-    @LmlActor("defense_L_block") public AnimatedImage defenseLBlockImage;
-    @LmlActor("defense_Bash_block") public AnimatedImage defenseBashBlockImage;
-    @LmlActor("power_Y_block") public AnimatedImage powerYBlockImage;
-    @LmlActor("power_O_block") public AnimatedImage powerOBlockImage;
-    @LmlActor("power_K_block") public AnimatedImage powerKBlockImage;
-    @LmlActor("power_E_block") public AnimatedImage powerEBlockImage;
-    @LmlActor("power_L_block") public AnimatedImage powerLBlockImage;
-    @LmlActor("power_bash_block") public AnimatedImage powerBashBlockImage;
-    @LmlActor("Y_block_Broken") public AnimatedImage brokenYBlockImage;
-    @LmlActor("O_block_Broken") public AnimatedImage brokenOBlockImage;
-    @LmlActor("K_block_Broken") public AnimatedImage brokenKBlockImage;
-    @LmlActor("E_block_Broken") public AnimatedImage brokenEBlockImage;
-    @LmlActor("L_block_Broken") public AnimatedImage brokenLBlockImage;
-    @LmlActor("Bash_block_Broken") public AnimatedImage brokenBashBlockImage;
-    @LmlActor("stone") public Image stoneBlockImage;
-    @LmlActor("gameClock") public GameClock gameClock;
-    @LmlActor("clear_block") public Image clearBlock;
-    @LmlActor("area1") public GameBlockArea area1;
-    @LmlActor("area2") public GameBlockArea area2;
 
-    private boolean isInitiated;
 
-    @SuppressWarnings("unchecked")
+
     private void loadGameData() {}
 
-    public void initiateAssets() {
-        uiService.loadDrawable(yBlockImage);
-        uiService.loadDrawable(this.oBlockImage);
-        uiService.loadDrawable(this.kBlockImage);
-        uiService.loadDrawable(this.eBlockImage);
-        uiService.loadDrawable(this.lBlockImage);
-        uiService.loadDrawable(this.bashBlockImage);
-        uiService.loadDrawable(this.defenseYBlockImage);
-        uiService.loadDrawable(this.defenseOBlockImage);
-        uiService.loadDrawable(this.defenseKBlockImage);
-        uiService.loadDrawable(this.defenseEBlockImage);
-        uiService.loadDrawable(this.defenseLBlockImage);
-        uiService.loadDrawable(this.defenseBashBlockImage);
-        uiService.loadDrawable(this.powerYBlockImage);
-        uiService.loadDrawable(this.powerOBlockImage);
-        uiService.loadDrawable(this.powerKBlockImage);
-        uiService.loadDrawable(this.powerEBlockImage);
-        uiService.loadDrawable(this.powerLBlockImage);
-        uiService.loadDrawable(this.powerBashBlockImage);
-        uiService.loadDrawable(this.brokenYBlockImage);
-        uiService.loadDrawable(this.brokenOBlockImage);
-        uiService.loadDrawable(this.brokenKBlockImage);
-        uiService.loadDrawable(this.brokenEBlockImage);
-        uiService.loadDrawable(this.brokenLBlockImage);
-        uiService.loadDrawable(this.brokenBashBlockImage);
-        uiService.loadDrawable(this.stoneBlockImage);
-        uiService.loadDrawable(this.clearBlock);
-    }
+
 
     @Override
     public void render(Stage stage, float delta) {
-        initiate();
         stage.act(delta);
         stage.draw();
     }
 
-    private void initiate(){
-        if(!isInitiated){
-            isInitiated = true;
-            initiateAssets();
-        }
-    }
+
 }

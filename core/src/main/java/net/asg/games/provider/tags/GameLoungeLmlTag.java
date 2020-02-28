@@ -1,6 +1,7 @@
 package net.asg.games.provider.tags;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.attribute.OnChangeLmlAttribute;
 import com.github.czyzby.lml.parser.impl.tag.actor.TableLmlTag;
@@ -29,8 +30,10 @@ public class GameLoungeLmlTag extends TableLmlTag {
         final GameLounge gameLounge = getLounge();
 
         YokelLounge lounge = Util.getObjectFromJsonString(YokelLounge.class, Util.stringToJson(plainTextLine));
-        gameLounge.setLounge(lounge);
-        setUpRooms(gameLounge);
+        if(lounge != null){
+            gameLounge.setLounge(lounge);
+            setUpRooms(gameLounge);
+        }
 
         if (LmlUtilities.isOneColumn(gameLounge)) {
             gameLounge.row();
@@ -64,7 +67,7 @@ public class GameLoungeLmlTag extends TableLmlTag {
     private VisTextButton createNewRoomButton(String roomName){
         VisTextButton button = new VisTextButton(roomName);
         OnChangeLmlAttribute onChange = new OnChangeLmlAttribute();
-        onChange.process(getParser(), this, button, "goto:room");
+        onChange.process(getParser(), this, button, InterfaceService.SCREEN_TRANSITION_ACTION_PREFIX + "room");
         return button;
     }
 }

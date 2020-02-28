@@ -27,7 +27,6 @@ import org.mockito.Mockito;
  ******************************************************************************/
 public class GameRunner implements ApplicationListener {
     private ServerManager daemon;
-    private float now = TimeUtils.millis();
 
     public GameRunner(ServerManager manager) {
         //super(klass);

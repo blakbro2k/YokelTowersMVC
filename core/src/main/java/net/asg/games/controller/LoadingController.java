@@ -13,11 +13,14 @@ import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.config.AutumnMessage;
 import com.github.czyzby.autumn.mvc.stereotype.Asset;
 import com.github.czyzby.autumn.mvc.stereotype.View;
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.tag.Dtd;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
 
+import net.asg.games.controller.action.Global;
 import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.UIUtil;
 
@@ -29,10 +32,14 @@ import java.io.Writer;
  * loaded. */
 @View(value = "ui/templates/loading.lml", first = true)
 public class LoadingController implements ViewRenderer {
+    /** Kiwi logger for this class. */
+    private static final Logger LOGGER = LoggerService.forClass(LoadingController.class);
+
     /** Will be injected automatically. Manages assets. Used to display loading progress. */
     @Inject private AssetService assetService;
     @Inject private InterfaceService interfaceService;
     @Inject private UserInterfaceService uiService;
+    @Inject private Global global;
 
 
     /** This is a widget injected from the loading.lml template. "loadingBar" is its ID. */
@@ -41,6 +48,7 @@ public class LoadingController implements ViewRenderer {
 
     private boolean regionsAssigned;
     private boolean dtdSaved = true;
+    private boolean isInitiated;
 
     // Since this class implements ViewRenderer, it can modify the way its views is drawn. Additionally to drawing the
     // stage, this views also updates assets manager and reads its progress.
@@ -54,10 +62,12 @@ public class LoadingController implements ViewRenderer {
 
     @OnMessage(AutumnMessage.ASSETS_LOADED)
     private void assignRegions() {
+        LOGGER.info("assignRegions");
         if (!regionsAssigned) {
             regionsAssigned = true;
             interfaceService.getSkin().addRegions(gameAtlas);
             UIUtil.getInstance().setFactory(uiService.getFactory());
+            initiate();
         }
         if(!dtdSaved){
             saveDtdSchema(Gdx.files.local("core/lml.dtd"));
@@ -109,6 +119,45 @@ public class LoadingController implements ViewRenderer {
     protected void createDtdSchema(final LmlParser parser, final Appendable appendable) throws Exception {
         //LOGGER.info("Creating DTD Schema");
         Dtd.saveSchema(parser, appendable);
+    }
+
+
+    private void initiate(){
+        if(!isInitiated){
+            isInitiated = true;
+            initiateAssets();
+        }
+    }
+
+    public void initiateAssets() {
+        uiService.loadDrawable(uiService.yBlockImage);
+        uiService.loadDrawable(uiService.oBlockImage);
+        uiService.loadDrawable(uiService.kBlockImage);
+        uiService.loadDrawable(uiService.eBlockImage);
+        uiService.loadDrawable(uiService.lBlockImage);
+        uiService.loadDrawable(uiService.bashBlockImage);
+        uiService.loadDrawable(uiService.defenseYBlockImage);
+        uiService.loadDrawable(uiService.defenseOBlockImage);
+        uiService.loadDrawable(uiService.defenseKBlockImage);
+        uiService.loadDrawable(uiService.defenseEBlockImage);
+        uiService.loadDrawable(uiService.defenseLBlockImage);
+        uiService.loadDrawable(uiService.defenseBashBlockImage);
+        uiService.loadDrawable(uiService.powerYBlockImage);
+        uiService.loadDrawable(uiService.powerOBlockImage);
+        uiService.loadDrawable(uiService.powerKBlockImage);
+        uiService.loadDrawable(uiService.powerEBlockImage);
+        uiService.loadDrawable(uiService.powerLBlockImage);
+        uiService.loadDrawable(uiService.powerBashBlockImage);
+        uiService.loadDrawable(uiService.brokenYBlockImage);
+        uiService.loadDrawable(uiService.brokenOBlockImage);
+        uiService.loadDrawable(uiService.brokenKBlockImage);
+        uiService.loadDrawable(uiService.brokenEBlockImage);
+        uiService.loadDrawable(uiService.brokenLBlockImage);
+        uiService.loadDrawable(uiService.brokenBashBlockImage);
+        uiService.loadDrawable(uiService.stoneBlockImage);
+        uiService.loadDrawable(uiService.clearBlock);
+        System.out.println("uiService.stoneBlockImage.=" + uiService.getActor("stone"));
+
     }
 }
 

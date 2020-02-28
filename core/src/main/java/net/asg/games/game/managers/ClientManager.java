@@ -25,11 +25,11 @@ import java.util.concurrent.TimeUnit;
 public class ClientManager implements Disposable {
     //private static final com.github.czyzby.kiwi.log.Logger LOGGER = LoggerService.forClass(ClientManager.class);
     private final static int DEFAULT_WAIT = 30;
-    private static WebSocket socket;
-    private static boolean isConnected;
-    private static String clientId = "";
-    private static int requestId = 0;
-    private static Queue<String[]> requests;
+    private WebSocket socket;
+    private boolean isConnected;
+    private String clientId = "";
+    private int requestId = 0;
+    private Queue<String[]> requests;
     private final String host;
     private final int port;
     private YokelPlayer player;
@@ -55,6 +55,7 @@ public class ClientManager implements Disposable {
     public ClientManager(String host, int port){
         isConnected = false;
         requests = new Queue<>();
+        player = null;
         this.host = host;
         this.port = port;
     }
@@ -186,7 +187,7 @@ public class ClientManager implements Disposable {
                 waiting = false;
             } else {
                 if(timeout > maxWait){
-                    throw new WebSocketException("Timed out waiting for WebSocket Request.");
+                    throw new InterruptedException("Timed out waiting for WebSocket Request.");
                 } else {
                     TimeUnit.SECONDS.sleep(1);
                     ++timeout;

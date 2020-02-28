@@ -2,13 +2,16 @@ package net.asg.games.controller.action;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.stereotype.ViewActionContainer;
 import com.github.czyzby.lml.annotation.LmlAction;
+import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
+import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketHandler;
 import com.github.czyzby.websocket.WebSocketListener;
@@ -21,6 +24,8 @@ import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.provider.actors.GameBlockArea;
+import net.asg.games.provider.actors.GameClock;
 import net.asg.games.provider.actors.GamePiece;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
@@ -44,8 +49,8 @@ public class Global implements ActionContainer {
     @Inject private UITestController ui;
     @Inject private UserInterfaceService uiService;
 
-    private OrderedMap<String, YokelPlayer> players = new OrderedMap<String, YokelPlayer>();
-    private OrderedMap<String, YokelLounge> lounges = new OrderedMap<String, YokelLounge>();
+    private OrderedMap<String, YokelPlayer> players = new OrderedMap<>();
+    private OrderedMap<String, YokelLounge> lounges = new OrderedMap<>();
 
     /**
      * This is a mock-up method that does nothing. It will be available in LML templates through "close" (annotation
@@ -69,10 +74,10 @@ public class Global implements ActionContainer {
 
     @LmlAction("toggleGameStart")
     public void toggleGameStart(Actor actor) {
-        if(!ui.gameClock.isRunning()){
-            ui.gameClock.start();
+        if(!uiService.gameClock.isRunning()){
+            uiService.gameClock.start();
         } else {
-            ui.gameClock.stop();
+            uiService.gameClock.stop();
         }
     }
 
@@ -81,7 +86,7 @@ public class Global implements ActionContainer {
         GamePiece gp = new GamePiece(uiService.getSkin(),null,null,null);
         gp.setData(new String[]{"12","16","3"});
         //System.out.println("lksjfd\n" + gp);
-        ui.area1.setGamePiece(gp);
+        uiService.area1.setGamePiece(gp);
     }
 
     @LmlAction("getTestBoard")
@@ -118,6 +123,6 @@ public class Global implements ActionContainer {
 
     @LmlAction("getTimerSeconds")
     public int getTimerSeconds() {
-        return ui.gameClock.isRunning() ? ui.gameClock.getElapsedSeconds() : 0;
+        return uiService.gameClock.isRunning() ? uiService.gameClock.getElapsedSeconds() : 0;
     }
 }
