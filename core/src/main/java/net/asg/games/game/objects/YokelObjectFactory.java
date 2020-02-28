@@ -11,24 +11,22 @@ import net.asg.games.service.UserInterfaceService;
 public class YokelObjectFactory {
     private UserInterfaceService userInterfaceService;
 
-    public YokelObjectFactory(UserInterfaceService userInterfaceService){
+    public YokelObjectFactory(UserInterfaceService userInterfaceService, String[] images, String[] animatedImages){
         if(userInterfaceService == null) throw new GdxRuntimeException("userInterfaceService was not initialized.");
+        if(images == null) throw new GdxRuntimeException("Images to load cannot be null.");
+        if(animatedImages == null) throw new GdxRuntimeException("Animated Images to load cannot be null.");
         this.userInterfaceService = userInterfaceService;
-        userInterfaceService.loadActors(createActors());
+        userInterfaceService.loadActors(createActors(images, animatedImages));
         userInterfaceService.loadDrawables();
     }
 
-    private Iterable<? extends Actor> createActors() {
+    private Iterable<? extends Actor> createActors(String[] imageNames, String[] animatedImageNames) {
         Array<Actor> actors = new Array<>();
 
-        String[] imageNames = new String[]{"Y_block","O_block","K_block","E_block","L_block","Bash_block","stone","clear_block"};
         for(String imageName : imageNames){
             addActor(actors, userInterfaceService.getImage(imageName));
         }
 
-        String[] animatedImageNames = {"defense_Y_block","defense_O_block","defense_K_block","defense_E_block","defense_L_block",
-                "defense_Bash_block","power_Y_block","power_O_block","power_K_block","power_E_block","power_L_block","power_bash_block",
-                "Y_block_Broken","O_block_Broken","K_block_Broken","E_block_Broken","L_block_Broken","Bash_block_Broken"};
         for(String aniImageName : animatedImageNames){
             addActor(actors, userInterfaceService.getAnimatedImage(aniImageName));
         }
@@ -49,7 +47,7 @@ public class YokelObjectFactory {
     private final Pool<GameBlock> yokelGameBlockPool = new Pool<GameBlock>() {
         @Override
         protected GameBlock newObject() {
-            return new GameBlock(userInterfaceService.getSkin(), getBlockImageName(0));
+            return new GameBlock(userInterfaceService.getSkin(), getBlockImageName(YokelBlock.CLEAR_BLOCK));
         }
     };
 

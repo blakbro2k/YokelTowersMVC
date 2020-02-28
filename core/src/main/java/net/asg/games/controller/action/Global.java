@@ -46,12 +46,6 @@ import java.util.Arrays;
  */
 @ViewActionContainer("global")
 public class Global implements ActionContainer {
-    @Inject private UITestController ui;
-    @Inject private UserInterfaceService uiService;
-
-    private OrderedMap<String, YokelPlayer> players = new OrderedMap<>();
-    private OrderedMap<String, YokelLounge> lounges = new OrderedMap<>();
-
     /**
      * This is a mock-up method that does nothing. It will be available in LML templates through "close" (annotation
      * argument) and "noOp" (method name) IDs.
@@ -70,59 +64,5 @@ public class Global implements ActionContainer {
     public boolean isDebug(){
         System.out.println("isDebugResult  called.");
         return PostLoader.DEBUG.equalsIgnoreCase(PostLoader.getInstance().getPreLoader());
-    }
-
-    @LmlAction("toggleGameStart")
-    public void toggleGameStart(Actor actor) {
-        if(!uiService.gameClock.isRunning()){
-            uiService.gameClock.start();
-        } else {
-            uiService.gameClock.stop();
-        }
-    }
-
-    @LmlAction("setGamePiece")
-    private void setGamePiece(){
-        GamePiece gp = new GamePiece(uiService.getSkin(),null,null,null);
-        gp.setData(new String[]{"12","16","3"});
-        //System.out.println("lksjfd\n" + gp);
-        uiService.area1.setGamePiece(gp);
-    }
-
-    @LmlAction("getTestBoard")
-    private YokelGameBoard getTestBoard(){
-
-        YokelGameBoard board = new YokelGameBoard(1L);
-
-        board.setCell(0,0, getRandomBlockId());
-        board.setCell(0,1, getRandomBlockId());
-        board.setCell(0,2, getRandomBlockId());
-        board.setCell(0,3, getRandomBlockId());
-        board.setCell(0,4, getRandomBlockId());
-        board.setCell(0,5, getRandomBlockId());
-
-        board.setCell(1,0, getRandomBlockId());
-        board.setCell(1,1, getRandomBlockId());
-        board.setCell(1,2, getRandomBlockId());
-        board.setCell(1,3, getRandomBlockId());
-        board.setCell(1,4, getRandomBlockId());
-        board.setCell(1,5, getRandomBlockId());
-
-        board.setCell(2,0, getRandomBlockId());
-        board.setCell(2,1, getRandomBlockId());
-        board.setCell(2,2, getRandomBlockId());
-        board.setCell(2,3, getRandomBlockId());
-        board.setCell(2,4, getRandomBlockId());
-        board.setCell(2,5, getRandomBlockId());
-        return board;
-    }
-
-    private int getRandomBlockId(){
-        return MathUtils.random(YokelBlock.EX_BLOCK);
-    }
-
-    @LmlAction("getTimerSeconds")
-    public int getTimerSeconds() {
-        return uiService.gameClock.isRunning() ? uiService.gameClock.getElapsedSeconds() : 0;
     }
 }

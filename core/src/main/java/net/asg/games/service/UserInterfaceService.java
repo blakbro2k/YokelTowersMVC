@@ -39,36 +39,6 @@ public class UserInterfaceService {
     private ObjectMap<String, Actor> uiAssetMap;
     private YokelObjectFactory factory;
 
-    @LmlActor("Y_block") public Actor yBlockImage;
-    @LmlActor("O_block") public Image oBlockImage;
-    @LmlActor("K_block") public Image kBlockImage;
-    @LmlActor("E_block") public Image eBlockImage;
-    @LmlActor("L_block") public Image lBlockImage;
-    @LmlActor("Bash_block") public Image bashBlockImage;
-    @LmlActor("defense_Y_block") public AnimatedImage defenseYBlockImage;
-    @LmlActor("defense_O_block") public AnimatedImage defenseOBlockImage;
-    @LmlActor("defense_K_block") public AnimatedImage defenseKBlockImage;
-    @LmlActor("defense_E_block") public AnimatedImage defenseEBlockImage;
-    @LmlActor("defense_L_block") public AnimatedImage defenseLBlockImage;
-    @LmlActor("defense_Bash_block") public AnimatedImage defenseBashBlockImage;
-    @LmlActor("power_Y_block") public AnimatedImage powerYBlockImage;
-    @LmlActor("power_O_block") public AnimatedImage powerOBlockImage;
-    @LmlActor("power_K_block") public AnimatedImage powerKBlockImage;
-    @LmlActor("power_E_block") public AnimatedImage powerEBlockImage;
-    @LmlActor("power_L_block") public AnimatedImage powerLBlockImage;
-    @LmlActor("power_bash_block") public AnimatedImage powerBashBlockImage;
-    @LmlActor("Y_block_Broken") public AnimatedImage brokenYBlockImage;
-    @LmlActor("O_block_Broken") public AnimatedImage brokenOBlockImage;
-    @LmlActor("K_block_Broken") public AnimatedImage brokenKBlockImage;
-    @LmlActor("E_block_Broken") public AnimatedImage brokenEBlockImage;
-    @LmlActor("L_block_Broken") public AnimatedImage brokenLBlockImage;
-    @LmlActor("Bash_block_Broken") public AnimatedImage brokenBashBlockImage;
-    @LmlActor("stone") public Image stoneBlockImage;
-    @LmlActor("gameClock") public GameClock gameClock;
-    @LmlActor("clear_block") public Image clearBlock;
-    @LmlActor("area1") public GameBlockArea area1;
-    @LmlActor("area2") public GameBlockArea area2;
-
     @Initiate
     private void initilize() {
         this.uiAssetMap = new ObjectMap<>();
@@ -77,7 +47,11 @@ public class UserInterfaceService {
     //Get Objects Factory
     public YokelObjectFactory getFactory(){
         if(factory == null){
-            factory = new YokelObjectFactory(this);
+            String[] imageNames = new String[]{"Y_block","O_block","K_block","E_block","L_block","Bash_block","stone","clear_block"};
+            String[] animatedImageNames = {"defense_Y_block","defense_O_block","defense_K_block","defense_E_block","defense_L_block",
+                    "defense_Bash_block","power_Y_block","power_O_block","power_K_block","power_E_block","power_L_block","power_bash_block",
+                    "Y_block_Broken","O_block_Broken","K_block_Broken","E_block_Broken","L_block_Broken","Bash_block_Broken"};
+            factory = new YokelObjectFactory(this, imageNames, animatedImageNames);
         }
         return this.factory;
     }
@@ -96,36 +70,6 @@ public class UserInterfaceService {
                 }
             }
         }
-    }
-
-    public void setActors(){
-        yBlockImage = getActor("Y_block");/*
-        @LmlActor("O_block") public Image oBlockImage;
-        @LmlActor("K_block") public Image kBlockImage;
-        @LmlActor("E_block") public Image eBlockImage;
-        @LmlActor("L_block") public Image lBlockImage;
-        @LmlActor("Bash_block") public Image bashBlockImage;
-        @LmlActor("defense_Y_block") public AnimatedImage defenseYBlockImage;
-        @LmlActor("defense_O_block") public AnimatedImage defenseOBlockImage;
-        @LmlActor("defense_K_block") public AnimatedImage defenseKBlockImage;
-        @LmlActor("defense_E_block") public AnimatedImage defenseEBlockImage;
-        @LmlActor("defense_L_block") public AnimatedImage defenseLBlockImage;
-        @LmlActor("defense_Bash_block") public AnimatedImage defenseBashBlockImage;
-        @LmlActor("power_Y_block") public AnimatedImage powerYBlockImage;
-        @LmlActor("power_O_block") public AnimatedImage powerOBlockImage;
-        @LmlActor("power_K_block") public AnimatedImage powerKBlockImage;
-        @LmlActor("power_E_block") public AnimatedImage powerEBlockImage;
-        @LmlActor("power_L_block") public AnimatedImage powerLBlockImage;
-        @LmlActor("power_bash_block") public AnimatedImage powerBashBlockImage;
-        @LmlActor("Y_block_Broken") public AnimatedImage brokenYBlockImage;
-        @LmlActor("O_block_Broken") public AnimatedImage brokenOBlockImage;
-        @LmlActor("K_block_Broken") public AnimatedImage brokenKBlockImage;
-        @LmlActor("E_block_Broken") public AnimatedImage brokenEBlockImage;
-        @LmlActor("L_block_Broken") public AnimatedImage brokenLBlockImage;
-        @LmlActor("Bash_block_Broken") public AnimatedImage brokenBashBlockImage;
-        @LmlActor("stone") public Image stoneBlockImage;
-        @LmlActor("gameClock") public GameClock gameClock;
-        @LmlActor("clear_block") public Image clearBlock;*/
     }
 
     public Skin getSkin(){

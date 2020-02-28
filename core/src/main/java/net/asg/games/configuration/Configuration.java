@@ -33,7 +33,6 @@ import net.asg.games.provider.tags.GameBlockAreaNumberLmlAttribute;
 import net.asg.games.provider.tags.GameBoardLmlTagProvider;
 import net.asg.games.provider.tags.GameClockLmlTagProvider;
 import net.asg.games.provider.tags.GameGamePieceDataLmlAttribute;
-import net.asg.games.provider.tags.GameLoungeDataLmlAttribute;
 import net.asg.games.provider.tags.GamePieceLmlTagProvider;
 import net.asg.games.provider.tags.GameLoungeLmlTagProvider;
 import net.asg.games.provider.tags.GamePlayerIconLmlTagProvider;
@@ -117,6 +116,5 @@ import net.asg.games.service.ScaleService;
             syntax.addAttributeProcessor(new GameBlockAreaNumberLmlAttribute(), "areanumber");
             syntax.addAttributeProcessor(new GameBlockAreaDataLmlAttribute(), "blockareadata");
             syntax.addAttributeProcessor(new GameGamePieceDataLmlAttribute(), "data");
-            syntax.addAttributeProcessor(new GameLoungeDataLmlAttribute(), "data");
         }
     }
