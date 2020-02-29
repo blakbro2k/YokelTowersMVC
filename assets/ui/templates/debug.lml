@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE table SYSTEM "core/lml.dtd">
-<table oneColumn="true" defaultPad="2" tableAlign="center" fillParent="true" defaultFillX="true">
+<table onecolumn="true" defaultpad="2" tablealign="center" fillparent="true" defaultfillx="true">
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
     <label>@playerChoose</label>
     <!--
@@ -8,5 +8,5 @@
         <textButton onChange="requestPlayerRegistration" id="{player}" onClick="goto:gameLounge">{player}</textButton>
     </:for>-->
     <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
-    <textButton onChange="app:exit">@exit</textButton>
+    <textbutton onchange="app:exit">@exit</textbutton>
 </table>

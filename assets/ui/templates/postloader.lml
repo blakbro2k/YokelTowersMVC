@@ -2,6 +2,6 @@
 <!DOCTYPE window SYSTEM "core/lml.dtd">
 <!-- Going through LML tutorials is suggested before starting with Autumn MVC. If anything is unclear
     in the .lml files, you should go through LML resources first. -->
-<window title="@loadingComplete" titleAlign="center">
-    <label onClose="goto:login"/>
+<window title="@loadingComplete" titlealign="center">
+    <label onclose="goto:login"/>
 </window>

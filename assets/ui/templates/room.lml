@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
 <!DOCTYPE table SYSTEM "core/lml.dtd">
-<table defaultPad="2" tableAlign="center" fillParent="true" defaultFillX="true" debug="true">
+<table defaultpad="2" tablealign="center" fillparent="true" defaultfillx="true" debug="true">
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
-    <image id="banner" style="banner" row="true" colSpan="3"/>
-    <container size="40">
-        <table oneColumn="true" tableAlign="top">
+    <image id="banner" style="banner" row="true" colspan="3"/>
+    <container size="240">
+        <table onecolumn="true" tablealign="top">
             <table row="true">
-                <textButton row="true" onChange="$isDebug" fillx="true">Play Now</textButton>
-                <textButton row="true" onChange="show:createGame">Create Table</textButton>
+                <textbutton row="true" onchange="$isDebug" fillx="true">Play Now</textbutton>
+                <textbutton row="true" onchange="show:createGame">Create Table</textbutton>
             </table>
-            <table tableAlign="bottom">
+            <table tablealign="bottom">
                 <image id="ratings" style="ratings" row="true" />
-                <textButton row="true" onChange="show:settings" fillx="true">@options</textButton>
-                <textButton row="true" onChange="goto:lounge">@exitLounge</textButton>
-                <textButton row="true" onChange="app:exit">@exitApp</textButton>
+                <textbutton row="true" onchange="show:settings" fillx="true">@options</textbutton>
+                <textbutton row="true" onchange="goto:lounge">@exitLounge</textbutton>
+                <textbutton row="true" onchange="app:exit">@exitApp</textbutton>
             </table>
         </table>
     </container>
-    <container size="40">
-        <table tableAlign="top">
+    <container size="240">
+        <table tablealign="top">
             <table row="true">
                 <label>Table No.</label>
                 <label>Seat 1-2</label>
@@ -27,12 +27,12 @@
                 <label>Seat 7-8</label>
                 <label row="true">Who is Watching</label>
                 <label>"#1"</label>
-                <imageButton>JOIN</imageButton>
+                <imagebutton>JOIN</imagebutton>
                 <button>JOIN</button>
                 <button>JOIN</button>
                 <button row="true">JOIN</button>
                 <label></label>
-                <imageButton>JOIN</imageButton>
+                <imagebutton>JOIN</imagebutton>
                 <button>JOIN</button>
                 <button>JOIN</button>
                 <button row="true">JOIN</button>
@@ -42,19 +42,19 @@
             </table>
         </table>
     </container>
-    <container size="40">
-        <table oneColumn="true" tableAlign="top">
-            <table defaultPad="2">
+    <container size="240">
+        <table onecolumn="true" tablealign="top">
+            <table defaultpad="2">
                 <label>Name</label>
                 <label row="true">Rtng</label>
             </table>
-            <scrollPane>
+            <scrollpane>
                 <table>
                     <:for users="$requestAllPlayers">
                         <gameplayer row="true">{users}</gameplayer>
                     </:for>
                 </table>
-            </scrollPane>
+            </scrollpane>
         </table>
     </container>
 </table>

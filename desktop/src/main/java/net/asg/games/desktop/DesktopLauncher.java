@@ -44,7 +44,7 @@ public class DesktopLauncher {
                 }
 
                 if("-dtd".equalsIgnoreCase((arg))) {
-                    saveDtdSchema(Gdx.files.local("dtd/lml.dtd"));
+                    saveDtdSchema(new FileHandle("dtd/lml.dtd"));
                 }
             }
         }

@@ -4,19 +4,19 @@
     <!-- Note that all values (like width and height) are in viewport units, not pixels.
         Its somewhat safe to use "magic" values. Values in {= } are equations; values
         proceeded with $ reference Java methods. -->
-    <tabbedPane selected="0" width="{=200 * ($getScale - X)}" height="{=100 * ($getScale - X)}">
+    <tabbedpane selected="0" width="{=200 * ($getScale - X)}" height="{=100 * ($getScale - X)}">
         <!-- :setting macro is defined at global.lml. -->
         <:setting name="@music">
             @musicVolume
             <!-- Music-related methods are added by MusicService. -->
-            <slider value="$getMusicVolume" onChange="setMusicVolume" growX="true" />
-            <checkBox onChange="toggleMusic" checked="$musicOn">@toggleMusic</checkBox>
+            <slider value="$getMusicVolume" onchange="setMusicVolume" growx="true" />
+            <checkbox onchange="toggleMusic" checked="$musicOn">@toggleMusic</checkbox>
         </:setting>
         <:setting name="@sound">
             @soundVolume
             <!-- Sound-related methods are added by MusicService. -->
-            <slider value="$getSoundVolume" onChange="setSoundVolume" growX="true" />
-            <checkBox onChange="toggleSound" checked="$soundOn">@toggleSound</checkBox>
+            <slider value="$getSoundVolume" onchange="setSoundVolume" growx="true" />
+            <checkbox onchange="toggleSound" checked="$soundOn">@toggleSound</checkbox>
         </:setting>
         <:setting name="@locale">
         <!-- {locales} and {currentLocale} are LML arguments automatically added by
@@ -24,7 +24,7 @@
             For example, "locale:en" action would change current locale to English. -->
             <:each locale="{locales}">
                 <:if test="{locale} != {currentLocale}">
-                    <textButton onChange="locale:{locale}">@{locale}</textButton>
+                    <textbutton onchange="locale:{locale}">@{locale}</textbutton>
                 </:if>
             </:each>
         </:setting>
@@ -34,11 +34,11 @@
         	    custom ScaleService. -->
         	<:each scale="$scales">
         	    <:if test="{scale} != $getScale">
-                    <textButton id="{scale}" onChange="changeScale">{scale}</textButton>
+                    <textbutton id="{scale}" onchange="changeScale">{scale}</textbutton>
                 </:if>
         	</:each>
         </:setting>
-    </tabbedPane>
+    </tabbedpane>
     <!-- "close" action is defined in Global class. -->
-    <textButton onResult="close">@exit</textButton>
+    <textbutton onresult="close">@exit</textbutton>
 </dialog>

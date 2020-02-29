@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
-<!DOCTYPE table SYSTEM "core/lml.dtd">
-<table oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true" debug="true">
-    <!-- <label>$requestAllLounges</label> -->
-    <label>Choose a lounge to play in</label>
-    <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
-    <table>
-        <:for gameLounge="$requestAllLounges">
-            <lounge row="true">{gameLounge}</lounge>
-        </:for>
+<!DOCTYPE window SYSTEM "core/lml.dtd">
+<window onecolumn="false" title="Choose a lounge to play in">
+    <table onecolumn="true" defaultpad="1" fillparent="true" defaultfillx="true">
+        <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
+        <table>
+            <:for gameLounge="$requestAllLounges">
+                <lounge row="true">{gameLounge}</lounge>
+            </:for>
+        </table>
+        <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
+        <textbutton onchange="app:exit">@exit</textbutton>
     </table>
-    <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
-    <textButton onChange="app:exit">@exit</textButton>
-</table>
+</window>
