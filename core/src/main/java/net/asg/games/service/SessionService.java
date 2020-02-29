@@ -1,47 +1,30 @@
 package net.asg.games.service;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.autumn.annotation.Component;
 import com.github.czyzby.autumn.annotation.Destroy;
 import com.github.czyzby.autumn.annotation.Initiate;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
-import com.github.czyzby.autumn.mvc.component.ui.action.ScreenTransitionAction;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
-import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogController;
-import com.github.czyzby.autumn.mvc.component.ui.controller.impl.AbstractViewController;
 import com.github.czyzby.kiwi.log.Logger;
 import com.github.czyzby.kiwi.log.LoggerService;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
-import com.github.czyzby.lml.parser.LmlView;
-import com.github.czyzby.websocket.WebSocket;
-import com.github.czyzby.websocket.WebSocketHandler;
-import com.github.czyzby.websocket.WebSocketListener;
 import com.github.czyzby.websocket.data.WebSocketException;
-import com.github.czyzby.websocket.net.ExtendedNet;
-import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
 import net.asg.games.game.managers.ClientManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
-import net.asg.games.server.serialization.ClientRequest;
-import net.asg.games.server.serialization.Packets;
-import net.asg.games.server.serialization.ServerResponse;
-import net.asg.games.utils.NetworkUtil;
 import net.asg.games.utils.PayloadUtil;
-import net.asg.games.utils.Util;
-import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 
 @Component
 public class SessionService {
     private static final Logger LOGGER = LoggerService.forClass(SessionService.class);
-    @Inject
-    private InterfaceService interfaceService;
+    @Inject private InterfaceService interfaceService;
 
     private String message = "Connecting...";
     private ClientManager client;
@@ -59,7 +42,6 @@ public class SessionService {
         //TODO: Create Unique client ID
         //TODO: Create PHPSESSION token6
         //TODO: Create CSRF Token
-
     }
 
     @Destroy
@@ -72,15 +54,37 @@ public class SessionService {
         client.dispose();
     }
 
-    public boolean register(YokelPlayer player) throws InterruptedException {
-        this.player = player;
-        return client.register(player);
+    public boolean connectToServer() throws InterruptedException {
+        return client.connectToServer();
+    }
+
+    public void registerPlayer() throws InterruptedException {
+        if(player == null) throw new InterruptedException("No Authorized player in currect session!");
+        client.requestPlayerRegister(getCurrentPlayer());
     }
 
     public Array<YokelLounge> getAllLounges() throws InterruptedException {
         client.requestLounges();
         client.waitForOneRequest();
         return PayloadUtil.getAllLoungesRequest(client.getRequests().removeFirst());
+    }
+
+    public Array<YokelPlayer> getAllPlayers() throws InterruptedException {
+        client.requestPlayers();
+        client.waitForOneRequest();
+        return PayloadUtil.getAllRegisteredPlayersRequest(client.getRequests().removeFirst());
+    }
+
+    public Array<String> toPlayerNames(Array<YokelPlayer> players) {
+        Array<String> playerNames = GdxArrays.newArray();
+        if(players != null){
+            for(YokelPlayer player : players){
+                if(player != null){
+                    playerNames.add(player.getName());
+                }
+            }
+        }
+        return playerNames;
     }
 
     public ViewController getView(String viewId){
@@ -97,11 +101,11 @@ public class SessionService {
         return interfaceService.getCurrentController();
     }
 
-    public void setCurrentUserNaame(String userName){
+    public void setCurrentUserName(String userName){
         this.userName = userName;
     }
 
-    public String getCurrentUserNaame(){
+    public String getCurrentUserName(){
         return userName;
     }
 
@@ -135,5 +139,13 @@ public class SessionService {
 
     public String getCurrentError() {
         return currentErrorMessage;
+    }
+
+    public void setCurrentPlayer(YokelPlayer yokelPlayer) {
+        this.player = yokelPlayer;
+    }
+
+    public YokelPlayer getCurrentPlayer() {
+        return player;
     }
 }

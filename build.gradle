@@ -2,9 +2,9 @@ buildscript {
   repositories {
     mavenLocal()
     mavenCentral()
+    google()
     jcenter()         // Required for org.jetbrains.trove4j:trove4j library
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    google()
   }
 
   dependencies {

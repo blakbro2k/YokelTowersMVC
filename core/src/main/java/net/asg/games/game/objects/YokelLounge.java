@@ -1,6 +1,7 @@
 package net.asg.games.game.objects;
 
 import com.badlogic.gdx.utils.OrderedMap;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -12,14 +13,14 @@ public class YokelLounge extends AbstractYokelObject {
     public static final String DEFAULT_LOUNGE = "Default";
 
     private String name;
-    private OrderedMap<String, YokelRoom> rooms;
+    final private OrderedMap<String, YokelRoom> rooms = GdxMaps.newOrderedMap();
 
-    public YokelLounge(){}
+    public YokelLounge(){
+    }
 
     public YokelLounge(String name) {
         if(name == null) throw new IllegalArgumentException("GameLounge name cannot be null.");
         setName(name);
-        this.rooms = new OrderedMap<>();
     }
 
     public void setName(String name){

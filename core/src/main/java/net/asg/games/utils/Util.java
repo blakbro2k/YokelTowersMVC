@@ -55,11 +55,11 @@ public class Util {
         return array;
     }
 
-    public static Array<? extends Object> safeIterable(Array<? extends Object> collection){
+    public static Array.ArrayIterator<Object> safeIterable(Array<Object> collection){
         if(collection != null){
-            return collection;
+            return new Array.ArrayIterator<>(collection);
         } else {
-            return new Array<>();
+            return new Array.ArrayIterator<>(GdxArrays.newArray());
         }
     }
 
@@ -283,7 +283,7 @@ public class Util {
 
     public static boolean otob(Object o){
         if(o != null){
-            return Boolean.valueOf(otos(o));
+            return Boolean.parseBoolean(otos(o));
         }
         return false;
     }
@@ -297,21 +297,21 @@ public class Util {
 
     public static int otoi(Object o){
         if(o != null){
-            return Integer.valueOf(otos(o));
+            return Integer.parseInt(otos(o));
         }
         return -1;
     }
 
     public static long otol(Object o){
         if(o != null){
-            return Long.valueOf(otos(o));
+            return Long.parseLong(otos(o));
         }
         return -1;
     }
 
     public static float otof(Object o){
         if(o != null){
-            return Float.valueOf(otos(o));
+            return Float.parseFloat(otos(o));
         }
         return -1;
     }

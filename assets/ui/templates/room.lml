@@ -1,15 +1,25 @@
 <?xml version="1.0"?>
 <!DOCTYPE table SYSTEM "core/lml.dtd">
-<table defaultPad="2" tableAlign="center" fillParent="true" defaultFillX="true">
+<table defaultPad="2" tableAlign="center" fillParent="true" defaultFillX="true" debug="true">
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
     <image id="banner" style="banner" row="true" colSpan="3"/>
-    <table>
-        <table oneColumn="true">
-            <textButton row="true" onChange="$isDebug" fillx="true">Play Now</textButton>
-            <textButton row="true" onChange="show:createGame">Create Table</textButton>
+    <container size="40">
+        <table oneColumn="true" tableAlign="top">
+            <table row="true">
+                <textButton row="true" onChange="$isDebug" fillx="true">Play Now</textButton>
+                <textButton row="true" onChange="show:createGame">Create Table</textButton>
+            </table>
+            <table tableAlign="bottom">
+                <image id="ratings" style="ratings" row="true" />
+                <textButton row="true" onChange="show:settings" fillx="true">@options</textButton>
+                <textButton row="true" onChange="goto:lounge">@exitLounge</textButton>
+                <textButton row="true" onChange="app:exit">@exitApp</textButton>
+            </table>
         </table>
-        <table row="true">
-            <table>
+    </container>
+    <container size="40">
+        <table tableAlign="top">
+            <table row="true">
                 <label>Table No.</label>
                 <label>Seat 1-2</label>
                 <label>Seat 3-4</label>
@@ -27,18 +37,24 @@
                 <button>JOIN</button>
                 <button row="true">JOIN</button>
             </table>
+            <table>
+                <label>Chat</label>
+            </table>
         </table>
-        <table tableAlign="bottom">
-            <image id="ratings" style="ratings" row="true" />
-            <textButton row="true" onChange="show:settings" fillx="true">Options</textButton>
-            <textButton row="true" onChange="app:exit">Exit Games</textButton>
+    </container>
+    <container size="40">
+        <table oneColumn="true" tableAlign="top">
+            <table defaultPad="2">
+                <label>Name</label>
+                <label row="true">Rtng</label>
+            </table>
+            <scrollPane>
+                <table>
+                    <:for users="$requestAllPlayers">
+                        <gameplayer row="true">{users}</gameplayer>
+                    </:for>
+                </table>
+            </scrollPane>
         </table>
-        <table>
-            <label>Chat</label>
-        </table>
-    </table>
-
-    <table>
-        <label>User Status</label>
-    </table>
+    </container>
 </table>

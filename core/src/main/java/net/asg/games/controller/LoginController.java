@@ -3,7 +3,6 @@ package net.asg.games.controller;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
-import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogController;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.github.czyzby.lml.annotation.LmlAction;
@@ -33,10 +32,18 @@ public class LoginController implements ViewRenderer, ActionContainer {
     @LmlAction("registerUser")
     public void registerUser() {
         try{
-            if(!username.isEmpty()){
-                if(sessionService.register(new YokelPlayer(username.getText()))){
-                    interfaceService.show(sessionService.getView("uitest"));
-                }
+            if(username.isEmpty()) throw new Exception("User Name is blank.");
+            if(password.isEmpty()) throw new Exception("Password is blank.");
+            //TODO: go get player OAuth and stats
+
+            //Give authenticated Player to session
+            sessionService.setCurrentPlayer(new YokelPlayer(username.getText()));
+
+            //Connect to Server
+            if(sessionService.connectToServer()){
+                //Register Player
+                sessionService.registerPlayer();
+                interfaceService.show(sessionService.getView("lounge"));
             }
         } catch (Exception e){
             e.printStackTrace();

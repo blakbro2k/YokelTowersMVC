@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
-<!DOCTYPE window SYSTEM "core/lml.dtd">
-<window defaultPad="2" width="320" height="460">
-    <table width="170" height="220" oneColumn="true" defaultPad="2" fillParent="true" defaultFillX="true">
-        <label>Yokel Test</label>
-        <textField id="username" message="Username"/>
-        <textField id="password" message="Password" passwordMode="true"/>
-        <textButton onChange="registerUser">Login</textButton>
+<!DOCTYPE :window SYSTEM "dtd/lml.dtd">
+<:window oneColumn="false" title="gameTitle">
+    <table width="170" height="220" onecolumn="true" defaultpad="2" fillparent="true" defaultfillx="true">
+        <textfield id="username" message="Username"/>
+        <textfield id="password" message="Password" passwordmode="true"/>
+        <textbutton onchange="registerUser">Login</textbutton>
     </table>
-</window>
+</:window>

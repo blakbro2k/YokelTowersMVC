@@ -14,11 +14,9 @@ import net.asg.games.utils.Util;
 
 public class GameLounge extends Table implements GameObject {
     private YokelLounge lounge;
-    private Array<Button> buttons;
 
     public GameLounge(Skin skin) {
         super(skin);
-        buttons = new Array<>();
     }
 
     public void setLounge(YokelLounge lounge){

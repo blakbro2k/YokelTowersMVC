@@ -36,6 +36,7 @@ import net.asg.games.provider.tags.GameGamePieceDataLmlAttribute;
 import net.asg.games.provider.tags.GamePieceLmlTagProvider;
 import net.asg.games.provider.tags.GameLoungeLmlTagProvider;
 import net.asg.games.provider.tags.GamePlayerIconLmlTagProvider;
+import net.asg.games.provider.tags.GamePlayerLmlTagProvider;
 import net.asg.games.service.ScaleService;
 
 /** Thanks to the Component annotation, this class will be automatically found and processed.
@@ -111,6 +112,7 @@ import net.asg.games.service.ScaleService;
             syntax.addTagProvider(new GameBlockAreaLmlTagProvider(), "gameblockarea");
             syntax.addTagProvider(new GameBlockLmlTagProvider(), "gameblock");
             syntax.addTagProvider(new GamePieceLmlTagProvider(), "gamepiece");
+            syntax.addTagProvider(new GamePlayerLmlTagProvider(), "gameplayer");
 
             syntax.addAttributeProcessor(new GameBlockTypeLmlAttribute(), "blocktype");
             syntax.addAttributeProcessor(new GameBlockAreaNumberLmlAttribute(), "areanumber");

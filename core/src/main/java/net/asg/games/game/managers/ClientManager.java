@@ -32,9 +32,6 @@ public class ClientManager implements Disposable {
     private Queue<String[]> requests;
     private final String host;
     private final int port;
-    private YokelPlayer player;
-
-
 
     public Queue<String[]> getRequests() {
         return requests;
@@ -55,26 +52,12 @@ public class ClientManager implements Disposable {
     public ClientManager(String host, int port){
         isConnected = false;
         requests = new Queue<>();
-        player = null;
         this.host = host;
         this.port = port;
     }
 
-    public void setPlayer(YokelPlayer player){
-        if(player != null){
-            this.player = player;
-        }
-    }
-
-    public YokelPlayer getPlayer(){
-        return this.player;
-    }
-
-    public boolean register(YokelPlayer player) throws InterruptedException {
-        setPlayer(player);
-        boolean register = initializeSockets();
-        registerClient();
-        return register;
+    public boolean connectToServer() throws InterruptedException {
+        return initializeSockets();
     }
 
     private boolean initializeSockets() throws WebSocketException, InterruptedException {
@@ -91,26 +74,19 @@ public class ClientManager implements Disposable {
         Packets.register(serializer);
 
         socket.send(ServerRequest.REQUEST_CLIENT_ID.toString());
-
         waitForRequest(DEFAULT_WAIT);
         String[] request = getRequests().removeFirst();
         clientId = request[0];
 
-        isConnected = true;
-        return isConnected;
-    }
-
-    private void registerClient() throws InterruptedException {
-        requestPlayerRegister(player);
-        waitForRequest(DEFAULT_WAIT);
+        return isConnected = true;
     }
 
     public boolean isAlive() {
-        //TODO: Implement ping test interval
-        //internal interval, if hit.
-        //do a test connection
-        //
         return isConnected;
+    }
+
+    public void requestServerPing() throws WebSocketException {
+        socket.sendKeepAlivePacket();
     }
 
     public void requestLounges() throws InterruptedException {

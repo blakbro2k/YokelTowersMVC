@@ -29,7 +29,8 @@ public class LocalLauncher {
         int seatNumber = 0;
 
         try{
-            if(!client.register(player)) throw new Exception("Could not Authenticate.");
+            if(!client.connectToServer()) throw new Exception("Could not Authenticate.");
+            client.requestPlayerRegister(player);
 
             // Input from player
             Logger.trace("Local Launcher Failed: ");
