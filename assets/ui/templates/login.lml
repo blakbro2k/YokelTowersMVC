@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE :window SYSTEM "dtd/lml.dtd">
 <:window oneColumn="false" title="gameTitle">
-    <table width="170" height="220" onecolumn="true" defaultpad="2" fillparent="true" defaultfillx="true">
+    <table width="220" height="220" onecolumn="true" defaultpad="2" fillparent="true" defaultfillx="true">
         <textfield id="username" message="Username"/>
         <textfield id="password" message="Password" passwordmode="true"/>
         <textbutton onchange="registerUser">Login</textbutton>

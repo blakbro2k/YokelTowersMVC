@@ -3,7 +3,7 @@
 <window onecolumn="true" title="Choose a lounge to play in" defaultgrowx="true">
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
     <:for gameLounge="$requestAllLounges">
-        <lounge row="true">{gameLounge}</lounge>
+        <lounge row="true" defaultgrowx="true">{gameLounge}</lounge>
     </:for>
     <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
     <textbutton onchange="app:exit">@exit</textbutton>

@@ -1,60 +1,57 @@
 <?xml version="1.0"?>
 <!DOCTYPE table SYSTEM "core/lml.dtd">
-<table defaultpad="2" tablealign="center" fillparent="true" defaultfillx="true" debug="true">
-    <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
-    <image id="banner" style="banner" row="true" colspan="3"/>
-    <container size="240">
-        <table onecolumn="true" tablealign="top">
-            <table row="true">
-                <textbutton row="true" onchange="$isDebug" fillx="true">Play Now</textbutton>
-                <textbutton row="true" onchange="show:createGame">Create Table</textbutton>
-            </table>
-            <table tablealign="bottom">
-                <image id="ratings" style="ratings" row="true" />
-                <textbutton row="true" onchange="show:settings" fillx="true">@options</textbutton>
-                <textbutton row="true" onchange="goto:lounge">@exitLounge</textbutton>
-                <textbutton row="true" onchange="app:exit">@exitApp</textbutton>
-            </table>
-        </table>
-    </container>
-    <container size="240">
-        <table tablealign="top">
-            <table row="true">
-                <label>Table No.</label>
-                <label>Seat 1-2</label>
-                <label>Seat 3-4</label>
-                <label>Seat 5-6</label>
-                <label>Seat 7-8</label>
-                <label row="true">Who is Watching</label>
-                <label>"#1"</label>
-                <imagebutton>JOIN</imagebutton>
-                <button>JOIN</button>
-                <button>JOIN</button>
-                <button row="true">JOIN</button>
-                <label></label>
-                <imagebutton>JOIN</imagebutton>
-                <button>JOIN</button>
-                <button>JOIN</button>
-                <button row="true">JOIN</button>
-            </table>
-            <table>
-                <label>Chat</label>
-            </table>
-        </table>
-    </container>
-    <container size="240">
-        <table onecolumn="true" tablealign="top">
-            <table defaultpad="2">
-                <label>Name</label>
-                <label row="true">Rtng</label>
-            </table>
-            <scrollpane>
-                <table>
-                    <:for users="$requestAllPlayers">
-                        <gameplayer row="true">{users}</gameplayer>
-                    </:for>
+<window defaultgrowx="true" debug="true">
+    <image id="banner" style="banner" row="true"/>
+    <table defaultfillx="true">
+            <table onecolumn="true" debug="true">
+                <table row="true">
+                    <textbutton row="true" onchange="$isDebug">Play Now</textbutton>
+                    <textbutton row="true" onchange="show:createGame">Create Table</textbutton>
                 </table>
-            </scrollpane>
-        </table>
-    </container>
-</table>
+                <table tablealign="bottom">
+                    <image id="ratings" style="ratings" row="true" />
+                    <textbutton row="true" onchange="show:settings">@options</textbutton>
+                    <textbutton row="true" onchange="goto:lounge">@exitLounge</textbutton>
+                    <textbutton row="true" onchange="app:exit">@exitApp</textbutton>
+                </table>
+            </table>
+
+                        <table>
+                            <table row="true">
+                                <label>Table No.</label>
+                                <label>Seat 1-2</label>
+                                <label>Seat 3-4</label>
+                                <label>Seat 5-6</label>
+                                <label>Seat 7-8</label>
+                                <label row="true">Who is Watching</label>
+                                <label>"#1"</label>
+                                <imagebutton>JOIN</imagebutton>
+                                <button>JOIN</button>
+                                <button>JOIN</button>
+                                <button row="true">JOIN</button>
+                                <label></label>
+                                <imagebutton>JOIN</imagebutton>
+                                <button>JOIN</button>
+                                <button>JOIN</button>
+                                <button row="true">JOIN</button>
+                            </table>
+                            <table>
+                                <label>Chat</label>
+                            </table>
+                        </table>
+
+                        <table onecolumn="true">
+                            <table defaultpad="2">
+                                <label>Name</label>
+                                <label row="true">Rtng</label>
+                            </table>
+                            <scrollpane>
+                                <table>
+                                    <:for users="$requestAllPlayers">
+                                        <gameplayer row="true">{users}</gameplayer>
+                                    </:for>
+                                </table>
+                            </scrollpane>
+                        </table>
+    </table>
+</window>

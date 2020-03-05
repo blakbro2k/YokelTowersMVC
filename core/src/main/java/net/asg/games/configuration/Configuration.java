@@ -19,6 +19,7 @@ import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundEnabled;
 import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundVolume;
 import com.github.czyzby.kiwi.util.gdx.asset.lazy.provider.ObjectProvider;
 import com.github.czyzby.lml.parser.LmlSyntax;
+import com.github.czyzby.lml.parser.impl.attribute.table.cell.TableCellDefaultsLmlAttribute;
 import com.github.czyzby.lml.util.Lml;
 import com.github.czyzby.lml.vis.parser.impl.VisLmlSyntax;
 import com.github.czyzby.lml.vis.util.ColorPickerContainer;
@@ -118,5 +119,7 @@ import net.asg.games.service.ScaleService;
             syntax.addAttributeProcessor(new GameBlockAreaNumberLmlAttribute(), "areanumber");
             syntax.addAttributeProcessor(new GameBlockAreaDataLmlAttribute(), "blockareadata");
             syntax.addAttributeProcessor(new GameGamePieceDataLmlAttribute(), "data");
+            //syntax.addAttributeProcessor(new TableCellDefaultsLmlAttribute(cellAttribute), names);
+
         }
     }

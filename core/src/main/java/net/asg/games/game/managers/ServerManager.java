@@ -593,9 +593,10 @@ public class ServerManager {
         return true;
     }
 
-    private void unRegisterPlayer(String clientId) throws Exception {
+    private boolean unRegisterPlayer(String clientId) throws Exception {
         //validateRegisteredPlayers();
         storage.removeRegisteredPlayer(clientId);
+        return true;
     }
 
     private YokelPlayer getRegisteredPlayer(String playerId){
@@ -624,25 +625,14 @@ public class ServerManager {
     }
 
     //0 = Client ID
-    //1 = Player Name
     private String[] disconnectPlayer(String[] clientPayload) throws Exception {
         Logger.trace("Enter registerPlayerRequest()");
 
         String[] ret = new String[1];
         ret[0] = "false";
 
-        YokelPlayer player = PayloadUtil.getRegisterPlayerFromPayload(clientPayload);
         String clientId = PayloadUtil.getClientIDFromPayload(clientPayload);
-
-        //Remove user from all Seats
-        //Remove user from all tables
-        //Remove user from all Rooms
-        //Remove user from all Lounges
-
-       if(player != null){
-            Logger.info("Removing {} from all Seats.", player.toString());
-            //ret[0] = Util.otos(registerPlayer(player));
-        }
+        Logger.info("Removing client [{}] from all storage session.", clientId);
 
         //Remove user from registered list
         unRegisterPlayer(clientId);

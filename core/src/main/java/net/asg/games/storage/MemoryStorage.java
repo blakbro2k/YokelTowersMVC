@@ -46,6 +46,10 @@ public class MemoryStorage implements StorageInterface {
 
     @Override
     public void removeRegisteredPlayer(String clientID) throws Exception {
+        //Remove user from all Seats
+        //Remove user from all tables
+        //Remove user from all Rooms
+        //Remove user from all Lounges
         if(clientID == null) throw new Exception("clientID was null.");
         registeredPlayers.remove(getPlayerIdFromClient(clientID));
         clients.remove(clientID);

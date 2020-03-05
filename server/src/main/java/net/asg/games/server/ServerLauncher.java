@@ -10,16 +10,22 @@ import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.storage.MemoryStorage;
 import net.asg.games.storage.StorageInterface;
+import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.pmw.tinylog.Logger;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.buffer.impl.BufferImpl;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
+import io.vertx.core.http.impl.FrameType;
+import io.vertx.core.http.impl.ws.WebSocketFrameImpl;
 
 /** Launches the server application. */
 public class ServerLauncher {
@@ -93,6 +99,7 @@ public class ServerLauncher {
                             }
                         } else if(frame.isClose()){
                             Logger.info("Client [" + handlerID + "] closing connection");
+                            handleFrame(webSocket, createDisconnectFrame(handlerID));
                         } else {
                             Logger.error("Received Unhandled WebSocket Frame type.");
                             throw new Exception("Received Unhandled WebSocket Frame type.");
@@ -107,6 +114,22 @@ public class ServerLauncher {
             Logger.error(e,"Error Setting up Network Listener: ");
             throw new Exception("Error Setting up Network Listener: ", e);
         }
+    }
+
+    private WebSocketFrame createDisconnectFrame(String id) {
+        return new WebSocketFrameImpl(FrameType.BINARY, Unpooled.wrappedBuffer(serializedRequest(createDisconnectRequest(id))), true);
+    }
+
+    private byte[] serializedRequest(ClientRequest request){
+        return serializer.serialize(request);
+    }
+
+    private ClientRequest createDisconnectRequest(String handlerId){
+        return new ClientRequest(-1,
+                "",
+                ServerRequest.REQUEST_CLIENT_DISCONNECT.toString(),
+                PayloadUtil.createPlayerDisconnectRequest(handlerId),
+                handlerId);
     }
 
     private void initialize(String... args) throws Exception{

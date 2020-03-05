@@ -38,6 +38,13 @@ public class PayloadUtil {
         return EMPTY_ARRAY;
     }
 
+    public static String[] createPlayerDisconnectRequest(String clientId){
+        if(validatedInputs(clientId)){
+            return new String[]{clientId, ""};
+        }
+        return EMPTY_ARRAY;
+    }
+
     public static String[] createJoinLeaveRoomRequest(YokelPlayer player, String loungeName, String roomName){
         if(validatedInputs(player, loungeName, roomName)){
             return new String[]{player.getId(), loungeName, roomName};
