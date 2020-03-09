@@ -4,44 +4,48 @@
     <table>
         <image growx="true" id="banner" style="banner" row="true" colspan="3"/>
         <table onecolumn="true" debug="true">
-            <table onecolumn="true" tablealign="top" defaultgrowx="true" debug="true">
+            <table onecolumn="true" align="top" defaultgrowx="true" debug="true">
                 <textbutton onchange="$isDebug">Play Now</textbutton>
                 <textbutton onchange="show:createGame">Create Table</textbutton>
             </table>
-            <table onecolumn="true" tablealign="bottom" defaultgrowx="true" debug="true">
+            <table onecolumn="true" align="bottom" defaultgrowx="true" debug="true">
                 <image id="ratings" style="ratings"/>
                 <textbutton onchange="show:settings" growx="true">@options</textbutton>
                 <textbutton onchange="goto:lounge" growx="true">@exitLounge</textbutton>
                 <textbutton onchange="app:exit" growx="true">@exitApp</textbutton>
             </table>
         </table>
-        <table onecolumn="true">
-            <table tablealign="top">
-                <label>Table No.</label>
-                <label>1-2</label>
-                <label>3-4</label>
-                <label>5-6</label>
-                <label>7-8</label>
-                <label row="true">Who is Watching</label>
-                <label>"#1"</label>
-                <imagebutton>JOIN</imagebutton>
-                <button>JOIN</button>
-                <button>JOIN</button>
-                <button row="true">JOIN</button>
-                <label></label>
-                <imagebutton>JOIN</imagebutton>
-                <button>JOIN</button>
-                <button>JOIN</button>
-                <button row="true">JOIN</button>
+        <table onecolumn="true" align="top">
+            <table debug="true">
+                <table row="true">
+                    <label>Table No.</label>
+                    <label>1-2</label>
+                    <label>3-4</label>
+                    <label>5-6</label>
+                    <label>7-8</label>
+                    <label row="true">Who is Watching</label>
+                </table>
+                <table growx="true">
+                    <label>"#1"</label>
+                    <imagebutton>JOIN</imagebutton>
+                    <button>JOIN</button>
+                    <button>JOIN</button>
+                    <button row="true">JOIN</button>
+                    <label></label>
+                    <imagebutton>JOIN</imagebutton>
+                    <button>JOIN</button>
+                    <button>JOIN</button>
+                    <button row="true">JOIN</button>
+                </table>
             </table>
             <table>
                 <label>Chat</label>
             </table>
         </table>
-        <table onecolumn="true" tablealign="top">
+        <table onecolumn="true" align="top">
             <table defaultpad="2">
-                <label>Name</label>
-                <label row="true">Rtng</label>
+                <label textalign="left">Name</label>
+                <label textalign="right" row="true">Rtng</label>
             </table>
             <scrollpane>
                 <table>

@@ -30,7 +30,10 @@ public class LoungeController implements ViewRenderer, ActionContainer {
     @LmlAction("requestAllLounges")
     public Array<String> requestAllLounges() {
         try{
-            return Util.toPlainTextArray(sessionService.getAllLounges());
+            //interfaceService.showDialog(LoadingController.class);
+            Array<String> lounges = Util.toPlainTextArray(sessionService.getAllLounges());
+            //interfaceService.destroyDialog(LoadingController.class);
+            return lounges;
         } catch (Exception e){
             e.printStackTrace();
             sessionService.setCurrentError(e.getCause(), e.getMessage());

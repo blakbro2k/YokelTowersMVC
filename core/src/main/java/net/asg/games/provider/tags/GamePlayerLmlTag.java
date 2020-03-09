@@ -2,6 +2,7 @@ package net.asg.games.provider.tags;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.attribute.OnChangeLmlAttribute;
@@ -35,8 +36,9 @@ public class GamePlayerLmlTag extends TableLmlTag {
         YokelPlayer player = Util.getObjectFromJsonString(YokelPlayer.class, Util.stringToJson(plainTextLine));
 
         if(player != null){
-            playerTag.add(player.getName());
-            playerTag.add(player.getRating() + "");
+
+            playerTag.add(player.getName()).align(Align.left);
+            playerTag.add(player.getRating() + "").align(Align.right);
             playerTag.row();
         }
     }
