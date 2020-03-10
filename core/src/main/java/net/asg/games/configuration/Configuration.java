@@ -19,7 +19,6 @@ import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundEnabled;
 import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundVolume;
 import com.github.czyzby.kiwi.util.gdx.asset.lazy.provider.ObjectProvider;
 import com.github.czyzby.lml.parser.LmlSyntax;
-import com.github.czyzby.lml.parser.impl.attribute.table.cell.TableCellDefaultsLmlAttribute;
 import com.github.czyzby.lml.util.Lml;
 import com.github.czyzby.lml.vis.parser.impl.VisLmlSyntax;
 import com.github.czyzby.lml.vis.util.ColorPickerContainer;
@@ -37,7 +36,7 @@ import net.asg.games.provider.tags.GameGamePieceDataLmlAttribute;
 import net.asg.games.provider.tags.GamePieceLmlTagProvider;
 import net.asg.games.provider.tags.GameLoungeLmlTagProvider;
 import net.asg.games.provider.tags.GamePlayerIconLmlTagProvider;
-import net.asg.games.provider.tags.GamePlayerLmlTagProvider;
+import net.asg.games.provider.tags.GamePlayerListLmlTagProvider;
 import net.asg.games.service.ScaleService;
 
 /** Thanks to the Component annotation, this class will be automatically found and processed.
@@ -113,7 +112,7 @@ import net.asg.games.service.ScaleService;
             syntax.addTagProvider(new GameBlockAreaLmlTagProvider(), "gameblockarea");
             syntax.addTagProvider(new GameBlockLmlTagProvider(), "gameblock");
             syntax.addTagProvider(new GamePieceLmlTagProvider(), "gamepiece");
-            syntax.addTagProvider(new GamePlayerLmlTagProvider(), "gameplayer");
+            syntax.addTagProvider(new GamePlayerListLmlTagProvider(), "gameplayerlist");
 
             syntax.addAttributeProcessor(new GameBlockTypeLmlAttribute(), "blocktype");
             syntax.addAttributeProcessor(new GameBlockAreaNumberLmlAttribute(), "areanumber");

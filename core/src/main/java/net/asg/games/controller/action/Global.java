@@ -42,17 +42,4 @@ public class Global implements ActionContainer {
         System.out.println("isDebugResult  called.");
         return PostLoader.DEBUG.equalsIgnoreCase(PostLoader.getInstance().getPreLoader());
     }
-
-    @LmlAction("requestAllPlayers")
-    public Array<String> requestAllPlayers() {
-        try{
-            return Util.toPlainTextArray(sessionService.getAllPlayers());
-        } catch (Exception e){
-            e.printStackTrace();
-            sessionService.setCurrentError(e.getCause(), e.getMessage());
-            interfaceService.showDialog(ErrorController.class);
-            return GdxArrays.newArray();
-        }
-    }
-
 }

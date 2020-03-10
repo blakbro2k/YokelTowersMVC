@@ -2,6 +2,7 @@ package net.asg.games.service;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Queue;
 import com.github.czyzby.autumn.annotation.Component;
 import com.github.czyzby.autumn.annotation.Destroy;
 import com.github.czyzby.autumn.annotation.Initiate;
@@ -18,6 +19,7 @@ import net.asg.games.game.managers.ClientManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.utils.PayloadUtil;
+import net.asg.games.utils.Util;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -73,6 +75,18 @@ public class SessionService {
         client.requestPlayers();
         client.waitForOneRequest();
         return PayloadUtil.getAllRegisteredPlayersRequest(client.getRequests().removeFirst());
+    }
+
+    public void asyncPlayerAllRequest() throws InterruptedException {
+        client.requestPlayers();
+    }
+
+    public Array<YokelPlayer> asyncGetPlayerAllRequest(){
+        Queue<String[]> requests = client.getRequests();
+        if(!Util.isQueueEmpty(requests)){
+            return PayloadUtil.getAllRegisteredPlayersRequest(requests.removeFirst());
+        }
+        return GdxArrays.newArray();
     }
 
     public Array<String> toPlayerNames(Array<YokelPlayer> players) {

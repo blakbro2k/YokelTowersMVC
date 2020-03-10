@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
@@ -55,7 +56,7 @@ public class Util {
         return array;
     }
 
-    public static Array.ArrayIterator<Object> safeIterable(Array<Object> collection){
+    public static <T> Array.ArrayIterator<Object> safeIterable(Array<Object> collection){
         if(collection != null){
             return new Array.ArrayIterator<>(collection);
         } else {
@@ -184,6 +185,10 @@ public class Util {
     }
 
     public static <T> boolean isArrayEmpty(Array<T> collection){
+        return collection != null && collection.isEmpty();
+    }
+
+    public static <T> boolean isQueueEmpty(Queue<T> collection){
         return collection != null && collection.isEmpty();
     }
 
