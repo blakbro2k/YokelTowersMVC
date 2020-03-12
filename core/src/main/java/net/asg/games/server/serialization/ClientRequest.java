@@ -18,7 +18,11 @@ public class ClientRequest implements Transferable<ClientRequest> {
     private final int requestSequence;
     private final String[] payload;
 
-    public ClientRequest(final int requestSequence, final String sessionId, final String message, String[] payload, String clientId) {
+    public ClientRequest(final int requestSequence,
+                         final String sessionId,
+                         final String message,
+                         final String[] payload,
+                         final String clientId) {
         this.requestSequence = requestSequence;
         this.sessionId = sessionId;
         this.message = message;

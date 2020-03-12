@@ -66,8 +66,6 @@ public class YokelTowersObjectsTest {
         player.decreaseRating(5);
         Assert.assertEquals(1515, player.getRating());
         Assert.assertNotNull(player.getPlayerId());
-        player.setSessionId("212");
-        Assert.assertEquals("212", player.getSessionId());
         Assert.assertEquals(getJSON(player), player.toString());
     }
 

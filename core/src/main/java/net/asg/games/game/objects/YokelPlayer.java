@@ -21,6 +21,11 @@ public class YokelPlayer extends AbstractYokelObject {
         rating = DEFAULT_RATING_NUMBER;
     }
 
+    public YokelPlayer(String name, int rating){
+        this(name);
+        setRating(rating);
+    }
+
     public String getName(){
         return name;
     }
@@ -29,12 +34,8 @@ public class YokelPlayer extends AbstractYokelObject {
         return rating;
     }
 
-    public void setSessionId(String sessionId){
-        this.sessionId = sessionId;
-    }
-
-    public String getSessionId() {
-        return sessionId;
+    public void setRating(int rating){
+        this.rating = rating;
     }
 
     public void increaseRating(int inc){

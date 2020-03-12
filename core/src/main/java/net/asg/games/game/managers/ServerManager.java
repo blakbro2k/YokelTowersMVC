@@ -256,12 +256,14 @@ public class ServerManager {
 
         if(request != null){
             Logger.debug("request: {}", request.getMessage());
-
-            message = request.getMessage();
-            sessionId = request.getSessionId();
-            requestSequence = request.getRequestSequence();
             clientId = request.getClientId();
-            serverPayload = buildPayload(message, request.getPayload());
+
+            //if(!storage.isClientRegistered(clientId)){
+                message = request.getMessage();
+                sessionId = request.getSessionId();
+                requestSequence = request.getRequestSequence();
+                serverPayload = buildPayload(message, request.getPayload());
+            //}
         }
         Logger.trace("Exit handleClientRequest()");
         return new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
@@ -635,7 +637,7 @@ public class ServerManager {
         Logger.info("Removing client [{}] from all storage session.", clientId);
 
         //Remove user from registered list
-        unRegisterPlayer(clientId);
+        ret[0] = unRegisterPlayer(clientId) + "";
         Logger.trace("Exit registerPlayerRequest()");
         return ret;
     }

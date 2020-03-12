@@ -17,7 +17,11 @@ public class ServerResponse implements Transferable<ServerResponse> {
     private final int serverId;
     private final String[] payload;
 
-    public ServerResponse(final int requestSequence, final String sessionId, final String message, final int serverId, String[] payload){
+    public ServerResponse(final int requestSequence,
+                          final String sessionId,
+                          final String message,
+                          final int serverId,
+                          final String[] payload){
         this.requestSequence = requestSequence;
         this.sessionId = sessionId;
         this.message = message;
@@ -69,7 +73,7 @@ public class ServerResponse implements Transferable<ServerResponse> {
                 getRequestSequence() + ":" +
                 getSessionId() + ":message:" +
                 getMessage() + "]{" +
-                getServerId() + "}" +
+                getServerId() + "}{" +
                 Arrays.toString(getPayload()) + "}";
     }
 }

@@ -2,6 +2,7 @@ package net.asg.games.game.managers;
 
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketHandler;
 import com.github.czyzby.websocket.WebSocketListener;
@@ -33,8 +34,13 @@ public class ClientManager implements Disposable {
     private final String host;
     private final int port;
 
-    public Queue<String[]> getRequests() {
+    public Queue<String[]> getAllRequests() {
         return requests;
+    }
+
+    public String[] getNextRequest() {
+        if(requests.size == 0) return null;
+        return requests.removeFirst();
     }
 
     @Override
@@ -75,7 +81,7 @@ public class ClientManager implements Disposable {
 
         socket.send(ServerRequest.REQUEST_CLIENT_ID.toString());
         waitForRequest(DEFAULT_WAIT);
-        String[] request = getRequests().removeFirst();
+        String[] request = getAllRequests().removeFirst();
         clientId = request[0];
 
         return isConnected = true;

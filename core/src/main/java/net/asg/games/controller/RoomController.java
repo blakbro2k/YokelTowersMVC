@@ -30,7 +30,7 @@ public class RoomController implements ViewRenderer, ActionContainer {
     @Override
     public void render(Stage stage, float delta) {
         //System.out.println(interfaceService.getHidingActionProvider());
-        System.out.println(refresh);
+        //System.out.println(refresh);
         if(++refresh > 100){
             refresh=0;
            // playersList.add(new Label("kjkjk", interfaceService.getSkin())).row();

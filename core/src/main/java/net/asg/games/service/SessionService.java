@@ -68,13 +68,13 @@ public class SessionService {
     public Array<YokelLounge> getAllLounges() throws InterruptedException {
         client.requestLounges();
         client.waitForOneRequest();
-        return PayloadUtil.getAllLoungesRequest(client.getRequests().removeFirst());
+        return PayloadUtil.getAllLoungesRequest(client.getNextRequest());
     }
 
     public Array<YokelPlayer> getAllPlayers() throws InterruptedException {
         client.requestPlayers();
         client.waitForOneRequest();
-        return PayloadUtil.getAllRegisteredPlayersRequest(client.getRequests().removeFirst());
+        return PayloadUtil.getAllRegisteredPlayersRequest(client.getNextRequest());
     }
 
     public void asyncPlayerAllRequest() throws InterruptedException {
@@ -82,7 +82,7 @@ public class SessionService {
     }
 
     public Array<YokelPlayer> asyncGetPlayerAllRequest(){
-        Queue<String[]> requests = client.getRequests();
+        Queue<String[]> requests = client.getAllRequests();
         if(!Util.isQueueEmpty(requests)){
             return PayloadUtil.getAllRegisteredPlayersRequest(requests.removeFirst());
         }

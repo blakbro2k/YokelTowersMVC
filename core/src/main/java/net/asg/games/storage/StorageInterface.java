@@ -48,4 +48,7 @@ public interface StorageInterface extends Disposable {
 
     /** Releases all resources of this object. */
     ObjectMap.Values<GameManager> getAllGames();
+
+    /** Check if client id is registered **/
+    boolean isClientRegistered(String clientId);
 }

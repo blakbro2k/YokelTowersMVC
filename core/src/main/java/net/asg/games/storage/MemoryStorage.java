@@ -101,6 +101,11 @@ public class MemoryStorage implements StorageInterface {
     }
 
     @Override
+    public boolean isClientRegistered(String clientId) {
+        return clients.containsKey(clientId);
+    }
+
+    @Override
     public void dispose() {
         if(lounges != null){
             lounges.clear();

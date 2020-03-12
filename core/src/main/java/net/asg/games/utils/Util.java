@@ -56,7 +56,7 @@ public class Util {
         return array;
     }
 
-    public static <T> Array.ArrayIterator<Object> safeIterable(Array<Object> collection){
+    public static <T> Array.ArrayIterator<T> safeIterable(Array<T> collection){
         if(collection != null){
             return new Array.ArrayIterator<>(collection);
         } else {

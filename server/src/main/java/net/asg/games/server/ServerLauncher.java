@@ -117,14 +117,18 @@ public class ServerLauncher {
     }
 
     private WebSocketFrame createDisconnectFrame(String id) {
+        Logger.trace("Enter createDisconnectFrame()");
         return new WebSocketFrameImpl(FrameType.BINARY, Unpooled.wrappedBuffer(serializedRequest(createDisconnectRequest(id))), true);
     }
 
     private byte[] serializedRequest(ClientRequest request){
+        Logger.trace("Enter serializedRequest()");
         return serializer.serialize(request);
     }
 
     private ClientRequest createDisconnectRequest(String handlerId){
+        Logger.trace("Enter createDisconnectRequest()");
+
         return new ClientRequest(-1,
                 "",
                 ServerRequest.REQUEST_CLIENT_DISCONNECT.toString(),

@@ -4,14 +4,9 @@ import com.badlogic.gdx.utils.Array;
 
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
-import net.asg.games.game.objects.YokelRoom;
-import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
-import net.asg.games.utils.Util;
 
 import org.pmw.tinylog.Logger;
-
-import java.util.Arrays;
 
 public class PayloadUtil {
     private static final String[] EMPTY_ARRAY = {""};
