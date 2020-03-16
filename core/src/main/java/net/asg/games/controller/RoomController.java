@@ -25,23 +25,20 @@ public class RoomController implements ViewRenderer, ActionContainer {
     @Inject private SessionService sessionService;
 
     @LmlActor("playersList") private GamePlayerList playersList;
-    private float refresh = 0;
+    private float refresh = 500;
+    private float test = 0;
 
     @Override
     public void render(Stage stage, float delta) {
-        //System.out.println(interfaceService.getHidingActionProvider());
-        //System.out.println(refresh);
-        if(++refresh > 100){
+        if(++refresh > 300){
             refresh=0;
-           // playersList.add(new Label("kjkjk", interfaceService.getSkin())).row();
             try {
-                //System.out.println(Util.toPlainTextArray(sessionService.getAllPlayers()));
-                playersList.updatePlayerList(sessionService.getAllPlayers());
-            } catch (InterruptedException e) {
+                playersList.updatePlayerList(sessionService.asyncGetPlayerAllRequest());
+                sessionService.asyncPlayerAllRequest();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
         stage.act(delta);
         stage.draw();
     }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.OrderedMap;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
 import net.asg.games.utils.Util;
 
@@ -31,8 +32,8 @@ public class YokelRoom extends AbstractYokelObject {
         return getId();
     }
 
-    public OrderedMap<Integer, YokelTable> getAllTables(){
-        return tables;
+    public Array<YokelTable> getAllTables(){
+        return GdxArrays.newArray(tables.values());
     }
 
     public Array<YokelPlayer> getAllPlayers(){

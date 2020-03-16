@@ -21,7 +21,7 @@ public class GamePlayerList extends Table {
         header = new Table(skin);
         playerList = new Table(skin);
 
-        this.setFillParent(true);
+        //this.setFillParent(true);
         setUpHeader();
         setUpPlayerList();
     }
@@ -36,7 +36,6 @@ public class GamePlayerList extends Table {
         header.pad(2);
         header.add(HEADER_NAME_STR);
         header.add(HEADER_RATING_STR);
-        //header.row();
         add(header).row();
     }
 
@@ -44,13 +43,14 @@ public class GamePlayerList extends Table {
         Table table = new Table(getSkin());
         table.add(player.getName());
         table.add(player.getRating() + "");
+        // removeActor();
         playerList.add(table).row();
     }
 
     public void updatePlayerList(Array<YokelPlayer> players){
+        playerList.clearChildren();
         for(YokelPlayer player : Util.safeIterable(players)){
             if(player != null){
-                System.out.println("Adding new player" + player);
                 addPlayer(player);
             }
         }

@@ -16,11 +16,9 @@ import net.asg.games.utils.enums.ServerRequest;
 import org.apache.commons.lang.StringUtils;
 import org.pmw.tinylog.Logger;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.buffer.impl.BufferImpl;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;

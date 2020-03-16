@@ -51,17 +51,17 @@ public class LocalLauncher {
                     case 'a':
                         client.requestLounges();
                         client.waitForOneRequest();
-                        System.out.println(Util.printYokelObjects(PayloadUtil.getAllLoungesRequest(client.getNextRequest())));
+                        System.out.println(Util.printYokelObjects(PayloadUtil.getAllLoungesRequest(client.getNextRequest().getPayload())));
                         break;
                     case 'p':
                         client.requestPlayers();
                         client.waitForRequest(30);
-                        System.out.println(Util.printYokelObjects(PayloadUtil.getAllRegisteredPlayersRequest(client.getNextRequest())));
+                        System.out.println(Util.printYokelObjects(PayloadUtil.getAllRegisteredPlayersRequest(client.getNextRequest().getPayload())));
                         break;
                     case 'r':
                         client.requestPlayerRegister(player);
                         client.waitForRequest(30);
-                        System.out.println(Arrays.toString(client.getNextRequest()));
+                        System.out.println(Arrays.toString(client.getNextRequest().getPayload()));
                         break;
                     case 'l':
                         System.out.println("Enter Lounge Name:");
@@ -72,7 +72,7 @@ public class LocalLauncher {
 
                         client.requestJoinRoom(player, loungeName, roomName);
                         client.waitForRequest(30);
-                        System.out.println(Arrays.toString(client.getNextRequest()));
+                        System.out.println(Arrays.toString(client.getNextRequest().getPayload()));
                         break;
                     case 'o':
                         System.out.println("Enter Lounge Name:");
@@ -83,7 +83,7 @@ public class LocalLauncher {
 
                         client.requestLeaveRoom(player, loungeName, roomName);
                         client.waitForRequest(30);
-                        System.out.println(Arrays.toString(client.getNextRequest()));
+                        System.out.println(Arrays.toString(client.getNextRequest().getPayload()));
                         break;
                     case 'c':
                         System.out.println("Enter Lounge Name:");
@@ -94,7 +94,7 @@ public class LocalLauncher {
 
                         client.requestCreateGame(loungeName, roomName, YokelTable.ACCESS_TYPE.PUBLIC, true);
                         client.waitForRequest(30);
-                        System.out.println(Arrays.toString(client.getNextRequest()));
+                        System.out.println(Arrays.toString(client.getNextRequest().getPayload()));
                         break;
                     case 's':
                         System.out.println("Enter Lounge Name:");
@@ -108,7 +108,7 @@ public class LocalLauncher {
 
                         client.requestTableSit(player, loungeName, roomName, 1, seatNumber);
                         client.waitForRequest(30);
-                        System.out.println(Arrays.toString(client.getNextRequest()));
+                        System.out.println(Arrays.toString(client.getNextRequest().getPayload()));
                         break;
                     case 'q':
                         isRunning = false;

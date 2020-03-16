@@ -20,6 +20,7 @@ import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.Util;
+import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -61,20 +62,20 @@ public class SessionService {
     }
 
     public void registerPlayer() throws InterruptedException {
-        if(player == null) throw new InterruptedException("No Authorized player in currect session!");
+        if(player == null) throw new InterruptedException("No Authorized player in current session!");
         client.requestPlayerRegister(getCurrentPlayer());
     }
 
     public Array<YokelLounge> getAllLounges() throws InterruptedException {
         client.requestLounges();
         client.waitForOneRequest();
-        return PayloadUtil.getAllLoungesRequest(client.getNextRequest());
+        return PayloadUtil.getAllLoungesRequest(client.getNextRequest().getPayload());
     }
 
     public Array<YokelPlayer> getAllPlayers() throws InterruptedException {
         client.requestPlayers();
         client.waitForOneRequest();
-        return PayloadUtil.getAllRegisteredPlayersRequest(client.getNextRequest());
+        return PayloadUtil.getAllRegisteredPlayersRequest(client.getNextRequest().getPayload());
     }
 
     public void asyncPlayerAllRequest() throws InterruptedException {
@@ -82,11 +83,7 @@ public class SessionService {
     }
 
     public Array<YokelPlayer> asyncGetPlayerAllRequest(){
-        Queue<String[]> requests = client.getAllRequests();
-        if(!Util.isQueueEmpty(requests)){
-            return PayloadUtil.getAllRegisteredPlayersRequest(requests.removeFirst());
-        }
-        return GdxArrays.newArray();
+        return PayloadUtil.getAllRegisteredPlayersRequest(client.getNextRequest(ServerRequest.REQUEST_ALL_REGISTERED_PLAYERS));
     }
 
     public Array<String> toPlayerNames(Array<YokelPlayer> players) {

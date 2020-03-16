@@ -118,7 +118,7 @@ public class PayloadUtil {
     }
 
     public static Array<YokelPlayer> getAllRegisteredPlayersRequest(String[] clientPayload) {
-        Logger.trace("Enter getLoungesRequest()");
+        Logger.trace("Enter getAllRegisteredPlayersRequest()");
 
         Array<YokelPlayer> ret = new Array<>();
         if(validatedInputs(clientPayload)){
@@ -126,7 +126,7 @@ public class PayloadUtil {
                 ret.add(Util.getObjectFromJsonString(YokelPlayer.class, payload));
             }
         }
-        Logger.trace("Exit getLoungesRequest()");
+        Logger.trace("Exit getAllRegisteredPlayersRequest()");
         return ret;
     }
 }

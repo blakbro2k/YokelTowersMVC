@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.czyzby.kiwi.util.gdx.collection.immutable.ImmutableArray;
 
-import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
@@ -452,16 +451,14 @@ public class ServerManager {
         return rooms;
     }
 
-    private OrderedMap.Values<YokelTable> getAllTables(String loungeName, String roomName) throws Exception {
+    private Array<YokelTable> getAllTables(String loungeName, String roomName) throws Exception {
         YokelLounge lounge = getLounge(loungeName);
-        OrderedMap.Values<YokelTable> tables = null;
+        Array<YokelTable> tables = null;
         if(lounge != null){
             YokelRoom room = getRoom(lounge.getName(), roomName);
 
             if(room != null){
-                OrderedMap<Integer, YokelTable> tableMap = room.getAllTables();
-
-                tables = tableMap.values();
+                tables = room.getAllTables();
             }
         }
         return tables;

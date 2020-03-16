@@ -2,7 +2,6 @@ package net.asg.games.game.managers;
 
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
-import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketHandler;
 import com.github.czyzby.websocket.WebSocketListener;
@@ -14,6 +13,7 @@ import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
+import net.asg.games.server.serialization.PayloadType;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.enums.ServerRequest;
@@ -25,21 +25,24 @@ import java.util.concurrent.TimeUnit;
 
 public class ClientManager implements Disposable {
     //private static final com.github.czyzby.kiwi.log.Logger LOGGER = LoggerService.forClass(ClientManager.class);
+    public final static String[] EMPTY_PAYLOAD = new String[]{""};
+    public final static PayloadType EMPTY_PAYLOAD_TYPE = new PayloadType(ServerRequest.REQUEST_EMPTY, new String[]{""});
+
     private final static int DEFAULT_WAIT = 30;
     private WebSocket socket;
     private boolean isConnected;
     private String clientId = "";
     private int requestId = 0;
-    private Queue<String[]> requests;
+    private Queue<PayloadType> requests;
     private final String host;
     private final int port;
 
-    public Queue<String[]> getAllRequests() {
+    public Queue<PayloadType> getAllRequests() {
         return requests;
     }
 
-    public String[] getNextRequest() {
-        if(requests.size == 0) return null;
+    public PayloadType getNextRequest() {
+        if(requests.size == 0) return EMPTY_PAYLOAD_TYPE;
         return requests.removeFirst();
     }
 
@@ -81,7 +84,7 @@ public class ClientManager implements Disposable {
 
         socket.send(ServerRequest.REQUEST_CLIENT_ID.toString());
         waitForRequest(DEFAULT_WAIT);
-        String[] request = getAllRequests().removeFirst();
+        String[] request = getNextRequest().getPayload();
         clientId = request[0];
 
         return isConnected = true;
@@ -123,24 +126,23 @@ public class ClientManager implements Disposable {
         sendClientRequest(ServerRequest.REQUEST_TABLE_SIT, PayloadUtil.createTableSitRequest(player, loungeName, roomName, tableNumber, seatNumber));
     }
 
-    public void handleServerResponse(ServerResponse request) {
-        String sessionId = null;
-        String message = null;
-        int requestSequence = -1;
-        String[] payload = null;
+    public void requestTables(String loungeName, String roomName) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_INFO, PayloadUtil.createTableInfoRequest(loungeName, roomName));
+    }
 
+    public void handleServerResponse(ServerResponse request) {
         if(request != null){
-            message = request.getMessage();
-            sessionId = request.getSessionId();
-            requestSequence = request.getRequestSequence();
-            payload = request.getPayload();
+            String message = request.getMessage();
+            String sessionId = request.getSessionId();
+            int requestSequence = request.getRequestSequence();
+            String[] payload = request.getPayload();
             decodePayload(message, payload);
         }
     }
 
     private void decodePayload(String message, String[] payload) {
         if(!StringUtils.isEmpty(message)){
-            requests.addFirst(payload);
+            requests.addFirst(new PayloadType(ServerRequest.valueOf(message), payload));
         }
     }
 
@@ -196,5 +198,18 @@ public class ClientManager implements Disposable {
         checkConnection();
         final ClientRequest request = new ClientRequest(++requestId, "1", serverRequest.toString(), payload, clientId);
         socket.send(request);
+    }
+
+    public String[] getNextRequest(ServerRequest message) {
+        for(PayloadType request : requests){
+            if(request != null){
+                ServerRequest type = request.getRequestType();
+                if(type.equals(message)){
+                    requests.removeValue(request, false);
+                    return request.getPayload();
+                }
+            }
+        }
+        return EMPTY_PAYLOAD;
     }
 }
