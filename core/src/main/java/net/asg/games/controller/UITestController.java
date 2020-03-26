@@ -111,8 +111,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
     @LmlAction("setGamePiece")
     private void setGamePiece(){
-        GamePiece gp = new GamePiece(uiService.getSkin(),null,null,null);
-        gp.setData(new String[]{"12","16","3"});
+        GamePiece gp = new GamePiece(uiService.getSkin(), new String[]{"12","16","3"});
+        //gp.setData(new String[]{"12","16","3"});
         //System.out.println("lksjfd\n" + gp);
         //uiService.area1.setGamePiece(gp);
     }

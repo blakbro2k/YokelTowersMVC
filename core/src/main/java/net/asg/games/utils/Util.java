@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -82,6 +84,19 @@ public class Util {
             plainTexts.add(jsonToString(yokelObject.toString()));
         }
         return plainTexts;
+    }
+
+    public static Label createLabel(Skin skin, String text, float size){
+        Label label = new Label("", skin);
+        if(!Util.isEmpty(text)){
+            label.setText(text);
+        }
+        label.setFontScale(size);
+        return label;
+    }
+
+    public static boolean isEmpty(String text) {
+        return text == null || text.isEmpty();
     }
 
     public static class IDGenerator {

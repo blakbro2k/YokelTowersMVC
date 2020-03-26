@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE dialog SYSTEM "core/lml.dtd">
-<dialog id="dialog" title="@createGameTitle" style="dialog" onecolumn="true" closeButton="true">
-    <selectBox selected="1">
+<dialog id="dialog" title="@createGameTitle" style="dialog" onecolumn="true" closebutton="true">
+    <selectbox id="accessType" selected="1">
         <label>@PrivateSelBx</label>
         <label>@PublicSelBx</label>
         <label>@ProtectedSelBx</label>
-    </selectBox>
-    <checkBox>@RatedChkBx</checkBox>
-    <textButton onChange="close" onClick="show:game">@createGameBtnLbl</textButton>
+    </selectbox>
+    <checkbox id="isRated">@RatedChkBx</checkbox>
+    <textbutton onchange="createGame" onclick="show:game">@createGameBtnLbl</textbutton>
 </dialog>

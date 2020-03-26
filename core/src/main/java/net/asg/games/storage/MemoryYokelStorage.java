@@ -6,9 +6,8 @@ import com.badlogic.gdx.utils.OrderedMap;
 import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
-import net.asg.games.game.objects.YokelTable;
 
-public class MemoryStorage implements StorageInterface {
+public class MemoryYokelStorage implements YokelStorage {
     //<"lounge name", room object>
     private OrderedMap<String, String> clients;
     //<"lounge name", room object>
@@ -18,21 +17,11 @@ public class MemoryStorage implements StorageInterface {
     //<"table name", gameManager>
     private OrderedMap<String, GameManager> games;
 
-    public MemoryStorage(){
+    public MemoryYokelStorage(){
         lounges = new OrderedMap<>();
         registeredPlayers = new OrderedMap<>();
         games = new OrderedMap<>();
         clients = new OrderedMap<>();
-    }
-
-    @Override
-    public void putTableState(YokelTable table) {
-
-    }
-
-    @Override
-    public YokelTable getTableState() {
-        return null;
     }
 
     @Override
@@ -48,9 +37,7 @@ public class MemoryStorage implements StorageInterface {
     public void removeRegisteredPlayer(String clientID) throws Exception {
         //Remove user from all Seats
         //Remove user from all tables
-        //Remove user from all Rooms
-        //Remove user from all Lounges
-        if(clientID == null) throw new Exception("clientID was null.");
+        //Remove user from all Roomsv
         registeredPlayers.remove(getPlayerIdFromClient(clientID));
         clients.remove(clientID);
     }
@@ -86,7 +73,7 @@ public class MemoryStorage implements StorageInterface {
     }
 
     @Override
-    public void addGame(String id, GameManager game) {
+    public void putGame(String id, GameManager game) {
         throw new RuntimeException("addGame not implemented.");
     }
 
@@ -121,5 +108,20 @@ public class MemoryStorage implements StorageInterface {
             games.clear();
             games = null;
         }
+    }
+
+    @Override
+    public void saveObject(Object object) {
+        //Memory Storage objects are saved realtime
+    }
+
+    @Override
+    public void commitTransactions() {
+        //Memory Storage does not have a commit
+    }
+
+    @Override
+    public void rollTransactions() {
+        //Memory Storage does not have a rollback
     }
 }

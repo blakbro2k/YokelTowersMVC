@@ -13,7 +13,7 @@ import net.asg.games.game.objects.YokelTable;
 import net.asg.games.server.serialization.AdminClientRequest;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.ServerResponse;
-import net.asg.games.storage.StorageInterface;
+import net.asg.games.storage.YokelStorage;
 import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
@@ -49,10 +49,10 @@ public class ServerManager {
     private float tickRate = 100;
     private boolean isDebug = true;
     private Level logLevel = Level.INFO;
-    private StorageInterface storage;
+    private YokelStorage storage;
     private OrderedMap<String, YokelPlayer> testPlayers;
 
-    public ServerManager(StorageInterface storage, String... args){
+    public ServerManager(YokelStorage storage, String... args){
         try {
             this.storage = storage;
             initialize(args);
@@ -256,13 +256,10 @@ public class ServerManager {
         if(request != null){
             Logger.debug("request: {}", request.getMessage());
             clientId = request.getClientId();
-
-            //if(!storage.isClientRegistered(clientId)){
-                message = request.getMessage();
-                sessionId = request.getSessionId();
-                requestSequence = request.getRequestSequence();
-                serverPayload = buildPayload(message, request.getPayload());
-            //}
+            message = request.getMessage();
+            sessionId = request.getSessionId();
+            requestSequence = request.getRequestSequence();
+            serverPayload = buildPayload(message, request.getPayload());
         }
         Logger.trace("Exit handleClientRequest()");
         return new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
@@ -387,17 +384,17 @@ public class ServerManager {
         return responsePayload;
     }
 
-    private YokelLounge getLounge(String key) throws Exception {
+    private YokelLounge getLounge(String loungName) throws Exception {
         try{
             Logger.trace("Enter getLounge()");
             //validateLounges();
-            Logger.info("Attempting to get {} lounge.", key);
+            Logger.info("Attempting to get {} lounge.", loungName);
             YokelLounge lounge = null;
 
-            if(key != null){
-                lounge = storage.getLounge(key);
+            if(loungName != null){
+                lounge = storage.getLounge(loungName);
             }
-            Logger.debug("GameLounge({})={}", key, lounge);
+            Logger.debug("GameLounge({})={}", loungName, lounge);
             Logger.trace("Exit getLounge()");
             return lounge;
         } catch (Exception e){
@@ -410,14 +407,14 @@ public class ServerManager {
         Logger.trace("Enter createLounge()");
         try{
             Logger.debug("loungeName={}",loungeName);
-            YokelLounge yl = null;
+            YokelLounge lounge = null;
 
             if(!StringUtils.isEmpty(loungeName)) {
-                yl = new YokelLounge(loungeName);
-                addLounge(yl);
+                lounge = new YokelLounge(loungeName);
+                addLounge(lounge);
             }
-            Logger.trace("Exit createLounge()={}",yl);
-            return yl;
+            Logger.trace("Exit createLounge()={}",lounge);
+            return lounge;
         } catch (Exception e){
             Logger.error(e, "Error creating GameLounge: ");
             throw new Exception("Error creating lounges", e);

@@ -2,11 +2,11 @@
 <!DOCTYPE table SYSTEM "core/lml.dtd">
 <table onecolumn="true" defaultpad="2" tablealign="center" fillparent="true" defaultfillx="true">
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
-    <label>@playerChoose</label>
+    <vislabel>@playerChoose</vislabel>
     <!--
     <:for player="$getPlayers">
         <textButton onChange="requestPlayerRegistration" id="{player}" onClick="goto:gameLounge">{player}</textButton>
     </:for>-->
     <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
-    <textbutton onchange="app:exit">@exit</textbutton>
+    <vistextbutton onchange="app:exit">@exit</vistextbutton>
 </table>

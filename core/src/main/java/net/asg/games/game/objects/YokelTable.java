@@ -10,7 +10,17 @@ import net.asg.games.utils.Util;
 import org.apache.commons.lang.StringUtils;
 
 public class YokelTable extends AbstractYokelObject {
-    public enum ACCESS_TYPE {PRIVATE, PUBLIC, PROTECTED}
+    public enum ACCESS_TYPE {PRIVATE("PRIVATE"), PUBLIC("PUBLIC"), PROTECTED("PROTECTED");
+        private String accessType;
+
+        ACCESS_TYPE(String accessType){
+            this.accessType = accessType;
+        }
+
+        public String getValue() {
+            return accessType;
+        }
+    }
 
     public static final int MAX_SEATS = 8;
 

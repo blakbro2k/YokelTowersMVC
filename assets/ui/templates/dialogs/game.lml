@@ -1,32 +1,32 @@
 <?xml version="1.0"?>
 <!DOCTYPE dialog SYSTEM "core/lml.dtd">
 <dialog style="dialog" closebutton="true">
-    <table defaultPad="2" tableAlign="bottomRight" fillParent="true" defaultFillX="true">
-        <image id="banner" style="banner" row="true" colSpan="3"/>
-        <table onecolumn="true"  tableAlign="left">
+    <table defaultpad="2" tablealign="bottomRight" fillparent="true" defaultfillx="true">
+        <image id="banner" style="banner" row="true" colspan="3"/>
+        <table onecolumn="true" defaultfillx="true" tablealign="left">
             <!-- Side Panel -->
-            <table onecolumn="true" defaultFillX="true">
-                <textButton>Start Game</textButton>
-                <textButton>Change Keys</textButton>
-                <textButton>Demo</textButton>
-                <textButton>Stand</textButton>
+            <table onecolumn="true" defaultfillx="true">
+                <button>Start Game</button>
+                <button>Change Keys</button>
+                <button>Demo</button>
+                <button>Stand</button>
                 <label row="true">Table Type</label>
-                <textButton>Invite</textButton>
-                <textButton>Boot</textButton>
-                <selectBox selected="1">
+                <button>Invite</button>
+                <button>Boot</button>
+                <selectbox selected="1">
                     <label>@PrivateSelBx</label>
                     <label>@PublicSelBx</label>
                     <label>@ProtectedSelBx</label>
-                </selectBox>
+                </selectbox>
             </table>
-            <table onecolumn="true" defaultFillX="true">
-                <checkBox tableAlign="left">@RatedChkBx</checkBox>
-                <checkBox tableAlign="left">Sound</checkBox>
+            <table onecolumn="true" defaultfillx="true">
+                <checkbox tablealign="left">@RatedChkBx</checkbox>
+                <checkbox tablealign="left">Sound</checkbox>
             </table>
-            <table onecolumn="true" defaultFillX="true">
-                <textButton>Help</textButton>
+            <table onecolumn="true" defaultfillx="true">
+                <button>Help</button>
                 <!-- "close" action is defined in Global class. -->
-                <textButton onResult="close">Quit</textButton>
+                <button onresult="close">Quit</button>
             </table>
         </table>
         <!-- End Side Panel -->
@@ -57,6 +57,6 @@
             </table>
         </table>
         <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
-        <textButton onChange="show:settings">thsi is a game</textButton>
+        <button onchange="show:settings">thsi is a game</button>
     </table>
 </dialog>

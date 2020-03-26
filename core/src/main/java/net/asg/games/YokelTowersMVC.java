@@ -4,5 +4,5 @@ package net.asg.games;
  * with proper Autumn MVC annotations will be found, scanned and initiated. */
 public class YokelTowersMVC {
     /** Default application size. */
-    public static final int WIDTH = 1200, HEIGHT = 1200;
+    public static final int WIDTH = 1600, HEIGHT = 1200;
 }

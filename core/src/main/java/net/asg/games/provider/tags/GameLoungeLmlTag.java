@@ -1,8 +1,10 @@
 package net.asg.games.provider.tags;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.lml.parser.LmlParser;
+import com.github.czyzby.lml.parser.impl.attribute.IdLmlAttribute;
 import com.github.czyzby.lml.parser.impl.attribute.OnChangeLmlAttribute;
 import com.github.czyzby.lml.parser.impl.tag.actor.TableLmlTag;
 import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
@@ -13,6 +15,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.provider.actors.GameLounge;
+import net.asg.games.service.SessionService;
 import net.asg.games.utils.Util;
 
 public class GameLoungeLmlTag extends TableLmlTag {
@@ -32,6 +35,7 @@ public class GameLoungeLmlTag extends TableLmlTag {
         YokelLounge lounge = Util.getObjectFromJsonString(YokelLounge.class, Util.stringToJson(plainTextLine));
         if(lounge != null){
             gameLounge.setLounge(lounge);
+            LmlUtilities.setActorId(gameLounge, lounge.getName());
             setUpRooms(gameLounge);
         }
 
@@ -51,8 +55,11 @@ public class GameLoungeLmlTag extends TableLmlTag {
 
     public void setUpRooms(GameLounge lounge){
         for(YokelRoom room : lounge.getAllRooms().values()){
-            String roomName = getRoomName(room);
-            lounge.add(createNewRoomButton(roomName)).row();
+            if(room != null){
+                String roomName = getRoomName(room);
+                String loungeName = lounge.getName();
+                lounge.add(createNewRoomButton(loungeName, roomName)).row();
+            }
         }
     }
 
@@ -64,10 +71,11 @@ public class GameLoungeLmlTag extends TableLmlTag {
         return roomName;
     }
 
-    private VisTextButton createNewRoomButton(String roomName){
+    private VisTextButton createNewRoomButton(String loungeName, String roomName){
         VisTextButton button = new VisTextButton(roomName);
         OnChangeLmlAttribute onChange = new OnChangeLmlAttribute();
-        onChange.process(getParser(), this, button, InterfaceService.SCREEN_TRANSITION_ACTION_PREFIX + "room");
+        LmlUtilities.setActorId(button, loungeName);
+        onChange.process(getParser(), this, button, LmlUtilities.toAction("selectLounge"));
         return button;
     }
 }

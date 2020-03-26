@@ -1,5 +1,7 @@
 package net.asg.games.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
@@ -25,6 +27,9 @@ public class LoginController implements ViewRenderer, ActionContainer {
 
     @Override
     public void render(Stage stage, float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            registerUser();
+        }
         stage.act(delta);
         stage.draw();
     }
@@ -43,12 +48,12 @@ public class LoginController implements ViewRenderer, ActionContainer {
             if(sessionService.connectToServer()){
                 //Register Player
                 sessionService.registerPlayer();
+                sessionService.asyncPlayerAllRequest();
                 interfaceService.show(sessionService.getView("lounge"));
             }
         } catch (Exception e){
             e.printStackTrace();
-            sessionService.setCurrentError(e.getCause(), e.getMessage());
-            interfaceService.showDialog(ErrorController.class);
+            sessionService.showError(e);
         }
     }
 }

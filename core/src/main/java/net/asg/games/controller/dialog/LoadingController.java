@@ -47,7 +47,5 @@ public class LoadingController implements ViewDialogController {
     }
 
     @Override
-    public void destroyDialog() {
-
-    }
+    public void destroyDialog() {}
 }

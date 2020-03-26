@@ -15,8 +15,8 @@ public class GamePiece extends Table {
     private GameBlock bottom;
     static final private int GRID_OFFSET = 6;
 
-    public GamePiece(){
-        this(null,null,null,null);
+    public GamePiece(Skin skin){
+        this(skin,null,null,null);
     }
 
     public GamePiece(Skin skin, GameBlock top, GameBlock mid, GameBlock bottom){
@@ -27,6 +27,12 @@ public class GamePiece extends Table {
 
     public GamePiece(Skin skin, int top, int mid, int bottom){
         this(skin, UIUtil.getInstance().getGameBlock(top), UIUtil.getInstance().getGameBlock(mid), UIUtil.getInstance().getGameBlock(bottom));
+    }
+
+    public GamePiece(Skin skin, String[] data){
+        this(skin);
+        setSkin(skin);
+        setData(data);
     }
 
     private void initialize(GameBlock top, GameBlock middle, GameBlock bottom){
@@ -50,7 +56,8 @@ public class GamePiece extends Table {
 
     public void setDebug(boolean enabled) {
         System.out.println("My Debug Set");
-super.setDebug(enabled);    }
+        super.setDebug(enabled);
+    }
 
     public void act(float delta){
         setPosition(getX(), getY());

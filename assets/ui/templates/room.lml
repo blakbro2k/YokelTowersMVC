@@ -1,49 +1,33 @@
 <?xml version="1.0"?>
 <!DOCTYPE window SYSTEM "core/lml.dtd">
-<window defaultgrowx="true" debug="true">
-    <table>
-        <image growx="true" id="banner" style="banner" row="true" colspan="3"/>
-        <table onecolumn="true" debug="true">
-            <table onecolumn="true" align="top" defaultgrowx="true" debug="true">
-                <textbutton onchange="$isDebug">Play Now</textbutton>
-                <textbutton onchange="show:createGame">Create Table</textbutton>
-            </table>
-            <table onecolumn="true" align="bottom" defaultgrowx="true" debug="true">
-                <image id="ratings" style="ratings"/>
-                <textbutton onchange="show:settings" growx="true">@options</textbutton>
-                <textbutton onchange="goto:lounge" growx="true">@exitLounge</textbutton>
-                <textbutton onchange="app:exit" growx="true">@exitApp</textbutton>
-            </table>
+<window defaultgrowx="true">
+    <table defaultalign="left" defaultfillx="true" defaultgrowx="true" height="800">
+        <table row="true" tablealign="left" colspan="2">
+            <image id="yahoo_games" style="yahoo_games" row="true" height="40"/>
         </table>
-        <table onecolumn="true" align="top">
-            <table debug="true">
-                <table row="true">
-                    <label>Table No.</label>
-                    <label>1-2</label>
-                    <label>3-4</label>
-                    <label>5-6</label>
-                    <label>7-8</label>
-                    <label row="true">Who is Watching</label>
-                </table>
-                <table growx="true" pad="2">
-                    <label>"#1"</label>
-                    <imagebutton>JOIN</imagebutton>
-                    <button>JOIN</button>
-                    <button>JOIN</button>
-                    <button row="true">JOIN</button>
-                    <label></label>
-                    <imagebutton>JOIN</imagebutton>
-                    <button>JOIN</button>
-                    <button>JOIN</button>
-                    <button row="true">JOIN</button>
-                </table>
+        <table row="true" tablealign="left" defaultfillx="true" colspan="2">
+            <label>YAHOO! TOWERS -</label>
+            <label id="roomName">[Null]</label>
+        </table>
+        <table onecolumn="true" tablealign="left" align="top" height="500">
+            <button onchange="requestRandomSeat" growx="true" align="top">Play Now</button>
+            <button onchange="show:createGame" growx="true" align="top">Create Table</button>
+            <image height="100" id="bg_color_dark" style="bg_color_dark" imagealign="center" grow="true"/>
+            <image id="ratings" style="ratings" imagealign="center"/>
+            <button onchange="show:settings" growx="true">@options</button>
+            <button onchange="goto:lounge" growx="true">@exitLounge</button>
+            <button onchange="app:exit" growx="true">@exitApp</button>
+        </table>
+        <table row="true" tablealign="left">
+            <table row="true">
+                <gametablelist id="tableList" growx="true"/>
             </table>
             <table>
-                <label>Chat</label>
+                <table align="left">
+                    <label height="200" width="300" growx="true">Chat</label>
+                </table>
+                <gameplayerlist id="playersList" align="right"/>
             </table>
-        </table>
-        <table onecolumn="true" align="top">
-            <gameplayerlist id="playersList"/>
         </table>
     </table>
 </window>

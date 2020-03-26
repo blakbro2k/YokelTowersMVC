@@ -8,8 +8,8 @@ import net.asg.games.server.serialization.AdminClientRequest;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
-import net.asg.games.storage.MemoryStorage;
-import net.asg.games.storage.StorageInterface;
+import net.asg.games.storage.MemoryYokelStorage;
+import net.asg.games.storage.YokelStorage;
 import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.enums.ServerRequest;
 
@@ -27,12 +27,12 @@ import io.vertx.core.http.impl.ws.WebSocketFrameImpl;
 
 /** Launches the server application. */
 public class ServerLauncher {
-    private final static String SERVER_BUILD = "0.0.1";
+    private final static String SERVER_BUILD = "0.2.1";
 
     private ServerManager serverDaemon;
     private final static Vertx vertx = Vertx.vertx();
     private final static ManualSerializer serializer = new ManualSerializer();
-    private final static StorageInterface storage = new MemoryStorage();
+    private final static YokelStorage storage = new MemoryYokelStorage();
     private static GameRunner gameRunner;
     //private ExecutorService threadPool;
 
@@ -91,7 +91,7 @@ public class ServerLauncher {
                         } else if(frame.isText()){
                             Logger.trace("is Text");
                             final String frameText = frame.textData();
-                            if(StringUtils.equalsIgnoreCase(frameText, "REQUEST_CLIENT_ID")){
+                            if(StringUtils.equalsIgnoreCase(frameText, ServerRequest.REQUEST_CLIENT_ID.toString())){
                                 Logger.info("Sending Client [" + handlerID + "]");
                                 sendClentId(webSocket, handlerID);
                             }
@@ -114,9 +114,16 @@ public class ServerLauncher {
         }
     }
 
-    private WebSocketFrame createDisconnectFrame(String id) {
-        Logger.trace("Enter createDisconnectFrame()");
-        return new WebSocketFrameImpl(FrameType.BINARY, Unpooled.wrappedBuffer(serializedRequest(createDisconnectRequest(id))), true);
+    private WebSocketFrame createDisconnectFrame(String id) throws Exception {
+        try{
+            Logger.trace("Enter createDisconnectFrame()");
+            WebSocketFrame frame = new WebSocketFrameImpl(FrameType.BINARY, Unpooled.wrappedBuffer(serializedRequest(createDisconnectRequest(id))), true);
+            Logger.trace("Exit createDisconnectFrame()=" + frame);
+            return frame;
+        } catch(Exception e) {
+            Logger.error(e,"Error creating disconnect frame: ");
+            throw new Exception("Error creating disconnect frame: ", e);
+        }
     }
 
     private byte[] serializedRequest(ClientRequest request){
@@ -124,14 +131,20 @@ public class ServerLauncher {
         return serializer.serialize(request);
     }
 
-    private ClientRequest createDisconnectRequest(String handlerId){
-        Logger.trace("Enter createDisconnectRequest()");
-
-        return new ClientRequest(-1,
-                "",
-                ServerRequest.REQUEST_CLIENT_DISCONNECT.toString(),
-                PayloadUtil.createPlayerDisconnectRequest(handlerId),
-                handlerId);
+    private ClientRequest createDisconnectRequest(String handlerId) throws Exception {
+        try{
+            Logger.trace("Enter createDisconnectRequest()");
+            ClientRequest request = new ClientRequest(-1,
+                    "",
+                    ServerRequest.REQUEST_CLIENT_DISCONNECT.toString(),
+                    PayloadUtil.createPlayerDisconnectRequest(handlerId),
+                    handlerId);
+            Logger.trace("Exit createDisconnectRequest()=" + request);
+            return request;
+        } catch (Exception e) {
+            Logger.error(e,"Error creating disconnect request: ");
+            throw new Exception("Error creating disconnect request: ", e);
+        }
     }
 
     private void initialize(String... args) throws Exception{
@@ -236,16 +249,13 @@ public class ServerLauncher {
             ServerResponse response = null;
 
             if(request != null){
-                String sessionId = null;
-                String message = null;
-                int requestSequence = -1;
                 String[] serverPayload = null;
 
                 Logger.debug("request: {}", request.getMessage());
 
-                message = request.getMessage();
-                sessionId = request.getSessionId();
-                requestSequence = request.getRequestSequence();
+                String message = request.getMessage();
+                String sessionId = request.getSessionId();
+                int requestSequence = request.getRequestSequence();
                 response = new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
             }
             Logger.trace("Exit handleAdminRequest()");

@@ -129,4 +129,17 @@ public class PayloadUtil {
         Logger.trace("Exit getAllRegisteredPlayersRequest()");
         return ret;
     }
+
+    public static Array<YokelTable> getAllTablesRequest(String[] clientPayload) {
+        Logger.trace("Enter getAllTablesRequest()");
+
+        Array<YokelTable> ret = new Array<>();
+        if(validatedInputs(clientPayload)){
+            for(String payload : clientPayload){
+                ret.add(Util.getObjectFromJsonString(YokelTable.class, payload));
+            }
+        }
+        Logger.trace("Exit getAllTablesRequest()");
+        return ret;
+    }
 }

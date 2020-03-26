@@ -15,9 +15,11 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.websocket.data.WebSocketException;
 
+import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.game.managers.ClientManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.game.objects.YokelTable;
 import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
@@ -42,7 +44,6 @@ public class SessionService {
     @Initiate
     public void initialize() throws WebSocketException {
         client = new ClientManager("localhost", 8000);
-        //TODO: Create Unique client ID
         //TODO: Create PHPSESSION token6
         //TODO: Create CSRF Token
     }
@@ -84,6 +85,23 @@ public class SessionService {
 
     public Array<YokelPlayer> asyncGetPlayerAllRequest(){
         return PayloadUtil.getAllRegisteredPlayersRequest(client.getNextRequest(ServerRequest.REQUEST_ALL_REGISTERED_PLAYERS));
+    }
+
+    public void asyncTableAllRequest() throws InterruptedException {
+        client.requestTables(currentLoungeName, currentRoomName);
+    }
+
+    public void asyncCreateGameRequest(YokelTable.ACCESS_TYPE accessType, boolean isRated) throws InterruptedException {
+        client.requestCreateGame(currentLoungeName, currentRoomName, accessType, isRated);
+    }
+
+    public void asyncTableSitRequest(int tableNumber, int seatNumber) throws InterruptedException {
+        client.requestTableSit(player, currentLoungeName, currentRoomName, tableNumber, seatNumber);
+    }
+
+    public Array<YokelTable> asyncGetTableAllRequest(){
+        //TODO: Save tables states
+        return PayloadUtil.getAllTablesRequest(client.getNextRequest(ServerRequest.REQUEST_TABLE_INFO));
     }
 
     public Array<String> toPlayerNames(Array<YokelPlayer> players) {
@@ -158,5 +176,11 @@ public class SessionService {
 
     public YokelPlayer getCurrentPlayer() {
         return player;
+    }
+
+    public void showError(Throwable throwable) {
+        if(throwable == null) return;
+        setCurrentError(throwable.getCause(), throwable.getMessage());
+        interfaceService.showDialog(ErrorController.class);
     }
 }

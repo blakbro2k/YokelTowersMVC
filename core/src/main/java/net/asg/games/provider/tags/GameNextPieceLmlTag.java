@@ -6,17 +6,17 @@ import com.github.czyzby.lml.parser.impl.tag.AbstractNonParentalActorLmlTag;
 import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 
-import net.asg.games.provider.actors.GameBlock;
-import net.asg.games.utils.UIUtil;
+import net.asg.games.provider.actors.GameBoard;
+import net.asg.games.provider.actors.GamePiece;
 
-public class GameBlockLmlTag extends AbstractNonParentalActorLmlTag {
-    public GameBlockLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
+public class GameNextPieceLmlTag extends AbstractNonParentalActorLmlTag {
+    public GameNextPieceLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
         super(parser, parentTag, rawTagData);
     }
 
     @Override
-    protected Actor getNewInstanceOfActor(LmlActorBuilder builder) {
-        return UIUtil.getInstance().getFactory().getGameBlock(0);
+    protected Actor getNewInstanceOfActor(final LmlActorBuilder builder) {
+        return new GameBoard(getSkin(builder));
     }
 
     @Override
@@ -24,7 +24,7 @@ public class GameBlockLmlTag extends AbstractNonParentalActorLmlTag {
     }
 
     /** @return casted actor. */
-    private GameBlock getGameBlock() {
-        return (GameBlock) getActor();
+    private GamePiece getGamePiece() {
+        return (GamePiece) getActor();
     }
-}
+ }

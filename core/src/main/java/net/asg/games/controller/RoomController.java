@@ -13,9 +13,11 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
+import com.kotcrab.vis.ui.widget.VisLabel;
 
 import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.provider.actors.GamePlayerList;
+import net.asg.games.provider.actors.GameTableList;
 import net.asg.games.service.SessionService;
 import net.asg.games.utils.Util;
 
@@ -25,18 +27,25 @@ public class RoomController implements ViewRenderer, ActionContainer {
     @Inject private SessionService sessionService;
 
     @LmlActor("playersList") private GamePlayerList playersList;
+    @LmlActor("tableList") private GameTableList tableList;
+    @LmlActor("roomName") private VisLabel roomName;
+
     private float refresh = 500;
-    private float test = 0;
 
     @Override
     public void render(Stage stage, float delta) {
+        roomName.setText(sessionService.getCurrentRoomName());
+
         if(++refresh > 300){
-            refresh=0;
+            refresh = 0;
             try {
                 playersList.updatePlayerList(sessionService.asyncGetPlayerAllRequest());
                 sessionService.asyncPlayerAllRequest();
+                tableList.updateTableList(sessionService.asyncGetTableAllRequest());
+                sessionService.asyncTableAllRequest();
             } catch (Exception e) {
                 e.printStackTrace();
+                sessionService.showError(e);
             }
         }
         stage.act(delta);
@@ -49,9 +58,18 @@ public class RoomController implements ViewRenderer, ActionContainer {
             return Util.toPlainTextArray(sessionService.getAllPlayers());
         } catch (Exception e){
             e.printStackTrace();
-            sessionService.setCurrentError(e.getCause(), e.getMessage());
-            interfaceService.showDialog(ErrorController.class);
+            sessionService.showError(e);
             return GdxArrays.newArray();
+        }
+    }
+
+    @LmlAction("requestRandomSeat")
+    public void requestRandomSeat() {
+        try{
+            sessionService.asyncTableSitRequest(1,0);
+        } catch (Exception e){
+            e.printStackTrace();
+            sessionService.showError(e);
         }
     }
 }

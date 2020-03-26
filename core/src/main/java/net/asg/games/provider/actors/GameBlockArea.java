@@ -179,6 +179,7 @@ public class GameBlockArea extends Stack {
         }
     }
 
+    /*
     @Override
     public void draw(Batch batch, float alpha){
         //if(!isActive) return;
@@ -186,7 +187,7 @@ public class GameBlockArea extends Stack {
         super.draw(batch, alpha);
         //drawGamePiece(batch, alpha);
         drawSprites(batch, alpha);
-    }
+    }*/
 
     public void updateData(YokelGameBoard gameBoard) {
         if(gameBoard != null) {

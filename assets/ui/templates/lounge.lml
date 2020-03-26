@@ -6,5 +6,5 @@
         <lounge row="true" defaultgrowx="true">{gameLounge}</lounge>
     </:for>
     <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->
-    <textbutton onchange="app:exit">@exit</textbutton>
+    <vistextbutton onchange="app:exit">@exit</vistextbutton>
 </window>

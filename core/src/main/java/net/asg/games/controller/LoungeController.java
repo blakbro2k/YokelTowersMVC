@@ -9,6 +9,7 @@ import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.game.objects.YokelLounge;
@@ -30,15 +31,28 @@ public class LoungeController implements ViewRenderer, ActionContainer {
     @LmlAction("requestAllLounges")
     public Array<String> requestAllLounges() {
         try{
-            //interfaceService.showDialog(LoadingController.class);
             Array<String> lounges = Util.toPlainTextArray(sessionService.getAllLounges());
-            //interfaceService.destroyDialog(LoadingController.class);
             return lounges;
         } catch (Exception e){
             e.printStackTrace();
             sessionService.setCurrentError(e.getCause(), e.getMessage());
             interfaceService.showDialog(ErrorController.class);
             return GdxArrays.newArray();
+        }
+    }
+
+    @LmlAction("selectLounge")
+    public void selectLounge(VisTextButton button) {
+        try{
+            if(button != null){
+                sessionService.setCurrentLoungeName(button.getName());
+                sessionService.setCurrentRoomName(button.getLabel().getText().toString());
+                sessionService.asyncTableAllRequest();
+                interfaceService.show(sessionService.getView("room"));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            sessionService.showError(e);
         }
     }
 }
