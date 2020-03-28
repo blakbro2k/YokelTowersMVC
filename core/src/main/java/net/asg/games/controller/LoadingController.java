@@ -56,6 +56,10 @@ public class LoadingController implements ViewRenderer {
         stage.draw();
     }
 
+    public TextureAtlas getGameAtlas(){
+        return gameAtlas;
+    }
+
     @OnMessage(AutumnMessage.ASSETS_LOADED)
     private void assignRegions() {
         if (!regionsAssigned) {

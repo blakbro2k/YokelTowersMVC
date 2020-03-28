@@ -124,4 +124,19 @@ public class MemoryYokelStorage implements YokelStorage {
     public void rollTransactions() {
         //Memory Storage does not have a rollback
     }
+
+    @Override
+    public <T> T getObjectByName(Class<T> clazz, String name) {
+        return null;
+    }
+
+    @Override
+    public <T> T getObjectById(Class<T> clazz, String id) {
+        return null;
+    }
+
+    @Override
+    public <T> T getObject(Class<T> clazz, String name) {
+        return null;
+    }
 }

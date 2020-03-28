@@ -31,8 +31,7 @@ public class LoungeController implements ViewRenderer, ActionContainer {
     @LmlAction("requestAllLounges")
     public Array<String> requestAllLounges() {
         try{
-            Array<String> lounges = Util.toPlainTextArray(sessionService.getAllLounges());
-            return lounges;
+            return Util.toPlainTextArray(sessionService.getAllLounges());
         } catch (Exception e){
             e.printStackTrace();
             sessionService.setCurrentError(e.getCause(), e.getMessage());

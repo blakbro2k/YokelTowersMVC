@@ -22,7 +22,7 @@ import net.asg.games.service.UserInterfaceService;
 
 @View(id = "uitest", value = "ui/templates/uitester.lml")
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
-     @Inject private UserInterfaceService uiService;
+    @Inject private UserInterfaceService uiService;
 
     @LmlActor("Y_block") private Image yBlockImage;
     @LmlActor("O_block") private Image oBlockImage;
@@ -53,6 +53,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("clear_block") public Image clearBlock;
     @LmlActor("area1") public GameBlockArea area1;
     @LmlActor("area2") public GameBlockArea area2;
+    @LmlActor("1:next") private GamePiece next1;
+    @LmlActor("2:next") private GamePiece next2;
 
     private void loadGameData() {}
     private boolean isInitiated;
@@ -60,6 +62,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @Override
     public void render(Stage stage, float delta) {
         initiate();
+        next1.setData(new String[]{"1","4","3"});
+        next2.setData(new String[]{"4","5","0"});
         stage.act(delta);
         stage.draw();
     }
@@ -119,7 +123,6 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
     @LmlAction("getTestBoard")
     private YokelGameBoard getTestBoard(){
-
         YokelGameBoard board = new YokelGameBoard(1L);
 
         board.setCell(0,0, getRandomBlockId());

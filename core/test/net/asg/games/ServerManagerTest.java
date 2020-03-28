@@ -377,7 +377,7 @@ public class ServerManagerTest {
 
     }
 
-    private class GameRunner implements Runnable{
+    private static class GameRunner implements Runnable{
         ServerManager serverManager;
         GameManager gameManager;
         boolean running;

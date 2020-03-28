@@ -13,8 +13,7 @@ import net.asg.games.YokelTowersMVC;
 public class GwtLauncher extends GwtApplication {
     @Override
     public GwtApplicationConfiguration getConfig() {
-        GwtApplicationConfiguration configuration = new GwtApplicationConfiguration(YokelTowersMVC.WIDTH, YokelTowersMVC.HEIGHT);
-        return configuration;
+        return new GwtApplicationConfiguration(YokelTowersMVC.WIDTH, YokelTowersMVC.HEIGHT);
     }
 
     @Override

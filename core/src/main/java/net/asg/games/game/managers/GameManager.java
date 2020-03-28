@@ -131,5 +131,5 @@ public class GameManager {
         return group1won || group2won || group3won || group4won;
     }
 
-    private class GameState{}
+    private static class GameState{}
 }

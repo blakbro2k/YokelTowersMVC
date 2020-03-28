@@ -55,24 +55,12 @@ public class GamePiece extends Table {
     }
 
     public void setDebug(boolean enabled) {
-        System.out.println("My Debug Set");
         super.setDebug(enabled);
     }
 
-    public void act(float delta){
-        setPosition(getX(), getY());
-    }
-
-    /*
-    public void draw(Batch batch, float a){
-        super.draw(batch, a);
-        //setPosition(this.getX(), this.getY());
-        top.draw(batch, a);
-        middle.draw(batch, a);
-        bottom.draw(batch, a);
-
-        System.out.println(this);
-    }*/
+//    public void act(float delta){
+ //       setPosition(getX(), getY());
+   // }
 
     public String toString(){
         return "this(" + this.getX() + "," + this.getY() + ")" +
@@ -100,16 +88,6 @@ public class GamePiece extends Table {
             this.top.setImage(top.getImage());
         }
     }
-/*
-    @Override
-    public void setPosition(float x, float y){
-        super.setPosition(x + GRID_OFFSET, y);
-        float x2 = getX();
-        float y2 = getY();
-        top.setPosition(x2, getY());
-        middle.setPosition(x2, y2 + top.getHeight());
-        bottom.setPosition(x2, y2 + (top.getHeight() * 2));
-    }*/
 
     public GameBlock getMiddleBlock() {
         return middle;
@@ -129,26 +107,6 @@ public class GamePiece extends Table {
         if(bottom != null){
             this.bottom.setImage(bottom.getImage());
         }
-    }
-
-    public void cycleUp(){
-        GameBlock topBlock = getTopBlock();
-        GameBlock midBlock = getMiddleBlock();
-        GameBlock bottomBlock = getBottomBlock();
-
-        setTopBlock(bottomBlock);
-        setMiddleBlock(topBlock);
-        setBottomBlock(midBlock);
-    }
-
-    public void cycleDown(){
-        GameBlock topBlock = getTopBlock();
-        GameBlock midBlock = getMiddleBlock();
-        GameBlock bottomBlock = getBottomBlock();
-
-        setTopBlock(midBlock);
-        setMiddleBlock(bottomBlock);
-        setBottomBlock(topBlock);
     }
 
     public void setData(String[] data) {

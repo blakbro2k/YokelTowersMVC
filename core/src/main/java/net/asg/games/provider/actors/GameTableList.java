@@ -20,6 +20,7 @@ public class GameTableList extends Table {
     private final static String HEADER_SEVEN_EIGHT_STR = "Team 7-8";
     private final static String HEADER_WATCHING_STR = "Who is Watching";
     private final static String JOIN_STR = "Join";
+    private final static String WATCH_STR = "Watch";
 
     private Table header;
     private Table tableList;
@@ -79,7 +80,7 @@ public class GameTableList extends Table {
     }
 
     private Button getWatchButton(){
-        return new TextButton("Watch", getSkin());
+        return new TextButton(WATCH_STR, getSkin());
     }
 
     private Button getJoinButton(YokelSeat seat){
