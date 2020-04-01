@@ -16,7 +16,7 @@ public class GameNextPieceLmlTag extends AbstractNonParentalActorLmlTag {
 
     @Override
     protected Actor getNewInstanceOfActor(final LmlActorBuilder builder) {
-        return new GameBoard(getSkin(builder));
+        return new GamePiece(getSkin(builder));
     }
 
     @Override

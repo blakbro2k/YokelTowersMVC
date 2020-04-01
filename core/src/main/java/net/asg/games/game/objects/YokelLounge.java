@@ -15,8 +15,8 @@ public class YokelLounge extends AbstractYokelObject {
     private String name;
     final private OrderedMap<String, YokelRoom> rooms = GdxMaps.newOrderedMap();
 
-    public YokelLounge(){
-    }
+    //Empty Contructor required for Json.Serializable
+    public YokelLounge(){}
 
     public YokelLounge(String name) {
         if(name == null) throw new IllegalArgumentException("GameLounge name cannot be null.");

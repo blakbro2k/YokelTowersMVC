@@ -2,13 +2,14 @@ package net.asg.games.game.objects;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
 
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.service.UserInterfaceService;
 
-public class YokelObjectFactory {
+public class YokelObjectFactory implements Disposable {
     private UserInterfaceService userInterfaceService;
 
     public YokelObjectFactory(UserInterfaceService userInterfaceService, Array<String> images, Array<String> animatedImages){
@@ -87,9 +88,62 @@ public class YokelObjectFactory {
             case YokelBlock.MEDUSA:
                 return "Medusa";
             case YokelBlock.STONE:
-                return "Stone";
+                return "stone";
+            case YokelBlock.OFFENSIVE_Y_BLOCK_MINOR:
+            case YokelBlock.OFFENSIVE_Y_BLOCK_REGULAR:
+            case YokelBlock.OFFENSIVE_Y_BLOCK_MEGA:
+                return "power_Y_block";
+            case YokelBlock.DEFENSIVE_Y_BLOCK_MINOR:
+            case YokelBlock.DEFENSIVE_Y_BLOCK_REGULAR:
+            case YokelBlock.DEFENSIVE_Y_BLOCK_MEGA:
+                return "defense_Y_block";
+            case YokelBlock.OFFENSIVE_O_BLOCK_MINOR:
+            case YokelBlock.OFFENSIVE_O_BLOCK_REGULAR:
+            case YokelBlock.OFFENSIVE_O_BLOCK_MEGA:
+                return "power_O_block";
+            case YokelBlock.DEFENSIVE_O_BLOCK_MINOR:
+            case YokelBlock.DEFENSIVE_O_BLOCK_REGULAR:
+            case YokelBlock.DEFENSIVE_O_BLOCK_MEGA:
+                return "defense_O_block";
+            case YokelBlock.OFFENSIVE_K_BLOCK_MINOR:
+            case YokelBlock.OFFENSIVE_K_BLOCK_REGULAR:
+            case YokelBlock.OFFENSIVE_K_BLOCK_MEGA:
+                return "power_K_block";
+            case YokelBlock.DEFENSIVE_K_BLOCK_MINOR:
+            case YokelBlock.DEFENSIVE_K_BLOCK_REGULAR:
+            case YokelBlock.DEFENSIVE_K_BLOCK_MEGA:
+                return "defense_K_block";
+            case YokelBlock.OFFENSIVE_E_BLOCK_MINOR:
+            case YokelBlock.OFFENSIVE_E_BLOCK_REGULAR:
+            case YokelBlock.OFFENSIVE_E_BLOCK_MEGA:
+                return "power_E_block";
+            case YokelBlock.DEFENSIVE_E_BLOCK_MINOR:
+            case YokelBlock.DEFENSIVE_E_BLOCK_REGULAR:
+            case YokelBlock.DEFENSIVE_E_BLOCK_MEGA:
+                return "defense_E_block";
+            case YokelBlock.OFFENSIVE_L_BLOCK_MINOR:
+            case YokelBlock.OFFENSIVE_L_BLOCK_REGULAR:
+            case YokelBlock.OFFENSIVE_L_BLOCK_MEGA:
+                return "power_L_block";
+            case YokelBlock.DEFENSIVE_L_BLOCK_MINOR:
+            case YokelBlock.DEFENSIVE_L_BLOCK_REGULAR:
+            case YokelBlock.DEFENSIVE_L_BLOCK_MEGA:
+                return "defense_L_block";
+            case YokelBlock.OFFENSIVE_BASH_BLOCK_MINOR:
+            case YokelBlock.OFFENSIVE_BASH_BLOCK_REGULAR:
+            case YokelBlock.OFFENSIVE_BASH_BLOCK_MEGA:
+                return "power_bash_block";
+            case YokelBlock.DEFENSIVE_BASH_BLOCK_MINOR:
+            case YokelBlock.DEFENSIVE_BASH_BLOCK_REGULAR:
+            case YokelBlock.DEFENSIVE_BASH_BLOCK_MEGA:
+                return "defense_bash_block";
             default:
                 return "";
         }
+    }
+
+    @Override
+    public void dispose() {
+        yokelGameBlockPool.clear();
     }
 }

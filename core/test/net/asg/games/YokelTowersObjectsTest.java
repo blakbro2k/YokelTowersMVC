@@ -1,6 +1,7 @@
 package net.asg.games;
 
 import com.badlogic.gdx.utils.Array;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 
 import net.asg.games.game.objects.YokelBlock;
@@ -111,7 +112,7 @@ public class YokelTowersObjectsTest {
         }
         room = new YokelRoom("Effel Tower");
         Assert.assertNotNull(room.getRoomId());
-        Assert.assertEquals(GdxMaps.newObjectMap(), room.getAllTables());
+        Assert.assertEquals(GdxArrays.newArray(), room.getAllTables());
         room.addTable(null);
         Assert.assertEquals(1, room.getAllTables().size);
         room.addTable(null);

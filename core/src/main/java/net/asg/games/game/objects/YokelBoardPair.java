@@ -4,6 +4,7 @@ public class YokelBoardPair {
     YokelGameBoard leftBoard;
     YokelGameBoard rightBoard;
 
+    //Empty Contructor required for Json.Serializable
     public YokelBoardPair(YokelGameBoard left, YokelGameBoard right){
         setLeftBoard(left);
         setRightBoard(right);

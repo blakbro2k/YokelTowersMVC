@@ -1,15 +1,17 @@
 package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Queue;
 
-public class GamePowersQueue extends Table {
+public class GamePowersQueue extends Table implements GameObject{
     private Queue<GameBlock> powers;
     private VerticalGroup powersDisplay;
 
-    public GamePowersQueue(){
+    public GamePowersQueue(Skin skin){
+        super(skin);
         initialize();
     }
 
@@ -39,21 +41,9 @@ public class GamePowersQueue extends Table {
         }
     }
 
-    /*
-    @Override
-    public void act(float delta){
-        for (GameBlock block : powers) {
-            if (block != null){
-                block.act(delta);
-            }
-        }
-    }*/
-
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        //System.out.println("powers = " + powers.getChildren());
-
     }
 
     public void clearAllPowerUps(){
@@ -79,5 +69,10 @@ public class GamePowersQueue extends Table {
             height = localHeight * 9;
         }
         return height;
+    }
+
+    @Override
+    public void setData(String data) {
+
     }
 }

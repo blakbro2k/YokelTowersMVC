@@ -25,7 +25,8 @@ public class GameBlockArea extends Stack {
     private static final float BLOCK_DROP_SPEED = .8f;
     private static final float MAX_BLOCK_DROP_SPEED = 6f;
     private static final float FALL_BLOCK_SPEED = 250f;
-    private final Skin skin;
+
+    private Skin skin;
 
     private boolean isSpeedDown;
     private boolean isActive;
@@ -41,24 +42,22 @@ public class GameBlockArea extends Stack {
     private YokelObjectFactory factory;
     private ObjectMap<String, GameBlock> uiBlocks;
     private Array<Actor> actors;
+    private boolean isPreview;
 
     public GameBlockArea(YokelObjectFactory factory) {
-        if (factory == null){
-            throw new GdxRuntimeException("YokelObjectFactory cannot be null.");
-        }
-        Skin skin = factory.getUserInterfaceService().getSkin();
-        if (skin == null){
-            throw new GdxRuntimeException("skin cannot be null.");
-        }
-        this.skin = skin;
-
+        super();
         initializeBoard(factory);
         initializeBackground();
         initializeGrid();
     }
 
     private void initializeBoard(YokelObjectFactory factory){
+        if (factory == null){
+            throw new GdxRuntimeException("YokelObjectFactory cannot be null.");
+        }
+
         this.factory = factory;
+        this.skin = factory.getUserInterfaceService().getSkin();
         this.uiBlocks = new ObjectMap<>();
         this.actors = new Array<>();
         this.boardNumber = 0;
@@ -67,14 +66,13 @@ public class GameBlockArea extends Stack {
     }
 
     public void setDebug (boolean enabled) {
+        super.setDebug(enabled);
         boarder.setDebug(enabled);
         grid.setDebug(enabled);
         //gamePiece.setDebug(enabled);
         bgNumber.setDebug(enabled);
-        super.setDebug(enabled);
     }
-
-
+    
     private void initializeGrid(){
         for(int r = YokelGameBoard.MAX_ROWS - 1; r >= 0; r--){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
@@ -166,6 +164,11 @@ public class GameBlockArea extends Stack {
         if(hasParent()){
             System.out.println("(" + getParent().getX() + "," + getParent().getY() + ")");
         }
+    }
+
+
+    public void setPreview(boolean isPreview){
+        this.isPreview = isPreview;
     }
 
     @Override

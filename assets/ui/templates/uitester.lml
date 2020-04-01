@@ -30,13 +30,26 @@
     <textButton onChange="toggleGameStart">Start</textButton>
     <textButton onChange="app:exit" row="true">@exit</textButton>
     <playericon/>
-    <table>
-        <gamepiece id="1:next" tablealign="top"/>
+    <table debug="true">
+        <!--<playericon align="left"/>
+        <label row="true">  Player 1</label>-->
+        <table onecolumn="true" align="top">
+            <gamepiece id="1:next"/>
+            <gamepowers id="1:powers"/>
+        </table>
         <gameblockarea id="1:area" debug="true" areanumber="1" blockareadata="$getTestBoard"/>
     </table>
-    <table>
+    <table debug="true">
+        <!--<playericon align="left"/>
+        <label row="true">  Player 2</label>-->
         <gameblockarea id="2:area" debug="true" areanumber="2" blockareadata="$getTestBoard"/>
-        <gamepiece id="2:next" tablealign="top"/>
+        <table onecolumn="true" align="top">
+            <gamepiece id="2:next"/>
+            <gamepowers id="2:powers"/>
+        </table>
+    </table>
+    <table debug="true">
+        <gameblockarea id="3:area" debug="true" areanumber="3" preview="true"/>
     </table>
     <!--<gamepiece data="1;2;3"/>
     <gamepiece data="4;5;6"/>-->

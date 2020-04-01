@@ -6,18 +6,17 @@ import com.github.czyzby.lml.parser.impl.tag.AbstractNonParentalActorLmlTag;
 import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 
-import net.asg.games.game.objects.YokelObjectFactory;
-import net.asg.games.provider.actors.GameBlockArea;
-import net.asg.games.utils.UIUtil;
+import net.asg.games.provider.actors.GamePiece;
+import net.asg.games.provider.actors.GamePowersQueue;
 
-public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
-    public GameBlockAreaLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
+public class GamePowersQueueLmlTag extends AbstractNonParentalActorLmlTag {
+    public GamePowersQueueLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
         super(parser, parentTag, rawTagData);
     }
 
     @Override
     protected Actor getNewInstanceOfActor(final LmlActorBuilder builder) {
-        return new GameBlockArea(getFactory());
+        return new GamePowersQueue(getSkin(builder));
     }
 
     @Override
@@ -25,11 +24,7 @@ public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
     }
 
     /** @return casted actor. */
-    private GameBlockArea getGameBlockArea() {
-        return (GameBlockArea) getActor();
+    private GamePowersQueue getGamePiece() {
+        return (GamePowersQueue) getActor();
     }
-
-    private YokelObjectFactory getFactory(){
-        return UIUtil.getInstance().getFactory();
-    }
-}
+ }

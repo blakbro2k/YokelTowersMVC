@@ -1,12 +1,13 @@
 package net.asg.games.game.objects;
 
-import java.util.Arrays;
-
 public class YokelPiece extends AbstractYokelObject {
     private int index;
     private int[] cells;
     public int row;
     public int column;
+
+    //Empty Contructor required for Json.Serializable
+    public YokelPiece(){}
 
     public YokelPiece(int index, int block1, int block2, int block3){
         init();
@@ -30,19 +31,17 @@ public class YokelPiece extends AbstractYokelObject {
         return index;
     }
 
-    @Override
-    public void dispose() {
-
+    public void setIndex(int index){
+        this.index = index;
     }
+
+    @Override
+    public void dispose() {}
 
     public void setPosition(int r, int c) {
         if(r < 0) throw new RuntimeException("Row value cannot be less than zero!");
         if(c < 0) throw new RuntimeException("Column value cannot be less than zero!");
         this.row = r;
         this.column = c;
-    }
-
-    public String toString(){
-        return Arrays.toString(cells);
     }
 }

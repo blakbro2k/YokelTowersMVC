@@ -21,6 +21,52 @@ public class YokelBlockEvalTest {
     }
 
     @Test
+    public void descriptionTest() throws Exception {
+        System.out.println(YokelBlockEval.getPowerUseDescriptionLabel(YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.OFFENSIVE_MINOR)) + "]Y_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+        System.out.println(YokelBlockEval.getPowerUseDescriptionLabel(YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.OFFENSIVE_REGULAR)) + "]Y_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
+        System.out.println(YokelBlockEval.getPowerUseDescriptionLabel(YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.OFFENSIVE_MEGA)) + "]Y_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.OFFENSIVE_MEGA));
+        System.out.println(YokelBlockEval.getPowerUseDescriptionLabel(YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.DEFENSIVE_MINOR)) + "]Y_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+        System.out.println(YokelBlockEval.getPowerUseDescriptionLabel(YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.DEFENSIVE_REGULAR)) + "]Y_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
+        System.out.println(YokelBlockEval.getPowerUseDescriptionLabel(YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.DEFENSIVE_MEGA)) + "]Y_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.DEFENSIVE_MEGA));
+
+        System.out.println("Offensive Y minor=" + YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+
+        System.out.println("O_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+        System.out.println("O_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
+        System.out.println("O_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.OFFENSIVE_MEGA));
+        System.out.println("O_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+        System.out.println("O_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
+        System.out.println("O_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.DEFENSIVE_MEGA));
+
+        System.out.println("K_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+        System.out.println("K_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
+        System.out.println("K_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.OFFENSIVE_MEGA));
+        System.out.println("K_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+        System.out.println("K_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
+        System.out.println("K_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.DEFENSIVE_MEGA));
+
+        System.out.println("E_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+        System.out.println("E_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
+        System.out.println("E_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_MEGA));
+        System.out.println("E_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+        System.out.println("E_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
+        System.out.println("E_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_MEGA));
+
+        System.out.println("L_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+        System.out.println("L_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
+        System.out.println("L_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.OFFENSIVE_MEGA));
+        System.out.println("L_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+        System.out.println("L_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
+        System.out.println("L_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.DEFENSIVE_MEGA));
+
+        System.out.println("EX_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+        System.out.println("EX_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
+        System.out.println("EX_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, YokelBlock.OFFENSIVE_MEGA));
+        System.out.println("EX_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+        System.out.println("EX_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
+        System.out.println("EX_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, YokelBlock.DEFENSIVE_MEGA));
+    }
+    @Test
     public void yokelblock_Y_Test() throws Exception {
         System.out.println("Start yokelblock_Y_Test()");
         int y_block = YokelBlock.Y_BLOCK;

@@ -14,6 +14,6 @@ public class GameGamePieceDataLmlAttribute implements LmlAttribute<GamePiece> {
     }
 
     public void process(final LmlParser parser, final LmlTag tag, GamePiece actor, final String rawAttributeData) {
-        actor.setData(parser.parseArray(rawAttributeData));
+        actor.setData(rawAttributeData);
     }
 }

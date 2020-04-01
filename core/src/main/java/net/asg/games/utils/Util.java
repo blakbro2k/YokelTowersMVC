@@ -20,13 +20,11 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.AbstractYokelObject;
-import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelObject;
 import net.asg.games.provider.actors.GameBlock;
 
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.pmw.tinylog.Level;
 
 import java.io.File;
@@ -60,7 +58,7 @@ public class Util {
 
     public static <T> Array.ArrayIterator<T> safeIterable(Array<T> collection){
         if(collection != null){
-            return new Array.ArrayIterator<>(collection);
+            return new Array.ArrayIterator<T>(collection);
         } else {
             return new Array.ArrayIterator<>(GdxArrays.newArray());
         }

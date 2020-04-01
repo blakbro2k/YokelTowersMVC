@@ -51,16 +51,21 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     private YokelPiece piece;
     private YokelPiece nextPiece;
+    private YokelClock clock;
     private float fallNumber;
     private RandomUtil.RandomNumberArray nextBlocks;
     private int currentBlockPointer = -1;
     private boolean fastDown;
+
+    //Empty Contructor required for Json.Serializable
+    public YokelGameBoard(){}
 
     public YokelGameBoard(long seed){
         cells = new int[MAX_ROWS][MAX_COLS];
         ids = new boolean[128];
         piece = null;
         fallNumber = MAX_FALL_VALUE;
+        clock = new YokelClock();
         reset(seed);
     }
 
@@ -137,6 +142,13 @@ public class YokelGameBoard extends AbstractYokelObject {
         ids[index] = false;
     }
 
+    public void startClock(){
+        clock.start();
+    }
+
+    public void stopClock(){
+        clock.stop();
+    }
     public boolean isArtificiallyAdded(int column, int row) {
         return YokelBlockEval.hasAddedByYahooFlag(cells[row][column]);
     }
@@ -334,7 +346,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         markColorBlast();
 
         if (isColorBlastGridEmpty()){
-            pushCellToBottomOfBoard(YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.MEGA_POWER_LEVEL));
+            pushCellToBottomOfBoard(YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_MINOR));
         } else {
             for (int row = 0; row < MAX_ROWS; row++) {
                 for (int col = 0; col < MAX_COLS; col++) {

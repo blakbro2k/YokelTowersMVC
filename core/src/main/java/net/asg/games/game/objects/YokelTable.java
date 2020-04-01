@@ -10,6 +10,9 @@ import net.asg.games.utils.Util;
 import org.apache.commons.lang.StringUtils;
 
 public class YokelTable extends AbstractYokelObject {
+    public static final String ARG_TYPE = "type";
+    public static final String ARG_RATED = "rated";
+
     public enum ACCESS_TYPE {PRIVATE("PRIVATE"), PUBLIC("PUBLIC"), PROTECTED("PROTECTED");
         private String accessType;
 
@@ -67,9 +70,9 @@ public class YokelTable extends AbstractYokelObject {
 
     private void processArg(String arg, Object value){
         if(arg != null && value != null){
-            if(StringUtils.equalsIgnoreCase("type", arg)){
+            if(StringUtils.equalsIgnoreCase(ARG_TYPE, arg)){
                 setAccessType(Util.otos(value));
-            } else if(StringUtils.equalsIgnoreCase("rated", arg)){
+            } else if(StringUtils.equalsIgnoreCase(ARG_RATED, arg)){
                 setRated(Util.otob(value));
             }
         }
@@ -88,9 +91,9 @@ public class YokelTable extends AbstractYokelObject {
     }
 
     public void setAccessType(String accessType){
-        if(StringUtils.equalsIgnoreCase("private", accessType)){
+        if(StringUtils.equalsIgnoreCase(ACCESS_TYPE.PRIVATE.toString(), accessType)){
             setAccessType(ACCESS_TYPE.PRIVATE);
-        } else if(StringUtils.equalsIgnoreCase("protected", accessType)){
+        } else if(StringUtils.equalsIgnoreCase(ACCESS_TYPE.PROTECTED.toString(), accessType)){
             setAccessType(ACCESS_TYPE.PROTECTED);
         } else {
             setAccessType(ACCESS_TYPE.PUBLIC);

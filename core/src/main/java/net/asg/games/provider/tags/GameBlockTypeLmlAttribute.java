@@ -14,7 +14,7 @@ public class GameBlockTypeLmlAttribute implements LmlAttribute<GameBlock> {
         return GameBlock.class;
     }
 
-    public void process(LmlParser parser, LmlTag tag, GameBlock actor, String rawAttributeData) {
+    public void process(final LmlParser parser, final LmlTag tag, final GameBlock actor, final String rawAttributeData) {
         actor.setImage(parser.parseString(rawAttributeData, actor));
     }
 }

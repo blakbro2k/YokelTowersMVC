@@ -9,10 +9,11 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class GameClock extends Table {
     public final static String NO_DIGIT_NME = "no_digit";
     public final static String COLON_NME = "colon";
-    public  final static String DIGIT_NME = "_digit";
+    public final static String DIGIT_NME = "_digit";
 
     private long start;
     private boolean isRunning;
+
     private Image digit_1;
     private Image digit_2;
     private Image digit_3;
@@ -29,6 +30,7 @@ public class GameClock extends Table {
         add(getDigit_3());
         add(getDigit_4());
     }
+
     public void start(){
         isRunning = true;
         start = TimeUtils.millis();

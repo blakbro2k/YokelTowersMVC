@@ -39,21 +39,31 @@
                 <label row="true">Use Item\t:Space Bar</label>
                 <gameclock id="gameClock" row="true"/>
             </table>
-            <table>
-                <label>1</label>
-                <label>2</label>
-             </table>
-            <table row="true">
-                <label>5</label>
-                <label>6</label>
+            <table debug="true">
+                <table onecolumn="true" align="top">
+                    <gamepiece id="1:next"/>
+                    <gamepowers id="1:powers"/>
+                </table>
+                <gameblockarea id="1:area" debug="true" areanumber="1" blockareadata="$getTestBoard"/>
+            </table>
+            <table debug="true">
+                <gameblockarea id="2:area" debug="true" areanumber="2" blockareadata="$getTestBoard"/>
+                <table onecolumn="true" align="top">
+                    <gamepiece id="2:next"/>
+                    <gamepowers id="2:powers"/>
+                </table>
             </table>
             <table row="true">
-                <label>3</label>
-                <label>4</label>
+                <gameblockarea id="5:area" debug="true" areanumber="5" blockareadata="$getTestBoard"/>
+                <gameblockarea id="6:area" debug="true" areanumber="6" blockareadata="$getTestBoard"/>
+            </table>
+            <table row="true">
+                <gameblockarea id="3:area" debug="true" areanumber="3" blockareadata="$getTestBoard"/>
+                <gameblockarea id="4:area" debug="true" areanumber="4" blockareadata="$getTestBoard"/>
             </table>
             <table>
-                <label>7</label>
-                <label>8</label>
+                <gameblockarea id="7:area" debug="true" areanumber="7" blockareadata="$getTestBoard"/>
+                <gameblockarea id="8:area" debug="true" areanumber="8" blockareadata="$getTestBoard"/>
             </table>
         </table>
         <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->

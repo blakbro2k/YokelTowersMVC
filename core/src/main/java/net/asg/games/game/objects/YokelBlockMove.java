@@ -5,6 +5,9 @@ public class YokelBlockMove extends AbstractYokelObject {
     public int y;
     public int block;
 
+    //Empty Contructor required for Json.Serializable
+    public YokelBlockMove(){}
+
     public YokelBlockMove(int x, int y, int block){
         this.x = x;
         this.y = y;

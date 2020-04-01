@@ -23,6 +23,8 @@ import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.controller.LoadingController;
 import net.asg.games.game.objects.YokelObjectFactory;
+import net.asg.games.provider.actors.GameBlock;
+import net.asg.games.utils.Util;
 
 @Component
 public class UserInterfaceService {
@@ -33,7 +35,6 @@ public class UserInterfaceService {
 
     private ObjectMap<String, Actor> uiAssetMap;
     private YokelObjectFactory factory;
-    private float animationDelay = 0.15f;
 
     @Initiate
     private void initilize() {
@@ -52,6 +53,7 @@ public class UserInterfaceService {
     @Destroy
     private void destroy(){
         uiAssetMap.clear();
+        factory.dispose();
     }
 
     private ObjectMap<String, Array> buildImageNames(){
@@ -147,7 +149,7 @@ public class UserInterfaceService {
         if(actor instanceof AnimatedImage){
             AnimatedImage image = (AnimatedImage) actor;
             image.setFrames(getDrawableFrames(name));
-            image.setDelay(animationDelay);
+            image.setDelay(GameBlock.ANIMATION_DELAY);
         } else if(actor instanceof Image){
             Image image = (Image) actor;
             image.setDrawable(interfaceService.getSkin(), name);
