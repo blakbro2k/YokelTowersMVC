@@ -42,4 +42,9 @@ public class Global implements ActionContainer {
         System.out.println("isDebugResult  called.");
         return PostLoader.DEBUG.equalsIgnoreCase(PostLoader.getInstance().getPreLoader());
     }
+
+    @LmlAction("getCurrentPlayerName")
+    public String getCurrentPlayerName(){
+        return sessionService.getCurrentUserName();
+    }
 }

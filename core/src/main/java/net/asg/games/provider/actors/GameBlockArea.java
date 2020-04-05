@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.SnapshotArray;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
@@ -46,9 +47,23 @@ public class GameBlockArea extends Stack {
 
     public GameBlockArea(YokelObjectFactory factory) {
         super();
+        reset(factory);
+    }
+
+    private void reset(YokelObjectFactory factory){
+        //initializeSize();
         initializeBoard(factory);
         initializeBackground();
         initializeGrid();
+    }
+
+    private void initializeSize(){
+        if(isPreview){
+            setSize(48, 128);
+        } else {
+            setSize(96, 256);
+        }
+        invalidate();
     }
 
     private void initializeBoard(YokelObjectFactory factory){
@@ -67,16 +82,13 @@ public class GameBlockArea extends Stack {
 
     public void setDebug (boolean enabled) {
         super.setDebug(enabled);
-        boarder.setDebug(enabled);
-        grid.setDebug(enabled);
-        //gamePiece.setDebug(enabled);
-        bgNumber.setDebug(enabled);
+        Util.setDebug(enabled, boarder, grid, bgNumber);
     }
     
     private void initializeGrid(){
         for(int r = YokelGameBoard.MAX_ROWS - 1; r >= 0; r--){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
-                GameBlock uiBlock = factory.getGameBlock(YokelBlock.CLEAR_BLOCK);
+                GameBlock uiBlock = factory.getGameBlock(YokelBlock.CLEAR_BLOCK, isPreview);
 
                 uiBlocks.put(getCellAttrName(r,c), uiBlock);
                 if(c + 1 == YokelGameBoard.MAX_COLS){
@@ -122,12 +134,16 @@ public class GameBlockArea extends Stack {
         GameBlock uiCell = uiBlocks.get(getCellAttrName(r, c));
 
         if(uiCell != null){
-            GameBlock blockUi = factory.getGameBlock(block);
+            GameBlock blockUi = factory.getGameBlock(block, isPreview);
             if(blockUi != null){
                 uiCell.setImage(blockUi.getImage());
             }
             //factory.freeObject(blockUi);
         }
+    }
+
+    public boolean isPreview(){
+        return isPreview;
     }
 
     public void setGamePiece(GamePiece gamePiece){
@@ -169,6 +185,14 @@ public class GameBlockArea extends Stack {
 
     public void setPreview(boolean isPreview){
         this.isPreview = isPreview;
+        SnapshotArray<Actor> cells = grid.getChildren();
+        grid.clearChildren();
+        invalidate();
+        reset(getFactory());
+        //update();
+        for(Actor cell : cells){
+            grid.add(cell);
+        }
     }
 
     @Override
@@ -268,10 +292,3 @@ public class GameBlockArea extends Stack {
         return factory;
     }
 }
-
-
-
-
-
-
-

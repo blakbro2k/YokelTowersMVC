@@ -5,6 +5,12 @@
     <image width="16" height="16" id="E_block"/>
     <image width="16" height="16" id="L_block"/>
     <image width="16" height="16" id="Bash_block" row="true"/>
+    <image width="8" height="8" id="Y_block_preview"/>
+    <image width="8" height="8" id="O_block_preview"/>
+    <image width="8" height="8" id="K_block_preview"/>
+    <image width="8" height="8" id="E_block_preview"/>
+    <image width="8" height="8" id="L_block_preview"/>
+    <image width="8" height="8" id="Bash_block_preview" row="true"/>
     <animatedimage width="16" height="16" id="defense_Y_block"/>
     <animatedimage width="16" height="16" id="defense_O_block"/>
     <animatedimage width="16" height="16" id="defense_K_block"/>
@@ -30,33 +36,37 @@
     <textButton onChange="toggleGameStart">Start</textButton>
     <textButton onChange="app:exit" row="true">@exit</textButton>
     <playericon/>
+
     <table debug="true">
-        <!--<playericon align="left"/>
-        <label row="true">  Player 1</label>-->
+        <gameblockarea id="3:area" areanumber="3" preview="true"/>
+        <gameblockarea id="4:area" areanumber="4" preview="true"/>
+    </table>
+    <table debug="true">
+        <table colspan="2" row="true">
+            <playericon align="left"/>
+            <label row="true">$getCurrentPlayerName</label>
+        </table>
         <table onecolumn="true" align="top">
             <gamepiece id="1:next"/>
             <gamepowers id="1:powers"/>
         </table>
-        <gameblockarea id="1:area" debug="true" areanumber="1" blockareadata="$getTestBoard"/>
+        <gameblockarea width="96" height="256" id="1:area" areanumber="1"/>
     </table>
     <table debug="true">
-        <!--<playericon align="left"/>
-        <label row="true">  Player 2</label>-->
-        <gameblockarea id="2:area" debug="true" areanumber="2" blockareadata="$getTestBoard"/>
+        <table colspan="2" row="true">
+            <playericon align="left"/>
+            <label row="true">$getCurrentPlayerName</label>
+        </table>
+        <gameblockarea width="96" height="256" id="2:area" debug="true" areanumber="2"/>
         <table onecolumn="true" align="top">
             <gamepiece id="2:next"/>
             <gamepowers id="2:powers"/>
         </table>
     </table>
-    <table debug="true">
-        <gameblockarea id="3:area" debug="true" areanumber="3" preview="true"/>
+    <table debug="true" row="true">
+        <gameblockarea id="5:area" areanumber="5" preview="true"/>
+        <gameblockarea id="6:area" areanumber="6" preview="true" row="true"/>
+        <gameblockarea id="7:area"  areanumber="7" preview="true"/>
+        <gameblockarea id="8:area" debug="true" areanumber="8" preview="true"/>
     </table>
-    <!--<gamepiece data="1;2;3"/>
-    <gamepiece data="4;5;6"/>-->
 </window>
-<!--
-<window defaultPad="2" title="The One">
-    <gameblockarea id="area1" debug="true" areanumber="1" blockareadata="$getTestBoard"/>
-    <gameblockarea id="area2" debug="true" areanumber="2" blockareadata="$getTestBoard"/>
-    <textButton onChange="setGamePiece">Set</textButton>
-</window>-->

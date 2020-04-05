@@ -34,6 +34,12 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("E_block") private Image eBlockImage;
     @LmlActor("L_block") private Image lBlockImage;
     @LmlActor("Bash_block") private Image bashBlockImage;
+    @LmlActor("Y_block_preview") private Image yBlockImagePreview;
+    @LmlActor("O_block_preview") private Image oBlockImagePreview;
+    @LmlActor("K_block_preview") private Image kBlockImagePreview;
+    @LmlActor("E_block_preview") private Image eBlockImagePreview;
+    @LmlActor("L_block_preview") private Image lBlockImagePreview;
+    @LmlActor("Bash_block_preview") private Image bashBlockImagePreview;
     @LmlActor("defense_Y_block") private AnimatedImage defenseYBlockImage;
     @LmlActor("defense_O_block") private AnimatedImage defenseOBlockImage;
     @LmlActor("defense_K_block") private AnimatedImage defenseKBlockImage;
@@ -55,8 +61,15 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("stone") private Image stoneBlockImage;
     @LmlActor("gameClock") private GameClock gameClock;
     @LmlActor("clear_block") private Image clearBlock;
-    @LmlActor("area1") private GameBlockArea area1;
-    @LmlActor("area2") private GameBlockArea area2;
+    @LmlActor("clear_block_preview") private Image clearBlockPreview;
+    @LmlActor("1:area") private GameBlockArea area1;
+    @LmlActor("2:area") private GameBlockArea area2;
+    @LmlActor("3:area") private GameBlockArea area3;
+    @LmlActor("4:area") private GameBlockArea area4;
+    @LmlActor("5:area") private GameBlockArea area5;
+    @LmlActor("6:area") private GameBlockArea area6;
+    @LmlActor("7:area") private GameBlockArea area7;
+    @LmlActor("8:area") private GameBlockArea area8;
     @LmlActor("1:next") private GamePiece next1;
     @LmlActor("2:next") private GamePiece next2;
     @LmlActor("1:powers") private GamePowersQueue powersQueue1;
@@ -64,7 +77,6 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
     private boolean isInitiated;
     private Queue<GameBlock> powerUps = new Queue<>();
-
 
     @Override
     public void render(Stage stage, float delta) {
@@ -81,6 +93,10 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
             next1.setData(piece1.toString());
             next2.setData(piece2.toString());
+
+            area1.updateData(getTestBoard());
+            area2.updateData(getTestBoard());
+            area5.updateData(getTestBoard());
 
             //Queue<YokelBlock>
             //powersQueue1.update();
@@ -115,6 +131,13 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         uiService.loadDrawable(brokenBashBlockImage);
         uiService.loadDrawable(stoneBlockImage);
         uiService.loadDrawable(clearBlock);
+        uiService.loadDrawable(clearBlockPreview);
+        uiService.loadDrawable(yBlockImagePreview);
+        uiService.loadDrawable(oBlockImagePreview);
+        uiService.loadDrawable(kBlockImagePreview);
+        uiService.loadDrawable(eBlockImagePreview);
+        uiService.loadDrawable(lBlockImagePreview);
+        uiService.loadDrawable(bashBlockImagePreview);
     }
 
     @LmlAction("toggleGameStart")

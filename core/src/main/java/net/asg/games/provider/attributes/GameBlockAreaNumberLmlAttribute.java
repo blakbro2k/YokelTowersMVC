@@ -1,4 +1,4 @@
-package net.asg.games.provider.tags;
+package net.asg.games.provider.attributes;
 
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.tag.LmlAttribute;

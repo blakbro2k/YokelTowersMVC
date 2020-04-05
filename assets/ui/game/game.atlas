@@ -94,21 +94,7 @@ defense_Bash_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 10
-defense_Bash_block
-  rotate: false
-  xy: 2, 2
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
   index: 6
-defense_Bash_block
-  rotate: false
-  xy: 2, 2
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 1
 defense_Bash_block
   rotate: false
   xy: 2, 2
@@ -123,6 +109,20 @@ defense_Bash_block
   orig: 16, 16
   offset: 0, 0
   index: 7
+defense_Bash_block
+  rotate: false
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 10
+defense_Bash_block
+  rotate: false
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
 Bash_block_Broken
   rotate: false
   xy: 638, 182
@@ -213,21 +213,7 @@ defense_E_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 10
-defense_E_block
-  rotate: false
-  xy: 477, 164
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 7
-defense_E_block
-  rotate: false
-  xy: 477, 164
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 8
+  index: 1
 defense_E_block
   rotate: false
   xy: 477, 164
@@ -241,6 +227,13 @@ defense_E_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
+  index: 7
+defense_E_block
+  rotate: false
+  xy: 477, 164
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
   index: 6
 defense_E_block
   rotate: false
@@ -248,7 +241,14 @@ defense_E_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 1
+  index: 10
+defense_E_block
+  rotate: false
+  xy: 477, 164
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 8
 E_block_Broken
   rotate: false
   xy: 495, 164
@@ -339,14 +339,14 @@ defense_K_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 8
+  index: 6
 defense_K_block
   rotate: false
   xy: 714, 204
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 6
+  index: 1
 defense_K_block
   rotate: false
   xy: 714, 204
@@ -360,7 +360,7 @@ defense_K_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 7
+  index: 8
 defense_K_block
   rotate: false
   xy: 714, 204
@@ -374,7 +374,7 @@ defense_K_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 1
+  index: 7
 K_block_Broken
   rotate: false
   xy: 732, 206
@@ -465,20 +465,6 @@ defense_L_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 8
-defense_L_block
-  rotate: false
-  xy: 477, 146
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 10
-defense_L_block
-  rotate: false
-  xy: 477, 146
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
   index: 7
 defense_L_block
   rotate: false
@@ -493,7 +479,14 @@ defense_L_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 6
+  index: 10
+defense_L_block
+  rotate: false
+  xy: 477, 146
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 8
 defense_L_block
   rotate: false
   xy: 477, 146
@@ -501,6 +494,13 @@ defense_L_block
   orig: 16, 16
   offset: 0, 0
   index: 9
+defense_L_block
+  rotate: false
+  xy: 477, 146
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 6
 L_block_Broken
   rotate: false
   xy: 495, 146
@@ -591,6 +591,20 @@ defense_O_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
+  index: 6
+defense_O_block
+  rotate: false
+  xy: 804, 203
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 8
+defense_O_block
+  rotate: false
+  xy: 804, 203
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
   index: 7
 defense_O_block
   rotate: false
@@ -605,7 +619,7 @@ defense_O_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 8
+  index: 10
 defense_O_block
   rotate: false
   xy: 804, 203
@@ -613,20 +627,6 @@ defense_O_block
   orig: 16, 16
   offset: 0, 0
   index: 9
-defense_O_block
-  rotate: false
-  xy: 804, 203
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 6
-defense_O_block
-  rotate: false
-  xy: 804, 203
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 10
 O_block_Broken
   rotate: false
   xy: 256, 100
@@ -717,14 +717,14 @@ defense_Y_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 1
+  index: 9
 defense_Y_block
   rotate: false
   xy: 710, 186
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 10
+  index: 7
 defense_Y_block
   rotate: false
   xy: 710, 186
@@ -738,14 +738,14 @@ defense_Y_block
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 9
+  index: 10
 defense_Y_block
   rotate: false
   xy: 710, 186
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 7
+  index: 1
 defense_Y_block
   rotate: false
   xy: 710, 186
@@ -856,6 +856,13 @@ clear_block
   xy: 764, 188
   size: 16, 16
   orig: 16, 16
+  offset: 0, 0
+  index: -1
+clear_block_preview
+  rotate: false
+  xy: 158, 43
+  size: 8, 8
+  orig: 8, 8
   offset: 0, 0
   index: -1
 colon

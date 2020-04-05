@@ -30,6 +30,7 @@ public class GameTableList extends Table {
 
         header = new Table(skin);
         tableList = new Table(skin);
+        tableList.left();
         //tableList.setFillParent(true);
 
         setUpHeader();
@@ -38,10 +39,11 @@ public class GameTableList extends Table {
 
     private void setUpTableList() {
         ScrollPane scrollPane = new ScrollPane(tableList);
-        scrollPane.setScrollbarsVisible(true);
         scrollPane.setScrollBarPositions(false, true);
+        scrollPane.setScrollbarsVisible(true);
+
         tableList.pad(2);
-        add(scrollPane);
+        add(scrollPane).growX();
     }
 
     private void setUpHeader() {

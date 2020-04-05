@@ -7,6 +7,8 @@ import net.asg.games.provider.actors.GameBlock;
 
 public class UIUtil {
     private static UIUtil myInstance = new UIUtil();
+    static final private String PREVIEW_TAG = "_preview";
+
     private YokelObjectFactory factory;
     public static UIUtil getInstance(){
         return myInstance;
@@ -26,6 +28,10 @@ public class UIUtil {
 
     public Image getBlockImage(int blockId){
         return getBlockImage(factory.getBlockImageName(blockId));
+    }
+
+    public Image getPreviewBlockImage(int blockId){
+        return getBlockImage(factory.getBlockImageName(blockId) + PREVIEW_TAG);
     }
 
     public GameBlock getGameBlock(int blockId){

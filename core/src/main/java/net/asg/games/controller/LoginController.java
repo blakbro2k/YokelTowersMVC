@@ -48,6 +48,7 @@ public class LoginController implements ViewRenderer, ActionContainer {
             if(sessionService.connectToServer()){
                 //Register Player
                 sessionService.registerPlayer();
+                sessionService.setCurrentUserName(username.getText());
                 sessionService.asyncPlayerAllRequest();
                 interfaceService.show(sessionService.getView("lounge"));
             }

@@ -1,7 +1,5 @@
 package net.asg.games.configuration;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.autumn.annotation.Component;
@@ -28,20 +26,19 @@ import com.kotcrab.vis.ui.VisUI;
 
 import net.asg.games.YokelTowersMVC;
 import net.asg.games.provider.tags.GameBlockAreaLmlTagProvider;
-import net.asg.games.provider.tags.GameBlockPreviewLmlAttribute;
-import net.asg.games.provider.tags.GameBlockTypeLmlAttribute;
+import net.asg.games.provider.attributes.GameBlockPreviewLmlAttribute;
+import net.asg.games.provider.attributes.GameBlockTypeLmlAttribute;
 import net.asg.games.provider.tags.GameBlockLmlTagProvider;
-import net.asg.games.provider.tags.GameBlockAreaDataLmlAttribute;
-import net.asg.games.provider.tags.GameBlockAreaNumberLmlAttribute;
+import net.asg.games.provider.attributes.GameBlockAreaDataLmlAttribute;
+import net.asg.games.provider.attributes.GameBlockAreaNumberLmlAttribute;
 import net.asg.games.provider.tags.GameBoardLmlTagProvider;
 import net.asg.games.provider.tags.GameClockLmlTagProvider;
-import net.asg.games.provider.tags.GameGamePieceDataLmlAttribute;
+import net.asg.games.provider.tags.GameNameLabelmlTagProvider;
 import net.asg.games.provider.tags.GameNextPieceLmlTagProvider;
 import net.asg.games.provider.tags.GamePieceLmlTagProvider;
 import net.asg.games.provider.tags.GameLoungeLmlTagProvider;
 import net.asg.games.provider.tags.GamePlayerIconLmlTagProvider;
 import net.asg.games.provider.tags.GamePlayerListLmlTagProvider;
-import net.asg.games.provider.tags.GamePowersQueueLmlTag;
 import net.asg.games.provider.tags.GamePowersQueueLmlTagProvider;
 import net.asg.games.provider.tags.GameTableListLmlTagProvider;
 import net.asg.games.service.ScaleService;
@@ -96,6 +93,7 @@ import net.asg.games.service.ScaleService;
         public void initiateConfiguration(final ScaleService scaleService, final SkinService skinService) {
             // Loading default VisUI skin with the selected scale:
             VisUI.load(scaleService.getScale());
+
             // Registering VisUI skin with "default" name - this skin will be the default one for all LML widgets:
             skinService.addSkin("default", VisUI.getSkin());
 
@@ -126,6 +124,7 @@ import net.asg.games.service.ScaleService;
             syntax.addTagProvider(new GamePowersQueueLmlTagProvider(), "gamepowers");
             syntax.addTagProvider(new GamePlayerListLmlTagProvider(), "gameplayerlist");
             syntax.addTagProvider(new GameTableListLmlTagProvider(), "gametablelist");
+            syntax.addTagProvider(new GameNameLabelmlTagProvider(), "gamenametag");
 
             syntax.addAttributeProcessor(new GameBlockTypeLmlAttribute(), "blocktype");
             syntax.addAttributeProcessor(new GameBlockAreaNumberLmlAttribute(), "areanumber");

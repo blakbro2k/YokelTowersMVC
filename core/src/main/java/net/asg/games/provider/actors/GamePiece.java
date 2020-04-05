@@ -66,7 +66,6 @@ public class GamePiece extends Table implements GameObject {
         YokelPiece piece = Util.getObjectFromJsonString(YokelPiece.class, data);
         if(piece != null){
             this.clearChildren();
-            System.out.println(UIUtil.getInstance().getGameBlock(piece.getValueAt(2)).getImage().getClass());
             initialize(UIUtil.getInstance().getGameBlock(piece.getValueAt(0)),
                         UIUtil.getInstance().getGameBlock(piece.getValueAt(1)),
                         UIUtil.getInstance().getGameBlock(piece.getValueAt(2)));

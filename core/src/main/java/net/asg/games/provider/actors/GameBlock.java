@@ -17,7 +17,7 @@ import net.asg.games.utils.Util;
  */
 
 public class GameBlock extends Table implements Pool.Poolable, GameObject{
-    final public static float ANIMATION_DELAY = 0.15f;
+    final public static float ANIMATION_DELAY = 0.12f;
 
     private AnimatedImage uiBlock;
     private boolean isActive;
@@ -46,6 +46,10 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject{
 
     public void setImage(int blockValue){
         setImage(UIUtil.getInstance().getBlockImage(blockValue));
+    }
+
+    public void setPreviewImage(int blockValue){
+        setImage(UIUtil.getInstance().getPreviewBlockImage(blockValue));
     }
 
     public AnimatedImage getImage(){

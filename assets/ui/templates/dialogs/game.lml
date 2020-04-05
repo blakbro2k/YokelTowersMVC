@@ -23,50 +23,58 @@
                 <checkbox tablealign="left">@RatedChkBx</checkbox>
                 <checkbox tablealign="left">Sound</checkbox>
             </table>
-            <table onecolumn="true" defaultfillx="true">
-                <button>Help</button>
+            <table onecolumn="true">
+                <button defaultfillx="true">Help</button>
                 <!-- "close" action is defined in Global class. -->
-                <button onresult="close">Quit</button>
+                <button onchange="close" defaultfillx="true">Quit</button>
             </table>
         </table>
         <!-- End Side Panel -->
-        <table>
-            <table>
-                <label row="true">Left\t:Left Arrow</label>
-                <label row="true">Right\t:Right Arrow</label>
-                <label row="true">Drop\t:Down Arrow</label>
-                <label row="true">Cycle Colors\t:R</label>
-                <label row="true">Use Item\t:Space Bar</label>
-                <gameclock id="gameClock" row="true"/>
-            </table>
-            <table debug="true">
-                <table onecolumn="true" align="top">
-                    <gamepiece id="1:next"/>
-                    <gamepowers id="1:powers"/>
+        <table align="top">
+            <table defaultpad="0">
+                <table row="true">
+                    <label row="true">Left\t:Left Arrow</label>
+                    <label row="true">Right\t:Right Arrow</label>
+                    <label row="true">Drop\t:Down Arrow</label>
+                    <label row="true">Cycle Colors\t:R</label>
+                    <label row="true">Use Item\t:Space Bar</label>
+                    <gameclock id="gameClock" row="true"/>
                 </table>
-                <gameblockarea id="1:area" debug="true" areanumber="1" blockareadata="$getTestBoard"/>
-            </table>
-            <table debug="true">
-                <gameblockarea id="2:area" debug="true" areanumber="2" blockareadata="$getTestBoard"/>
-                <table onecolumn="true" align="top">
-                    <gamepiece id="2:next"/>
-                    <gamepowers id="2:powers"/>
+                <table debug="true">
+                    <gameblockarea width="48" height="128" id="3:area" debug="true" areanumber="3" preview="true"/>
+                    <gameblockarea width="48" height="128" id="4:area" debug="true" areanumber="4" preview="true"/>
                 </table>
             </table>
-            <table row="true">
-                <gameblockarea id="5:area" debug="true" areanumber="5" blockareadata="$getTestBoard"/>
-                <gameblockarea id="6:area" debug="true" areanumber="6" blockareadata="$getTestBoard"/>
-            </table>
-            <table row="true">
-                <gameblockarea id="3:area" debug="true" areanumber="3" blockareadata="$getTestBoard"/>
-                <gameblockarea id="4:area" debug="true" areanumber="4" blockareadata="$getTestBoard"/>
+            <table>
+                <table debug="true">
+                    <table colspan="2" row="true">
+                        <gamenametag id="1:nameTag" align="left" row="true"/>
+                    </table>
+                    <table onecolumn="true" align="top">
+                        <gamepiece id="1:next"/>
+                        <gamepowers id="1:powers"/>
+                    </table>
+                    <gameblockarea width="96" height="256" id="1:area" debug="true" areanumber="1"/>
+                </table>
+                <table debug="true">
+                    <table colspan="2" row="true">
+                        <gamenametag id="2:nameTag" align="left" row="true"/>
+                    </table>
+                    <gameblockarea width="96" height="256" id="2:area" debug="true" areanumber="2"/>
+                    <table onecolumn="true" align="top">
+                        <gamepiece id="2:next"/>
+                        <gamepowers id="2:powers"/>
+                    </table>
+                </table>
             </table>
             <table>
-                <gameblockarea id="7:area" debug="true" areanumber="7" blockareadata="$getTestBoard"/>
-                <gameblockarea id="8:area" debug="true" areanumber="8" blockareadata="$getTestBoard"/>
+                <table debug="true" row="true">
+                    <gameblockarea width="48" height="128" id="5:area" debug="true" areanumber="5" preview="true"/>
+                    <gameblockarea width="48" height="128" id="6:area" debug="true" areanumber="6" preview="true" row="true"/>
+                    <gameblockarea width="48" height="128" id="7:area" debug="true" areanumber="7" preview="true"/>
+                    <gameblockarea width="48" height="128" id="8:area" debug="true" areanumber="8" preview="true"/>
+                </table>
             </table>
         </table>
-        <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
-        <button onchange="show:settings">thsi is a game</button>
     </table>
 </dialog>

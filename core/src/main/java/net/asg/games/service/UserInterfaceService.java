@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.autumn.annotation.Component;
@@ -24,7 +23,6 @@ import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 import net.asg.games.controller.LoadingController;
 import net.asg.games.game.objects.YokelObjectFactory;
 import net.asg.games.provider.actors.GameBlock;
-import net.asg.games.utils.Util;
 
 @Component
 public class UserInterfaceService {
@@ -44,7 +42,7 @@ public class UserInterfaceService {
     //Get Objects Factory
     public YokelObjectFactory getFactory(){
         if(factory == null){
-            ObjectMap<String, Array> imageMap = buildImageNames();
+            ObjectMap<String, Array<String>> imageMap = buildImageNames();
             factory = new YokelObjectFactory(this, imageMap.get("imageNames"), imageMap.get("animatedImageNames"));
         }
         return this.factory;
@@ -56,8 +54,8 @@ public class UserInterfaceService {
         factory.dispose();
     }
 
-    private ObjectMap<String, Array> buildImageNames(){
-        ObjectMap<String, Array> imageMap = GdxMaps.newObjectMap();
+    private ObjectMap<String, Array<String>> buildImageNames(){
+        ObjectMap<String, Array<String>> imageMap = GdxMaps.newObjectMap();
         Array<String> images = GdxArrays.newArray();
         Array<String> animatedImages = GdxArrays.newArray();
 
