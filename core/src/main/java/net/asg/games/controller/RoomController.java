@@ -1,6 +1,7 @@
 package net.asg.games.controller;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -16,8 +17,10 @@ import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 import net.asg.games.controller.dialog.ErrorController;
+import net.asg.games.provider.actors.GameNameLabel;
 import net.asg.games.provider.actors.GamePlayerList;
 import net.asg.games.provider.actors.GameTableList;
+import net.asg.games.provider.tags.GameTableListLmlTag;
 import net.asg.games.service.SessionService;
 import net.asg.games.utils.Util;
 
@@ -29,12 +32,15 @@ public class RoomController implements ViewRenderer, ActionContainer {
     @LmlActor("playersList") private GamePlayerList playersList;
     @LmlActor("tableList") private GameTableList tableList;
     @LmlActor("roomName") private VisLabel roomName;
+    @LmlActor("1:nameTag") private GameNameLabel nameTagOne;
+    @LmlActor("2:nameTag") private GameNameLabel nameTagTwo;
 
     private float refresh = 500;
 
     @Override
     public void render(Stage stage, float delta) {
         roomName.setText(sessionService.getCurrentRoomName());
+        //nameTagOne.setData();
 
         if(++refresh > 300){
             refresh = 0;
@@ -42,6 +48,7 @@ public class RoomController implements ViewRenderer, ActionContainer {
                 playersList.updatePlayerList(sessionService.asyncGetPlayerAllRequest());
                 sessionService.asyncPlayerAllRequest();
                 tableList.updateTableList(sessionService.asyncGetTableAllRequest());
+                GameTableListLmlTag.setUpListeners(interfaceService.getParser(), tableList.getRoomsButtons());
                 sessionService.asyncTableAllRequest();
             } catch (Exception e) {
                 e.printStackTrace();

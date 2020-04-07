@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -19,7 +20,6 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
-import net.asg.games.game.objects.AbstractYokelObject;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelObject;
 import net.asg.games.provider.actors.GameBlock;
@@ -76,9 +76,9 @@ public class Util {
         return sb.toString();
     }
 
-    public static Array<String> toPlainTextArray(Array<? extends AbstractYokelObject> objects) {
+    public static Array<String> toPlainTextArray(Array<? extends YokelObject> objects) {
         Array<String> plainTexts = GdxArrays.newArray();
-        for(AbstractYokelObject yokelObject : objects){
+        for(YokelObject yokelObject : objects){
             plainTexts.add(jsonToString(yokelObject.toString()));
         }
         return plainTexts;
@@ -95,6 +95,23 @@ public class Util {
 
     public static boolean isEmpty(String text) {
         return text == null || text.isEmpty();
+    }
+
+    /** @param actor might have an ID attached using name setter.
+     * @return actor's ID or null. */
+    public static String getActorId(Actor actor) {
+        String id = "";
+        if(actor != null){
+            id = actor.getName();
+        }
+        return id;
+    }
+
+    public static <T extends Actor> T getActorFromCell(Class<T> tableClass, Cell cell) {
+        if(cell != null && tableClass != null && tableClass.isInstance(cell.getActor())){
+            return (T) cell.getActor();
+        }
+        return null;
     }
 
     public static class IDGenerator {
@@ -376,7 +393,7 @@ public class Util {
         return fileNames;
     }
 
-    public static TextureRegion get2DAnimationFrame(Animation animation, int keyFrame) throws GdxRuntimeException{
+    public static TextureRegion get2DAnimationFrame(Animation<Object> animation, int keyFrame) throws GdxRuntimeException{
         if(animation == null){
             throw new GdxRuntimeException("Animation cannot be null.");
         }

@@ -153,6 +153,7 @@ public class GameBlockArea extends Stack {
             this.gamePiece = gamePiece;
             this.gamePiece.setDebug(true);
             this.gamePiece.setPosition(grid.getX() + (2 * gamePiece.getWidth()), grid.getY() + (16 * gamePiece.getWidth()));
+
             //System.out.println("gamePiece.. " + gamePiece);
             //Stage stage = getStage();
             //gamePiece.setX(getParent().getX());

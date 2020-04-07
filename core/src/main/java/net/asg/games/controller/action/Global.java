@@ -1,5 +1,6 @@
 package net.asg.games.controller.action;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
@@ -9,6 +10,8 @@ import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
 import net.asg.games.controller.dialog.ErrorController;
+import net.asg.games.controller.dialog.GameController;
+import net.asg.games.provider.actors.GameTableList;
 import net.asg.games.service.SessionService;
 import net.asg.games.utils.PostLoader;
 import net.asg.games.utils.Util;
@@ -46,5 +49,17 @@ public class Global implements ActionContainer {
     @LmlAction("getCurrentPlayerName")
     public String getCurrentPlayerName(){
         return sessionService.getCurrentUserName();
+    }
+
+
+    @LmlAction("requestJoinTable")
+    public void requestJoinTable(Button button) {
+        try{
+            sessionService.asyncTableSitRequest(GameTableList.getTableNumberFromButton(button), GameTableList.getSeatNumberFromButton(button));
+            interfaceService.showDialog(GameController.class);
+        } catch (Exception e){
+            e.printStackTrace();
+            sessionService.showError(e);
+        }
     }
 }

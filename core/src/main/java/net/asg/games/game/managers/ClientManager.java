@@ -52,6 +52,10 @@ public class ClientManager implements Disposable {
         if(socket != null){
             socket.close();
         }
+
+        if(requests != null){
+            requests.clear();
+        }
     }
 
     public boolean isRunning(){
@@ -83,7 +87,7 @@ public class ClientManager implements Disposable {
         Packets.register(serializer);
 
         socket.send(ServerRequest.REQUEST_CLIENT_ID.toString());
-        waitForRequest(DEFAULT_WAIT);
+        waitForOneRequest();
         String[] request = getNextRequest().getPayload();
         clientId = request[0];
 

@@ -84,6 +84,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         stage.act(delta);
         stage.draw();
     }
+
     private void initiate(){
         if(!isInitiated){
             isInitiated = true;

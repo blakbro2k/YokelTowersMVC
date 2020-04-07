@@ -79,6 +79,11 @@ public class SessionService {
         return PayloadUtil.getAllRegisteredPlayersRequest(client.getNextRequest().getPayload());
     }
 
+    public void requestTableSitRequest(int tableNumber, int seatNumber) throws InterruptedException {
+        client.requestTableSit(player, currentLoungeName, currentRoomName, tableNumber, seatNumber);
+        client.waitForOneRequest();
+    }
+
     public void asyncPlayerAllRequest() throws InterruptedException {
         client.requestPlayers();
     }
