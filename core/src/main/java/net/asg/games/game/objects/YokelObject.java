@@ -8,4 +8,10 @@ public interface YokelObject extends Disposable {
 
     /** Returns the Object ID*/
     String getId();
+
+    /** Sets the Object Name*/
+    void setName(String name);
+
+    /** Returns the Object Name*/
+    String getName();
 }

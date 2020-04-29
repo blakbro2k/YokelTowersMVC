@@ -4,8 +4,12 @@ import net.asg.games.utils.Util;
 
 public abstract class AbstractYokelObject implements YokelObject {
     protected String id;
+    protected String name;
 
-    AbstractYokelObject(){ setId();}
+    AbstractYokelObject(){
+        setId();
+        setName();
+    }
 
     @Override
     public String toString() { return Util.getJsonString(this);}
@@ -19,5 +23,15 @@ public abstract class AbstractYokelObject implements YokelObject {
 
     public String getId(){ return id;}
 
+    public void setName(){
+        setName(null);
+    }
 
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String getName(){
+        return this.name;
+    }
 }

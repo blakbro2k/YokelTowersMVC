@@ -96,6 +96,7 @@ import net.asg.games.service.ScaleService;
 
             // Registering VisUI skin with "default" name - this skin will be the default one for all LML widgets:
             skinService.addSkin("default", VisUI.getSkin());
+            //skinService.addSkin("font-small", VisUI.getSkin());
 
             //skinService.addSkin("default", new Skin(Gdx.files.internal("C:\\Users\\bigg_\\StudioProjects\\YokelTowersMVC\\assets\\ui\\skins\\sgx\\skin\\sgx-ui.json")));
             //skinService.addSkin("default", new Skin(Gdx.files.internal("C:\\Users\\bigg_\\StudioProjects\\YokelTowersMVC\\assets\\ui\\skins\\Neutralizer_UI_Skin\\neutralizerui\\neutralizer-ui.json")));

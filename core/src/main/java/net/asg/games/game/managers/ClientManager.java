@@ -130,6 +130,10 @@ public class ClientManager implements Disposable {
         sendClientRequest(ServerRequest.REQUEST_TABLE_SIT, PayloadUtil.createTableSitRequest(player, loungeName, roomName, tableNumber, seatNumber));
     }
 
+    public void requestTableStand(String loungeName, String roomName, int tableNumber, int seatNumber) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_STAND, PayloadUtil.createTableStandRequest(loungeName, roomName, tableNumber, seatNumber));
+    }
+
     public void requestTables(String loungeName, String roomName) throws InterruptedException {
         sendClientRequest(ServerRequest.REQUEST_TABLE_INFO, PayloadUtil.createTableInfoRequest(loungeName, roomName));
     }

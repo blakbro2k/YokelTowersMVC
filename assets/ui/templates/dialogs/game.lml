@@ -38,7 +38,7 @@
                     <label row="true">Drop\t:Down Arrow</label>
                     <label row="true">Cycle Colors\t:R</label>
                     <label row="true">Use Item\t:Space Bar</label>
-                    <gameclock id="gameClock" row="true"/>
+                    <gameclock width="100" height="46" id="gameClock" row="true"/>
                 </table>
                 <table debug="true">
                     <gameblockarea width="48" height="128" id="3:area" debug="true" areanumber="3" preview="true"/>

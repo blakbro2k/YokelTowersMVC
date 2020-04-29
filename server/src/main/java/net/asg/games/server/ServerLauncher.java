@@ -93,7 +93,7 @@ public class ServerLauncher {
                             final String frameText = frame.textData();
                             if(StringUtils.equalsIgnoreCase(frameText, ServerRequest.REQUEST_CLIENT_ID.toString())){
                                 Logger.info("Sending Client [" + handlerID + "]");
-                                sendClentId(webSocket, handlerID);
+                                sendClientId(webSocket, handlerID);
                             }
                         } else if(frame.isClose()){
                             Logger.info("Client [" + handlerID + "] closing connection");
@@ -160,7 +160,7 @@ public class ServerLauncher {
         }
     }
 
-    private void sendClentId(ServerWebSocket webSocket, String handlerID) throws Exception {
+    private void sendClientId(ServerWebSocket webSocket, String handlerID) throws Exception {
         try{
             Logger.trace("Enter sendClentId()");
             ServerResponse response = new ServerResponse(-1,

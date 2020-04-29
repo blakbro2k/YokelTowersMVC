@@ -8,6 +8,7 @@ import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 
 import net.asg.games.provider.actors.GameBoard;
+import net.asg.games.utils.UIUtil;
 
 public class GameBoardLmlTag extends AbstractNonParentalActorLmlTag {
     public GameBoardLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
@@ -16,7 +17,7 @@ public class GameBoardLmlTag extends AbstractNonParentalActorLmlTag {
 
     @Override
     protected Actor getNewInstanceOfActor(final LmlActorBuilder builder) {
-        return new GameBoard(getSkin(builder));
+        return new GameBoard(getSkin(builder), UIUtil.getInstance().getFactory());
     }
 
     @Override

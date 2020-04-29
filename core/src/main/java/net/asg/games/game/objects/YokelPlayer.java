@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 
 public class YokelPlayer extends AbstractYokelObject {
     private final static int DEFAULT_RATING_NUMBER = 1500;
-    private String name;
     private int rating;
     private String logo;
     private String sessionId;
@@ -17,17 +16,13 @@ public class YokelPlayer extends AbstractYokelObject {
     public YokelPlayer(){}
 
     public YokelPlayer(String name){
-        this.name = name;
+        setName(name);
         rating = DEFAULT_RATING_NUMBER;
     }
 
     public YokelPlayer(String name, int rating){
         this(name);
         setRating(rating);
-    }
-
-    public String getName(){
-        return name;
     }
 
     public int getRating(){

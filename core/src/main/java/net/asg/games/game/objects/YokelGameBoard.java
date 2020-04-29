@@ -70,7 +70,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void reset(long seed){
-        nextBlocks = new RandomUtil.RandomNumberArray(1024, seed, 6);
+        nextBlocks = new RandomUtil.RandomNumberArray(1024, seed, MAX_COLS);
         clearBoard();
     }
 

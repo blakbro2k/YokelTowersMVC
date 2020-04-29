@@ -1,10 +1,15 @@
 package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-public class GameNextPeiceQueue extends Table {
+public class GameNextPieceQueue extends Table {
+
+    GameNextPieceQueue(Skin skin){
+        super(skin);
+    }
     /*
     private Drawable background;
     private Rectangle bounds = new Rectangle();

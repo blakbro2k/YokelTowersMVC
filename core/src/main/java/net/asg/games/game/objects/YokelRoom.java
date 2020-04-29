@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
  */
 
 public class YokelRoom extends AbstractYokelObject {
-    private String name;
     //private Chat chatRoom;
     private Array<YokelPlayer> players = new Array<>();
     private OrderedMap<Integer, YokelTable> tables = new OrderedMap<>();
@@ -25,7 +24,7 @@ public class YokelRoom extends AbstractYokelObject {
     public YokelRoom(){}
 
     public YokelRoom(String name){
-        this.name = name;
+        setName(name);
     }
 
     public String getRoomId() {
@@ -69,10 +68,6 @@ public class YokelRoom extends AbstractYokelObject {
 
     public void removeTable(int index){
         tables.remove(index);
-    }
-
-    public String getName() {
-        return name;
     }
 
     @Override

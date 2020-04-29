@@ -1,12 +1,14 @@
 package net.asg.games.storage;
 
-public interface Saveable {
-    /** Put the Table State */
-    void saveObject(Object object);
+import net.asg.games.game.objects.YokelObject;
 
-    /** Releases all resources of this object. */
+public interface Saveable {
+    /** Add Object to transaction list */
+    void saveObject(YokelObject object);
+
+    /** Commit transactions */
     void commitTransactions();
 
-    /** Releases all resources of this object. */
+    /** Delete transactions */
     void rollTransactions();
 }

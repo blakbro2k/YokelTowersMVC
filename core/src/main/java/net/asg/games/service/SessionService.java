@@ -104,6 +104,10 @@ public class SessionService {
         client.requestTableSit(player, currentLoungeName, currentRoomName, tableNumber, seatNumber);
     }
 
+    public void asyncTableStandRequest(int tableNumber, int seatNumber) throws InterruptedException {
+        client.requestTableStand(currentLoungeName, currentRoomName, tableNumber, seatNumber);
+    }
+
     public Array<YokelTable> asyncGetTableAllRequest(){
         //TODO: Save tables states
         return PayloadUtil.getAllTablesRequest(client.getNextRequest(ServerRequest.REQUEST_TABLE_INFO));

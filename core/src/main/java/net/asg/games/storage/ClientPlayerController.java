@@ -5,18 +5,21 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 import net.asg.games.game.objects.YokelPlayer;
 
-public interface StorageController extends Disposable, Saveable, Resolver {
+public interface ClientPlayerController {
     /** Player Controls
-     *  Methods control the flow of a player and client*/
+     *  Methods control the flow of a player and client */
     /** Must link clientID to Player ID to Player Object. */
-    void putRegisteredPlayer(String clientId, YokelPlayer player) throws Exception;
-
-    /** Get Registered Player. */
-    YokelPlayer getRegisteredPlayer(String playerId);
+    void registerPlayer(String clientId, YokelPlayer player) throws Exception;
 
     /** Remove Registered Player. */
     /** Should remove the from all tables, seats, games and rooms **/
-    void removeRegisteredPlayer(String clientID) throws Exception;
+    void unRegisterPlayer(String clientID) throws Exception;
+
+    /** Get Registered Player given Yokel Id. */
+    YokelPlayer getRegisteredPlayer(String playerId);
+
+    /** Get Registered Player given YokelObject. */
+    YokelPlayer getRegisteredPlayer(YokelPlayer player);
 
     /** Gets all registered players. */
     ObjectMap.Values<YokelPlayer> getAllRegisteredPlayers();
@@ -24,6 +27,6 @@ public interface StorageController extends Disposable, Saveable, Resolver {
     /** Check if client id is registered **/
     boolean isClientRegistered(String clientId);
 
-    /** Check if client id is registered **/
-    //boolean isPlayerRegistered(String playerId);
+    /** Check if player id is registered **/
+    boolean isPlayerRegistered(String playerId);
 }

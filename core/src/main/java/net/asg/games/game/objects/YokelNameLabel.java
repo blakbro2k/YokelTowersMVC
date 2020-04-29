@@ -10,26 +10,17 @@ import static net.asg.games.game.objects.YokelBlock.CLEAR_BLOCK;
 
 public class YokelNameLabel extends AbstractYokelObject {
     private int icon;
-    private String name;
 
     //Empty Contructor required for Json.Serializable
     public YokelNameLabel() {}
 
     public YokelNameLabel(String name, int icon) {
         this.icon = icon;
-        this.name = name;
+        setName(name);
     }
 
     @Override
     public void dispose() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getIcon() {

@@ -6,7 +6,6 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.TimeUtils;
 
 import org.mockito.Mockito;
 

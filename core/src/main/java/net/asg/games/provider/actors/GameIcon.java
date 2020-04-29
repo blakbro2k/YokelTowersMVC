@@ -32,7 +32,7 @@ public class GameIcon extends ImageButton {
             throw new GdxRuntimeException("Skin cannot be null to set Default Icon Style.");
         }
         Drawable icon = skin.getDrawable(ICON_ATTR_NAME + currentIconNumber);
-        return new ImageButtonStyle(icon,icon,icon,icon,icon,icon);
+        return new ImageButtonStyle(icon, icon, icon, icon, icon, icon);
     }
 
     private void cycleIcon(){

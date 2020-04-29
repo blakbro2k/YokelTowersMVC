@@ -151,15 +151,15 @@ public class GameTableList extends Table {
     }
 
     public static int getSeatNumberFromButton(Button button) throws GdxRuntimeException {
-        int tableNumber = -1;
+        int seatNumber = -1;
         String buttonName = Util.getActorId(button);
 
         try {
-            tableNumber = Integer.parseInt(buttonName.substring(buttonName.indexOf(TABLE_SEPARATOR) + 1));
+            seatNumber = Integer.parseInt(buttonName.substring(buttonName.indexOf(TABLE_SEPARATOR) + 1));
         } catch (Exception e) {
-            throw new GdxRuntimeException("There was an error getting table number from button :" + buttonName, e);
+            throw new GdxRuntimeException("There was an error getting seat number from button :" + buttonName, e);
         }
 
-        return tableNumber;
+        return seatNumber;
     }
 }

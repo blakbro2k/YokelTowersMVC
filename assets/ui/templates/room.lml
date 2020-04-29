@@ -6,7 +6,7 @@
             <image id="yahoo_games" style="yahoo_games" row="true" height="40"/>
         </table>
         <table row="true" tablealign="left" defaultfillx="true" colspan="2">
-            <label>YAHOO! TOWERS -</label>
+            <label scale="1">YAHOO! TOWERS -</label>
             <label id="roomName">[Null]</label>
         </table>
         <table onecolumn="true" tablealign="left" align="top" height="500">
@@ -18,7 +18,7 @@
             <button onchange="goto:lounge" growx="true">@exitLounge</button>
             <button onchange="app:exit" growx="true">@exitApp</button>
         </table>
-        <table row="true" tablealign="left">
+        <table row="true" align="top">
             <table row="true">
                 <gametablelist id="tableList" growx="true"/>
             </table>

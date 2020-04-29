@@ -50,8 +50,8 @@ public class Util {
         int size = o.length;
         Array<String> array = new Array<>(size);
 
-        for(int i = 0; i < size; i++){
-            array.add(o[i]);
+        for (String s : o) {
+            array.add(s);
         }
         return array;
     }

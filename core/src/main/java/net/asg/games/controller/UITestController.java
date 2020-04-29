@@ -95,9 +95,9 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             next1.setData(piece1.toString());
             next2.setData(piece2.toString());
 
-            area1.updateData(getTestBoard());
-            area2.updateData(getTestBoard());
-            area5.updateData(getTestBoard());
+            //area1.updateData(getTestBoard());
+            //area2.updateData(getTestBoard());
+            //area5.updateData(getTestBoard());
 
             //Queue<YokelBlock>
             //powersQueue1.update();

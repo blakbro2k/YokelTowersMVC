@@ -584,14 +584,14 @@ public class ServerManager {
     private boolean registerPlayer(String clientId, YokelPlayer player) throws Exception {
         if(player != null){
             //validateRegisteredPlayers();
-            storage.putRegisteredPlayer(clientId, player);
+            storage.registerPlayer(clientId, player);
         }
         return true;
     }
 
     private boolean unRegisterPlayer(String clientId) throws Exception {
         //validateRegisteredPlayers();
-        storage.removeRegisteredPlayer(clientId);
+        storage.unRegisterPlayer(clientId);
         return true;
     }
 

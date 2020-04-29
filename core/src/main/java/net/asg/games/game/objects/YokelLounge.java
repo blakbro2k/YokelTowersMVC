@@ -12,7 +12,6 @@ public class YokelLounge extends AbstractYokelObject {
     public static final String ADVANCED_GROUP = "Advanced";
     public static final String DEFAULT_LOUNGE = "Default";
 
-    private String name;
     final private OrderedMap<String, YokelRoom> rooms = GdxMaps.newOrderedMap();
 
     //Empty Contructor required for Json.Serializable
@@ -21,14 +20,6 @@ public class YokelLounge extends AbstractYokelObject {
     public YokelLounge(String name) {
         if(name == null) throw new IllegalArgumentException("GameLounge name cannot be null.");
         setName(name);
-    }
-
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public String getName(){
-        return name;
     }
 
     public void addRoom(YokelRoom room){
