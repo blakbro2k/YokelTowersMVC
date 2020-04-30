@@ -6,8 +6,11 @@ import com.badlogic.gdx.utils.OrderedMap;
 import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.game.objects.YokelRoom;
+import net.asg.games.game.objects.YokelSeat;
+import net.asg.games.game.objects.YokelTable;
 
-public class MemoryYokelStorage extends AbstractStorage {
+public class YokelMemoryStorage extends MemoryStorage implements YokelStorageAdapter {
     //<"lounge name", room object>
     private OrderedMap<String, String> clients;
     //<"lounge name", room object>
@@ -17,7 +20,8 @@ public class MemoryYokelStorage extends AbstractStorage {
     //<"table name", gameManager>
     private OrderedMap<String, GameManager> games;
 
-    public MemoryYokelStorage(){
+    public YokelMemoryStorage(){
+        super();
         lounges = new OrderedMap<>();
         registeredPlayers = new OrderedMap<>();
         games = new OrderedMap<>();
@@ -43,6 +47,12 @@ public class MemoryYokelStorage extends AbstractStorage {
         clients.remove(clientID);
     }
 
+
+    @Override
+    public ObjectMap.Values<YokelPlayer> getAllRegisteredPlayers() {
+        return registeredPlayers.values();
+    }
+
     private String getPlayerIdFromClient(String clientId){
         return clients.get(clientId);
     }
@@ -58,8 +68,13 @@ public class MemoryYokelStorage extends AbstractStorage {
     }
 
     @Override
-    public ObjectMap.Values<YokelPlayer> getAllRegisteredPlayers() {
-        return registeredPlayers.values();
+    public boolean isClientRegistered(String clientId) {
+        return clients.containsKey(clientId);
+    }
+
+    @Override
+    public boolean isPlayerRegistered(String playerId) {
+        return false;
     }
 
     @Override
@@ -71,6 +86,46 @@ public class MemoryYokelStorage extends AbstractStorage {
     @Override
     public YokelLounge getLounge(String lounge) {
         return lounges.get(lounge);
+    }
+
+    @Override
+    public void putRoom(YokelRoom room) throws Exception {
+
+    }
+
+    @Override
+    public YokelRoom getRoom(String nameOrId) {
+        return null;
+    }
+
+    @Override
+    public void putTable(YokelTable table) throws Exception {
+
+    }
+
+    @Override
+    public YokelTable getTable(String nameOrId) {
+        return null;
+    }
+
+    @Override
+    public void putSeat(YokelSeat lounge) throws Exception {
+
+    }
+
+    @Override
+    public YokelSeat getSeat(String nameOrId) {
+        return null;
+    }
+
+    @Override
+    public void putPlayer(YokelPlayer player) throws Exception {
+
+    }
+
+    @Override
+    public YokelPlayer getPlayer(String nameOrId) {
+        return null;
     }
 
     @Override
@@ -91,11 +146,6 @@ public class MemoryYokelStorage extends AbstractStorage {
     @Override
     public ObjectMap.Values<GameManager> getAllGames() {
         return games.values();
-    }
-
-    @Override
-    public boolean isClientRegistered(String clientId) {
-        return clients.containsKey(clientId);
     }
 
     @Override

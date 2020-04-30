@@ -17,7 +17,7 @@ public class YokelPlayer extends AbstractYokelObject {
 
     public YokelPlayer(String name){
         setName(name);
-        rating = DEFAULT_RATING_NUMBER;
+        setRating(DEFAULT_RATING_NUMBER);
     }
 
     public YokelPlayer(String name, int rating){

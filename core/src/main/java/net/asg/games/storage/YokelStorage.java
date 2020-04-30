@@ -1,6 +1,5 @@
 package net.asg.games.storage;
 
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import net.asg.games.game.managers.GameManager;
@@ -10,9 +9,10 @@ import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 
-/** Interface for Storage resources.
+/** Interface for Yokel Object Resource Storage.
  * @author blakbro2k */
-public interface YokelStorage extends ClientPlayerController, Saveable, Disposable, Resolver {
+public interface YokelStorage {
+
     /** Puts a lounge into storage. */
     void putLounge(YokelLounge lounge) throws Exception;
 

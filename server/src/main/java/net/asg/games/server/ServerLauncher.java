@@ -8,8 +8,8 @@ import net.asg.games.server.serialization.AdminClientRequest;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
-import net.asg.games.storage.MemoryYokelStorage;
-import net.asg.games.storage.YokelStorage;
+import net.asg.games.storage.YokelMemoryStorage;
+import net.asg.games.storage.YokelStorageAdapter;
 import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.enums.ServerRequest;
 
@@ -32,7 +32,7 @@ public class ServerLauncher {
     private ServerManager serverDaemon;
     private final static Vertx vertx = Vertx.vertx();
     private final static ManualSerializer serializer = new ManualSerializer();
-    private final static YokelStorage storage = new MemoryYokelStorage();
+    private final static YokelStorageAdapter storage = new YokelMemoryStorage();
     private static GameRunner gameRunner;
     //private ExecutorService threadPool;
 

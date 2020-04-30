@@ -13,7 +13,7 @@ import net.asg.games.game.objects.YokelTable;
 import net.asg.games.server.serialization.AdminClientRequest;
 import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.ServerResponse;
-import net.asg.games.storage.YokelStorage;
+import net.asg.games.storage.YokelStorageAdapter;
 import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.Util;
 import net.asg.games.utils.enums.ServerRequest;
@@ -49,10 +49,10 @@ public class ServerManager {
     private float tickRate = 100;
     private boolean isDebug = true;
     private Level logLevel = Level.INFO;
-    private YokelStorage storage;
+    private YokelStorageAdapter storage;
     private OrderedMap<String, YokelPlayer> testPlayers;
 
-    public ServerManager(YokelStorage storage, String... args){
+    public ServerManager(YokelStorageAdapter storage, String... args){
         try {
             this.storage = storage;
             initialize(args);

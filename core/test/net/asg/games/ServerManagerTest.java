@@ -10,8 +10,9 @@ import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.game.objects.YokelTable;
-import net.asg.games.storage.MemoryYokelStorage;
+import net.asg.games.storage.YokelMemoryStorage;
 import net.asg.games.storage.YokelStorage;
+import net.asg.games.storage.YokelStorageAdapter;
 import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.TestingUtils;
 import net.asg.games.utils.Util;
@@ -34,7 +35,7 @@ public class ServerManagerTest {
     @BeforeClass
     public static void startDaemon() {
         String[] args = {ServerManager.LOG_LEVEL_ATTR, "trace", ServerManager.DEBUG_ATTR};
-        YokelStorage storage = new MemoryYokelStorage();
+        YokelStorageAdapter storage = new YokelMemoryStorage();
         daemon = new ServerManager(storage, args);
     }
 
