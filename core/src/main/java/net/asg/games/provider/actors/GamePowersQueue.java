@@ -22,7 +22,7 @@ public class GamePowersQueue extends Table implements GameObject{
         add(powersDisplay);
     }
 
-    public void update(Queue<GameBlock> powerUps){
+    public void updateQueue(Queue<GameBlock> powerUps){
         if(powerUps != null) {
             for (GameBlock block : powerUps) {
                 if (block != null){

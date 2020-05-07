@@ -3,7 +3,6 @@ package net.asg.games.provider.tags;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.tag.AbstractNonParentalActorLmlTag;
-import com.github.czyzby.lml.parser.impl.tag.actor.ImageLmlTag;
 import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 

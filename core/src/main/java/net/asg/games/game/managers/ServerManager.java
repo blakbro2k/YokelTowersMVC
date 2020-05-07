@@ -539,6 +539,7 @@ public class ServerManager {
 
             if(seat != null){
                 success = seat.sitDown(player);
+                storage.putSeat(seat);
                 Logger.debug("seat=" + seat);
             }
         }
@@ -550,7 +551,9 @@ public class ServerManager {
         YokelSeat seat = getSeat(loungeName, roomName, tableNumber, seatNumber);
 
         if(seat != null){
-            seat.standUp();
+            YokelPlayer standingPlayer = seat.standUp();
+            storage.putSeat(seat);
+            //storage.standUpPlayer()
             return true;
         }
         return false;
@@ -596,7 +599,7 @@ public class ServerManager {
     }
 
     private YokelPlayer getRegisteredPlayer(String playerId){
-        return storage.getRegisteredPlayer(playerId);
+        return storage.getRegisteredPlayerGivenId(playerId);
     }
 
     //0 = Client ID

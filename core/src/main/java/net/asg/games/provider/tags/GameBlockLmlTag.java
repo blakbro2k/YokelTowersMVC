@@ -6,6 +6,7 @@ import com.github.czyzby.lml.parser.impl.tag.AbstractNonParentalActorLmlTag;
 import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 
+import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.utils.UIUtil;
 
@@ -16,7 +17,7 @@ public class GameBlockLmlTag extends AbstractNonParentalActorLmlTag {
 
     @Override
     protected Actor getNewInstanceOfActor(LmlActorBuilder builder) {
-        return UIUtil.getInstance().getFactory().getGameBlock(0);
+        return UIUtil.getInstance().getFactory().getGameBlock(YokelBlock.CLEAR_BLOCK);
     }
 
     @Override

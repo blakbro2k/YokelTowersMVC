@@ -5,15 +5,16 @@ import com.github.czyzby.lml.parser.tag.LmlAttribute;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 
 import net.asg.games.provider.actors.GameBlockArea;
+import net.asg.games.provider.actors.GameBoard;
 
-public class GameBlockAreaNumberLmlAttribute implements LmlAttribute<GameBlockArea> {
+public class GameBlockAreaNumberLmlAttribute implements LmlAttribute<GameBoard> {
     public GameBlockAreaNumberLmlAttribute() {}
 
-    public Class<GameBlockArea> getHandledType() {
-        return GameBlockArea.class;
+    public Class<GameBoard> getHandledType() {
+        return GameBoard.class;
     }
 
-    public void process(LmlParser parser, LmlTag tag, GameBlockArea actor, String rawAttributeData) {
+    public void process(LmlParser parser, LmlTag tag, GameBoard actor, String rawAttributeData) {
         actor.setBoardNumber(parser.parseInt(rawAttributeData));
     }
 }

@@ -1,10 +1,5 @@
 package net.asg.games.game.objects;
 
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
-
-import net.asg.games.utils.Util;
-
 /**
  * Created by Blakbro2k on 1/28/2018.
  */
@@ -29,8 +24,10 @@ public class YokelSeat extends AbstractYokelObject {
         return false;
     }
 
-    public void standUp(){
+    public YokelPlayer standUp(){
+        YokelPlayer var = seatedPlayer;
         seatedPlayer = null;
+        return var;
     }
 
     public boolean isOccupied(){

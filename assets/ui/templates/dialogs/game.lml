@@ -23,7 +23,7 @@
                 <checkbox tablealign="left">@RatedChkBx</checkbox>
                 <checkbox tablealign="left">Sound</checkbox>
             </table>
-            <table onecolumn="true">
+            <table>
                 <button defaultfillx="true">Help</button>
                 <!-- "close" action is defined in Global class. -->
                 <button onchange="close" defaultfillx="true">Quit</button>
@@ -54,13 +54,13 @@
                         <gamepiece id="1:next"/>
                         <gamepowers id="1:powers"/>
                     </table>
-                    <gameblockarea width="96" height="256" id="1:area" debug="true" areanumber="1"/>
+                    <gameblockarea width="96" height="256" id="1:area" areanumber="1"/>
                 </table>
                 <table debug="true">
                     <table colspan="2" row="true">
                         <gamenametag id="2:nameTag" align="left" row="true"/>
                     </table>
-                    <gameblockarea width="96" height="256" id="2:area" debug="true" areanumber="2"/>
+                    <gameblockarea width="96" height="256" id="2:area" areanumber="2"/>
                     <table onecolumn="true" align="top">
                         <gamepiece id="2:next"/>
                         <gamepowers id="2:powers"/>

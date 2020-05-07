@@ -1,5 +1,8 @@
 package net.asg.games.game.objects;
 
+import com.badlogic.gdx.utils.Queue;
+
+import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.utils.RandomUtil;
 
 import java.util.Stack;
@@ -52,6 +55,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     private YokelPiece piece;
     private YokelPiece nextPiece;
     private YokelClock clock;
+
     private float fallNumber;
     private RandomUtil.RandomNumberArray nextBlocks;
     private int currentBlockPointer = -1;
@@ -76,6 +80,22 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     @Override
     public void dispose() {}
+
+    public void startClock(){
+        clock.start();
+    }
+
+    public void stopClock(){
+        clock.stop();
+    }
+
+    public YokelPiece getNextPiece(){
+        return nextPiece;
+    }
+
+    public YokelClock getClock(){
+        return clock;
+    }
 
     public int[][] getCells(){
         return cells;
@@ -142,13 +162,6 @@ public class YokelGameBoard extends AbstractYokelObject {
         ids[index] = false;
     }
 
-    public void startClock(){
-        clock.start();
-    }
-
-    public void stopClock(){
-        clock.stop();
-    }
     public boolean isArtificiallyAdded(int column, int row) {
         return YokelBlockEval.hasAddedByYahooFlag(cells[row][column]);
     }
@@ -1498,7 +1511,7 @@ public class YokelGameBoard extends AbstractYokelObject {
             this.fallNumber = MAX_FALL_VALUE;
         } else {
             setNextPiece();
-            getNextPiece();
+            getNewNextPiece();
         }
     }
 
@@ -1524,7 +1537,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         }
     }
 
-    public void getNextPiece() {
+    public void getNewNextPiece() {
         if(nextPiece == null){
             this.nextPiece = newPieceBock();
         }
@@ -1551,5 +1564,9 @@ public class YokelGameBoard extends AbstractYokelObject {
             ++countOfPieces[block];
             return block;
         }
+    }
+
+    public Queue<GameBlock> getPowers() {
+        return null;
     }
 }

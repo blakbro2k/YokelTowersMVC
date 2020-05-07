@@ -19,6 +19,7 @@ import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.provider.actors.GameBlockArea;
+import net.asg.games.provider.actors.GameBoard;
 import net.asg.games.provider.actors.GameClock;
 import net.asg.games.provider.actors.GamePiece;
 import net.asg.games.provider.actors.GamePowersQueue;
@@ -62,16 +63,16 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("gameClock") private GameClock gameClock;
     @LmlActor("clear_block") private Image clearBlock;
     @LmlActor("clear_block_preview") private Image clearBlockPreview;
-    @LmlActor("1:area") private GameBlockArea area1;
-    @LmlActor("2:area") private GameBlockArea area2;
-    @LmlActor("3:area") private GameBlockArea area3;
-    @LmlActor("4:area") private GameBlockArea area4;
-    @LmlActor("5:area") private GameBlockArea area5;
-    @LmlActor("6:area") private GameBlockArea area6;
-    @LmlActor("7:area") private GameBlockArea area7;
-    @LmlActor("8:area") private GameBlockArea area8;
-    @LmlActor("1:next") private GamePiece next1;
-    @LmlActor("2:next") private GamePiece next2;
+    @LmlActor("1:area") private GameBoard area1;
+    @LmlActor("2:area") private GameBoard area2;
+    @LmlActor("3:area") private GameBoard area3;
+    @LmlActor("4:area") private GameBoard area4;
+    @LmlActor("5:area") private GameBoard area5;
+    @LmlActor("6:area") private GameBoard area6;
+    @LmlActor("7:area") private GameBoard area7;
+    @LmlActor("8:area") private GameBoard area8;
+    @LmlActor("1:next") private GameBoard next1;
+    @LmlActor("2:next") private GameBoard next2;
     @LmlActor("1:powers") private GamePowersQueue powersQueue1;
     @LmlActor("2:powers") private GamePowersQueue powersQueue2;
 
@@ -92,8 +93,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             YokelPiece piece1 = new YokelPiece(1,32,84,112);
             YokelPiece piece2 = new YokelPiece(2,68,53,51);
 
-            next1.setData(piece1.toString());
-            next2.setData(piece2.toString());
+            //next1.setData(piece1.toString());
+            //next2.setData(piece2.toString());
 
             //area1.updateData(getTestBoard());
             //area2.updateData(getTestBoard());

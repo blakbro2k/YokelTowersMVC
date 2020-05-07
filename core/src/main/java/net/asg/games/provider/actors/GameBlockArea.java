@@ -4,9 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -36,18 +38,27 @@ public class GameBlockArea extends Table {
     private int boardNumber;
     private YokelGameBoard board;
 
-    private Table boarder;
     private Table grid;
-    private GamePiece gamePiece;
     private Table bgNumber;
+
+    private GamePiece gamePiece;
+
+    private GameJoinWindow joinWindow;
 
     private YokelObjectFactory factory;
     private ObjectMap<String, GameBlock> uiBlocks;
     private Array<Actor> actors;
 
     public GameBlockArea(YokelObjectFactory factory) {
-        super();
+        super(factory.getUserInterfaceService().getSkin());
+
         reset(factory);
+        joinWindow = new GameJoinWindow(getSkin());
+        //joinButton.clearChildren();
+        //joinDialog.button("Join").setDebug(false);
+        //joinDialog.set
+        //joinDialog.show(factory.getUserInterfaceService().getStage());
+        add(joinWindow);
     }
 
     private void reset(YokelObjectFactory factory){
@@ -86,10 +97,9 @@ public class GameBlockArea extends Table {
     }
 
     public void setDebug (boolean enabled) {
-        super.setDebug(enabled);
-        Util.setDebug(enabled, boarder, grid, bgNumber);
+        super.setDebug(Util.setDebug(enabled, grid, bgNumber));
     }
-    
+
     private void initializeGrid(){
         for(int r = YokelGameBoard.MAX_ROWS - 1; r >= 0; r--){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
@@ -111,14 +121,8 @@ public class GameBlockArea extends Table {
     }
 
     private void initializeBackground(){
-        boarder = new Table();
         Skin skin = getSkin();
-        boarder.setSkin(skin);
-        boarder.setWidth(getWidth());
-        boarder.setHeight(getHeight());
-        boarder.setBounds(this.getX(), this.getY(), 16, 48);
         this.setColor(ACTIVE_BACKGROUND_COLOR);
-        //add(boarder);
 
         bgNumber = new Table(skin);
         bgNumber.align(Align.top);
@@ -209,7 +213,7 @@ public class GameBlockArea extends Table {
     @Override
     public void act(float delta){
         super.act(delta);
-
+        //joinWindow.setPosition(getX(), getY());
         //Move game piece down
         moveGamePiece(delta);
         if(this.gamePiece != null){
@@ -217,15 +221,15 @@ public class GameBlockArea extends Table {
         }
     }
 
-    /*
     @Override
     public void draw(Batch batch, float alpha){
+        super.draw(batch, alpha);
+        //joinWindow.setPosition(getX(), getY() / 2);
         //if(!isActive) return;
 
-        super.draw(batch, alpha);
         //drawGamePiece(batch, alpha);
-        drawSprites(batch, alpha);
-    }*/
+        //drawSprites(batch, alpha);
+    }
 
     public void updateData(YokelGameBoard gameBoard) {
         if(gameBoard != null) {

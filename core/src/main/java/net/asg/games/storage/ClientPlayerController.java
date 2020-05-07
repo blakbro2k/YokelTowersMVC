@@ -1,6 +1,5 @@
 package net.asg.games.storage;
 
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import net.asg.games.game.objects.YokelPlayer;
@@ -16,7 +15,7 @@ public interface ClientPlayerController {
     void unRegisterPlayer(String clientID) throws Exception;
 
     /** Get Registered Player given Yokel Id. */
-    YokelPlayer getRegisteredPlayer(String playerId);
+    YokelPlayer getRegisteredPlayerGivenId(String playerId);
 
     /** Get Registered Player given YokelObject. */
     YokelPlayer getRegisteredPlayer(YokelPlayer player);

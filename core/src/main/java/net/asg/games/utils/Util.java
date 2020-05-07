@@ -478,7 +478,7 @@ public class Util {
         }
     }
 
-    public static void setDebug(boolean b, Actor... actors){
+    public static boolean setDebug(boolean b, Actor... actors){
         if(actors != null){
             for(Actor actor : actors){
                 if(actor != null){
@@ -486,6 +486,7 @@ public class Util {
                 }
             }
         }
+        return b;
     }
 
 

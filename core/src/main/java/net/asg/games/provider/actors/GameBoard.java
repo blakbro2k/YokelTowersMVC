@@ -3,6 +3,7 @@ package net.asg.games.provider.actors;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelObjectFactory;
 
 /**
@@ -17,6 +18,9 @@ public class GameBoard extends Table {
     private GamePowersQueue powers;
     private GameBlockArea area;
 
+    private boolean isPreview = false;
+    private boolean isLeftBar = true;
+
     public GameBoard(Skin skin, YokelObjectFactory factory) {
         super(skin);
 
@@ -25,21 +29,59 @@ public class GameBoard extends Table {
     }
 
     private void initialize(Skin skin, YokelObjectFactory factory) {
-        GameNameLabel nameLabel = new GameNameLabel(skin);
-        GameNextPieceQueue next = new GameNextPieceQueue(skin);
-        GamePowersQueue powers = new GamePowersQueue(skin);
-        GameBlockArea area = new GameBlockArea(factory);
+        nameLabel = new GameNameLabel(skin);
+        next = new GameNextPieceQueue(skin);
+        powers = new GamePowersQueue(skin);
+        area = new GameBlockArea(factory);
 
-        Table left = new Table(skin);
-        Table right = new Table(skin);
+        setUpBoard(isPreview);
+    }
 
-        left.add(next).row();
-        left.add(powers);
+    private void setUpBoard(boolean preview){
+        clearChildren();
 
+        Table right = new Table(getSkin());
         right.add(area);
 
-        add(nameLabel).colspan(2).row();
-        add(left);
-        add(right);
+        if(preview){
+            add(nameLabel);
+            row();
+            add(right);
+        } else {
+            Table left = new Table(getSkin());
+            left.add(next).row();
+            left.add(powers);
+
+            add(nameLabel).colspan(2);
+            row();
+
+            if(isLeftBar){
+                add(left);
+                add(right);
+            } else {
+                add(right);
+                add(left);
+            }
+        }
+    }
+
+    public void setPreview(boolean preview){
+        isPreview = preview;
+        setUpBoard(isPreview);
+    }
+
+    public void update(YokelGameBoard board){
+        if(board != null){
+            area.updateData(board);
+            powers.updateQueue(board.getPowers());
+        }
+    }
+
+    public void setLeftBarOrientation(boolean isLeft){
+        isLeftBar = isLeft;
+    }
+
+    public void setBoardNumber(int boardNumber) {
+        area.setBoardNumber(boardNumber);
     }
 }
