@@ -9,6 +9,9 @@ build/
 *.ear
 hs_err_pid*
 
+## Core
+.dtd
+
 ## Android:
 android/libs/armeabi/
 android/libs/armeabi-v7a/

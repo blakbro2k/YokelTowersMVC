@@ -17,7 +17,7 @@ public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
 
     @Override
     protected Actor getNewInstanceOfActor(final LmlActorBuilder builder) {
-        return new GameBlockArea(getFactory());
+        return new GameBlockArea(getSkin(builder));
     }
 
     @Override
@@ -27,9 +27,5 @@ public class GameBlockAreaLmlTag extends AbstractNonParentalActorLmlTag {
     /** @return casted actor. */
     private GameBlockArea getGameBlockArea() {
         return (GameBlockArea) getActor();
-    }
-
-    private YokelObjectFactory getFactory(){
-        return UIUtil.getInstance().getFactory();
     }
 }

@@ -27,6 +27,18 @@ public class YokelPiece extends AbstractYokelObject {
         }
     }
 
+    public int getBlock1(){
+        return cells[2];
+    }
+
+    public int getBlock2(){
+        return cells[1];
+    }
+
+    public int getBlock3(){
+        return cells[0];
+    }
+
     public int getIndex() {
         return index;
     }

@@ -2,7 +2,6 @@ package net.asg.games.game.objects;
 
 import com.badlogic.gdx.utils.Queue;
 
-import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.utils.RandomUtil;
 
 import java.util.Stack;
@@ -60,6 +59,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     private RandomUtil.RandomNumberArray nextBlocks;
     private int currentBlockPointer = -1;
     private boolean fastDown;
+    private Queue<Integer> powers;
 
     //Empty Contructor required for Json.Serializable
     public YokelGameBoard(){}
@@ -70,6 +70,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         piece = null;
         fallNumber = MAX_FALL_VALUE;
         clock = new YokelClock();
+        powers = new Queue<>();
         reset(seed);
     }
 
@@ -1476,6 +1477,18 @@ public class YokelGameBoard extends AbstractYokelObject {
         sb.append('+').append('\n');
     }
 
+    public YokelPiece fetchCurrentPiece(){
+        return piece;
+    }
+
+    public float fetchCurrentFallnumber(){
+        return fallNumber;
+    }
+
+    public YokelPiece fetchCurrentNextPiece(){
+        return nextPiece;
+    }
+
     private void clearCell(int r, int c){
         cells[r][c] = YokelBlock.CLEAR_BLOCK;
     }
@@ -1566,7 +1579,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         }
     }
 
-    public Queue<GameBlock> getPowers() {
-        return null;
+    public Queue<Integer> getPowers() {
+        return powers;
     }
 }

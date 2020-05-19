@@ -52,12 +52,11 @@ public class YokelObjectFactory implements Disposable {
         }
     };
 
-    public GameBlock getGameBlock(int blockType){
-        return getGameBlock(blockType, false);
-    }
-
     public GameBlock getGameBlock(int blockType, boolean isPreview){
         GameBlock block = yokelGameBlockPool.obtain();
+        System.out.println("block pool=" + yokelGameBlockPool.getFree());
+        System.out.println("block max=" + yokelGameBlockPool.max);
+        System.out.println("block peak=" + yokelGameBlockPool.peak);
 
         if(isPreview){
             block.setPreviewImage(blockType);

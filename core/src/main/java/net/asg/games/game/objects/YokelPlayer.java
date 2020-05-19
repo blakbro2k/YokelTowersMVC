@@ -9,20 +9,25 @@ import org.apache.commons.lang.StringUtils;
 public class YokelPlayer extends AbstractYokelObject {
     private final static int DEFAULT_RATING_NUMBER = 1500;
     private int rating;
-    private String logo;
-    private String sessionId;
+    private int icon;
+    private YokelNameLabel nameLabel;
 
     //Empty Contructor required for Json.Serializable
     public YokelPlayer(){}
 
     public YokelPlayer(String name){
-        setName(name);
-        setRating(DEFAULT_RATING_NUMBER);
+        this(name, DEFAULT_RATING_NUMBER, 1);
     }
 
     public YokelPlayer(String name, int rating){
-        this(name);
+        this(name, rating, 1);
+    }
+
+    public YokelPlayer(String name, int rating, int icon){
+        setName(name);
         setRating(rating);
+        setIcon(icon);
+        nameLabel = new YokelNameLabel(name, icon);
     }
 
     public int getRating(){
@@ -31,6 +36,14 @@ public class YokelPlayer extends AbstractYokelObject {
 
     public void setRating(int rating){
         this.rating = rating;
+    }
+
+    public void setIcon(int icon){
+        this.icon = icon;
+    }
+
+    public int getIcon(){
+        return icon;
     }
 
     public void increaseRating(int inc){
@@ -43,6 +56,10 @@ public class YokelPlayer extends AbstractYokelObject {
 
     public String getPlayerId() {
         return getId();
+    }
+
+    public YokelNameLabel getNameLabel(){
+        return nameLabel;
     }
 
     @Override
@@ -63,5 +80,5 @@ public class YokelPlayer extends AbstractYokelObject {
     }
 
     @Override
-    public void dispose() {}
+    public void dispose() { nameLabel.dispose();}
 }

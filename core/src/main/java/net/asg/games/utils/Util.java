@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.SnapshotArray;
+
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
@@ -112,6 +113,24 @@ public class Util {
             return (T) cell.getActor();
         }
         return null;
+    }
+
+    public static float maxFloat(Float... floats) {
+        float max = 0;
+        if(floats != null){
+            for(float f : floats){
+                max = Math.max(max, f);
+            }
+        }
+        return max;
+    }
+
+    public static GameBlock getBlock(int block){
+        return UIUtil.getInstance().getGameBlock(block, false);
+    }
+
+    public static GameBlock getBlock(int block, boolean isPreview){
+        return UIUtil.getInstance().getGameBlock(block, isPreview);
     }
 
     public static class IDGenerator {

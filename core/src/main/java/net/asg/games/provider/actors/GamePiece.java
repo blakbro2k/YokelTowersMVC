@@ -5,14 +5,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelPiece;
-import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.Util;
 
 public class GamePiece extends Table implements GameObject {
     static final private int GRID_OFFSET = 6;
 
     public GamePiece(Skin skin){
-        this(skin,null,null,null);
+        this(skin, YokelBlock.CLEAR_BLOCK, YokelBlock.CLEAR_BLOCK, YokelBlock.CLEAR_BLOCK);
     }
 
     public GamePiece(Skin skin, GameBlock top, GameBlock mid, GameBlock bottom){
@@ -21,7 +20,7 @@ public class GamePiece extends Table implements GameObject {
     }
 
     public GamePiece(Skin skin, int top, int mid, int bottom){
-        this(skin, UIUtil.getInstance().getGameBlock(top), UIUtil.getInstance().getGameBlock(mid), UIUtil.getInstance().getGameBlock(bottom));
+        this(skin, Util.getBlock(top), Util.getBlock(mid), Util.getBlock(bottom));
     }
 
     public GamePiece(Skin skin, String data){
@@ -45,20 +44,8 @@ public class GamePiece extends Table implements GameObject {
         add(bottom).row();
     }
 
-    private GameBlock getBlock(GameBlock block){
-        if(block == null){
-            return getClearBlock();
-        } else {
-            return block;
-        }
-    }
-
     public void setDebug(boolean enabled) {
         super.setDebug(enabled);
-    }
-
-    private GameBlock getClearBlock(){
-        return UIUtil.getInstance().getGameBlock(YokelBlock.CLEAR_BLOCK);
     }
 
     @Override
@@ -66,9 +53,9 @@ public class GamePiece extends Table implements GameObject {
         YokelPiece piece = Util.getObjectFromJsonString(YokelPiece.class, data);
         if(piece != null){
             this.clearChildren();
-            initialize(UIUtil.getInstance().getGameBlock(piece.getValueAt(0)),
-                        UIUtil.getInstance().getGameBlock(piece.getValueAt(1)),
-                        UIUtil.getInstance().getGameBlock(piece.getValueAt(2)));
+            initialize(Util.getBlock(piece.getValueAt(0)),
+                    Util.getBlock(piece.getValueAt(1)),
+                    Util.getBlock(piece.getValueAt(2)));
         }
     }
 }

@@ -17,11 +17,11 @@ import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
+import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.provider.actors.GameBlockArea;
 import net.asg.games.provider.actors.GameBoard;
 import net.asg.games.provider.actors.GameClock;
-import net.asg.games.provider.actors.GamePiece;
 import net.asg.games.provider.actors.GamePowersQueue;
 import net.asg.games.service.UserInterfaceService;
 
@@ -71,6 +71,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("6:area") private GameBoard area6;
     @LmlActor("7:area") private GameBoard area7;
     @LmlActor("8:area") private GameBoard area8;
+    @LmlActor("9:area") private GameBlockArea area9;
     @LmlActor("1:next") private GameBoard next1;
     @LmlActor("2:next") private GameBoard next2;
     @LmlActor("1:powers") private GamePowersQueue powersQueue1;
@@ -78,10 +79,14 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
     private boolean isInitiated;
     private Queue<GameBlock> powerUps = new Queue<>();
+    private YokelGameBoard board1;
+    private YokelGameBoard board2;
 
     @Override
     public void render(Stage stage, float delta) {
         initiate();
+        //board1.update(delta);
+        //board2.update(delta);
         stage.act(delta);
         stage.draw();
     }
@@ -90,10 +95,31 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         if(!isInitiated){
             isInitiated = true;
             initiateActors();
+
+            //Util.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
+
             YokelPiece piece1 = new YokelPiece(1,32,84,112);
             YokelPiece piece2 = new YokelPiece(2,68,53,51);
+            YokelPlayer player1 = new YokelPlayer("enboateng");
+            YokelPlayer player2 = new YokelPlayer("lhotham", 1400,5);
+            YokelPlayer player3 = new YokelPlayer("rmeyers", 1700,7);
+            board1 = getGameBoard();
+            board1.getNewNextPiece();
+            board2 = getGameBoard();
+            board2.getNewNextPiece();
 
-            //next1.setData(piece1.toString());
+            area1.setPlayerLabel(player1.getNameLabel().toString());
+            area1.update(board1);
+
+            //area9.updateData(getTestBoard());
+            area2.setPlayerLabel(player2.getNameLabel().toString());
+            area2.update(board2);
+
+            area5.setPlayerLabel(player3.getNameLabel().toString());
+            area5.update(getTestBoard());
+            //area5.setPreview(true);
+
+            //next1.setData(piece1.toString());,
             //next2.setData(piece2.toString());
 
             //area1.updateData(getTestBoard());
@@ -160,6 +186,10 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         //uiService.area1.setGamePiece(gp);
     }
 
+    private YokelGameBoard getGameBoard(){
+        return new YokelGameBoard(1L);
+    }
+
     @LmlAction("getTestBoard")
     private YokelGameBoard getTestBoard(){
         YokelGameBoard board = new YokelGameBoard(1L);
@@ -184,6 +214,98 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         board.setCell(2,3, getRandomBlockId());
         board.setCell(2,4, getRandomBlockId());
         board.setCell(2,5, 112);
+
+        board.setCell(3,0, 112);
+        board.setCell(3,1, getRandomBlockId());
+        board.setCell(3,2, getRandomBlockId());
+        board.setCell(3,3, getRandomBlockId());
+        board.setCell(3,4, getRandomBlockId());
+        board.setCell(3,5, 112);
+
+        board.setCell(4,0, 112);
+        board.setCell(4,1, getRandomBlockId());
+        board.setCell(4,2, getRandomBlockId());
+        board.setCell(4,3, getRandomBlockId());
+        board.setCell(4,4, getRandomBlockId());
+        board.setCell(4,5, 112);
+
+        board.setCell(5,0, getRandomBlockId());
+        board.setCell(5,1, getRandomBlockId());
+        board.setCell(5,2, getRandomBlockId());
+        board.setCell(5,3, getRandomBlockId());
+        board.setCell(5,4, getRandomBlockId());
+        board.setCell(5,5, getRandomBlockId());
+
+        board.setCell(6,0, getRandomBlockId());
+        board.setCell(6,1, getRandomBlockId());
+        board.setCell(6,2, getRandomBlockId());
+        board.setCell(6,3, getRandomBlockId());
+        board.setCell(6,4, getRandomBlockId());
+        board.setCell(6,5, getRandomBlockId());
+
+        board.setCell(7,0, getRandomBlockId());
+        board.setCell(7,1, getRandomBlockId());
+        board.setCell(7,2, getRandomBlockId());
+        board.setCell(7,3, getRandomBlockId());
+        board.setCell(7,4, getRandomBlockId());
+        board.setCell(7,5, 112);
+
+        board.setCell(8,0, getRandomBlockId());
+        board.setCell(8,1, getRandomBlockId());
+        board.setCell(8,2, getRandomBlockId());
+        board.setCell(8,3, getRandomBlockId());
+        board.setCell(8,4, getRandomBlockId());
+        board.setCell(8,5, getRandomBlockId());
+
+        board.setCell(9,0, getRandomBlockId());
+        board.setCell(9,1, getRandomBlockId());
+        board.setCell(9,2, getRandomBlockId());
+        board.setCell(9,3, getRandomBlockId());
+        board.setCell(9,4, getRandomBlockId());
+        board.setCell(9,5, getRandomBlockId());
+
+        board.setCell(10,0, getRandomBlockId());
+        board.setCell(10,1, getRandomBlockId());
+        board.setCell(10,2, getRandomBlockId());
+        board.setCell(10,3, getRandomBlockId());
+        board.setCell(10,4, getRandomBlockId());
+        board.setCell(10,5, getRandomBlockId());
+
+        board.setCell(11,0, getRandomBlockId());
+        board.setCell(11,1, getRandomBlockId());
+        board.setCell(11,2, getRandomBlockId());
+        board.setCell(11,3, getRandomBlockId());
+        board.setCell(11,4, getRandomBlockId());
+        board.setCell(11,5, getRandomBlockId());
+
+        board.setCell(12,0, getRandomBlockId());
+        board.setCell(12,1, getRandomBlockId());
+        board.setCell(12,2, getRandomBlockId());
+        board.setCell(12,3, getRandomBlockId());
+        board.setCell(12,4, getRandomBlockId());
+        board.setCell(12,5, getRandomBlockId());
+
+        board.setCell(13,0, getRandomBlockId());
+        board.setCell(13,1, getRandomBlockId());
+        board.setCell(13,2, getRandomBlockId());
+        board.setCell(13,3, getRandomBlockId());
+        board.setCell(13,4, getRandomBlockId());
+        board.setCell(13,5, getRandomBlockId());
+
+        board.setCell(14,0, getRandomBlockId());
+        board.setCell(14,1, getRandomBlockId());
+        board.setCell(14,2, getRandomBlockId());
+        board.setCell(14,3, getRandomBlockId());
+        board.setCell(14,4, getRandomBlockId());
+        board.setCell(14,5, getRandomBlockId());
+
+        board.setCell(15,0, getRandomBlockId());
+        board.setCell(15,1, getRandomBlockId());
+        board.setCell(15,2, getRandomBlockId());
+        board.setCell(15,3, getRandomBlockId());
+        board.setCell(15,4, getRandomBlockId());
+        board.setCell(15,5, getRandomBlockId());
+
         return board;
     }
 

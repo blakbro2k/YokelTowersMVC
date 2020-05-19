@@ -14,7 +14,7 @@ public class GameNameLabel extends Table implements GameObject {
     public GameNameLabel(Skin skin){
         super(skin);
         icon = null;
-        playerName = null;
+        playerName = new Label(" ", skin);
     }
 
     @Override
@@ -33,9 +33,6 @@ public class GameNameLabel extends Table implements GameObject {
     }
 
     private void setNameTag(String name) {
-        if(playerName == null){
-            playerName = new Label("", getSkin());
-        }
         playerName.setText(name);
     }
 
@@ -44,5 +41,21 @@ public class GameNameLabel extends Table implements GameObject {
             icon = new GameIcon(GameIcon.getGameDefaultIconStyle(getSkin()), getSkin());
         }
         icon.setIconNumber(iconNumber);
+    }
+
+    @Override
+    public float getPrefHeight() {
+        float iconHeight = icon.getPrefHeight();
+        float playerHeight = playerName.getPrefHeight();
+        float superHeight = super.getPrefHeight();
+        return Util.maxFloat(iconHeight, playerHeight, superHeight);
+    }
+
+    @Override
+    public float getPrefWidth() {
+        float iconWidth = icon.getPrefWidth();
+        float playerWidth = icon.getPrefWidth();
+        float superWidth = super.getPrefWidth();
+        return Util.maxFloat(iconWidth, playerWidth, superWidth);
     }
 }

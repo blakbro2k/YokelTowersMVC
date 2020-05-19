@@ -6,6 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Queue;
 
+import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.utils.Util;
+
 public class GamePowersQueue extends Table implements GameObject{
     private Queue<GameBlock> powers;
     private VerticalGroup powersDisplay;
@@ -33,10 +36,9 @@ public class GamePowersQueue extends Table implements GameObject{
             int maxIndex = 9;
             int index = 0;
             for(GameBlock block : powers){
-                if(index < maxIndex){
+                if(++index < maxIndex){
                     powersDisplay.addActor(block);
                 }
-                index++;
             }
         }
     }
@@ -52,23 +54,11 @@ public class GamePowersQueue extends Table implements GameObject{
     }
 
     public float getPrefWidth() {
-        float width = super.getPrefWidth();
-        float localWidth = 3f;
-
-        if (localWidth > 0){
-            width = localWidth * 1;
-        }
-        return width;
+        return Util.getBlock(YokelBlock.CLEAR_BLOCK).getPrefWidth();
     }
 
     public float getPrefHeight() {
-        float height = super.getPrefHeight();
-        float localHeight = 3f;
-
-        if (localHeight > 0){
-            height = localHeight * 9;
-        }
-        return height;
+        return Util.getBlock(YokelBlock.CLEAR_BLOCK).getPrefHeight() * 6;
     }
 
     @Override

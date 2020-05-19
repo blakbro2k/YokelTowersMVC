@@ -99,7 +99,7 @@ public class GameTableList extends Table {
     private Button getJoinButton(int tableNumber, YokelSeat seat){
         TextButton button = new TextButton(JOIN_STR, getSkin());
 
-        int seatNumber = -1;
+        int seatNumber;
         if(seat != null) {
             seatNumber = seat.getSeatNumber();
             button.setName(tableNumber + TABLE_SEPARATOR + seatNumber);
@@ -138,7 +138,7 @@ public class GameTableList extends Table {
     }
 
     public static int getTableNumberFromButton(Button button) throws GdxRuntimeException {
-        int tableNumber = -1;
+        int tableNumber;
         String buttonName = Util.getActorId(button);
 
         try {
@@ -151,7 +151,7 @@ public class GameTableList extends Table {
     }
 
     public static int getSeatNumberFromButton(Button button) throws GdxRuntimeException {
-        int seatNumber = -1;
+        int seatNumber;
         String buttonName = Util.getActorId(button);
 
         try {

@@ -27,6 +27,7 @@ import com.github.czyzby.lml.vis.util.ColorPickerContainer;
 import com.kotcrab.vis.ui.VisUI;
 
 import net.asg.games.YokelTowersMVC;
+import net.asg.games.provider.attributes.GamePieceOrientationLmlAttribute;
 import net.asg.games.provider.tags.GameBlockAreaLmlTagProvider;
 import net.asg.games.provider.attributes.GameBlockPreviewLmlAttribute;
 import net.asg.games.provider.attributes.GameBlockTypeLmlAttribute;
@@ -36,7 +37,6 @@ import net.asg.games.provider.attributes.GameBlockAreaNumberLmlAttribute;
 import net.asg.games.provider.tags.GameBoardLmlTagProvider;
 import net.asg.games.provider.tags.GameClockLmlTagProvider;
 import net.asg.games.provider.tags.GameNameLabelmlTagProvider;
-import net.asg.games.provider.tags.GameNextPieceLmlTagProvider;
 import net.asg.games.provider.tags.GamePieceLmlTagProvider;
 import net.asg.games.provider.tags.GameLoungeLmlTagProvider;
 import net.asg.games.provider.tags.GamePlayerIconLmlTagProvider;
@@ -44,7 +44,6 @@ import net.asg.games.provider.tags.GamePlayerListLmlTagProvider;
 import net.asg.games.provider.tags.GamePowersQueueLmlTagProvider;
 import net.asg.games.provider.tags.GameTableListLmlTagProvider;
 import net.asg.games.service.ScaleService;
-import net.asg.games.ui.YahooUi;
 
 /** Thanks to the Component annotation, this class will be automatically found and processed.
      *
@@ -124,7 +123,6 @@ import net.asg.games.ui.YahooUi;
             syntax.addTagProvider(new GameBlockAreaLmlTagProvider(), "gameblockarea");
             syntax.addTagProvider(new GameBlockLmlTagProvider(), "gameblock");
             syntax.addTagProvider(new GamePieceLmlTagProvider(), "gamepiece");
-            syntax.addTagProvider(new GameNextPieceLmlTagProvider(), "gamenext");
             syntax.addTagProvider(new GamePowersQueueLmlTagProvider(), "gamepowers");
             syntax.addTagProvider(new GamePlayerListLmlTagProvider(), "gameplayerlist");
             syntax.addTagProvider(new GameTableListLmlTagProvider(), "gametablelist");
@@ -134,5 +132,6 @@ import net.asg.games.ui.YahooUi;
             syntax.addAttributeProcessor(new GameBlockAreaNumberLmlAttribute(), "areanumber");
             syntax.addAttributeProcessor(new GameBlockAreaDataLmlAttribute(), "blockareadata");
             syntax.addAttributeProcessor(new GameBlockPreviewLmlAttribute(), "preview");
+            syntax.addAttributeProcessor(new GamePieceOrientationLmlAttribute(), "left");
         }
     }

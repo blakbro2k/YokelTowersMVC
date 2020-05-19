@@ -112,4 +112,23 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject{
         YokelBlock block = Util.getObjectFromJsonString(YokelBlock.class, data);
         if(block != null) setImage(Util.otoi(block.toString()));
     }
+
+    @Override
+    public float getPrefWidth(){
+        return getImage().getWidth();
+    }
+
+    @Override
+    public float getPrefHeight(){
+        return getImage().getHeight();
+    }
+    @Override
+    public float getWidth(){
+        return getPrefWidth();
+    }
+
+    @Override
+    public float getHeight(){
+        return getPrefHeight();
+    }
 }

@@ -31,6 +31,9 @@ public class UserInterfaceService {
     @Inject private SkinService skinService;
     @Inject private LoadingController controller;
 
+    private final static String ATTR_IMAGE_NAMES = "imageNames";
+    private final static String ATTR_ANIMATED_IMAGE_NAMES = "animatedImageNames";
+
     private ObjectMap<String, Actor> uiAssetMap;
     private YokelObjectFactory factory;
 
@@ -43,7 +46,7 @@ public class UserInterfaceService {
     public YokelObjectFactory getFactory(){
         if(factory == null){
             ObjectMap<String, Array<String>> imageMap = buildImageNames();
-            factory = new YokelObjectFactory(this, imageMap.get("imageNames"), imageMap.get("animatedImageNames"));
+            factory = new YokelObjectFactory(this, imageMap.get(ATTR_IMAGE_NAMES), imageMap.get(ATTR_ANIMATED_IMAGE_NAMES));
         }
         return this.factory;
     }
@@ -71,8 +74,8 @@ public class UserInterfaceService {
                 }
             }
         }
-        imageMap.put("imageNames", images);
-        imageMap.put("animatedImageNames", animatedImages);
+        imageMap.put(ATTR_IMAGE_NAMES, images);
+        imageMap.put(ATTR_ANIMATED_IMAGE_NAMES, animatedImages);
         return imageMap;
     }
 

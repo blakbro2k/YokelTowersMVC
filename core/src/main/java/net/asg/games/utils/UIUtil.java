@@ -34,7 +34,7 @@ public class UIUtil {
         return getBlockImage(factory.getBlockImageName(blockId) + PREVIEW_TAG);
     }
 
-    public GameBlock getGameBlock(int blockId){
-        return getFactory().getGameBlock(blockId);
+    public GameBlock getGameBlock(int blockId, boolean preview){
+        return getFactory().getGameBlock(blockId, preview);
     }
 }

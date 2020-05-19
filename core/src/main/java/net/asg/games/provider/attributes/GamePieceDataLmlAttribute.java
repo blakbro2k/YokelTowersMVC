@@ -6,8 +6,8 @@ import com.github.czyzby.lml.parser.tag.LmlTag;
 
 import net.asg.games.provider.actors.GamePiece;
 
-public class GameGamePieceDataLmlAttribute implements LmlAttribute<GamePiece> {
-    public GameGamePieceDataLmlAttribute() {}
+public class GamePieceDataLmlAttribute implements LmlAttribute<GamePiece> {
+    public GamePieceDataLmlAttribute() {}
 
     public Class<GamePiece> getHandledType() {
         return GamePiece.class;
