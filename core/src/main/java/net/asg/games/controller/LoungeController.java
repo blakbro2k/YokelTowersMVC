@@ -12,12 +12,10 @@ import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import net.asg.games.controller.dialog.ErrorController;
-import net.asg.games.game.objects.YokelLounge;
-import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.service.SessionService;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
-@View(id = "lounge", value = "ui/templates/lounge.lml")
+@View(id = ControllerNames.LOUNGE_VIEW, value = "ui/templates/lounge.lml")
 public class LoungeController implements ViewRenderer, ActionContainer {
     @Inject private SessionService sessionService;
     @Inject private InterfaceService interfaceService;
@@ -31,7 +29,7 @@ public class LoungeController implements ViewRenderer, ActionContainer {
     @LmlAction("requestAllLounges")
     public Array<String> requestAllLounges() {
         try{
-            return Util.toPlainTextArray(sessionService.getAllLounges());
+            return YokelUtilities.toPlainTextArray(sessionService.getAllLounges());
         } catch (Exception e){
             e.printStackTrace();
             sessionService.setCurrentError(e.getCause(), e.getMessage());
@@ -47,7 +45,7 @@ public class LoungeController implements ViewRenderer, ActionContainer {
                 sessionService.setCurrentLoungeName(button.getName());
                 sessionService.setCurrentRoomName(button.getLabel().getText().toString());
                 sessionService.asyncTableAllRequest();
-                interfaceService.show(sessionService.getView("room"));
+                interfaceService.show(sessionService.getView(ControllerNames.ROOM_VIEW));
             }
         } catch (Exception e){
             e.printStackTrace();

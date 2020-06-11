@@ -6,12 +6,14 @@ package net.asg.games.controller.dialog;
     import com.github.czyzby.lml.annotation.LmlAction;
     import com.github.czyzby.lml.parser.action.ActionContainer;
     import com.kotcrab.vis.ui.VisUI.SkinScale;
+
+    import net.asg.games.controller.ControllerNames;
     import net.asg.games.service.ScaleService;
 
     /** This is a settings dialog, which can be shown in any views by using "show:settings" LML action or - in Java code -
      * through InterfaceService.showDialog(Class) method. Thanks to the fact that it implements ActionContainer, its methods
      * will be available in the LML template. */
-    @ViewDialog(id = "settings", value = "ui/templates/dialogs/settings.lml")
+    @ViewDialog(id = ControllerNames.SETTINGS_DIALOG, value = "ui/templates/dialogs/settings.lml")
     public class SettingsController implements ActionContainer {
         // @Inject-annotated fields will be automatically filled with values from the context.
         @Inject private ScaleService scaleService;

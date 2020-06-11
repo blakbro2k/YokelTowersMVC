@@ -37,4 +37,8 @@ public class UIUtil {
     public GameBlock getGameBlock(int blockId, boolean preview){
         return getFactory().getGameBlock(blockId, preview);
     }
+
+    public void freeObject(GameBlock block) {
+        factory.freeObject(block);
+    }
 }

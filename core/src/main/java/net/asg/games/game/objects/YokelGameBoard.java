@@ -8,14 +8,16 @@ import java.util.Stack;
 import java.util.Vector;
 
 public class YokelGameBoard extends AbstractYokelObject {
+    public static final int MAX_RANDOM_BLOCK_NUMBER = 2048;
     public static final int MAX_COLS = 6;
     public static final int MAX_ROWS = 16;
     public static final int MAX_PLAYABLE_ROWS = MAX_ROWS - 3;
     public static final int HORIZONTAL_HOO_TIME = 2;
     public static final int VERTICAL_HOO_TIME = 4;
     public static final int DIAGONAL_HOO_TIME = 3;
-    public static final float FALL_RATE = 0.346f;
-    public static final float FAST_FALL_RATE = 0.666f;
+    //public static final float FALL_RATE = 0.346f;
+    public static final float FALL_RATE = 0.016f;
+    public static final float FAST_FALL_RATE = 0.266f;
     private static final int MAX_FALL_VALUE = 1;
 
     private int[][] cells;
@@ -60,6 +62,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     private int currentBlockPointer = -1;
     private boolean fastDown;
     private Queue<Integer> powers;
+    private int[] countOfBreaks = new int[MAX_COLS];
 
     //Empty Contructor required for Json.Serializable
     public YokelGameBoard(){}
@@ -75,7 +78,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void reset(long seed){
-        nextBlocks = new RandomUtil.RandomNumberArray(1024, seed, MAX_COLS);
+        nextBlocks = new RandomUtil.RandomNumberArray(MAX_RANDOM_BLOCK_NUMBER, seed, MAX_COLS);
         clearBoard();
     }
 
@@ -1048,8 +1051,10 @@ public class YokelGameBoard extends AbstractYokelObject {
 
         int v1 = block.getValueAt((1 + index) % 3);
         v1 = YokelBlockEval.setIDFlag(v1, incrementID());
+
         int v2 = block.getValueAt((2 + index) % 3);
         v2 = YokelBlockEval.setIDFlag(v2, incrementID());
+
         if (YokelBlockEval.getCellFlag(cells[y][x]) != MAX_COLS) {
             Thread.dumpStack();
             System.out.println("Assertion failure: grid at " + x + "," + y
@@ -1065,9 +1070,9 @@ public class YokelGameBoard extends AbstractYokelObject {
             System.out.println("Assertion failure: grid at " + x + "," + y
                     + " isn't empty for piece placement");
         }
-        cells[y][x] = v0;
+        cells[y][x] = v2;
         cells[y + 1][x] = v1;
-        cells[y + 2][x] = v2;
+        cells[y + 2][x] = v0;
         updateBoard();
     }
 
@@ -1101,7 +1106,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     void applyPowerBlockAt(int value, int col, int row) {
         if (!YokelBlockEval.hasPowerBlockFlag(value)) {
             System.out.println("Assertion failure:  cell isn't weird " + value);
-        } else if (YokelBlockEval.getCellFlag(value) != 4) {
+        } else if (YokelBlockEval.getCellFlag(value) != YokelBlock.L_BLOCK) {
             System.out.println("Assertion failure:  cell isn't weird type " + value);
         } else if (!YokelBlockEval.hasPowerBlockFlag(cells[row][col])) {
             boolean isAttack = YokelBlockEval.isOffensive(value);
@@ -1115,7 +1120,7 @@ public class YokelGameBoard extends AbstractYokelObject {
                     cells[row][col] = 7;
                 }
             } else if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS) {
-                cells[row][col] = YokelBlockEval.addArtificialFlag(YokelBlockEval.setValueFlag(cells[row][col], 4));
+                cells[row][col] = YokelBlockEval.addArtificialFlag(YokelBlockEval.setValueFlag(cells[row][col], YokelBlock.L_BLOCK));
             }
 
             updateBoard();
@@ -1132,14 +1137,13 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public boolean hasPlayerDied() {
+        /*
         for (int row = MAX_PLAYABLE_ROWS; row < MAX_ROWS; row++) {
             for (int col = 0; col < MAX_COLS; col++) {
-                if (getPieceValue(col, row) != MAX_COLS) {
+                if (getPieceValue(col, row) != YokelBlock.CLEAR_BLOCK)
                     return true;
-                }
             }
-        }
-
+        }*/
         return getPieceValue(2, 12) != YokelBlock.CLEAR_BLOCK;
     }
 
@@ -1439,8 +1443,11 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     public String toString(){
         StringBuilder out = new StringBuilder();
-//System.out.println("out = " + out);
-        out.append("piece pos(").append(piece.column).append(",").append(piece.row).append(")").append("\n");
+        //System.out.println("out = " + out);
+        if(piece != null){
+            out.append("piece pos(").append(piece.column).append(",").append(piece.row).append(")").append("\n");
+        }
+
         addPrintLine(out);
         for (int r = MAX_ROWS - 1; r > -1; r--){
             for (int c = 0; c < MAX_COLS; c++) {
@@ -1463,7 +1470,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     private boolean isPieceBlock(int row, int col){
-        return piece.column == col && (piece.row == row || piece.row + 1 == row || piece.row + 2 == row);
+        return piece != null && piece.column == col && (piece.row == row || piece.row + 1 == row || piece.row + 2 == row);
     }
 
     private int getPieceBlock(int row){
@@ -1494,13 +1501,12 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void update(float delta){
+        //System.err.println("fallNumber=" + fallNumber);
+
         if(!hasPlayerDied()){
             this.fallNumber -= getCurrentFallRate();
-            System.out.println("fallNumber:" + fallNumber);
-
             if(this.fallNumber < 0){
                 movePieceDown();
-                System.out.println("after fallNumber:" + fallNumber);
             }
         }
         updateBoard();
@@ -1515,13 +1521,14 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void updateBoard(){
-        //Check P
+        //Check broken Pieces
     }
 
     private void movePieceDown(){
+        //TODO:add setting state for isDownCell stopped
         if(isDownCellFree(piece.column, piece.row)){
-            piece.setPosition(piece.row - 1, piece.column);
             this.fallNumber = MAX_FALL_VALUE;
+            piece.setPosition(piece.row - 1, piece.column);
         } else {
             setNextPiece();
             getNewNextPiece();
@@ -1538,6 +1545,26 @@ public class YokelGameBoard extends AbstractYokelObject {
         if(isLeftCellFree(piece.column, piece.row)){
             piece.setPosition(piece.row, piece.column - 1);
         }
+    }
+
+    public void attemptCycleDown(){
+        if(piece != null){
+            piece.cycleDown();
+        }
+    }
+
+    public void attemptCycleUp(){
+        if(piece != null){
+            piece.cycleUp();
+        }
+    }
+
+    public void attemptStartMoveDown(){
+        fastDown = true;
+    }
+
+    public void attemptStopMoveDown(){
+        fastDown = false;
     }
 
     public int getNextBlock(){
@@ -1564,17 +1591,18 @@ public class YokelGameBoard extends AbstractYokelObject {
         int block3 = powerUpBlock(getNextBlock());
 
         YokelPiece piece = new YokelPiece(getIdIndex(), block1, block2, block3);
+        fallNumber = MAX_FALL_VALUE;
         piece.setPosition(MAX_PLAYABLE_ROWS, 2);
         return piece;
     }
 
     private int powerUpBlock(int block){
-        if(countOfPieces[block] > 3){
-            countOfPieces[block] = 0;
+        if(countOfBreaks[block] > 3){
             //powerUp
-            return block;
+            countOfBreaks[block] = 0;
+            return YokelBlockEval.setPowerFlag(block, 3);
         } else {
-            ++countOfPieces[block];
+            ++countOfBreaks[block];
             return block;
         }
     }

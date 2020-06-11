@@ -6,7 +6,7 @@ import net.asg.games.game.managers.ClientManager;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.utils.PayloadUtil;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 import org.pmw.tinylog.Logger;
 
@@ -50,12 +50,12 @@ public class LocalLauncher {
                     case 'a':
                         client.requestLounges();
                         client.waitForOneRequest();
-                        System.out.println(Util.printYokelObjects(PayloadUtil.getAllLoungesRequest(client.getNextRequest().getPayload())));
+                        System.out.println(YokelUtilities.printYokelObjects(PayloadUtil.getAllLoungesRequest(client.getNextRequest().getPayload())));
                         break;
                     case 'p':
                         client.requestPlayers();
                         client.waitForRequest(30);
-                        System.out.println(Util.printYokelObjects(PayloadUtil.getAllRegisteredPlayersRequest(client.getNextRequest().getPayload())));
+                        System.out.println(YokelUtilities.printYokelObjects(PayloadUtil.getAllRegisteredPlayersRequest(client.getNextRequest().getPayload())));
                         break;
                     case 'r':
                         client.requestPlayerRegister(player);

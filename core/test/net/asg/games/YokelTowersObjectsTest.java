@@ -1,16 +1,13 @@
 package net.asg.games;
 
-import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
-import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 
-import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -335,7 +332,7 @@ public class YokelTowersObjectsTest {
     }
 
     private String getJSON(Object o){
-        return Util.getJsonString(o);
+        return YokelUtilities.getJsonString(o);
     }
 /*
     @Test

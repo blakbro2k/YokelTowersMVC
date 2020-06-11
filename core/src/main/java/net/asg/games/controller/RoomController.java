@@ -1,10 +1,6 @@
 package net.asg.games.controller;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
@@ -16,15 +12,14 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
-import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.provider.actors.GameNameLabel;
 import net.asg.games.provider.actors.GamePlayerList;
 import net.asg.games.provider.actors.GameTableList;
 import net.asg.games.provider.tags.GameTableListLmlTag;
 import net.asg.games.service.SessionService;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
-@View(id = "room", value = "ui/templates/room.lml")
+@View(id = ControllerNames.ROOM_VIEW, value = "ui/templates/room.lml")
 public class RoomController implements ViewRenderer, ActionContainer {
     @Inject private InterfaceService interfaceService;
     @Inject private SessionService sessionService;
@@ -62,7 +57,7 @@ public class RoomController implements ViewRenderer, ActionContainer {
     @LmlAction("requestAllPlayers")
     public Array<String> requestAllPlayers() {
         try{
-            return Util.toPlainTextArray(sessionService.getAllPlayers());
+            return YokelUtilities.toPlainTextArray(sessionService.getAllPlayers());
         } catch (Exception e){
             e.printStackTrace();
             sessionService.showError(e);

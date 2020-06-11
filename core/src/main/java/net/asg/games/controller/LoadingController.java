@@ -29,7 +29,7 @@ import java.io.Writer;
  *
  * This is the first application's views, shown right after the application starts. It will hide after all assests are
  * loaded. */
-@View(value = "ui/templates/loading.lml", first = true)
+@View(id = ControllerNames.LOADING_VIEW, value = "ui/templates/loading.lml", first = true)
 public class LoadingController implements ViewRenderer {
     /** Kiwi logger for this class. */
     private static final Logger LOGGER = LoggerService.forClass(LoadingController.class);

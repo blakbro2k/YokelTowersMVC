@@ -54,9 +54,9 @@ public class YokelObjectFactory implements Disposable {
 
     public GameBlock getGameBlock(int blockType, boolean isPreview){
         GameBlock block = yokelGameBlockPool.obtain();
-        System.out.println("block pool=" + yokelGameBlockPool.getFree());
-        System.out.println("block max=" + yokelGameBlockPool.max);
-        System.out.println("block peak=" + yokelGameBlockPool.peak);
+        //System.out.println("block pool=" + yokelGameBlockPool.getFree());
+        //System.out.println("block max=" + yokelGameBlockPool.max);
+        //System.out.println("block peak=" + yokelGameBlockPool.peak);
 
         if(isPreview){
             block.setPreviewImage(blockType);
@@ -76,7 +76,46 @@ public class YokelObjectFactory implements Disposable {
         }
     }
 
+    public int getBlockNumber(String blockName){
+        switch (blockName) {
+            case "Y_block":
+            case "power_Y_block":
+            case "defense_Y_block":
+                return YokelBlock.Y_BLOCK;
+            case "O_block":
+            case "power_O_block":
+            case "defense_O_block":
+                return YokelBlock.O_BLOCK;
+            case "K_block":
+            case "power_K_block":
+            case "defense_K_block":
+                return YokelBlock.K_BLOCK;
+            case "E_block":
+            case "power_E_block":
+            case "defense_E_block":
+                return YokelBlock.E_BLOCK;
+            case "L_block":
+            case "power_L_block":
+            case "defense_L_block":
+                return YokelBlock.L_BLOCK;
+            case "Bash_block":
+            case "power_bash_block":
+            case "defense_bash_block":
+                return YokelBlock.EX_BLOCK;
+            case "Midas":
+                return YokelBlock.MIDAS;
+            case "Medusa":
+                return YokelBlock.MEDUSA;
+            case "stone":
+                return YokelBlock.STONE;
+            case "clear_block" :
+            default:
+                return YokelBlock.CLEAR_BLOCK;
+        }
+    }
+
     public String getBlockImageName(int blockValue){
+        int brokenK = YokelBlockEval.addBrokenFlag(YokelBlock.K_BLOCK);
         switch (blockValue){
             case YokelBlock.CLEAR_BLOCK:
                 return "clear_block";
@@ -146,6 +185,8 @@ public class YokelObjectFactory implements Disposable {
             case YokelBlock.DEFENSIVE_BASH_BLOCK_REGULAR:
             case YokelBlock.DEFENSIVE_BASH_BLOCK_MEGA:
                 return "defense_bash_block";
+            case 258:
+                return "K_block_Broken";
             default:
                 return "";
         }

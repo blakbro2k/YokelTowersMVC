@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.game.objects.YokelBlock;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 public class GamePowersQueue extends Table implements GameObject{
     private Queue<GameBlock> powers;
@@ -54,11 +54,11 @@ public class GamePowersQueue extends Table implements GameObject{
     }
 
     public float getPrefWidth() {
-        return Util.getBlock(YokelBlock.CLEAR_BLOCK).getPrefWidth();
+        return YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK).getPrefWidth();
     }
 
     public float getPrefHeight() {
-        return Util.getBlock(YokelBlock.CLEAR_BLOCK).getPrefHeight() * 6;
+        return YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK).getPrefHeight() * 6;
     }
 
     @Override

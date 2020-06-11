@@ -8,8 +8,7 @@ import com.github.czyzby.lml.parser.tag.LmlTag;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.provider.actors.GameBlock;
-import net.asg.games.utils.UIUtil;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 public class GameBlockLmlTag extends AbstractNonParentalActorLmlTag {
     public GameBlockLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
@@ -18,7 +17,7 @@ public class GameBlockLmlTag extends AbstractNonParentalActorLmlTag {
 
     @Override
     protected Actor getNewInstanceOfActor(LmlActorBuilder builder) {
-        return Util.getBlock(YokelBlock.CLEAR_BLOCK);
+        return YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK);
     }
 
     @Override

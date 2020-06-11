@@ -9,7 +9,7 @@ import com.github.czyzby.autumn.mvc.stereotype.View;
  * This is the first application's views, it will check if the debug Players will be shown, the UI tester, or the normal login Page
  * shown right after the application starts. It will hide after all assests are
  * loaded. */
-@View(id = "postload", value = "ui/templates/postloader.lml")
+@View(id = ControllerNames.POST_LOADER_VIEW, value = "ui/templates/postloader.lml")
 public class PostLoaderController implements ViewRenderer {
 
     @Override

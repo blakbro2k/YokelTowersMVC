@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import net.asg.games.game.objects.YokelNameLabel;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 public class GameNameLabel extends Table implements GameObject {
     private GameIcon icon;
@@ -13,13 +13,16 @@ public class GameNameLabel extends Table implements GameObject {
 
     public GameNameLabel(Skin skin){
         super(skin);
-        icon = null;
+        padTop(4);
+        padBottom(4);
+        icon = new GameIcon(GameIcon.getGameDefaultIconStyle(skin), skin);
+        icon.setIconNumber(0);
         playerName = new Label(" ", skin);
     }
 
     @Override
     public void setData(String data) {
-        YokelNameLabel nameTag = Util.getObjectFromJsonString(YokelNameLabel.class, data);
+        YokelNameLabel nameTag = YokelUtilities.getObjectFromJsonString(YokelNameLabel.class, data);
         if(nameTag != null){
             setIcon(nameTag.getIcon());
             setNameTag(nameTag.getName());
@@ -45,17 +48,17 @@ public class GameNameLabel extends Table implements GameObject {
 
     @Override
     public float getPrefHeight() {
-        float iconHeight = icon.getPrefHeight();
-        float playerHeight = playerName.getPrefHeight();
+        float iconHeight = icon == null ? 28 : icon.getPrefHeight();
+        float playerHeight = playerName == null ? 28 : playerName.getPrefHeight();
         float superHeight = super.getPrefHeight();
-        return Util.maxFloat(iconHeight, playerHeight, superHeight);
+        return YokelUtilities.maxFloat(iconHeight, playerHeight, superHeight);
     }
 
     @Override
     public float getPrefWidth() {
-        float iconWidth = icon.getPrefWidth();
-        float playerWidth = icon.getPrefWidth();
+        float iconWidth = icon == null ? 32 : icon.getPrefWidth();
+        float playerWidth = 75;
         float superWidth = super.getPrefWidth();
-        return Util.maxFloat(iconWidth, playerWidth, superWidth);
+        return YokelUtilities.maxFloat(iconWidth, playerWidth, superWidth);
     }
 }

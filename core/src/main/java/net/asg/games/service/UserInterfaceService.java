@@ -150,6 +150,7 @@ public class UserInterfaceService {
         if(actor instanceof AnimatedImage){
             AnimatedImage image = (AnimatedImage) actor;
             image.setFrames(getDrawableFrames(name));
+            //TODO: Have a map of classes to set delay from configuration
             image.setDelay(GameBlock.ANIMATION_DELAY);
         } else if(actor instanceof Image){
             Image image = (Image) actor;

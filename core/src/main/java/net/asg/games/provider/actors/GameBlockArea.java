@@ -2,22 +2,20 @@ package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
-
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.SnapshotArray;
 
 import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.UIUtil;
+import net.asg.games.utils.YokelUtilities;
 
 public class GameBlockArea extends Stack {
     private static final String CELL_ATTR = "uiCell";
@@ -32,6 +30,7 @@ public class GameBlockArea extends Stack {
     private boolean isSpeedDown;
     private boolean isActive;
     private boolean isPreview;
+    private boolean isPlayerView;
 
     private int boardNumber;
     private YokelGameBoard board;
@@ -45,12 +44,12 @@ public class GameBlockArea extends Stack {
     private GameJoinWindow joinWindow;
 
     private ObjectMap<String, GameBlock> uiBlocks;
-    private Array<Actor> actors;
 
-    private Sprite pieceSprite;
+    private PieceDrawable pieceSprite;
 
-    public GameBlockArea(Skin skin) {
+    public GameBlockArea(Skin skin, boolean isPreview) {
         this.skin = skin;
+        this.isPreview = isPreview;
         init();
         joinWindow = new GameJoinWindow(skin);
         //joinButton.clearChildren();
@@ -61,10 +60,13 @@ public class GameBlockArea extends Stack {
         //System.out.println("Adding block " + this.getName() + "w: " + this.getWidth() + " h: " + this.getHeight());
     }
 
+    public GameBlockArea(Skin skin) {
+        this(skin, true);
+    }
+
     private void init(){
         initializeBoard();
         initializeSize();
-        initializeBackground();
         initializeGrid();
     }
 
@@ -73,26 +75,27 @@ public class GameBlockArea extends Stack {
         float width = clear.getWidth() * YokelGameBoard.MAX_COLS;
         float height = clear.getHeight() * YokelGameBoard.MAX_PLAYABLE_ROWS;
 
-        setSize(width, height);
-        this.setBounds(0, 0, width, height);
-        grid.setBounds(0, 0, width, height);
-        setCullingArea(new Rectangle(0, 0, width, height));
-        pieceSprite = new Sprite();
+        //validate();
+
+        //this.setBounds(sLoc.x, sLoc.y, width, height);
+        //grid.setBounds(sLoc.x, sLoc.y, width, height);
+        //setCullingArea(new Rectangle(sLoc.x, sLoc.y, width, height));
     }
 
     private void initializeBoard(){
         this.uiBlocks = new ObjectMap<>();
-        this.actors = new Array<>();
         this.boardNumber = 0;
         this.grid = new Table(skin);
         this.bgNumber = new Table(skin);
+        this.pieceSprite = new PieceDrawable();
     }
 
     public void setDebug (boolean enabled) {
-        super.setDebug(Util.setDebug(enabled, grid, bgNumber));
+        super.setDebug(YokelUtilities.setDebug(enabled, grid, bgNumber));
     }
 
     private void initializeGrid(){
+        this.grid.setName("grid");
         for(int r = YokelGameBoard.MAX_PLAYABLE_ROWS - 1; r >= 0; r--){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
                 GameBlock uiBlock = getClearBlock();
@@ -105,23 +108,23 @@ public class GameBlockArea extends Stack {
                 }
             }
         }
+        setAreaBounds();
+        grid.setBackground(GameClock.NO_DIGIT_NME);
+        grid.add(pieceSprite);
         add(grid);
     }
 
-    private GameBlock getClearBlock(){
-        return Util.getBlock(YokelBlock.CLEAR_BLOCK, isPreview);
+    private void setAreaBounds(){
+        GameBlock block = getClearBlock();
+        float width = block.getWidth();
+        float height = block.getHeight();
+        Rectangle bounds = new Rectangle(0, 0, width * YokelGameBoard.MAX_COLS, height * YokelGameBoard.MAX_PLAYABLE_ROWS);
+        grid.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+        grid.setCullingArea(bounds);
     }
 
-    private void initializeBackground(){
-        //Skin skin = getSkin();
-        this.setColor(ACTIVE_BACKGROUND_COLOR);
-
-        bgNumber = new Table(skin);
-        bgNumber.align(Align.top);
-        bgNumber.setBounds(0, 0, getWidth(), getWidth());
-        bgNumber.setBackground(GameClock.NO_DIGIT_NME);
-        //bgNumber.setScale(2);
-        add(bgNumber);
+    private GameBlock getClearBlock(){
+        return YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK, isPreview);
     }
 
     private String getCellAttrName(int r, int c){
@@ -132,8 +135,9 @@ public class GameBlockArea extends Stack {
         return this.boardNumber;
     }
 
-    public void setBoardNumber(int number){
-        this.bgNumber.setBackground(number + GameClock.DIGIT_NME);
+    void setBoardNumber(int number){
+        this.bgNumber.setName("boardNumber");
+        this.grid.setBackground(number + GameClock.DIGIT_NME);
         this.boardNumber = number;
     }
 
@@ -141,12 +145,19 @@ public class GameBlockArea extends Stack {
         GameBlock uiCell = uiBlocks.get(getCellAttrName(r, c));
 
         if(uiCell != null){
-            GameBlock blockUi = Util.getBlock(block, isPreview);
-            if(blockUi != null){
-                uiCell.setImage(blockUi.getImage());
-            }
-            //factory.freeObject(blockUi);
+            uiCell.update(block, isPreview);
         }
+    }
+
+    public boolean isDownCellFree(int column, int row) {
+        return row > 0 && row < YokelGameBoard.MAX_PLAYABLE_ROWS + 1 && getPieceValue(column, row - 1) == YokelBlock.CLEAR_BLOCK;
+    }
+
+    public int getPieceValue(int c, int r){
+        GameBlock uiCell = uiBlocks.get(getCellAttrName(r, c));
+        int ret = YokelBlock.CLEAR_BLOCK;
+        if(uiCell != null) ret = UIUtil.getInstance().getFactory().getBlockNumber(uiCell.getImage().getName());
+        return ret;
     }
 
     public boolean isPreview(){
@@ -162,129 +173,179 @@ public class GameBlockArea extends Stack {
         }
     }
 
-    /*
-    @Override
-    public void setPosition(float x, float y){
-        super.setPosition(x, y);
-        boarder.setPosition(x, y);
-        grid.setPosition(x, y);
-        gamePiece.setPosition(x, y);
-        bgNumber.setPosition(x, y);
-    }*/
-
-    public void printParentCoords(){
-        if(hasParent()){
-            System.out.println("(" + getParent().getX() + "," + getParent().getY() + ")");
-        }
-    }
-
     public void setPreview(boolean isPreview){
         this.isPreview = isPreview;
-        //setUpBoard();
-        //invalidate();
-        //init(getFactory());
-        update();
-    }
-
-    private void setUpBoard(){
-        clearChildren();
-        SnapshotArray<Actor> cells = grid.getChildren();
-        grid.clearChildren();
-        for(Actor cell : cells){
-            grid.add(cell);
-        }
-        add(bgNumber);
-        add(grid);
+        setAreaBounds();
         update();
     }
 
     @Override
     public void act(float delta){
         super.act(delta);
-        //joinWindow.setPosition(getX(), getY());
-        //Move game piece down
-        moveGamePiece(delta);
-        if(this.gamePiece != null){
-            System.out.println("(" + this.gamePiece.getX() + "," + this.gamePiece.getY() + ")");
+        for(GameBlock uiblock : uiBlocks.values()) {
+            if(uiblock != null){
+                uiblock.act(delta);
+            }
         }
+        //joinWindow.setPosition(getX(), getY());
     }
 
     @Override
     public void draw(Batch batch, float alpha){
         super.draw(batch, alpha);
+
         //joinWindow.setPosition(getX(), getY() / 2);
         //if(!isActive) return;
-
+        //System.err.println("s=" + super.getX());
         //drawGamePiece(batch, alpha);
         //drawSprites(batch, alpha);
+    }
+
+    private boolean validatePiece(){
+        return pieceSprite != null && !isPreview && isActive && isPlayerView;
+    }
+
+    private static class PieceDrawable extends Actor {
+        private GameBlock[] blocks = new GameBlock[3];
+        private int row;
+        private int col;
+        private boolean isActive;
+        private float fallOffset;
+        private GameBlockArea parent;
+
+        PieceDrawable(){
+            blocks[0] = YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK);
+            blocks[1] = YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK);
+            blocks[2] = YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK);
+        }
+
+        void setActive(boolean b){
+            isActive = b;
+        }
+
+        @Override
+        public void act(float delta){
+            super.act(delta);
+            if(isActive) {
+                for(int i = 0; i < 3; i++){
+                    if(blocks[i] != null){
+                        blocks[i].act(delta);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void draw(Batch batch, float alpha){
+            super.draw(batch, alpha);
+            if(isActive){
+                computePosition();
+                float x = getX();
+                float y = getY();
+                //System.out.println("after(" + x + "," + y + ")");
+
+                for(int i = 0; i < 3; i++){
+                    if(this.blocks[i] != null){
+                        //System.out.println("(" + x + "," + y + ")");
+                        this.blocks[i].setPosition(x, y + (i * blocks[i].getHeight() / 2));
+                        this.blocks[i].draw(batch, alpha);
+                    }
+                }
+            }
+        }
+
+        void setBlocks(YokelPiece piece){
+            if(piece != null && isActive){
+                updateIndex(0, piece.getBlock1());
+                updateIndex(1, piece.getBlock2());
+                updateIndex(2, piece.getBlock3());
+                this.row = piece.row;
+                this.col = piece.column;
+            }
+        }
+
+        private void updateIndex(int index, int block){
+            if(index > -1 && blocks[index] != null){
+                blocks[index].update(block,false);
+            }
+        }
+
+        private void setParent(GameBlockArea area){
+            this.parent = area;
+        }
+
+        private void computePosition() {
+            GameBlock block = blocks[0];
+
+            if(block != null){
+                //Set the x to the position of the grid
+                Vector2 pos = this.parentToLocalCoordinates(new Vector2(0, 0));
+                System.out.println("(" + pos.x + "," + pos.y + ")");
+
+                pos.x = 267;
+                pos.y = -50;
+                System.out.println("comp(" + pos.x + "," + pos.y + ")");
+
+                pos.x -= block.getWidth();
+                //System.out.println(fallOffset + " [" + ((1 - fallOffset) * block.getWidth()) + "]");
+                //pos.y -= pos.y / 2 - block.getHeight() / 2 + block.getHeight() / 2;
+                if(parent != null){
+                    if(parent.isDownCellFree(col, row)){
+                        pos.y -= ((1 - fallOffset) * block.getWidth());
+                    }
+                }
+
+                float offSetX = block.getWidth() / 2 * col;
+                float offSetY = block.getHeight() * row;
+
+                this.setPosition(pos.x + offSetX, pos.y + offSetY);
+            }
+        }
+
+        private void setFallOffset(float fallOffset) {
+            this.fallOffset = fallOffset;
+        }
+    }
+
+    private void setPieceSprite(YokelPiece piece, float fallOffset){
+        if(piece != null){
+            pieceSprite.setBlocks(piece);
+            pieceSprite.setParent(this);
+            pieceSprite.setFallOffset(fallOffset);
+        }
     }
 
     public void updateData(YokelGameBoard gameBoard) {
         if(gameBoard != null) {
             this.board = gameBoard;
+            setPieceSprite(gameBoard.fetchCurrentPiece(), board.fetchCurrentFallnumber());
             update();
         }
     }
 
     private void update(){
         if(board != null){
-            int[][] cells = board.getCells();
-            for(int r = 0; r < YokelGameBoard.MAX_ROWS; r++){
+            //System.out.println(board);
+            for(int r = 0; r < YokelGameBoard.MAX_PLAYABLE_ROWS; r++){
                 for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
-                    setBlock(cells[r][c], r, c);
+                    if(YokelBlockEval.hasPowerBlockFlag(board.getPieceValue(c, r))){
+                        System.out.println("POWER!!!!");
+                    }
+                    //System.out.println("block!" + board.getBlockValueAt(c, r));
+                    //System.out.println("POWER!!!!" + board.getPieceValue(c, r));
+
+                    setBlock(board.getPieceValue(c, r), r, c);
                 }
             }
         }
     }
 
-    private void drawSprites(Batch batch, float alpha){
-        if(Util.isArrayEmpty(actors)){
-            for(Actor actor : actors){
-               if(actor != null){
-                   actor.draw(batch, alpha);
-               }
-            }
-        }
+    void setActive(boolean b){
+        this.isActive = b;
     }
 
-    private void drawGamePiece(Batch batch, float alpha){
-        if(gamePiece != null){
-            gamePiece.setX(getX());
-            gamePiece.setY(getY());
-            gamePiece.draw(batch, alpha);
-        }
-    }
-
-    private void actOnBlocks(int r, int c, float delta){
-        //if(!isActive) return;
-        //update ui blocks
-        GameBlock uiBlock = uiBlocks.get(getCellAttrName(r,c));
-
-        if(uiBlock != null){
-            uiBlock.act(delta);
-
-            // move down one space
-            // if speed down move down more spaces
-            //if not broken, act
-            //if broken, interpolate down
-        }
-    }
-
-    private void moveGamePiece(float delta) {
-        if(this.gamePiece != null){
-            attemptGamePieceMoveDown(delta);
-        }
-    }
-
-    private void attemptGamePieceMoveDown(float delta) {
-        if(gamePiece != null){
-            if(gamePiece.getY() > 0){
-                gamePiece.setY(gamePiece.getY() - 1);
-                System.out.println("Grid:" + grid.getPadX() + "," + grid.getY() + ")");
-            } else {
-                //actors.removeValue(gamePiece, false);
-                //gamePiece = null;
-            }
-        }
+    void setPlayerView(boolean b){
+        this.isPlayerView = b;
+        this.pieceSprite.setActive(validatePiece());
     }
 }

@@ -6,7 +6,7 @@ import net.asg.games.game.managers.ServerManager;
 import net.asg.games.server.serialization.AdminClientRequest;
 import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.ServerResponse;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 import org.apache.commons.lang.StringUtils;
 import org.pmw.tinylog.Logger;
@@ -102,7 +102,7 @@ public class AdminLauncher {
         try {
             Logger.trace("Enter initializeParams()");
             Logger.info("Evaluating input parameters...");
-            if(!Util.isStaticArrayEmpty(args)){
+            if(!YokelUtilities.isStaticArrayEmpty(args)){
                 for(int i = 0; i < args.length; i++){
                     //System.out.println("Param: " + args[i]);
                     String param = args[i];
@@ -129,7 +129,7 @@ public class AdminLauncher {
     //if it is something else, it will fail when we try to set it.
     private boolean validateArumentParameterValue(int i, String... args) throws Exception {
         Logger.trace("Enter validateArumentParameterValue()");
-        if(Util.isStaticArrayEmpty(args)){
+        if(YokelUtilities.isStaticArrayEmpty(args)){
             Logger.error("Arguments cannot be null or empty.");
             throw new Exception("Arguments cannot be null or empty.");
         }

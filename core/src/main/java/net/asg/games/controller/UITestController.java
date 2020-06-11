@@ -1,6 +1,9 @@
 package net.asg.games.controller;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,9 +27,10 @@ import net.asg.games.provider.actors.GameBoard;
 import net.asg.games.provider.actors.GameClock;
 import net.asg.games.provider.actors.GamePowersQueue;
 import net.asg.games.service.UserInterfaceService;
+import net.asg.games.utils.YokelUtilities;
 
-@View(id = "uitest", value = "ui/templates/uitester.lml")
-public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
+@View(id = ControllerNames.UI_TEST_VIEW, value = "ui/templates/uitester.lml")
+public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer, InputProcessor {
     @Inject private UserInterfaceService uiService;
 
     @LmlActor("Y_block") private Image yBlockImage;
@@ -76,27 +80,63 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("2:next") private GameBoard next2;
     @LmlActor("1:powers") private GamePowersQueue powersQueue1;
     @LmlActor("2:powers") private GamePowersQueue powersQueue2;
+    @LmlActor("gameblock_1") private GameBlock gameblock_1;
 
     private boolean isInitiated;
     private Queue<GameBlock> powerUps = new Queue<>();
     private YokelGameBoard board1;
     private YokelGameBoard board2;
+    private YokelGameBoard board5;
+    private YokelGameBoard board6;
 
     @Override
     public void render(Stage stage, float delta) {
-        initiate();
-        //board1.update(delta);
+        initiate(stage);
+
+        board1.flagBoardMatches();
+        board1.update(delta);
+        area1.update(board1);
+        board1.handleBrokenCellDrops();
+
         //board2.update(delta);
+        //area2.update(board2);
+
+        //board5.update(delta);
+        //area5.update(board5);
+
+        /*
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            board1.attemptMovePieceRight();
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            board1.attemptMovePieceLeft();
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            board1.attemptCycleDown();
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            board1.attemptMovePieceLeft();
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            board1.attemptMovePieceLeft();
+        }*/
+
+        Gdx.input.setInputProcessor(this);
+
         stage.act(delta);
         stage.draw();
     }
 
-    private void initiate(){
+    private void initiate(Stage stage){
         if(!isInitiated){
             isInitiated = true;
             initiateActors();
 
-            //Util.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
+            YokelUtilities.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
 
             YokelPiece piece1 = new YokelPiece(1,32,84,112);
             YokelPiece piece2 = new YokelPiece(2,68,53,51);
@@ -107,16 +147,25 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             board1.getNewNextPiece();
             board2 = getGameBoard();
             board2.getNewNextPiece();
+            board5 = getGameBoard();
+            board5.getNewNextPiece();
+            board6 = getGameBoard();
+            board6.getNewNextPiece();
 
             area1.setPlayerLabel(player1.getNameLabel().toString());
+            area1.setActive(true);
+            area1.setPlayerView(true);
             area1.update(board1);
 
             //area9.updateData(getTestBoard());
             area2.setPlayerLabel(player2.getNameLabel().toString());
+            area2.setActive(true);
+            //area2.setPlayerView(true);
             area2.update(board2);
+            //area2.update(getTestBoard());
 
             area5.setPlayerLabel(player3.getNameLabel().toString());
-            area5.update(getTestBoard());
+            area5.update(board5);
             //area5.setPreview(true);
 
             //next1.setData(piece1.toString());,
@@ -215,7 +264,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         board.setCell(2,4, getRandomBlockId());
         board.setCell(2,5, 112);
 
-        board.setCell(3,0, 112);
+        board.setCell(3,0, 96);
         board.setCell(3,1, getRandomBlockId());
         board.setCell(3,2, getRandomBlockId());
         board.setCell(3,3, getRandomBlockId());
@@ -227,7 +276,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         board.setCell(4,2, getRandomBlockId());
         board.setCell(4,3, getRandomBlockId());
         board.setCell(4,4, getRandomBlockId());
-        board.setCell(4,5, 112);
+        board.setCell(4,5, 83);
 
         board.setCell(5,0, getRandomBlockId());
         board.setCell(5,1, getRandomBlockId());
@@ -316,5 +365,63 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlAction("getTimerSeconds")
     public int getTimerSeconds() {
         return gameClock.isRunning() ? gameClock.getElapsedSeconds() : 0;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.RIGHT) {
+            board1.attemptMovePieceRight();
+        }
+
+        if (keycode == Input.Keys.LEFT) {
+            board1.attemptMovePieceLeft();
+        }
+
+        if (keycode == Input.Keys.UP) {
+            board1.attemptCycleDown();
+        }
+
+        if (keycode == Input.Keys.DOWN) {
+            board1.attemptStartMoveDown();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if (keycode == Input.Keys.DOWN) {
+            board1.attemptStopMoveDown();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

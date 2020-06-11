@@ -1,11 +1,9 @@
 package net.asg.games.game.objects;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.OrderedMap;
 
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -71,9 +69,9 @@ public class YokelTable extends AbstractYokelObject {
     private void processArg(String arg, Object value){
         if(arg != null && value != null){
             if(StringUtils.equalsIgnoreCase(ARG_TYPE, arg)){
-                setAccessType(Util.otos(value));
+                setAccessType(YokelUtilities.otos(value));
             } else if(StringUtils.equalsIgnoreCase(ARG_RATED, arg)){
-                setRated(Util.otob(value));
+                setRated(YokelUtilities.otob(value));
             }
         }
     }

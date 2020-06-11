@@ -5,10 +5,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelPiece;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 public class GamePiece extends Table implements GameObject {
-    static final private int GRID_OFFSET = 6;
+    private GameBlock top;
+    private GameBlock mid;
+    private GameBlock bot;
 
     public GamePiece(Skin skin){
         this(skin, YokelBlock.CLEAR_BLOCK, YokelBlock.CLEAR_BLOCK, YokelBlock.CLEAR_BLOCK);
@@ -20,7 +22,7 @@ public class GamePiece extends Table implements GameObject {
     }
 
     public GamePiece(Skin skin, int top, int mid, int bottom){
-        this(skin, Util.getBlock(top), Util.getBlock(mid), Util.getBlock(bottom));
+        this(skin, YokelUtilities.getBlock(top), YokelUtilities.getBlock(mid), YokelUtilities.getBlock(bottom));
     }
 
     public GamePiece(Skin skin, String data){
@@ -39,9 +41,16 @@ public class GamePiece extends Table implements GameObject {
         if(bottom == null){
             bottom = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK);
         }
-        add(top).row();
-        add(middle).row();
-        add(bottom).row();
+        this.top = top;
+        this.mid = middle;
+        this.bot = bottom;
+
+        add(top);
+        row();
+        add(middle);
+        row();
+        add(bottom);
+        row();
     }
 
     public void setDebug(boolean enabled) {
@@ -50,12 +59,11 @@ public class GamePiece extends Table implements GameObject {
 
     @Override
     public void setData(String data) {
-        YokelPiece piece = Util.getObjectFromJsonString(YokelPiece.class, data);
+        YokelPiece piece = YokelUtilities.getObjectFromJsonString(YokelPiece.class, data);
         if(piece != null){
-            this.clearChildren();
-            initialize(Util.getBlock(piece.getValueAt(0)),
-                    Util.getBlock(piece.getValueAt(1)),
-                    Util.getBlock(piece.getValueAt(2)));
+            top.update(piece.getBlock3(), false);
+            mid.update(piece.getBlock2(), false);
+            bot.update(piece.getBlock1(), false);
         }
     }
 }

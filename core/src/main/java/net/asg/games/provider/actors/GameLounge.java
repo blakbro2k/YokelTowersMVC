@@ -8,7 +8,7 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelRoom;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 public class GameLounge extends Table implements GameObject {
     private YokelLounge lounge;
@@ -37,6 +37,6 @@ public class GameLounge extends Table implements GameObject {
 
     @Override
     public void setData(String data){
-        setLounge(Util.getObjectFromJsonString(YokelLounge.class, Util.stringToJson(data)));
+        setLounge(YokelUtilities.getObjectFromJsonString(YokelLounge.class, YokelUtilities.stringToJson(data)));
     }
 }

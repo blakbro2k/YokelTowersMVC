@@ -8,6 +8,7 @@ import com.github.czyzby.autumn.mvc.stereotype.ViewDialog;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
+import net.asg.games.controller.ControllerNames;
 import net.asg.games.provider.actors.GameBlockArea;
 import net.asg.games.provider.actors.GamePiece;
 import net.asg.games.provider.actors.GamePowersQueue;
@@ -16,7 +17,7 @@ import net.asg.games.service.SessionService;
 /** This is a settings dialog, which can be shown in any views by using "show:settings" LML action or - in Java code -
  * through InterfaceService.showDialog(Class) method. Thanks to the fact that it implements ActionContainer, its methods
  * will be available in the LML template. */
-@ViewDialog(id = "game", value = "ui/templates/dialogs/game.lml")
+@ViewDialog(id = ControllerNames.GAME_DIALOG, value = "ui/templates/dialogs/game.lml")
 public class GameController implements ViewRenderer, ActionContainer {
     @Inject private InterfaceService interfaceService;
     @Inject private SessionService sessionService;

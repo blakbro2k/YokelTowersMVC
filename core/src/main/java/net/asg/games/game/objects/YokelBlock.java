@@ -30,7 +30,7 @@ public class YokelBlock extends AbstractYokelObject implements Pool.Poolable {
     public static final int DEFENSIVE_MEGA = 6;
     public static final int SPECIAL_BLOCK_1 = 1024;
     public static final int SPECIAL_BLOCK_2 = 1026;
-    public static final int SPECIAL_BLOCK_3 = 1024;
+    public static final int SPECIAL_BLOCK_3 = 1028;
     public static final int OFFENSIVE_Y_BLOCK_MINOR = 48;
     public static final int OFFENSIVE_Y_BLOCK_REGULAR = 80;
     public static final int OFFENSIVE_Y_BLOCK_MEGA = 112;

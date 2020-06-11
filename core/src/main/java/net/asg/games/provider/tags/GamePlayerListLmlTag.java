@@ -1,16 +1,12 @@
 package net.asg.games.provider.tags;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.tag.actor.TableLmlTag;
 import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 
-import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.provider.actors.GamePlayerList;
-import net.asg.games.utils.Util;
 
 public class GamePlayerListLmlTag extends TableLmlTag {
     GamePlayerListLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {

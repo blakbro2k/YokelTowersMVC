@@ -12,12 +12,11 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.kotcrab.vis.ui.widget.VisTextField;
 
-import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.service.SessionService;
 
 
-@View(id = "login", value = "ui/templates/login.lml")
+@View(id = ControllerNames.LOGIN_VIEW, value = "ui/templates/login.lml")
 public class LoginController implements ViewRenderer, ActionContainer {
     @Inject private SessionService sessionService;
     @Inject private InterfaceService interfaceService;
@@ -50,7 +49,7 @@ public class LoginController implements ViewRenderer, ActionContainer {
                 sessionService.registerPlayer();
                 sessionService.setCurrentUserName(username.getText());
                 sessionService.asyncPlayerAllRequest();
-                interfaceService.show(sessionService.getView("lounge"));
+                interfaceService.show(sessionService.getView(ControllerNames.LOUNGE_VIEW));
             }
         } catch (Exception e){
             e.printStackTrace();

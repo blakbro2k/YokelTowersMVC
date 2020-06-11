@@ -1,10 +1,7 @@
 package net.asg.games.provider.tags;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.github.czyzby.autumn.annotation.Inject;
-import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.lml.parser.LmlParser;
-import com.github.czyzby.lml.parser.impl.attribute.IdLmlAttribute;
 import com.github.czyzby.lml.parser.impl.attribute.OnChangeLmlAttribute;
 import com.github.czyzby.lml.parser.impl.tag.actor.TableLmlTag;
 import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
@@ -15,8 +12,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.provider.actors.GameLounge;
-import net.asg.games.service.SessionService;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 public class GameLoungeLmlTag extends TableLmlTag {
     GameLoungeLmlTag(LmlParser parser, LmlTag parentTag, StringBuilder rawTagData) {
@@ -32,7 +28,7 @@ public class GameLoungeLmlTag extends TableLmlTag {
     protected void handlePlainTextLine(final String plainTextLine) {
         final GameLounge gameLounge = getLounge();
 
-        YokelLounge lounge = Util.getObjectFromJsonString(YokelLounge.class, Util.stringToJson(plainTextLine));
+        YokelLounge lounge = YokelUtilities.getObjectFromJsonString(YokelLounge.class, YokelUtilities.stringToJson(plainTextLine));
         if(lounge != null){
             gameLounge.setLounge(lounge);
             LmlUtilities.setActorId(gameLounge, lounge.getName());

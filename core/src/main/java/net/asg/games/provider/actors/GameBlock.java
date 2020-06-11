@@ -9,58 +9,63 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.utils.UIUtil;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
+
+import org.apache.commons.lang.StringUtils;
+
+import java.util.Objects;
 
 /**
  * Created by Blakbro2k on 3/15/2018.
  */
 
-public class GameBlock extends Table implements Pool.Poolable, GameObject{
+public class GameBlock extends Table implements Pool.Poolable, GameObject {
     final public static float ANIMATION_DELAY = 0.12f;
 
     private AnimatedImage uiBlock;
     private boolean isActive;
 
-    public GameBlock(Skin skin, String blockName){
+    public GameBlock(Skin skin, String blockName) {
         super(skin);
         reset();
         setImage(blockName);
         add(uiBlock);
     }
 
-    public GameBlock(Skin skin, int block){
+    public GameBlock(Skin skin, int block) {
         super(skin);
         reset();
         setImage(block);
         add(uiBlock);
     }
 
-    public void setImage(Image image){
+    public void setImage(Image image) {
         setDrawable(image);
     }
 
-    public void setImage(String blockName){
+    public void setImage(String blockName) {
         setImage(UIUtil.getInstance().getBlockImage(blockName));
     }
 
-    public void setImage(int blockValue){
+    public void setImage(int blockValue) {
         setImage(UIUtil.getInstance().getBlockImage(blockValue));
     }
 
-    public void setPreviewImage(int blockValue){
+    public void setPreviewImage(int blockValue) {
         setImage(UIUtil.getInstance().getPreviewBlockImage(blockValue));
     }
 
-    public AnimatedImage getImage(){
+    public AnimatedImage getImage() {
         return this.uiBlock;
     }
 
-    public void setActive(boolean b){
+    public void setActive(boolean b) {
         this.isActive = b;
     }
 
-    public boolean isActive(){
+    public boolean isActive() {
         return uiBlock != null && isActive;
     }
 
@@ -72,63 +77,88 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject{
         setActive(false);
     }
 
-    private void setDrawable(Image image){
-        if(uiBlock == null){
+    private void setDrawable(Image image) {
+        if (uiBlock == null) {
             uiBlock = new AnimatedImage();
             uiBlock.setDelay(ANIMATION_DELAY);
         }
 
-        if(image != null) {
-            Drawable drawable = image.getDrawable();
-            setName(image.getName());
+        if(image == null) return;
 
-            Util.setSizeFromDrawable(uiBlock, drawable);
-            Util.setSizeFromDrawable(this, drawable);
-
-            uiBlock.setDrawable(drawable);
-
-            if (image instanceof AnimatedImage) {
-                uiBlock.setFrames(Util.getAniImageFrames((AnimatedImage) image));
-            } else {
-                uiBlock.setFrames(GdxArrays.newArray(image.getDrawable()));
-            }
+        Drawable drawable;
+        if (image instanceof AnimatedImage) {
+            drawable = ((AnimatedImage) image).getFrames().get(0);
+            uiBlock.setFrames(YokelUtilities.getAniImageFrames((AnimatedImage) image));
+        } else {
+            drawable = image.getDrawable();
+            uiBlock.setFrames(GdxArrays.newArray(drawable));
         }
+
+        setName(image.getName());
+        uiBlock.setDrawable(drawable);
+        YokelUtilities.setSizeFromDrawable(uiBlock, drawable);
+        YokelUtilities.setSizeFromDrawable(this, drawable);
     }
 
     @Override
-    public void setName(String name){
+    public void setName(String name) {
         super.setName(name);
         uiBlock.setName(name);
     }
 
     @Override
-    public void setPosition(float x, float y){
+    public void setPosition(float x, float y) {
         super.setPosition(x, y);
         uiBlock.setPosition(x, y);
     }
 
     @Override
     public void setData(String data) {
-        YokelBlock block = Util.getObjectFromJsonString(YokelBlock.class, data);
-        if(block != null) setImage(Util.otoi(block.toString()));
+        YokelBlock block = YokelUtilities.getObjectFromJsonString(YokelBlock.class, data);
+        if (block != null) setImage(YokelUtilities.otoi(block));
     }
 
     @Override
-    public float getPrefWidth(){
+    public float getPrefWidth() {
         return getImage().getWidth();
     }
 
     @Override
-    public float getPrefHeight(){
+    public float getPrefHeight() {
         return getImage().getHeight();
     }
+
     @Override
-    public float getWidth(){
+    public float getWidth() {
         return getPrefWidth();
     }
 
     @Override
-    public float getHeight(){
+    public float getHeight() {
         return getPrefHeight();
+    }
+
+    public void update(int block, boolean isPreview) {
+        if(needsUpdate(block, isPreview)){
+            GameBlock blockUi = YokelUtilities.getBlock(block, isPreview);
+            if(blockUi != null){
+                setImage(blockUi.getImage());
+            }
+        }
+    }
+
+    private boolean needsUpdate(int block, boolean isPreview) {
+        String blockName = "";
+        Image blockImage;
+
+        if(isPreview){
+            blockImage = UIUtil.getInstance().getPreviewBlockImage(block);
+        } else {
+            blockImage = UIUtil.getInstance().getBlockImage(block);
+        }
+        if(blockImage != null){
+            blockName = blockImage.getName();
+        }
+        return !StringUtils.equalsIgnoreCase(blockName, uiBlock.getName());
     }
 }

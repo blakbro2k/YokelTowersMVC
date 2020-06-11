@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Queue;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 /**
  * Created by eboateng on 3/19/2018.
@@ -18,7 +18,6 @@ public class GameBoard extends Table {
 
     private GameNameLabel nameLabel;
     private GamePiece next;
-    private GamePiece piece;
     private GamePowersQueue powers;
     private GameBlockArea area;
 
@@ -27,28 +26,26 @@ public class GameBoard extends Table {
     private float blockHeight;
     private float blockPrevHeight;
 
-    private boolean isPreview = false;
     private boolean isLeftBar = true;
 
     public GameBoard(Skin skin) {
         super(skin);
-        GameBlock block = Util.getBlock(YokelBlock.CLEAR_BLOCK);
-        GameBlock previewBlock = Util.getBlock(YokelBlock.CLEAR_BLOCK, true);
+        initialize(skin);
+        GameBlock block = YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK);
+        GameBlock previewBlock = YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK, area.isPreview());
 
         blockWidth = block.getWidth();
         blockPrevWidth = previewBlock.getWidth();
         blockHeight = block.getHeight();
         blockPrevHeight = previewBlock.getHeight();
-
-        initialize(skin);
     }
 
     private void initialize(Skin skin) {
         next = new GamePiece(skin);
         powers = new GamePowersQueue(skin);
         area = new GameBlockArea(skin);
+        nameLabel = new GameNameLabel(skin);
         setUpBoard();
-
     }
 
     private void setUpBoard(){
@@ -57,16 +54,15 @@ public class GameBoard extends Table {
         Table right = new Table(getSkin());
         right.add(area);
 
-        if(isPreview){
-            add(nameLabel);
-            row();
+        if(area.isPreview()){
+            add(nameLabel).left().row();
             add(right);
         } else {
             Table left = new Table(getSkin());
             left.add(next).top().row();
             left.add(powers).bottom();
 
-            add(nameLabel).colspan(2);
+            add(nameLabel).left().colspan(2);
             row();
 
             if(isLeftBar){
@@ -81,11 +77,10 @@ public class GameBoard extends Table {
 
     @Override
     public void setDebug(boolean debug){
-        super.setDebug(Util.setDebug(debug, nameLabel, next, powers, area));
+        super.setDebug(YokelUtilities.setDebug(debug, nameLabel, next, powers, area));
     }
 
     public void setPreview(boolean preview){
-        isPreview = preview;
         area.setPreview(preview);
         setUpBoard();
     }
@@ -106,12 +101,7 @@ public class GameBoard extends Table {
 
     public void setPlayerLabel(String data){
         if(data != null){
-            if(nameLabel == null){
-                nameLabel = new GameNameLabel(getSkin());
-            }
             nameLabel.setData(data);
-        } else {
-            nameLabel = null;
         }
         setUpBoard();
     }
@@ -123,17 +113,17 @@ public class GameBoard extends Table {
 
     @Override
     public float getPrefHeight() {
-        if(isPreview){
-            return blockPrevHeight * YokelGameBoard.MAX_PLAYABLE_ROWS + blockPrevHeight;
+        if(area.isPreview()){
+            return blockPrevHeight * YokelGameBoard.MAX_PLAYABLE_ROWS + nameLabel.getPrefHeight();
         } else {
-            return blockHeight * YokelGameBoard.MAX_PLAYABLE_ROWS + 40;
+            return blockHeight * YokelGameBoard.MAX_PLAYABLE_ROWS + nameLabel.getPrefHeight();
         }
     }
 
     @Override
     public float getPrefWidth() {
-        if(isPreview){
-            return blockPrevWidth * YokelGameBoard.MAX_COLS + blockPrevWidth;
+        if(area.isPreview()){
+            return blockPrevWidth * YokelGameBoard.MAX_COLS + nameLabel.getPrefWidth();
         } else {
             return blockWidth * YokelGameBoard.MAX_COLS + blockWidth * 2;
         }
@@ -146,8 +136,16 @@ public class GameBoard extends Table {
     private Queue<GameBlock> blockToGameBlocks(Queue<Integer> blocks){
         Queue<GameBlock> bs = new Queue<>();
         for(int block : blocks){
-            bs.addFirst(Util.getBlock(block, isPreview));
+            bs.addFirst(YokelUtilities.getBlock(block, area.isPreview()));
         }
         return bs;
+    }
+
+    public void setActive(boolean b) {
+        area.setActive(b);
+    }
+
+    public void setPlayerView(boolean b) {
+        area.setPlayerView(b);
     }
 }

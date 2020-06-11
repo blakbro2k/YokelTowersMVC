@@ -15,7 +15,7 @@ import net.asg.games.server.serialization.ClientRequest;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.storage.YokelStorageAdapter;
 import net.asg.games.utils.PayloadUtil;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -129,7 +129,7 @@ public class ServerManager {
         try {
             Logger.trace("Enter initializeParams()");
             Logger.info("Evaluating input parameters...");
-            if(!Util.isStaticArrayEmpty(args)){
+            if(!YokelUtilities.isStaticArrayEmpty(args)){
                 for(int i = 0; i < args.length; i++){
                     String param = args[i];
                     String paramValue = validateArumentParameterValue(i, args) ? args[i + 1] : null;
@@ -166,7 +166,7 @@ public class ServerManager {
     //if it is something else, it will fail when we try to set it.
     private boolean validateArumentParameterValue(int i, String... args) throws Exception {
         Logger.trace("Enter validateArumentParameterValue()");
-        if(Util.isStaticArrayEmpty(args)){
+        if(YokelUtilities.isStaticArrayEmpty(args)){
             Logger.error("Arguments cannot be null or empty.");
             throw new Exception("Arguments cannot be null or empty.");
         }
@@ -197,7 +197,7 @@ public class ServerManager {
 
     public void setLogLevel(String logLevel){
         Logger.info("setting log level to: {}", logLevel);
-        this.logLevel = Util.getTinyLogLevel(logLevel);
+        this.logLevel = YokelUtilities.getTinyLogLevel(logLevel);
         Configurator.defaultConfig().level(this.logLevel).activate();
     }
 
@@ -333,10 +333,10 @@ public class ServerManager {
                         responsePayload = disconnectPlayer(clientPayload);
                         break;
                     case REQUEST_ALL_REGISTERED_PLAYERS:
-                        responsePayload = Util.toStringArray(playersToJSON());
+                        responsePayload = YokelUtilities.toStringArray(playersToJSON());
                         break;
                     case REQUEST_LOGOFF:
-                        responsePayload = Util.toStringArray(testPlayersToJSON());
+                        responsePayload = YokelUtilities.toStringArray(testPlayersToJSON());
                         break;
                     case REQUEST_PLAYER_REGISTER:
                         responsePayload = registerPlayerRequest(clientPayload);
@@ -370,7 +370,7 @@ public class ServerManager {
                         responsePayload = getLoungesRequest(clientPayload);
                         break;
                     case REQUEST_LOUNGE_ALL:
-                        responsePayload = Util.toStringArray(loungesToJSON());
+                        responsePayload = YokelUtilities.toStringArray(loungesToJSON());
                         break;
                     default:
                         Logger.error("Unknown Client Request: " + value);
@@ -617,7 +617,7 @@ public class ServerManager {
 
         if(player != null){
             Logger.info("Attempting to register player={}", player.toString());
-            ret[0] = Util.otos(registerPlayer(clientId, player));
+            ret[0] = YokelUtilities.otos(registerPlayer(clientId, player));
         }
         Logger.trace("Exit registerPlayerRequest()");
         return ret;
@@ -643,7 +643,7 @@ public class ServerManager {
     private String[] getLoungesRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter getLoungesRequest()");
         String[] ret = new String[1];
-        if(Util.isValidPayload(clientPayload, 1)){
+        if(YokelUtilities.isValidPayload(clientPayload, 1)){
             String loungeName = clientPayload[0];
             YokelLounge lounge = getLounge(loungeName);
             ret[0] = lounge == null ? null : lounge.toString();
@@ -659,7 +659,7 @@ public class ServerManager {
         Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
 
         String[] ret = new String[1];
-        if(Util.isValidPayload(clientPayload, 2)){
+        if(YokelUtilities.isValidPayload(clientPayload, 2)){
             String loungeName = clientPayload[0];
             String roomName = clientPayload[1];
             YokelRoom room = getRoom(loungeName, roomName);
@@ -680,11 +680,11 @@ public class ServerManager {
             String[] ret = new String[1];
             ret[0] = "false";
             //TODO: Cannot create a table in a lounch you are not apart of
-            if(Util.isValidPayload(clientPayload, 4)){
-                String loungeName = Util.getStringValue(clientPayload, 0);
-                String roomName = Util.getStringValue(clientPayload, 1);
-                String type = Util.getStringValue(clientPayload, 2);
-                boolean isRated = Util.getBooleanValue(clientPayload, 3);
+            if(YokelUtilities.isValidPayload(clientPayload, 4)){
+                String loungeName = YokelUtilities.getStringValue(clientPayload, 0);
+                String roomName = YokelUtilities.getStringValue(clientPayload, 1);
+                String type = YokelUtilities.getStringValue(clientPayload, 2);
+                boolean isRated = YokelUtilities.getBooleanValue(clientPayload, 3);
 
                 OrderedMap<String, Object> arguments = new OrderedMap<>();
                 arguments.put("type", type);
@@ -727,7 +727,7 @@ public class ServerManager {
         String[] ret = new String[1];
         ret[0] = "false";
 
-        if(Util.isValidPayload(clientPayload, 3)){
+        if(YokelUtilities.isValidPayload(clientPayload, 3)){
             String playerId = clientPayload[0];
             String loungeName = clientPayload[1];
             String roomName = clientPayload[2];
@@ -749,7 +749,7 @@ public class ServerManager {
         String[] ret = new String[1];
         ret[0] = "false";
 
-        if(Util.isValidPayload(clientPayload, 3)){
+        if(YokelUtilities.isValidPayload(clientPayload, 3)){
             String playerId = clientPayload[0];
             String loungeName = clientPayload[1];
             String roomName = clientPayload[2];
@@ -768,11 +768,11 @@ public class ServerManager {
         Logger.trace("Enter getTablesRequest()");
         Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
 
-        if(Util.isValidPayload(clientPayload, 2)){
+        if(YokelUtilities.isValidPayload(clientPayload, 2)){
             String loungeName = clientPayload[0];
             String roomName = clientPayload[1];
 
-            return Util.toStringArray(getAllTables(loungeName, roomName));
+            return YokelUtilities.toStringArray(getAllTables(loungeName, roomName));
         }
         Logger.trace("Exit getTablesRequest()");
         return new String[]{"false"};
@@ -788,12 +788,12 @@ public class ServerManager {
         Logger.trace("Received payload=" + Arrays.toString(clientPayload));
         String[] ret = new String[1];
 
-        if(Util.isValidPayload(clientPayload, 5)){
+        if(YokelUtilities.isValidPayload(clientPayload, 5)){
             String playerId = clientPayload[0];
             String loungeName = clientPayload[1];
             String roomName = clientPayload[2];
-            int tableNumber = Util.otoi(clientPayload[3]);
-            int seatNumber = Util.otoi(clientPayload[4]);
+            int tableNumber = YokelUtilities.otoi(clientPayload[3]);
+            int seatNumber = YokelUtilities.otoi(clientPayload[4]);
 
             YokelPlayer player = getRegisteredPlayer(playerId);
             Logger.debug("player=" + player);
@@ -813,11 +813,11 @@ public class ServerManager {
         Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
         String[] ret = new String[1];
 
-        if(Util.isValidPayload(clientPayload, 4)){
+        if(YokelUtilities.isValidPayload(clientPayload, 4)){
             String loungeName = clientPayload[0];
             String roomName = clientPayload[1];
-            int tableNumber = Util.otoi(clientPayload[2]);
-            int seatNumber = Util.otoi(clientPayload[3]);
+            int tableNumber = YokelUtilities.otoi(clientPayload[2]);
+            int seatNumber = YokelUtilities.otoi(clientPayload[3]);
 
             ret[0] = "" + standAtTable(loungeName, roomName, tableNumber, seatNumber);
         }
@@ -833,10 +833,10 @@ public class ServerManager {
         Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
         String[] ret = new String[1];
 
-        if(Util.isValidPayload(clientPayload, 3)){
+        if(YokelUtilities.isValidPayload(clientPayload, 3)){
             String loungeName = clientPayload[0];
             String roomName = clientPayload[1];
-            int tableNumber = Util.otoi(clientPayload[2]);
+            int tableNumber = YokelUtilities.otoi(clientPayload[2]);
 
             ret[0] = "" + startGameAtTable(loungeName, roomName, tableNumber);
         }

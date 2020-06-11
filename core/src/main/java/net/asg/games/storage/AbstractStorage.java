@@ -2,7 +2,7 @@ package net.asg.games.storage;
 
 import net.asg.games.game.objects.AbstractYokelObject;
 import net.asg.games.game.objects.YokelObject;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +38,7 @@ public abstract class AbstractStorage implements Storage {
         } catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException e){
             e.printStackTrace();
         }
-        return Util.otos(var);
+        return YokelUtilities.otos(var);
     }
 
     public Class<?> getClassFromSuper(@NotNull Class<?> klass, Object o){

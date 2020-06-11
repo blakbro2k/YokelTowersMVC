@@ -49,35 +49,35 @@ public class PayloadUtil {
 
     public static String[] createNewGameRequest(String loungeName, String roomName, YokelTable.ACCESS_TYPE type, boolean isRated){
         if(validatedInputs(loungeName, roomName)){
-            return new String[]{loungeName, roomName, Util.otos(type), Util.otos(isRated)};
+            return new String[]{loungeName, roomName, YokelUtilities.otos(type), YokelUtilities.otos(isRated)};
         }
         return EMPTY_ARRAY;
     }
 
     public static String[] createTableJoinRequest(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber){
         if(validatedInputs(player, loungeName, roomName)){
-            return new String[]{player.getId(), loungeName, roomName, Util.otos(tableNumber), Util.otos(seatNumber)};
+            return new String[]{player.getId(), loungeName, roomName, YokelUtilities.otos(tableNumber), YokelUtilities.otos(seatNumber)};
         }
         return EMPTY_ARRAY;
     }
 
     public static String[] createGameStartRequest(String loungeName, String roomName, int tableNumber){
         if(validatedInputs(loungeName, roomName)){
-            return new String[]{loungeName, roomName, Util.otos(tableNumber)};
+            return new String[]{loungeName, roomName, YokelUtilities.otos(tableNumber)};
         }
         return EMPTY_ARRAY;
     }
 
     public static String[] createTableStandRequest(String loungeName, String roomName, int tableNumber, int seatNumber){
         if(validatedInputs(loungeName, roomName)){
-            return new String[]{loungeName, roomName, Util.otos(tableNumber), Util.otos(seatNumber)};
+            return new String[]{loungeName, roomName, YokelUtilities.otos(tableNumber), YokelUtilities.otos(seatNumber)};
         }
         return EMPTY_ARRAY;
     }
 
     public static String[] createTableSitRequest(YokelPlayer player, String loungeName, String roomName, int tableNumber, int seatNumber){
         if(validatedInputs(loungeName, roomName)){
-            return new String[]{player.getId(), loungeName, roomName, Util.otos(tableNumber), Util.otos(seatNumber)};
+            return new String[]{player.getId(), loungeName, roomName, YokelUtilities.otos(tableNumber), YokelUtilities.otos(seatNumber)};
         }
         return EMPTY_ARRAY;
     }
@@ -91,15 +91,15 @@ public class PayloadUtil {
 
     //From payload
     public static YokelPlayer getRegisterPlayerFromPayload(String[] clientPayload){
-        if(Util.isValidPayload(clientPayload, 2)){
-            return Util.getObjectFromJsonString(YokelPlayer.class, clientPayload[1]);
+        if(YokelUtilities.isValidPayload(clientPayload, 2)){
+            return YokelUtilities.getObjectFromJsonString(YokelPlayer.class, clientPayload[1]);
         }
         return null;
     }
 
     public static String getClientIDFromPayload(String[] clientPayload){
-        if(Util.isValidPayload(clientPayload, 2)){
-            return Util.otos(clientPayload[0]);
+        if(YokelUtilities.isValidPayload(clientPayload, 2)){
+            return YokelUtilities.otos(clientPayload[0]);
         }
         return null;
     }
@@ -110,7 +110,7 @@ public class PayloadUtil {
         Array<YokelLounge> ret = new Array<>();
         if(validatedInputs(clientPayload)){
             for(String payload : clientPayload){
-                ret.add(Util.getObjectFromJsonString(YokelLounge.class, payload));
+                ret.add(YokelUtilities.getObjectFromJsonString(YokelLounge.class, payload));
             }
         }
         Logger.trace("Exit getLoungesRequest()");
@@ -123,7 +123,7 @@ public class PayloadUtil {
         Array<YokelPlayer> ret = new Array<>();
         if(validatedInputs(clientPayload)){
             for(String payload : clientPayload){
-                ret.add(Util.getObjectFromJsonString(YokelPlayer.class, payload));
+                ret.add(YokelUtilities.getObjectFromJsonString(YokelPlayer.class, payload));
             }
         }
         Logger.trace("Exit getAllRegisteredPlayersRequest()");
@@ -136,7 +136,7 @@ public class PayloadUtil {
         Array<YokelTable> ret = new Array<>();
         if(validatedInputs(clientPayload)){
             for(String payload : clientPayload){
-                ret.add(Util.getObjectFromJsonString(YokelTable.class, payload));
+                ret.add(YokelUtilities.getObjectFromJsonString(YokelTable.class, payload));
             }
         }
         Logger.trace("Exit getAllTablesRequest()");

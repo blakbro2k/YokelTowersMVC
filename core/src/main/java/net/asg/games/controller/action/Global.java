@@ -1,20 +1,16 @@
 package net.asg.games.controller.action;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.stereotype.ViewActionContainer;
-import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
-import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.controller.dialog.GameController;
 import net.asg.games.provider.actors.GameTableList;
 import net.asg.games.service.SessionService;
 import net.asg.games.utils.PostLoader;
-import net.asg.games.utils.Util;
 
 /**
  * Since this class implements ActionContainer and is annotated with ViewActionContainer, its methods will be reflected

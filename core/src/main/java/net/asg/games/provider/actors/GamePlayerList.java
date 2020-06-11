@@ -4,11 +4,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 import net.asg.games.game.objects.YokelPlayer;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 public class GamePlayerList extends Table {
     private final static String HEADER_NAME_STR = "Name";
@@ -53,12 +52,12 @@ public class GamePlayerList extends Table {
     }
 
     private Label labalize(Object text){
-        return Util.createLabel(getSkin(), text.toString(), 1f);
+        return YokelUtilities.createLabel(getSkin(), text.toString(), 1f);
     }
 
     public void updatePlayerList(Array<YokelPlayer> players){
         playerList.clearChildren();
-        for(YokelPlayer player : Util.safeIterable(players)){
+        for(YokelPlayer player : YokelUtilities.safeIterable(players)){
             if(player != null){
                 addPlayer(player);
             }

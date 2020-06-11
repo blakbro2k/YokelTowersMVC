@@ -15,7 +15,7 @@ import com.github.czyzby.lml.util.LmlUtilities;
 
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
-import net.asg.games.utils.Util;
+import net.asg.games.utils.YokelUtilities;
 
 public class GameTableList extends Table {
     private final static String HEADER_TABLE_STR = "Table";
@@ -40,7 +40,6 @@ public class GameTableList extends Table {
         tableList = new Table(skin);
 
         tableList.left().align(Align.top);
-        //tableList.setFillParent(true);
 
         setUpHeader();
         setUpTableList();
@@ -67,7 +66,7 @@ public class GameTableList extends Table {
     }
 
     private Label labelize(String text){
-        return Util.createLabel(getSkin(), text, 1f);
+        return YokelUtilities.createLabel(getSkin(), text, 1f);
     }
 
     private void addTable(YokelTable yTable){
@@ -114,7 +113,7 @@ public class GameTableList extends Table {
 
     public void updateTableList(Array<YokelTable> tables){
         tableList.clearChildren();
-        for(YokelTable table : Util.safeIterable(tables)){
+        for(YokelTable table : YokelUtilities.safeIterable(tables)){
             if(table != null){
                 addTable(table);
             }
@@ -125,12 +124,14 @@ public class GameTableList extends Table {
         Array<Button> buttons = GdxArrays.newArray();
 
             for(Cell cell : tableList.getCells()){
-                Table actor = Util.getActorFromCell(Table.class, cell);
-                if(TABLE_LIST_ATTR.equalsIgnoreCase(Util.getActorId(actor))){
+                Table actor = YokelUtilities.getActorFromCell(Table.class, cell);
+                if(TABLE_LIST_ATTR.equalsIgnoreCase(YokelUtilities.getActorId(actor))){
                     Array<Cell> cells = actor.getCells();
                     for(Cell cell2 : cells){
-                        Button button = Util.getActorFromCell(Button.class, cell2);
-                        buttons.add(button);
+                        Button button = YokelUtilities.getActorFromCell(Button.class, cell2);
+                        if(button != null){
+                            buttons.add(button);
+                        }
                     }
                 }
             }
@@ -139,7 +140,7 @@ public class GameTableList extends Table {
 
     public static int getTableNumberFromButton(Button button) throws GdxRuntimeException {
         int tableNumber;
-        String buttonName = Util.getActorId(button);
+        String buttonName = YokelUtilities.getActorId(button);
 
         try {
             tableNumber = Integer.parseInt(buttonName.substring(0, buttonName.indexOf(TABLE_SEPARATOR)));
@@ -152,7 +153,7 @@ public class GameTableList extends Table {
 
     public static int getSeatNumberFromButton(Button button) throws GdxRuntimeException {
         int seatNumber;
-        String buttonName = Util.getActorId(button);
+        String buttonName = YokelUtilities.getActorId(button);
 
         try {
             seatNumber = Integer.parseInt(buttonName.substring(buttonName.indexOf(TABLE_SEPARATOR) + 1));

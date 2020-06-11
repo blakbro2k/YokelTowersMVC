@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Util {
+public class YokelUtilities {
     private final static String LEFT_CURLY_BRACET_HTML = "&#123;";
     private final static String RIGHTT_CURLY_BRACET_HTML = "&#125;";
     private final static Json json = new Json();
@@ -87,7 +87,7 @@ public class Util {
 
     public static Label createLabel(Skin skin, String text, float size){
         Label label = new Label("", skin);
-        if(!Util.isEmpty(text)){
+        if(!YokelUtilities.isEmpty(text)){
             label.setText(text);
         }
         label.setFontScale(size);
@@ -131,6 +131,12 @@ public class Util {
 
     public static GameBlock getBlock(int block, boolean isPreview){
         return UIUtil.getInstance().getGameBlock(block, isPreview);
+    }
+
+    public static void setActorName(Actor actor, Actor actorToName) {
+        if(actor != null && actorToName != null){
+            actor.setName(actorToName.getName());
+        }
     }
 
     public static class IDGenerator {
