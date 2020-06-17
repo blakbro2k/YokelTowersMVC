@@ -60,7 +60,7 @@ public class GameJoinWindow extends Table {
 
     public GameJoinWindow (Skin skin, WindowStyle style) {
         setSkin(skin);
-        GameWindowStyle style1 = new GameWindowStyle(skin.getDrawable("panel"), skin.getDrawable("panel"));
+        GameWindowStyle style1 = new GameWindowStyle(skin.getDrawable("sub-menu"), skin.getDrawable("sub-menu"));
 
         setTouchable(Touchable.enabled);
         setClip(true);
@@ -162,7 +162,7 @@ public class GameJoinWindow extends Table {
     }
 
     public float getPrefHeight () {
-        return super.getPrefHeight() + 0;
+        return super.getPrefHeight();
         //return Math.max(super.getPrefWidth(), titleTable.getPrefWidth() + getPadLeft() + getPadRight());
     }
 

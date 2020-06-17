@@ -20,6 +20,9 @@ import net.asg.games.utils.YokelUtilities;
 public class GameBlockArea extends Stack {
     private static final String CELL_ATTR = "uiCell";
     private static final String CELL_ATTR_SEPARATOR = "_";
+    private static final String GRID_NAME = "grid";
+    private static final String BOARD_NUMBER_NAME = "boardNumber";
+
     private static final Color ACTIVE_BACKGROUND_COLOR = new Color(0.7f, 0.7f, 0.7f, 1);
     private static final Color DEFAULT_BACKGROUND_COLOR = new Color(0.3f, 0.3f, 0.3f, 1);
 
@@ -95,7 +98,7 @@ public class GameBlockArea extends Stack {
     }
 
     private void initializeGrid(){
-        this.grid.setName("grid");
+        this.grid.setName(GRID_NAME);
         for(int r = YokelGameBoard.MAX_PLAYABLE_ROWS - 1; r >= 0; r--){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
                 GameBlock uiBlock = getClearBlock();
@@ -136,7 +139,7 @@ public class GameBlockArea extends Stack {
     }
 
     void setBoardNumber(int number){
-        this.bgNumber.setName("boardNumber");
+        this.bgNumber.setName(BOARD_NUMBER_NAME);
         this.grid.setBackground(number + GameClock.DIGIT_NME);
         this.boardNumber = number;
     }
@@ -193,7 +196,7 @@ public class GameBlockArea extends Stack {
     @Override
     public void draw(Batch batch, float alpha){
         super.draw(batch, alpha);
-
+        //this.drawChildren();
         //joinWindow.setPosition(getX(), getY() / 2);
         //if(!isActive) return;
         //System.err.println("s=" + super.getX());
@@ -242,11 +245,9 @@ public class GameBlockArea extends Stack {
                 computePosition();
                 float x = getX();
                 float y = getY();
-                //System.out.println("after(" + x + "," + y + ")");
 
                 for(int i = 0; i < 3; i++){
                     if(this.blocks[i] != null){
-                        //System.out.println("(" + x + "," + y + ")");
                         this.blocks[i].setPosition(x, y + (i * blocks[i].getHeight() / 2));
                         this.blocks[i].draw(batch, alpha);
                     }
@@ -265,7 +266,7 @@ public class GameBlockArea extends Stack {
         }
 
         private void updateIndex(int index, int block){
-            if(index > -1 && blocks[index] != null){
+            if(index > -1 && index < blocks.length && blocks[index] != null){
                 blocks[index].update(block,false);
             }
         }
@@ -278,25 +279,24 @@ public class GameBlockArea extends Stack {
             GameBlock block = blocks[0];
 
             if(block != null){
-                //Set the x to the position of the grid
-                Vector2 pos = this.parentToLocalCoordinates(new Vector2(0, 0));
-                System.out.println("(" + pos.x + "," + pos.y + ")");
+                // No transform for this group, offset each child.
 
-                pos.x = 267;
-                pos.y = -50;
-                System.out.println("comp(" + pos.x + "," + pos.y + ")");
+                //Set the x to the position of the grid
+                Vector2 pos = localToParentCoordinates(new Vector2(0, 0));
+
+                float SIDE_BAR_OFFSET = 12;
+                pos.x = pos.x / 2 + SIDE_BAR_OFFSET;
+                pos.y = pos.y / 2;
 
                 pos.x -= block.getWidth();
-                //System.out.println(fallOffset + " [" + ((1 - fallOffset) * block.getWidth()) + "]");
-                //pos.y -= pos.y / 2 - block.getHeight() / 2 + block.getHeight() / 2;
                 if(parent != null){
                     if(parent.isDownCellFree(col, row)){
-                        pos.y -= ((1 - fallOffset) * block.getWidth());
+                        pos.y -= ((1 - fallOffset) * block.getHeight() / 2);
                     }
                 }
 
                 float offSetX = block.getWidth() / 2 * col;
-                float offSetY = block.getHeight() * row;
+                float offSetY = block.getHeight() / 2 * row;
 
                 this.setPosition(pos.x + offSetX, pos.y + offSetY);
             }

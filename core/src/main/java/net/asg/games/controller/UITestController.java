@@ -141,7 +141,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             YokelPiece piece1 = new YokelPiece(1,32,84,112);
             YokelPiece piece2 = new YokelPiece(2,68,53,51);
             YokelPlayer player1 = new YokelPlayer("enboateng");
-            YokelPlayer player2 = new YokelPlayer("lhotham", 1400,5);
+            YokelPlayer player2 = new YokelPlayer("lholtham", 1400,5);
             YokelPlayer player3 = new YokelPlayer("rmeyers", 1700,7);
             board1 = getGameBoard();
             board1.getNewNextPiece();

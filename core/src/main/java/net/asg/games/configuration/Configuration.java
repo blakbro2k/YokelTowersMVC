@@ -97,11 +97,11 @@ import net.asg.games.service.ScaleService;
             VisUI.load(scaleService.getScale());
 
             // Registering VisUI skin with "default" name - this skin will be the default one for all LML widgets:
-            //skinService.addSkin("default", VisUI.getSkin());
+            skinService.addSkin("default", VisUI.getSkin());
             //skinService.addSkin("default", YahooUi.getSkin());
 
             //skinService.addSkin("default", new Skin(Gdx.files.internal("C:\\Users\\bigg_\\StudioProjects\\YokelTowersMVC\\assets\\ui\\skins\\sgx\\skin\\sgx-ui.json")));
-            skinService.addSkin("default", new Skin(Gdx.files.internal("C:\\Users\\bigg_\\StudioProjects\\YokelTowersMVC\\assets\\ui\\skins\\Neutralizer_UI_Skin\\neutralizerui\\neutralizer-ui.json")));
+            //skinService.addSkin("default", new Skin(Gdx.files.internal("C:\\Users\\bigg_\\StudioProjects\\YokelTowersMVC\\assets\\ui\\skins\\Neutralizer_UI_Skin\\neutralizerui\\neutralizer-ui.json")));
 
             // Thanks to this setting, only methods annotated with @LmlAction will be available in views, significantly
             // speeding up method look-up:
