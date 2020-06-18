@@ -54,6 +54,10 @@ public class YokelBlockEval {
         return (i & 0x7f000) >> 12;
     }
 
+    public static int getIDFlag(int id, int value){
+        return (value & ~0x7f000) | id >> 12;
+    }
+
     public static int setIDFlag(int i, int id) {
         if (id > 127)
             System.out.println("Assertion failure: invalid id " + id);

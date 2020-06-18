@@ -1047,13 +1047,31 @@ public class YokelGameBoard extends AbstractYokelObject {
         int index = block.getIndex();
 
         int v0 = block.getValueAt(index % 3);
+        if(YokelBlockEval.hasPowerBlockFlag(v0)){
+            System.out.println("powwah-V0-" + v0);
+        }
         v0 = YokelBlockEval.setIDFlag(v0, incrementID());
+        if(YokelBlockEval.hasPowerBlockFlag(v0)){
+            System.out.println("-V0-" + v0);
+        }
 
         int v1 = block.getValueAt((1 + index) % 3);
+        if(YokelBlockEval.hasPowerBlockFlag(v1)){
+            System.out.println("powwah-V1-" + v1);
+        }
         v1 = YokelBlockEval.setIDFlag(v1, incrementID());
+        if(YokelBlockEval.hasPowerBlockFlag(v1)){
+            System.out.println("-V1-" + v1);
+        }
 
         int v2 = block.getValueAt((2 + index) % 3);
+        if(YokelBlockEval.hasPowerBlockFlag(v2)){
+            System.out.println("powwah-V2-" + v2);
+        }
         v2 = YokelBlockEval.setIDFlag(v2, incrementID());
+        if(YokelBlockEval.hasPowerBlockFlag(v2)){
+            System.out.println("-V2-" + v2);
+        }
 
         if (YokelBlockEval.getCellFlag(cells[y][x]) != MAX_COLS) {
             Thread.dumpStack();
@@ -1600,7 +1618,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         if(countOfBreaks[block] > 3){
             //powerUp
             countOfBreaks[block] = 0;
-            return YokelBlockEval.setPowerFlag(block, 3);
+            return YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(block, 3));
         } else {
             ++countOfBreaks[block];
             return block;

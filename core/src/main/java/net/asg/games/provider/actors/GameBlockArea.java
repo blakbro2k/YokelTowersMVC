@@ -145,6 +145,9 @@ public class GameBlockArea extends Stack {
     }
 
     private void setBlock(int block, int r, int c){
+        if(block != YokelBlock.CLEAR_BLOCK){
+            block = YokelBlockEval.getIDFlag(YokelBlockEval.getID(block), block);
+        }
         GameBlock uiCell = uiBlocks.get(getCellAttrName(r, c));
 
         if(uiCell != null){
@@ -328,13 +331,7 @@ public class GameBlockArea extends Stack {
             //System.out.println(board);
             for(int r = 0; r < YokelGameBoard.MAX_PLAYABLE_ROWS; r++){
                 for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
-                    if(YokelBlockEval.hasPowerBlockFlag(board.getPieceValue(c, r))){
-                        System.out.println("POWER!!!!");
-                    }
-                    //System.out.println("block!" + board.getBlockValueAt(c, r));
-                    //System.out.println("POWER!!!!" + board.getPieceValue(c, r));
-
-                    setBlock(board.getPieceValue(c, r), r, c);
+                    setBlock(board.getBlockValueAt(c, r), r, c);
                 }
             }
         }
