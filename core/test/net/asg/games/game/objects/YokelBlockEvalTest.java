@@ -521,7 +521,13 @@ public class YokelBlockEvalTest {
 
     @Test
     public void testSetPowerFlag() throws Exception {
-        throw new Exception("Test not implemented.");
+        System.out.println("power 8" + YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, 8));
+        System.out.println("power 8" + YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, 1));
+        int block = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, 4));
+        Assert.assertEquals(YokelBlock.Y_BLOCK, YokelBlockEval.getCellFlag(block));
+        System.out.println("power 8" + YokelBlockEval.isOffensive(block));
+        System.out.println("power level = " + YokelBlockEval.getPowerLevel(block));
+
     }
 
     @Test

@@ -69,11 +69,11 @@ public class GameManager {
     public void resetGameBoards(){}
 
     public void handleMoveRight(int player){
-        gameBoards.get(player).attemptMovePieceRight();
+        gameBoards.get(player).movePieceRight();
     }
 
     public void handleMoveLeft(int player){
-        gameBoards.get(player).attemptMovePieceLeft();
+        gameBoards.get(player).movePieceLeft();
     }
 
     public void handleSetPiece(){}

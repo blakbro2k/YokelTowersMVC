@@ -8,10 +8,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
 import com.github.czyzby.autumn.annotation.Inject;
+import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
@@ -29,8 +32,10 @@ import net.asg.games.provider.actors.GamePowersQueue;
 import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.YokelUtilities;
 
+import java.util.Vector;
+
 @View(id = ControllerNames.UI_TEST_VIEW, value = "ui/templates/uitester.lml")
-public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer, InputProcessor {
+public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
     @Inject private UserInterfaceService uiService;
 
     @LmlActor("Y_block") private Image yBlockImage;
@@ -88,14 +93,31 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private YokelGameBoard board2;
     private YokelGameBoard board5;
     private YokelGameBoard board6;
+    private PlayerKeyMap keyMap = new PlayerKeyMap();
 
     @Override
     public void render(Stage stage, float delta) {
         initiate(stage);
-
-        board1.flagBoardMatches();
+        checkForInput();
         board1.update(delta);
         area1.update(board1);
+
+        //board1.flagPowerBlockCells();
+        board1.flagBoardMatches();
+        board1.checkForYahoos();
+
+        if(board1.getBrokenCellCount() > 0){
+            Vector<YokelBlock> broken = board1.getBrokenCells();
+            System.out.println("Broken Cells: " + broken);
+            for (YokelBlock b : broken) {
+                board1.incrementBreakCount(b.getType());
+            }
+        }
+        //board1.flagBrokenCells();
+
+        //System.out.println(board1.checkForYahoos());
+       // System.out.println(board1.getBrokenCellCount());
+        //System.out.println(board1.getBrokenCells());
         board1.handleBrokenCellDrops();
 
         //board2.update(delta);
@@ -104,28 +126,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         //board5.update(delta);
         //area5.update(board5);
 
-        /*
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            board1.attemptMovePieceRight();
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            board1.attemptMovePieceLeft();
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            board1.attemptCycleDown();
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            board1.attemptMovePieceLeft();
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            board1.attemptMovePieceLeft();
-        }*/
-
-        Gdx.input.setInputProcessor(this);
+        //Gdx.input.setInputProcessor(this);
 
         stage.act(delta);
         stage.draw();
@@ -367,61 +368,96 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         return gameClock.isRunning() ? gameClock.getElapsedSeconds() : 0;
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.RIGHT) {
-            board1.attemptMovePieceRight();
+    private void checkForInput(){
+        if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
+            board1.movePieceRight();
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getLeftKey())) {
+            board1.movePieceLeft();
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
+            board1.cycleDown();
+        }
+        if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
+            board1.startMoveDown();
+        }
+        if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
+            board1.stopMoveDown();
+        }
+        //System.out.println("key pressed:" + Gdx.input.isKeyPressed(Input.Keys.LEFT));
+    }
+
+    private static class PlayerKeyMap{
+        int[] keyMap = {Input.Keys.RIGHT,
+                Input.Keys.LEFT,
+                Input.Keys.UP,
+                Input.Keys.DOWN,
+                Input.Keys.P,
+                Input.Keys.NUM_1,
+                Input.Keys.NUM_2,
+                Input.Keys.NUM_3,
+                Input.Keys.NUM_4,
+                Input.Keys.NUM_5,
+                Input.Keys.NUM_6,
+                Input.Keys.NUM_7,
+                Input.Keys.NUM_8,
+                Input.Keys.SPACE};
+
+        public int getRightKey(){
+            return keyMap[0];
         }
 
-        if (keycode == Input.Keys.LEFT) {
-            board1.attemptMovePieceLeft();
+        public int getLeftKey(){
+            return keyMap[1];
         }
 
-        if (keycode == Input.Keys.UP) {
-            board1.attemptCycleDown();
+        public int getCycleDownKey(){
+            return keyMap[2];
         }
 
-        if (keycode == Input.Keys.DOWN) {
-            board1.attemptStartMoveDown();
+        public int getCycleUpKey(){
+            return keyMap[4];
         }
-        return true;
-    }
 
-    @Override
-    public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.DOWN) {
-            board1.attemptStopMoveDown();
+        public int getDownKey(){
+            return keyMap[3];
         }
-        return true;
+
+        public int getRandomAttackKey(){
+            return keyMap[13];
+        }
+
+        public int getTarget1(){
+            return keyMap[5];
+        }
+
+        public int getTarget2(){
+            return keyMap[6];
+        }
+
+        public int getTarget3(){
+            return keyMap[7];
+        }
+
+        public int getTarget4(){
+            return keyMap[8];
+        }
+
+        public int getTarget5(){
+            return keyMap[9];
+        }
+
+        public int getTarget6(){
+            return keyMap[10];
+        }
+
+        public int getTarget7(){
+            return keyMap[11];
+        }
+
+        public int getTarget8(){
+            return keyMap[12];
+        }
     }
 
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
 }

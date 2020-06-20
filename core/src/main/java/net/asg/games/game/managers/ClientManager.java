@@ -30,7 +30,7 @@ public class ClientManager implements Disposable {
 
     private final static int DEFAULT_WAIT = 30;
     private WebSocket socket;
-    private boolean isConnected;
+    private boolean isConnected  = false;;
     private String clientId = "";
     private int requestId = 0;
     private Queue<PayloadType> requests;
@@ -44,6 +44,12 @@ public class ClientManager implements Disposable {
     public PayloadType getNextRequest() {
         if(requests.size == 0) return EMPTY_PAYLOAD_TYPE;
         return requests.removeFirst();
+    }
+
+    public ClientManager(String host, int port){
+        requests = new Queue<>();
+        this.host = host;
+        this.port = port;
     }
 
     @Override
@@ -60,13 +66,6 @@ public class ClientManager implements Disposable {
 
     public boolean isRunning(){
         return isConnected;
-    }
-
-    public ClientManager(String host, int port){
-        isConnected = false;
-        requests = new Queue<>();
-        this.host = host;
-        this.port = port;
     }
 
     public boolean connectToServer() throws InterruptedException {

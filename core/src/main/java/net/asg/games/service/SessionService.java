@@ -24,6 +24,10 @@ import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
 
+/** Manages an authorized user's current session
+ * Includes the client and communicates with the server
+ *
+ * @author Blakbro2k */
 @Component
 public class SessionService {
     private static final Logger LOGGER = LoggerService.forClass(SessionService.class);
@@ -44,6 +48,7 @@ public class SessionService {
         client = new ClientManager("localhost", 8000);
         //TODO: Create PHPSESSION token6
         //TODO: Create CSRF Token
+        //TODO: Get host and port from configuration or preferences
     }
 
     @Destroy
@@ -133,8 +138,9 @@ public class SessionService {
                     return ctrl;
                 }
             }
+            //If view does not exist, return current view
+            return interfaceService.getCurrentController();
         }
-        return interfaceService.getCurrentController();
     }
 
     public void setCurrentUserName(String userName){

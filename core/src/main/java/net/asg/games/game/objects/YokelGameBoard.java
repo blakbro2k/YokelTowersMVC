@@ -4,6 +4,8 @@ import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.utils.RandomUtil;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -16,7 +18,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     public static final int VERTICAL_HOO_TIME = 4;
     public static final int DIAGONAL_HOO_TIME = 3;
     //public static final float FALL_RATE = 0.346f;
-    public static final float FALL_RATE = 0.016f;
+    public static final float FALL_RATE = 0.026f;
     public static final float FAST_FALL_RATE = 0.266f;
     private static final int MAX_FALL_VALUE = 1;
 
@@ -63,6 +65,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     private boolean fastDown;
     private Queue<Integer> powers;
     private int[] countOfBreaks = new int[MAX_COLS];
+    private int[] powersKeep = new int[MAX_COLS];
 
     //Empty Contructor required for Json.Serializable
     public YokelGameBoard(){}
@@ -1047,31 +1050,13 @@ public class YokelGameBoard extends AbstractYokelObject {
         int index = block.getIndex();
 
         int v0 = block.getValueAt(index % 3);
-        if(YokelBlockEval.hasPowerBlockFlag(v0)){
-            System.out.println("powwah-V0-" + v0);
-        }
         v0 = YokelBlockEval.setIDFlag(v0, incrementID());
-        if(YokelBlockEval.hasPowerBlockFlag(v0)){
-            System.out.println("-V0-" + v0);
-        }
 
         int v1 = block.getValueAt((1 + index) % 3);
-        if(YokelBlockEval.hasPowerBlockFlag(v1)){
-            System.out.println("powwah-V1-" + v1);
-        }
         v1 = YokelBlockEval.setIDFlag(v1, incrementID());
-        if(YokelBlockEval.hasPowerBlockFlag(v1)){
-            System.out.println("-V1-" + v1);
-        }
 
         int v2 = block.getValueAt((2 + index) % 3);
-        if(YokelBlockEval.hasPowerBlockFlag(v2)){
-            System.out.println("powwah-V2-" + v2);
-        }
         v2 = YokelBlockEval.setIDFlag(v2, incrementID());
-        if(YokelBlockEval.hasPowerBlockFlag(v2)){
-            System.out.println("-V2-" + v2);
-        }
 
         if (YokelBlockEval.getCellFlag(cells[y][x]) != MAX_COLS) {
             Thread.dumpStack();
@@ -1178,33 +1163,20 @@ public class YokelGameBoard extends AbstractYokelObject {
         return count;
     }
 
-    // Possible UI Function
     public Vector<YokelBlock> getBrokenCells() {
         Vector<YokelBlock> vector = new Vector<>();
 
         for (int i = 0; i < MAX_ROWS; i++) {
             for (int j = 0; j < MAX_COLS; j++) {
                 if (YokelBlockEval.hasBrokenFlag(cells[i][j]))
-                    vector.addElement(new YokelBlock(j, i));
+                    vector.addElement(new YokelBlock(j, i, YokelBlockEval.getCellFlag(cells[i][j])));
             }
         }
         return vector;
     }
-/*
-    public ByteStack getBrokenByPartnerCellIDs() {
-        ByteStack stack = new ByteStack();
 
-        for (int row = 0; row < MAX_ROWS; row++) {
-            for (int col = 0; col < MAX_COLS; col++) {
-                if (YokelBlockEval.hasPartnerBreakFlag(cells[row][col])) {
-                    stack.push(YokelBlockEval.getID(cells[row][col]));
-                }
-            }
-        }
 
-        return stack;
-    }
-
+    /*
     public void flagBrokenCells(ByteStack stack) {
         int index = 0;
 
@@ -1249,6 +1221,20 @@ public class YokelGameBoard extends AbstractYokelObject {
         updateBoard();
     }*/
 
+    /*
+    public ByteStack getBrokenByPartnerCellIDs() {
+        ByteStack stack = new ByteStack();
+
+        for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
+                if (YokelBlockEval.hasPartnerBreakFlag(cells[row][col])) {
+                    stack.push(YokelBlockEval.getID(cells[row][col]));
+                }
+            }
+        }
+
+        return stack;
+    }*/
 
     public Stack<Integer> getBrokenByPartnerCellIDs() {
         Stack<Integer> stack = new Stack<>();
@@ -1519,8 +1505,6 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void update(float delta){
-        //System.err.println("fallNumber=" + fallNumber);
-
         if(!hasPlayerDied()){
             this.fallNumber -= getCurrentFallRate();
             if(this.fallNumber < 0){
@@ -1553,35 +1537,35 @@ public class YokelGameBoard extends AbstractYokelObject {
         }
     }
 
-    public void attemptMovePieceRight(){
+    public void movePieceRight(){
         if(isRightCellFree(piece.column, piece.row)){
             piece.setPosition(piece.row, piece.column + 1);
         }
     }
 
-    public void attemptMovePieceLeft(){
+    public void movePieceLeft(){
         if(isLeftCellFree(piece.column, piece.row)){
             piece.setPosition(piece.row, piece.column - 1);
         }
     }
 
-    public void attemptCycleDown(){
+    public void cycleDown(){
         if(piece != null){
             piece.cycleDown();
         }
     }
 
-    public void attemptCycleUp(){
+    public void cycleUp(){
         if(piece != null){
             piece.cycleUp();
         }
     }
 
-    public void attemptStartMoveDown(){
+    public void startMoveDown(){
         fastDown = true;
     }
 
-    public void attemptStopMoveDown(){
+    public void stopMoveDown(){
         fastDown = false;
     }
 
@@ -1614,18 +1598,44 @@ public class YokelGameBoard extends AbstractYokelObject {
         return piece;
     }
 
+    //TODO: Make this safe
     private int powerUpBlock(int block){
         if(countOfBreaks[block] > 3){
             //powerUp
-            countOfBreaks[block] = 0;
-            return YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(block, 3));
+            countOfBreaks[block] -= 4;
+            ++powersKeep[block];
+            return getBlockPower(block, powersKeep[block]);
         } else {
-            ++countOfBreaks[block];
             return block;
         }
     }
 
     public Queue<Integer> getPowers() {
         return powers;
+    }
+
+    public int checkForYahoos() {
+        return getYahooDuration();
+    }
+
+    private int getBlockPower(int block, int intensity){
+        System.out.println("Powering up block[" + block + "] with intensity = " + intensity);
+        System.out.println("powers keep" + Arrays.toString(powersKeep));
+        if(intensity == 1) {
+            intensity = 3;
+        }
+        if(intensity > 7) {
+            intensity = 7;
+        }
+        return YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(block, intensity));
+    }
+
+    public void incrementBreakCount(int type){
+        System.out.println("breaks" + Arrays.toString(countOfBreaks));
+
+        System.out.println("block type=" + type);
+        if(type < 0 || type > MAX_COLS) return;
+        ++countOfBreaks[type];
+        System.out.println("powers keep" + Arrays.toString(countOfBreaks));
     }
 }

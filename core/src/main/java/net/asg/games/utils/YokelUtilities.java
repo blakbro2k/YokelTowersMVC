@@ -158,56 +158,6 @@ public class YokelUtilities {
         }
     }
 
-    /**
-     * @param numMonth Number value of Month requested
-     * @return String with three letter consideration
-     */
-    public static String getThreeLetterMonth(int numMonth) throws GdxRuntimeException {
-        String ret;
-        switch (numMonth) {
-            case 0:
-                ret = "JAN";
-                break;
-            case 1:
-                ret = "FEB";
-                break;
-            case 2:
-                ret = "MAR";
-                break;
-            case 3:
-                ret = "APR";
-                break;
-            case 4:
-                ret = "MAY";
-                break;
-            case 5:
-                ret = "JUN";
-                break;
-            case 6:
-                ret = "JUL";
-                break;
-            case 7:
-                ret = "AUG";
-                break;
-            case 8:
-                ret = "SEP";
-                break;
-            case 9:
-                ret = "OCT";
-                break;
-            case 10:
-                ret = "NOV";
-                break;
-            case 11:
-                ret = "DEC";
-                break;
-            default:
-                ret = "";
-                break;
-        }
-        return ret;
-    }
-
     public static boolean containsAny(Array<Object> c1, Array<Object> c2, boolean identity){
         boolean containsAny = false;
         if(null != c1 && null != c2){

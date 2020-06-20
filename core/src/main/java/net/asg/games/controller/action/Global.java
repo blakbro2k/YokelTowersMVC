@@ -7,6 +7,7 @@ import com.github.czyzby.autumn.mvc.stereotype.ViewActionContainer;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
+import net.asg.games.controller.ControllerNames;
 import net.asg.games.controller.dialog.GameController;
 import net.asg.games.provider.actors.GameTableList;
 import net.asg.games.service.SessionService;
@@ -30,9 +31,13 @@ public class Global implements ActionContainer {
     public void noOp() {
     }
 
+    @LmlAction("quitToRoom")
+    public void quitToRoom() {
+        interfaceService.show(sessionService.getView(ControllerNames.ROOM_VIEW));
+    }
+
     @LmlAction("isUITest")
     public boolean isUITest(){
-        System.out.println("isUITestResult  called.");
         return PostLoader.UI_TEST.equalsIgnoreCase(PostLoader.getInstance().getPreLoader());
     }
 
