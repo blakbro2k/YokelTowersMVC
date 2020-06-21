@@ -190,7 +190,7 @@ public class GameBlockArea extends Stack {
         super.act(delta);
         for(GameBlock uiblock : uiBlocks.values()) {
             if(uiblock != null){
-                uiblock.act(delta);
+                uiblock.act(delta * YokelUtilities.otof(0.03));
             }
         }
         //joinWindow.setPosition(getX(), getY());

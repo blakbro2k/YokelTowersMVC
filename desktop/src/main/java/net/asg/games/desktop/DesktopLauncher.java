@@ -1,24 +1,16 @@
 package net.asg.games.desktop;
 
 import com.badlogic.gdx.Files.FileType;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.czyzby.autumn.fcs.scanner.DesktopClassScanner;
 import com.github.czyzby.autumn.mvc.application.AutumnApplication;
-import com.github.czyzby.lml.parser.LmlParser;
-import com.github.czyzby.lml.parser.impl.tag.Dtd;
-import com.github.czyzby.lml.util.Lml;
 import com.github.czyzby.websocket.CommonWebSockets;
 
 import net.asg.games.YokelTowersMVC;
 import net.asg.games.utils.GlobalConstants;
 import net.asg.games.utils.PostLoader;
-
-import java.io.Writer;
 
 /** Launches the desktop (LWJGL) application. */
 public class DesktopLauncher {

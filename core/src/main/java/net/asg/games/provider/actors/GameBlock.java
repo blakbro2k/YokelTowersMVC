@@ -9,20 +9,18 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlock;
-import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.YokelUtilities;
 
 import org.apache.commons.lang.StringUtils;
-
-import java.util.Objects;
 
 /**
  * Created by Blakbro2k on 3/15/2018.
  */
 
 public class GameBlock extends Table implements Pool.Poolable, GameObject {
-    final public static float ANIMATION_DELAY = 0.12f;
+    private final static float DEFAULT_ANIMATION_DELAY = 0.12f;
+    private final static float DEFENSE_ANIMATION_DELAY = 0.32f;
 
     private AnimatedImage uiBlock;
     private boolean isActive;
@@ -69,6 +67,14 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject {
         return uiBlock != null && isActive;
     }
 
+    private float getDelay(Image image){
+        if(image != null){
+            if(StringUtils.containsIgnoreCase(image.getName(), "defense")){
+                return DEFENSE_ANIMATION_DELAY;
+            }
+        }
+        return DEFAULT_ANIMATION_DELAY;
+    }
     @Override
     public void reset() {
         setX(0);
@@ -80,9 +86,8 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject {
     private void setDrawable(Image image) {
         if (uiBlock == null) {
             uiBlock = new AnimatedImage();
-            uiBlock.setDelay(ANIMATION_DELAY);
         }
-
+        uiBlock.setDelay(getDelay(image));
         if(image == null) return;
 
         Drawable drawable;

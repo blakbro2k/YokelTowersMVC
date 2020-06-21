@@ -3,18 +3,14 @@ package net.asg.games.controller;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
 import com.github.czyzby.autumn.annotation.Inject;
-import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
-import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
@@ -102,31 +98,19 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         board1.update(delta);
         area1.update(board1);
 
-        //board1.flagPowerBlockCells();
         board1.flagBoardMatches();
         board1.checkForYahoos();
 
         if(board1.getBrokenCellCount() > 0){
             Vector<YokelBlock> broken = board1.getBrokenCells();
+
             System.out.println("Broken Cells: " + broken);
             for (YokelBlock b : broken) {
-                board1.incrementBreakCount(b.getType());
+                board1.addPowerToQueue(b);
+                board1.incrementBreakCount(b.getBlockType());
             }
         }
-        //board1.flagBrokenCells();
-
-        //System.out.println(board1.checkForYahoos());
-       // System.out.println(board1.getBrokenCellCount());
-        //System.out.println(board1.getBrokenCells());
         board1.handleBrokenCellDrops();
-
-        //board2.update(delta);
-        //area2.update(board2);
-
-        //board5.update(delta);
-        //area5.update(board5);
-
-        //Gdx.input.setInputProcessor(this);
 
         stage.act(delta);
         stage.draw();
@@ -146,12 +130,12 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             YokelPlayer player3 = new YokelPlayer("rmeyers", 1700,7);
             board1 = getGameBoard();
             board1.getNewNextPiece();
-            board2 = getGameBoard();
-            board2.getNewNextPiece();
-            board5 = getGameBoard();
-            board5.getNewNextPiece();
-            board6 = getGameBoard();
-            board6.getNewNextPiece();
+            //board2 = getGameBoard();
+            //board2.getNewNextPiece();
+            //board5 = getGameBoard();
+            //board5.getNewNextPiece();
+            //board6 = getGameBoard();
+            //board6.getNewNextPiece();
 
             area1.setPlayerLabel(player1.getNameLabel().toString());
             area1.setActive(true);

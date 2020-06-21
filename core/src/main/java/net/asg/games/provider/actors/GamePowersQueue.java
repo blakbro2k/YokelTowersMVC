@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.game.objects.YokelBlock;
@@ -19,7 +20,7 @@ public class GamePowersQueue extends Table implements GameObject{
     }
 
     private void initialize(){
-        powers = new Queue<GameBlock>();
+        powers = new Queue<>();
         powersDisplay = new VerticalGroup();
         setSize(getPrefWidth(), getPrefHeight());
         add(powersDisplay);
@@ -27,11 +28,7 @@ public class GamePowersQueue extends Table implements GameObject{
 
     public void updateQueue(Queue<GameBlock> powerUps){
         if(powerUps != null) {
-            for (GameBlock block : powerUps) {
-                if (block != null){
-                    powers.addFirst(block);
-                }
-            }
+            powers = powerUps;
             powersDisplay.clear();
             int maxIndex = 9;
             int index = 0;
@@ -46,11 +43,6 @@ public class GamePowersQueue extends Table implements GameObject{
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-    }
-
-    public void clearAllPowerUps(){
-        //TODO: keep special power ups
-        powers.clear();
     }
 
     public float getPrefWidth() {

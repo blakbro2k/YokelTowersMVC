@@ -60,6 +60,7 @@ public class GameBoard extends Table {
         } else {
             Table left = new Table(getSkin());
             left.add(next).top().row();
+            left.add(new GamePiece(getSkin())).row();
             left.add(powers).bottom();
 
             add(nameLabel).left().colspan(2);
@@ -134,11 +135,11 @@ public class GameBoard extends Table {
     }
 
     private Queue<GameBlock> blockToGameBlocks(Queue<Integer> blocks){
-        Queue<GameBlock> bs = new Queue<>();
+        Queue<GameBlock> gameBlocks = new Queue<>();
         for(int block : blocks){
-            bs.addFirst(YokelUtilities.getBlock(block, area.isPreview()));
+            gameBlocks.addFirst(YokelUtilities.getBlock(block, area.isPreview()));
         }
-        return bs;
+        return gameBlocks;
     }
 
     public void setActive(boolean b) {

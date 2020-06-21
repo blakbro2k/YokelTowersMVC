@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.Queue;
 import net.asg.games.utils.RandomUtil;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -530,11 +529,20 @@ public class YokelGameBoard extends AbstractYokelObject {
         int count;
         for (count = 1;
              (isCellInBoard(x + count * _x, y + count * _y)
-                     && getPieceValue(x + count * _x, y + count * _y) == cell
-                     && !YokelBlockEval.hasPowerBlockFlag(cells[y + count * _y][x + count * _x]));
+                     && getPieceValue(x + count * _x, y + count * _y) == cell);
+                     //&& YokelBlockEval.hasPowerBlockFlag(cells[y + count * _y][x + count * _x]) == false);
              count++) {
             /* empty */
         }
+
+        /*
+        for (count = 1;
+             (isCellInBoard(x + count * _x, y + count * _y)
+                     && getPieceValue(x + count * _x, y + count * _y) == cell
+                     && CellEval.hasPowerBlockFlag(cells[y + count * _y][x + count * _x]) == false);
+             count++) {
+            /* empty *
+        }*/
 
         if (count >= 3) {
             for (int i = 0; i < count; i++) {
@@ -1046,6 +1054,8 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     // Possible UI function
     public void placeBlockAt(YokelPiece block, int x, int y) {
+        System.err.println("Placing piece " + block);
+
         this.piece = block;
         int index = block.getIndex();
 
@@ -1168,8 +1178,14 @@ public class YokelGameBoard extends AbstractYokelObject {
 
         for (int i = 0; i < MAX_ROWS; i++) {
             for (int j = 0; j < MAX_COLS; j++) {
-                if (YokelBlockEval.hasBrokenFlag(cells[i][j]))
-                    vector.addElement(new YokelBlock(j, i, YokelBlockEval.getCellFlag(cells[i][j])));
+                if (YokelBlockEval.hasBrokenFlag(cells[i][j])){
+                    int cell = cells[i][j];
+                    YokelBlock block = new YokelBlock(j, i, YokelBlockEval.getCellFlag(cell));
+                    if(YokelBlockEval.hasPowerBlockFlag(cell)){
+                        block.setPower(YokelBlockEval.getPowerFlag(cell));
+                    }
+                    vector.addElement(block);
+                }
             }
         }
         return vector;
@@ -1527,7 +1543,6 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     private void movePieceDown(){
-        //TODO:add setting state for isDownCell stopped
         if(isDownCellFree(piece.column, piece.row)){
             this.fallNumber = MAX_FALL_VALUE;
             piece.setPosition(piece.row - 1, piece.column);
@@ -1600,7 +1615,12 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     //TODO: Make this safe
     private int powerUpBlock(int block){
+
         if(countOfBreaks[block] > 3){
+            //System.out.println("breaks" + Arrays.toString(countOfBreaks));
+            //System.out.println("block[" + block + "] has broken." );
+            //System.out.println("powers keep" + Arrays.toString(powersKeep));
+
             //powerUp
             countOfBreaks[block] -= 4;
             ++powersKeep[block];
@@ -1619,8 +1639,8 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     private int getBlockPower(int block, int intensity){
-        System.out.println("Powering up block[" + block + "] with intensity = " + intensity);
-        System.out.println("powers keep" + Arrays.toString(powersKeep));
+        //System.out.println("Powering up block[" + block + "] with intensity = " + intensity);
+        //System.out.println("powers keep" + Arrays.toString(powersKeep));
         if(intensity == 1) {
             intensity = 3;
         }
@@ -1631,11 +1651,17 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void incrementBreakCount(int type){
-        System.out.println("breaks" + Arrays.toString(countOfBreaks));
-
-        System.out.println("block type=" + type);
         if(type < 0 || type > MAX_COLS) return;
         ++countOfBreaks[type];
-        System.out.println("powers keep" + Arrays.toString(countOfBreaks));
+    }
+
+    public void addPowerToQueue(YokelBlock block){
+        if(block != null){
+            int b = block.getBlockType();
+            if(block.hasPower()){
+                //System.err.println("Adding power block=" + block);
+                powers.addFirst(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(b, block.getPower())));
+            }
+        }
     }
 }

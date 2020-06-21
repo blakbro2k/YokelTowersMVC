@@ -679,7 +679,7 @@ public class ServerManager {
         try{
             String[] ret = new String[1];
             ret[0] = "false";
-            //TODO: Cannot create a table in a lounch you are not apart of
+            //TODO: Cannot create a table in a lounge you are not apart of
             if(YokelUtilities.isValidPayload(clientPayload, 4)){
                 String loungeName = YokelUtilities.getStringValue(clientPayload, 0);
                 String roomName = YokelUtilities.getStringValue(clientPayload, 1);

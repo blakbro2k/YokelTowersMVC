@@ -70,39 +70,58 @@ public class YokelBlock extends AbstractYokelObject implements Pool.Poolable {
 
     public int x;
     public int y;
-    private int type;
+    private int blockType;
+    private int powerIntensity = 0;
 
     //Empty Contructor required for Json.Serializable
     public YokelBlock() {}
 
-    public YokelBlock(int x, int y, int type) {
+    public YokelBlock(int x, int y, int blockType) {
         reset();
         this.x = x;
         this.y = y;
-        this.type = type;
+        this.blockType = blockType;
     }
 
     public YokelBlock(int x, int y) {
         this(x, y, CLEAR_BLOCK);
     }
 
-    public int getType() {
-        return type;
+    public int getBlockType() {
+        return blockType;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setBlockType(int blockType) {
+        this.blockType = blockType;
     }
 
     @Override
     public void reset() {
         this.x = 0;
         this.y = 0;
-        this.type = CLEAR_BLOCK;
+        this.blockType = CLEAR_BLOCK;
     }
 
     @Override
     public void dispose() {
         reset();
+    }
+
+    public void setPower(int intensity) {
+        this.powerIntensity = intensity;
+    }
+
+    public int getPower() {
+        if(powerIntensity == 1) {
+            powerIntensity = 3;
+        }
+        if(powerIntensity > 7) {
+            powerIntensity = 7;
+        }
+        return powerIntensity;
+    }
+
+    public boolean hasPower(){
+        return powerIntensity > 0;
     }
 }
