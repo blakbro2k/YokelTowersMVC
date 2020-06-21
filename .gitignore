@@ -65,3 +65,4 @@ nb-configuration.xml
 
 ## OS Specific
 .DS_Store
+/assets/core/lml.dtd
