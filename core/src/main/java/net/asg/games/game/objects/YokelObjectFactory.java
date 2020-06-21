@@ -184,7 +184,7 @@ public class YokelObjectFactory implements Disposable {
             case YokelBlock.DEFENSIVE_BASH_BLOCK_MINOR:
             case YokelBlock.DEFENSIVE_BASH_BLOCK_REGULAR:
             case YokelBlock.DEFENSIVE_BASH_BLOCK_MEGA:
-                return "defense_bash_block";
+                return "defense_Bash_block";
             case 258:
                 return "K_block_Broken";
             default:
