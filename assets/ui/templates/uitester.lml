@@ -160,8 +160,8 @@
                 <label row="true">Right\t:Right Arrow</label>
                 <label row="true">Drop\t:Down Arrow</label>
                 <label row="true">Cycle Colors\t:R</label>
-                <label row="true">Use Item\t:Space Bar</label>
-                <gameclock width="100" height="46" id="gameClock" row="true"/>-->
+                <label row="true">Use Item\t:Space Bar</label>-->
+                <gameclock width="100" height="46" id="gameClock" row="true"/>
             </table>
             <table>
                 <gameboard id="3:area" areanumber="3"/>

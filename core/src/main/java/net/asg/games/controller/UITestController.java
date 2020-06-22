@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Queue;
@@ -16,10 +15,13 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
+import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.game.objects.YokelSeat;
+import net.asg.games.game.objects.YokelTable;
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.provider.actors.GameBlockArea;
 import net.asg.games.provider.actors.GameBoard;
@@ -27,8 +29,6 @@ import net.asg.games.provider.actors.GameClock;
 import net.asg.games.provider.actors.GamePowersQueue;
 import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.YokelUtilities;
-
-import java.util.Vector;
 
 @View(id = ControllerNames.UI_TEST_VIEW, value = "ui/templates/uitester.lml")
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
@@ -90,36 +90,38 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private YokelGameBoard board5;
     private YokelGameBoard board6;
     private PlayerKeyMap keyMap = new PlayerKeyMap();
+    private GameManager game;
+    private GameBoard[] gameBoards = new GameBoard[8];
 
     @Override
     public void render(Stage stage, float delta) {
         initiate(stage);
         checkForInput();
-        board1.update(delta);
-        area1.update(board1);
-
-        board1.flagBoardMatches();
-        board1.checkForYahoos();
-
-        if(board1.getBrokenCellCount() > 0){
-            Vector<YokelBlock> broken = board1.getBrokenCells();
-
-            System.out.println("Broken Cells: " + broken);
-            for (YokelBlock b : broken) {
-                board1.addPowerToQueue(b);
-                board1.incrementBreakCount(b.getBlockType());
-            }
-        }
-        board1.handleBrokenCellDrops();
+        game.update(delta);
+        updateGameBoards();
 
         stage.act(delta);
         stage.draw();
+    }
+
+    private void updateGameBoards() {
+        for(int board = 0; board < gameBoards.length; board++){
+            gameBoards[board].update(game.getGameBoard(board));
+        }
     }
 
     private void initiate(Stage stage){
         if(!isInitiated){
             isInitiated = true;
             initiateActors();
+            gameBoards[0] = area1;
+            gameBoards[1] = area2;
+            gameBoards[2] = area3;
+            gameBoards[3] = area4;
+            gameBoards[4] = area5;
+            gameBoards[5] = area6;
+            gameBoards[6] = area7;
+            gameBoards[7] = area8;
 
             YokelUtilities.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
 
@@ -128,14 +130,17 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             YokelPlayer player1 = new YokelPlayer("enboateng");
             YokelPlayer player2 = new YokelPlayer("lholtham", 1400,5);
             YokelPlayer player3 = new YokelPlayer("rmeyers", 1700,7);
-            board1 = getGameBoard();
-            board1.getNewNextPiece();
-            //board2 = getGameBoard();
-            //board2.getNewNextPiece();
-            //board5 = getGameBoard();
-            //board5.getNewNextPiece();
-            //board6 = getGameBoard();
-            //board6.getNewNextPiece();
+
+            YokelTable table = new YokelTable(1);
+            YokelSeat seat1 = table.getSeat(0);
+            YokelSeat seat3 = table.getSeat(4);
+
+            seat1.sitDown(player1);
+            seat3.sitDown(player2);
+
+            game = new GameManager(table);
+            game.startGame();
+            toggleGameStart();
 
             area1.setPlayerLabel(player1.getNameLabel().toString());
             area1.setActive(true);
@@ -143,14 +148,15 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             area1.update(board1);
 
             //area9.updateData(getTestBoard());
-            area2.setPlayerLabel(player2.getNameLabel().toString());
-            area2.setActive(true);
+            //area2.setPlayerLabel(player2.getNameLabel().toString());
+            //area2.setActive(true);
             //area2.setPlayerView(true);
             area2.update(board2);
             //area2.update(getTestBoard());
 
             area5.setPlayerLabel(player3.getNameLabel().toString());
             area5.update(board5);
+
             //area5.setPreview(true);
 
             //next1.setData(piece1.toString());,
@@ -203,8 +209,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     }
 
     @LmlAction("toggleGameStart")
-    public void toggleGameStart(Actor actor) {
-        if(gameClock == null) return;// gameClock = uiService.getImage("Y_block")
+    public void toggleGameStart() {
+        if(gameClock == null) return;
         if(!gameClock.isRunning()){
             gameClock.start();
         } else {
@@ -354,19 +360,19 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
     private void checkForInput(){
         if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
-            board1.movePieceRight();
+            game.handleMoveRight(0);
         }
         if (Gdx.input.isKeyJustPressed(keyMap.getLeftKey())) {
-            board1.movePieceLeft();
+            game.handleMoveLeft(0);
         }
         if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
-            board1.cycleDown();
+            game.handleCycleDown(0);
         }
         if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-            board1.startMoveDown();
+            game.handleStartMoveDown(0);
         }
         if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-            board1.stopMoveDown();
+            game.handleStopMoveDown(0);
         }
         //System.out.println("key pressed:" + Gdx.input.isKeyPressed(Input.Keys.LEFT));
     }

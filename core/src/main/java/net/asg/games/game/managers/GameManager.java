@@ -1,15 +1,19 @@
 package net.asg.games.game.managers;
 
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
+import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 
+import java.util.Vector;
+
 public class GameManager {
     private YokelTable table;
-    private Array<YokelGameBoard> gameBoards = new Array<>();
+    private YokelGameBoard[] gameBoards = new YokelGameBoard[8];
     private boolean isGameRunning;
+    private boolean hasGameStarted;
 
     public GameManager(YokelTable table){
         this.table = table;
@@ -23,19 +27,40 @@ public class GameManager {
 
         for(int i = 0; i < 8; i++){
             YokelSeat seat = table.getSeat(i);
-            YokelGameBoard board = gameBoards.get(i);
-
-            System.out.println(board);
 
             if(isOccupied(seat)){
+                YokelGameBoard board = gameBoards[i];
+
                 if(board != null){
-                    board.update(delta);
+                    board.begin();
+                    updateBoard(board, delta);
                 }
             }
         }
 
         if(isGameOver()){
             stopGame();
+        }
+    }
+
+    private void updateBoard(YokelGameBoard board, float delta){
+        if(board != null){
+            board.update(delta);
+
+            //Check broken Pieces
+            board.flagBoardMatches();
+            board.checkForYahoos();
+
+            if(board.getBrokenCellCount() > 0){
+                Vector<YokelBlock> broken = board.getBrokenCells();
+
+                System.out.println("Broken Cells: " + broken);
+                for (YokelBlock b : broken) {
+                    board.addPowerToQueue(b);
+                    board.incrementBreakCount(b.getBlockType());
+                }
+            }
+            board.handleBrokenCellDrops();
         }
     }
 
@@ -57,8 +82,13 @@ public class GameManager {
         long seed = getSeed();
         isGameRunning = false;
         for(int i = 0; i < 8; i++){
-            gameBoards.add(new YokelGameBoard(seed));
+            gameBoards[i] = new YokelGameBoard(seed);
         }
+    }
+
+    public YokelGameBoard getGameBoard(int i){
+        if(i < 0 || i > 8) throw new GdxRuntimeException("Invalid Gameboard index: " + i);
+        return gameBoards[i];
     }
 
     private long getSeed() {
@@ -68,15 +98,29 @@ public class GameManager {
 
     public void resetGameBoards(){}
 
-    public void handleMoveRight(int player){
-        gameBoards.get(player).movePieceRight();
+    public void handleMoveRight(int boardIndex){
+        getGameBoard(boardIndex).movePieceRight();
     }
 
-    public void handleMoveLeft(int player){
-        gameBoards.get(player).movePieceLeft();
+    public void handleMoveLeft(int boardIndex){
+        getGameBoard(boardIndex).movePieceLeft();
     }
 
-    public void handleSetPiece(){}
+    public void handleCycleDown(int boardIndex){
+        getGameBoard(boardIndex).cycleDown();
+    }
+
+    public void handleCycleUp(int boardIndex){
+        getGameBoard(boardIndex).cycleUp();
+    }
+
+    public void handleStartMoveDown(int boardIndex){
+        getGameBoard(boardIndex).startMoveDown();
+    }
+
+    public void handleStopMoveDown(int boardIndex){
+        getGameBoard(boardIndex).stopMoveDown();
+    }
 
     public String[] getBoardState(){
         return null;
@@ -84,7 +128,7 @@ public class GameManager {
 
     public String printTables(){
         StringBuilder sbSeats = new StringBuilder();
-        //String t = "";
+
         if(table != null){
             for(YokelGameBoard board : gameBoards){
                 sbSeats.append(board.toString());
@@ -101,7 +145,12 @@ public class GameManager {
     }
 
     public boolean stopGame(){
-        return isGameRunning = false;
+        for(YokelGameBoard gameboard : gameBoards){
+            if(gameboard != null){
+                gameboard.end();
+            }
+        }
+        return isGameRunning = hasGameStarted = false;
     }
 
     public boolean isRunning() {
@@ -109,14 +158,14 @@ public class GameManager {
     }
 
     private boolean isGameOver(){
-        boolean player1 = isPlayerDead(gameBoards.get(0));
-        boolean player2 = isPlayerDead(gameBoards.get(1));
-        boolean player3 = isPlayerDead(gameBoards.get(2));
-        boolean player4 = isPlayerDead(gameBoards.get(3));
-        boolean player5 = isPlayerDead(gameBoards.get(4));
-        boolean player6 = isPlayerDead(gameBoards.get(5));
-        boolean player7 = isPlayerDead(gameBoards.get(6));
-        boolean player8 = isPlayerDead(gameBoards.get(7));
+        boolean player1 = isPlayerDead(getGameBoard(0));
+        boolean player2 = isPlayerDead(getGameBoard(1));
+        boolean player3 = isPlayerDead(getGameBoard(2));
+        boolean player4 = isPlayerDead(getGameBoard(3));
+        boolean player5 = isPlayerDead(getGameBoard(4));
+        boolean player6 = isPlayerDead(getGameBoard(5));
+        boolean player7 = isPlayerDead(getGameBoard(6));
+        boolean player8 = isPlayerDead(getGameBoard(7));
 
         boolean isGroup1Dead = player1 && player2;
         boolean isGroup2Dead = player3 && player4;

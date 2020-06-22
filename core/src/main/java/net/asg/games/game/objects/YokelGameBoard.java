@@ -56,7 +56,6 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     private YokelPiece piece;
     private YokelPiece nextPiece;
-    private YokelClock clock;
 
     private float fallNumber;
     private RandomUtil.RandomNumberArray nextBlocks;
@@ -65,6 +64,8 @@ public class YokelGameBoard extends AbstractYokelObject {
     private Queue<Integer> powers;
     private int[] countOfBreaks = new int[MAX_COLS];
     private int[] powersKeep = new int[MAX_COLS];
+    private int yahooDuration = 0;
+    private boolean hasGameStarted;
 
     //Empty Contructor required for Json.Serializable
     public YokelGameBoard(){}
@@ -74,7 +75,6 @@ public class YokelGameBoard extends AbstractYokelObject {
         ids = new boolean[128];
         piece = null;
         fallNumber = MAX_FALL_VALUE;
-        clock = new YokelClock();
         powers = new Queue<>();
         reset(seed);
     }
@@ -87,20 +87,19 @@ public class YokelGameBoard extends AbstractYokelObject {
     @Override
     public void dispose() {}
 
-    public void startClock(){
-        clock.start();
+    public void begin(){
+        if(!hasGameStarted){
+            getNewNextPiece();
+            hasGameStarted = true;
+        }
     }
 
-    public void stopClock(){
-        clock.stop();
+    public void end(){
+        hasGameStarted = false;
     }
 
     public YokelPiece getNextPiece(){
         return nextPiece;
-    }
-
-    public YokelClock getClock(){
-        return clock;
     }
 
     public int[][] getCells(){
@@ -1539,16 +1538,33 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void updateBoard(){
+        /*
         //Check broken Pieces
+        flagBoardMatches();
+        yahooDuration = checkForYahoos();
+
+        if(getBrokenCellCount() > 0){
+            Vector<YokelBlock> broken = getBrokenCells();
+
+            System.out.println("Broken Cells: " + broken);
+            for (YokelBlock b : broken) {
+                addPowerToQueue(b);
+                incrementBreakCount(b.getBlockType());
+            }
+        }
+         */
+        //handleBrokenCellDrops();
     }
 
     private void movePieceDown(){
-        if(isDownCellFree(piece.column, piece.row)){
-            this.fallNumber = MAX_FALL_VALUE;
-            piece.setPosition(piece.row - 1, piece.column);
-        } else {
-            setNextPiece();
-            getNewNextPiece();
+        if(piece != null){
+            if(isDownCellFree(piece.column, piece.row)){
+                this.fallNumber = MAX_FALL_VALUE;
+                piece.setPosition(piece.row - 1, piece.column);
+            } else {
+                setNextPiece();
+                getNewNextPiece();
+            }
         }
     }
 
@@ -1663,5 +1679,9 @@ public class YokelGameBoard extends AbstractYokelObject {
                 powers.addFirst(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(b, block.getPower())));
             }
         }
+    }
+
+    public int getDuration(){
+        return yahooDuration;
     }
 }
