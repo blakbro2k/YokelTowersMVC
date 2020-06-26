@@ -2,20 +2,21 @@ package net.asg.games.controller;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.Queue;
+import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.managers.GameManager;
+import net.asg.games.game.objects.PlayerKeyMap;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
@@ -27,12 +28,16 @@ import net.asg.games.provider.actors.GameBlockArea;
 import net.asg.games.provider.actors.GameBoard;
 import net.asg.games.provider.actors.GameClock;
 import net.asg.games.provider.actors.GamePowersQueue;
+import net.asg.games.service.SessionService;
 import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.YokelUtilities;
+
+import java.util.Iterator;
 
 @View(id = ControllerNames.UI_TEST_VIEW, value = "ui/templates/uitester.lml")
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
     @Inject private UserInterfaceService uiService;
+    @Inject private SessionService sessionService;
 
     @LmlActor("Y_block") private Image yBlockImage;
     @LmlActor("O_block") private Image oBlockImage;
@@ -84,14 +89,10 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("gameblock_1") private GameBlock gameblock_1;
 
     private boolean isInitiated;
-    private Queue<GameBlock> powerUps = new Queue<>();
-    private YokelGameBoard board1;
-    private YokelGameBoard board2;
-    private YokelGameBoard board5;
-    private YokelGameBoard board6;
     private PlayerKeyMap keyMap = new PlayerKeyMap();
     private GameManager game;
     private GameBoard[] gameBoards = new GameBoard[8];
+    private GameBoard[] areas;
 
     @Override
     public void render(Stage stage, float delta) {
@@ -107,21 +108,17 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private void updateGameBoards() {
         for(int board = 0; board < gameBoards.length; board++){
             gameBoards[board].update(game.getGameBoard(board));
+            if(game.isPlayerDead(board)){
+                gameBoards[board].killPlayer();
+            }
         }
     }
 
     private void initiate(Stage stage){
         if(!isInitiated){
             isInitiated = true;
-            initiateActors();
-            gameBoards[0] = area1;
-            gameBoards[1] = area2;
-            gameBoards[2] = area3;
-            gameBoards[3] = area4;
-            gameBoards[4] = area5;
-            gameBoards[5] = area6;
-            gameBoards[6] = area7;
-            gameBoards[7] = area8;
+            //initiateActors();
+            areas = new GameBoard[]{area1, area2, area3, area4, area5, area6, area7, area8};
 
             YokelUtilities.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
 
@@ -131,48 +128,106 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             YokelPlayer player2 = new YokelPlayer("lholtham", 1400,5);
             YokelPlayer player3 = new YokelPlayer("rmeyers", 1700,7);
 
+            System.out.println(sessionService.getView(ControllerNames.UI_TEST_VIEW));
+
+            //{0,1}{2,3}{4,5}{6,7}
+            int cSeat = 6;
+            int pSeat = 7;
+            int tSeat = 1;
+
+            sessionService.setCurrentPlayer(player1);
+            sessionService.setCurrentLoungeName("Social");
+            sessionService.setCurrentRoomName("Eiffel Tower");
+            sessionService.setCurrentSeat(cSeat);
+
             YokelTable table = new YokelTable(1);
-            YokelSeat seat1 = table.getSeat(0);
-            YokelSeat seat3 = table.getSeat(4);
+            YokelSeat seat1 = table.getSeat(cSeat);
+            YokelSeat seat2 = table.getSeat(pSeat);
+            YokelSeat seat3 = table.getSeat(tSeat);
 
             seat1.sitDown(player1);
-            seat3.sitDown(player2);
+            seat2.sitDown(player2);
+            seat3.sitDown(player3);
 
             game = new GameManager(table);
-            game.startGame();
+            setUpGameArea(table);
             toggleGameStart();
-
-            area1.setPlayerLabel(player1.getNameLabel().toString());
-            area1.setActive(true);
-            area1.setPlayerView(true);
-            area1.update(board1);
-
-            //area9.updateData(getTestBoard());
-            //area2.setPlayerLabel(player2.getNameLabel().toString());
-            //area2.setActive(true);
-            //area2.setPlayerView(true);
-            area2.update(board2);
-            //area2.update(getTestBoard());
-
-            area5.setPlayerLabel(player3.getNameLabel().toString());
-            area5.update(board5);
-
-            //area5.setPreview(true);
-
-            //next1.setData(piece1.toString());,
-            //next2.setData(piece2.toString());
-
-            //area1.updateData(getTestBoard());
-            //area2.updateData(getTestBoard());
-            //area5.updateData(getTestBoard());
-
-            //Queue<YokelBlock>
-            //powersQueue1.update();
-            //powersQueue1.update();
+            game.startGame();
         }
     }
 
-    public void initiateActors() {
+
+    private void setUpGameArea(YokelTable table){
+        //If table does not exist, keep it moving
+        if(table == null) return;
+        int playerSeat = sessionService.getCurrentSeat();
+
+        //Set up Player View
+        setUpPlayerArea(sessionService.getCurrentPlayer(), playerSeat,true);
+
+        //Set up Partner View
+        int partnerSeat = getPlayerPartnerSeatNum(playerSeat);
+        YokelPlayer partner = getSeatedPlayer(partnerSeat, table);
+        setUpPlayerArea(partner, partnerSeat,false);
+
+        //Set up rest of active players
+        Array<Integer> remaining = GdxArrays.newArray();
+        for(int i = 2; i < gameBoards.length; i++) {
+            remaining.add(i);
+        }
+
+        Iterator<Integer> iterator = remaining.iterator();
+
+        for(int i = 0; i < gameBoards.length; i++){
+            if(i != playerSeat && i != partnerSeat){
+                YokelSeat seat = table.getSeat(i);
+                if(seat != null && iterator.hasNext()){
+                    activateArea(i, iterator.next(), seat.isOccupied(), seat.getSeatedPlayer(), playerSeat, false, true);
+                }
+            }
+        }
+    }
+
+    private int getPlayerPartnerSeatNum(int playerSeat) {
+        if (playerSeat % 2 == 0) {
+            return playerSeat + 1;
+        } else {
+            return playerSeat - 1;
+        }
+    }
+
+    private YokelPlayer getSeatedPlayer(int seatNum, YokelTable table){
+        if(table != null){
+            YokelSeat seat = table.getSeat(seatNum);
+            if(seat != null){
+                return seat.getSeatedPlayer();
+            }
+        }
+        return null;
+    }
+
+    private void setUpPlayerArea(YokelPlayer player, int playerSeat, boolean isPlayerView){
+        //Even seats are on the left
+        activateArea(playerSeat, playerSeat % 2, true, player, playerSeat, isPlayerView, false);
+    }
+
+    private void activateArea(int playerSeat, int areaNum, boolean isActive, YokelPlayer player, int boardIndex, boolean isPlayerView, boolean isPreview){
+        gameBoards[playerSeat] = areas[areaNum];
+        GameBoard area = gameBoards[playerSeat];
+
+        if(area != null){
+            YokelGameBoard board = game.getGameBoard(boardIndex);
+            if(player != null){
+                area.setPlayerLabel(player.getNameLabel().toString());
+                area.setPlayerView(isPlayerView);
+                area.setActive(isActive);
+            }
+            area.setPreview(isPreview);
+            area.update(board);
+        }
+    }
+
+    private void initiateActors() {
         uiService.loadDrawable(yBlockImage);
         uiService.loadDrawable(oBlockImage);
         uiService.loadDrawable(kBlockImage);
@@ -209,25 +264,13 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     }
 
     @LmlAction("toggleGameStart")
-    public void toggleGameStart() {
+    private void toggleGameStart() {
         if(gameClock == null) return;
         if(!gameClock.isRunning()){
             gameClock.start();
         } else {
             gameClock.stop();
         }
-    }
-
-    @LmlAction("setGamePiece")
-    private void setGamePiece(){
-        //GamePiece gp = new GamePiece(uiService.getSkin(), new String[]{"12","16","3"});
-        //gp.setData(new String[]{"12","16","3"});
-        //System.out.println("lksjfd\n" + gp);
-        //uiService.area1.setGamePiece(gp);
-    }
-
-    private YokelGameBoard getGameBoard(){
-        return new YokelGameBoard(1L);
     }
 
     @LmlAction("getTestBoard")
@@ -353,101 +396,23 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         return MathUtils.random(YokelBlock.EX_BLOCK);
     }
 
-    @LmlAction("getTimerSeconds")
-    public int getTimerSeconds() {
-        return gameClock.isRunning() ? gameClock.getElapsedSeconds() : 0;
-    }
-
     private void checkForInput(){
+        int currentSeat = sessionService.getCurrentSeat();
         if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
-            game.handleMoveRight(0);
+            game.handleMoveRight(currentSeat);
         }
         if (Gdx.input.isKeyJustPressed(keyMap.getLeftKey())) {
-            game.handleMoveLeft(0);
+            game.handleMoveLeft(currentSeat);
         }
         if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
-            game.handleCycleDown(0);
+            game.handleCycleDown(currentSeat);
         }
         if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-            game.handleStartMoveDown(0);
+            game.handleStartMoveDown(currentSeat);
         }
         if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-            game.handleStopMoveDown(0);
+            game.handleStopMoveDown(currentSeat);
         }
         //System.out.println("key pressed:" + Gdx.input.isKeyPressed(Input.Keys.LEFT));
     }
-
-    private static class PlayerKeyMap{
-        int[] keyMap = {Input.Keys.RIGHT,
-                Input.Keys.LEFT,
-                Input.Keys.UP,
-                Input.Keys.DOWN,
-                Input.Keys.P,
-                Input.Keys.NUM_1,
-                Input.Keys.NUM_2,
-                Input.Keys.NUM_3,
-                Input.Keys.NUM_4,
-                Input.Keys.NUM_5,
-                Input.Keys.NUM_6,
-                Input.Keys.NUM_7,
-                Input.Keys.NUM_8,
-                Input.Keys.SPACE};
-
-        public int getRightKey(){
-            return keyMap[0];
-        }
-
-        public int getLeftKey(){
-            return keyMap[1];
-        }
-
-        public int getCycleDownKey(){
-            return keyMap[2];
-        }
-
-        public int getCycleUpKey(){
-            return keyMap[4];
-        }
-
-        public int getDownKey(){
-            return keyMap[3];
-        }
-
-        public int getRandomAttackKey(){
-            return keyMap[13];
-        }
-
-        public int getTarget1(){
-            return keyMap[5];
-        }
-
-        public int getTarget2(){
-            return keyMap[6];
-        }
-
-        public int getTarget3(){
-            return keyMap[7];
-        }
-
-        public int getTarget4(){
-            return keyMap[8];
-        }
-
-        public int getTarget5(){
-            return keyMap[9];
-        }
-
-        public int getTarget6(){
-            return keyMap[10];
-        }
-
-        public int getTarget7(){
-            return keyMap[11];
-        }
-
-        public int getTarget8(){
-            return keyMap[12];
-        }
-    }
-
 }

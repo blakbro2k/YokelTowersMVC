@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE dialog SYSTEM "core/lml.dtd">
 <dialog style="dialog" closebutton="true">
-    <table defaultpad="2" tablealign="bottomRight" fillparent="true" defaultfillx="true">
+    <table tablealign="bottomRight" fillparent="true" defaultfillx="true">
         <image id="banner" style="banner" row="true" colspan="3"/>
         <table onecolumn="true" defaultfillx="true" tablealign="left">
             <!-- Side Panel -->
@@ -24,55 +24,38 @@
                 <checkbox tablealign="left">Sound</checkbox>
             </table>
             <table>
-                <button defaultfillx="true">Help</button>
+                <button fillx="true">Help</button>
                 <!-- "close" action is defined in Global class. -->
-                <button onchange="close" defaultfillx="true">Quit</button>
+                <button onchange="close" fillx="true">Quit</button>
             </table>
         </table>
         <!-- End Side Panel -->
-        <table align="top">
-            <table defaultpad="0">
+        <table align="top" tablealign="left">
+            <table defaultpad="16" tablealign="left">
                 <table row="true">
-                    <label row="true">Left\t:Left Arrow</label>
+                    <label row="true">df</label>
+                    <!--<label row="true">Left\t:Left Arrow</label>
                     <label row="true">Right\t:Right Arrow</label>
                     <label row="true">Drop\t:Down Arrow</label>
                     <label row="true">Cycle Colors\t:R</label>
-                    <label row="true">Use Item\t:Space Bar</label>
+                    <label row="true">Use Item\t:Space Bar</label>-->
                     <gameclock width="100" height="46" id="gameClock" row="true"/>
                 </table>
-                <table debug="true">
-                    <gameblockarea width="48" height="128" id="3:area" debug="true" areanumber="3" preview="true"/>
-                    <gameblockarea width="48" height="128" id="4:area" debug="true" areanumber="4" preview="true"/>
+                <table>
+                    <gameboard id="3:area" areanumber="3"/>
+                    <gameboard id="4:area" areanumber="4"/>
                 </table>
             </table>
             <table>
-                <table debug="true">
-                    <table colspan="2" row="true">
-                        <gamenametag id="1:nameTag" align="left" row="true"/>
-                    </table>
-                    <table onecolumn="true" align="top">
-                        <gamepiece id="1:next"/>
-                        <gamepowers id="1:powers"/>
-                    </table>
-                    <gameblockarea width="96" height="256" id="1:area" areanumber="1"/>
-                </table>
-                <table debug="true">
-                    <table colspan="2" row="true">
-                        <gamenametag id="2:nameTag" align="left" row="true"/>
-                    </table>
-                    <gameblockarea width="96" height="256" id="2:area" areanumber="2"/>
-                    <table onecolumn="true" align="top">
-                        <gamepiece id="2:next"/>
-                        <gamepowers id="2:powers"/>
-                    </table>
-                </table>
+                <gameboard id="1:area" areanumber="1" preview="false"/>
+                <gameboard id="2:area" areanumber="2" preview="false" left="false"/>
             </table>
             <table>
-                <table debug="true" row="true">
-                    <gameblockarea width="48" height="128" id="5:area" debug="true" areanumber="5" preview="true"/>
-                    <gameblockarea width="48" height="128" id="6:area" debug="true" areanumber="6" preview="true" row="true"/>
-                    <gameblockarea width="48" height="128" id="7:area" debug="true" areanumber="7" preview="true"/>
-                    <gameblockarea width="48" height="128" id="8:area" debug="true" areanumber="8" preview="true"/>
+                <table row="true">
+                    <gameboard id="5:area" areanumber="5"/>
+                    <gameboard id="6:area" areanumber="6" row="true"/>
+                    <gameboard id="7:area" areanumber="7"/>
+                    <gameboard id="8:area" areanumber="8"/>
                 </table>
             </table>
         </table>

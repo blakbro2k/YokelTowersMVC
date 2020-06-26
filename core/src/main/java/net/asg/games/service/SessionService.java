@@ -37,7 +37,8 @@ public class SessionService {
     private ClientManager client;
     private String currentLoungeName;
     private String currentRoomName;
-    private String currentSeat;
+    private YokelTable currentTable;
+    private int currentSeat;
     private String userName;
     private YokelPlayer player;
     private ObjectMap<String, ViewController> views = GdxMaps.newObjectMap();
@@ -151,12 +152,20 @@ public class SessionService {
         return userName;
     }
 
-    public void setCurrentSeat(String currentSeat){
+    public void setCurrentSeat(int currentSeat){
         this.currentSeat = currentSeat;
     }
 
-    public String getCurrentSeat(){
+    public int getCurrentSeat(){
         return currentSeat;
+    }
+
+    public void setCurrentTable(YokelTable currentTable){
+        this.currentTable = currentTable;
+    }
+
+    public YokelTable getCurrentTable(){
+        return currentTable;
     }
 
     public void setCurrentRoomName(String currentRoomName){

@@ -149,4 +149,8 @@ public class GameBoard extends Table {
     public void setPlayerView(boolean b) {
         area.setPlayerView(b);
     }
+
+    public void killPlayer(){
+        area.killPlayer();
+    }
 }

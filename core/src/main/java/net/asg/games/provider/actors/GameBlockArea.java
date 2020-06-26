@@ -1,6 +1,5 @@
 package net.asg.games.provider.actors;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -22,15 +21,15 @@ public class GameBlockArea extends Stack {
     private static final String CELL_ATTR_SEPARATOR = "_";
     private static final String GRID_NAME = "grid";
     private static final String BOARD_NUMBER_NAME = "boardNumber";
+    private static final String ALIVE_BACKGROUND = "area_alive_bg";
+    private static final String DEAD_BACKGROUND = "area_dead_bg";
+    private static final String PLAYER_BACKGROUND = "area_player_bg";
 
-    private static final Color ACTIVE_BACKGROUND_COLOR = new Color(0.7f, 0.7f, 0.7f, 1);
-    private static final Color DEFAULT_BACKGROUND_COLOR = new Color(0.3f, 0.3f, 0.3f, 1);
 
     private static final float BLOCK_DROP_SPEED = .8f;
     private static final float MAX_BLOCK_DROP_SPEED = 6f;
     private static final float FALL_BLOCK_SPEED = 250f;
 
-    private boolean isSpeedDown;
     private boolean isActive;
     private boolean isPreview;
     private boolean isPlayerView;
@@ -70,6 +69,9 @@ public class GameBlockArea extends Stack {
     private void init(){
         initializeBoard();
         initializeSize();
+        setBoardNumber(0);
+        bgNumber.setBackground(skin.getDrawable(ALIVE_BACKGROUND));
+        add(bgNumber);
         initializeGrid();
     }
 
@@ -103,7 +105,7 @@ public class GameBlockArea extends Stack {
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
                 GameBlock uiBlock = getClearBlock();
 
-                uiBlocks.put(getCellAttrName(r,c), uiBlock);
+                uiBlocks.put(getCellAttrName(r, c), uiBlock);
                 if(c + 1 == YokelGameBoard.MAX_COLS){
                     grid.add(uiBlock).row();
                 } else {
@@ -112,7 +114,6 @@ public class GameBlockArea extends Stack {
             }
         }
         setAreaBounds();
-        grid.setBackground(GameClock.NO_DIGIT_NME);
         grid.add(pieceSprite);
         add(grid);
     }
@@ -168,15 +169,6 @@ public class GameBlockArea extends Stack {
 
     public boolean isPreview(){
         return isPreview;
-    }
-
-    public void setGamePiece(YokelPiece gamePiece){
-        if(gamePiece != null){
-            if(this.gamePiece == null){
-                this.gamePiece = new GamePiece(skin);
-            }
-            this.gamePiece.setData(gamePiece.toString());
-        }
     }
 
     public void setPreview(boolean isPreview){
@@ -282,8 +274,6 @@ public class GameBlockArea extends Stack {
             GameBlock block = blocks[0];
 
             if(block != null){
-                // No transform for this group, offset each child.
-
                 //Set the x to the position of the grid
                 Vector2 pos = localToParentCoordinates(new Vector2(0, 0));
 
@@ -328,7 +318,6 @@ public class GameBlockArea extends Stack {
 
     private void update(){
         if(board != null){
-            //System.out.println(board);
             for(int r = 0; r < YokelGameBoard.MAX_PLAYABLE_ROWS; r++){
                 for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
                     setBlock(board.getBlockValueAt(c, r), r, c);
@@ -339,10 +328,25 @@ public class GameBlockArea extends Stack {
 
     void setActive(boolean b){
         this.isActive = b;
+        if(isActive){
+            if(isPlayerView){
+                bgNumber.setBackground(skin.getDrawable(PLAYER_BACKGROUND));
+            } else {
+                bgNumber.setBackground(skin.getDrawable(ALIVE_BACKGROUND));
+            }
+        }
     }
 
     void setPlayerView(boolean b){
         this.isPlayerView = b;
-        this.pieceSprite.setActive(validatePiece());
+        this.pieceSprite.setActive(!isPreview && isPlayerView);
+        if(isPlayerView){
+            bgNumber.setBackground(skin.getDrawable(PLAYER_BACKGROUND));
+        }
+    }
+
+    void killPlayer(){
+        setActive(false);
+        bgNumber.setBackground(skin.getDrawable(DEAD_BACKGROUND));
     }
 }

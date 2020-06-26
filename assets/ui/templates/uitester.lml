@@ -155,12 +155,11 @@
     <table align="top" tablealign="left">
         <table defaultpad="16" tablealign="left">
             <table row="true">
-                <label row="true">df</label>
-                <!--<label row="true">Left\t:Left Arrow</label>
+                <label row="true">Left\t:Left Arrow</label>
                 <label row="true">Right\t:Right Arrow</label>
                 <label row="true">Drop\t:Down Arrow</label>
                 <label row="true">Cycle Colors\t:R</label>
-                <label row="true">Use Item\t:Space Bar</label>-->
+                <label row="true">Use Item\t:Space Bar</label>
                 <gameclock width="100" height="46" id="gameClock" row="true"/>
             </table>
             <table>
@@ -169,8 +168,13 @@
             </table>
         </table>
         <table>
-            <gameboard id="1:area" areanumber="1" preview="false"/>
-            <gameboard id="2:area" areanumber="2" preview="false" left="false"/>
+            <table row="true">
+                <gameboard id="1:area" areanumber="1" preview="false"/>
+                <gameboard id="2:area" areanumber="2" preview="false" left="false"/>
+            </table>
+            <table>
+                <label id="action_msg" row="true">blakbro dithered rmeyers</label>
+            </table>
         </table>
         <table>
             <table row="true">

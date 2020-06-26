@@ -78,6 +78,10 @@ public class GameManager {
         return true;
     }
 
+    public boolean isPlayerDead(int i){
+        return isPlayerDead(getGameBoard(i));
+    }
+
     private void init(){
         long seed = getSeed();
         isGameRunning = false;
