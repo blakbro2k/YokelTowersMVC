@@ -120,7 +120,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             //initiateActors();
             areas = new GameBoard[]{area1, area2, area3, area4, area5, area6, area7, area8};
 
-            YokelUtilities.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
+            //YokelUtilities.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
 
             YokelPiece piece1 = new YokelPiece(1,32,84,112);
             YokelPiece piece2 = new YokelPiece(2,68,53,51);

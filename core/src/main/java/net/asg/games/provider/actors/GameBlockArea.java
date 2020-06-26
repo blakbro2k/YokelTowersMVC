@@ -4,9 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import net.asg.games.game.objects.YokelBlock;
@@ -41,6 +43,8 @@ public class GameBlockArea extends Stack {
 
     private Table grid;
     private Table bgNumber;
+    private Table bgColor;
+    private Label tableNumber;
 
     private GamePiece gamePiece;
     private GameJoinWindow joinWindow;
@@ -70,7 +74,10 @@ public class GameBlockArea extends Stack {
         initializeBoard();
         initializeSize();
         setBoardNumber(0);
-        bgNumber.setBackground(skin.getDrawable(ALIVE_BACKGROUND));
+        bgColor.setBackground(skin.getDrawable(ALIVE_BACKGROUND));
+        add(bgColor);
+        bgNumber.add(tableNumber);
+        bgNumber.add("");
         add(bgNumber);
         initializeGrid();
     }
@@ -91,6 +98,7 @@ public class GameBlockArea extends Stack {
         this.uiBlocks = new ObjectMap<>();
         this.boardNumber = 0;
         this.grid = new Table(skin);
+        this.bgColor = new Table(skin);
         this.bgNumber = new Table(skin);
         this.pieceSprite = new PieceDrawable();
     }
@@ -140,9 +148,14 @@ public class GameBlockArea extends Stack {
     }
 
     void setBoardNumber(int number){
+        if(tableNumber == null){
+            tableNumber = new Label("", skin);
+            tableNumber.setFontScale(2);
+            tableNumber.setColor(0,0,0,1);
+        }
         this.bgNumber.setName(BOARD_NUMBER_NAME);
-        this.grid.setBackground(number + GameClock.DIGIT_NME);
         this.boardNumber = number;
+        this.tableNumber.setText(number);
     }
 
     private void setBlock(int block, int r, int c){
@@ -330,9 +343,9 @@ public class GameBlockArea extends Stack {
         this.isActive = b;
         if(isActive){
             if(isPlayerView){
-                bgNumber.setBackground(skin.getDrawable(PLAYER_BACKGROUND));
+                bgColor.setBackground(skin.getDrawable(PLAYER_BACKGROUND));
             } else {
-                bgNumber.setBackground(skin.getDrawable(ALIVE_BACKGROUND));
+                bgColor.setBackground(skin.getDrawable(ALIVE_BACKGROUND));
             }
         }
     }
@@ -341,12 +354,12 @@ public class GameBlockArea extends Stack {
         this.isPlayerView = b;
         this.pieceSprite.setActive(!isPreview && isPlayerView);
         if(isPlayerView){
-            bgNumber.setBackground(skin.getDrawable(PLAYER_BACKGROUND));
+            bgColor.setBackground(skin.getDrawable(PLAYER_BACKGROUND));
         }
     }
 
     void killPlayer(){
         setActive(false);
-        bgNumber.setBackground(skin.getDrawable(DEAD_BACKGROUND));
+        bgColor.setBackground(skin.getDrawable(DEAD_BACKGROUND));
     }
 }
