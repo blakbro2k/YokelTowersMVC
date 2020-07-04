@@ -16,12 +16,12 @@ public class GamePiece extends Table implements GameObject {
         this(skin, YokelBlock.CLEAR_BLOCK, YokelBlock.CLEAR_BLOCK, YokelBlock.CLEAR_BLOCK);
     }
 
-    public GamePiece(Skin skin, GameBlock top, GameBlock mid, GameBlock bottom){
+    private GamePiece(Skin skin, GameBlock top, GameBlock mid, GameBlock bottom){
         setSkin(skin);
         initialize(top, mid, bottom);
     }
 
-    public GamePiece(Skin skin, int top, int mid, int bottom){
+    private GamePiece(Skin skin, int top, int mid, int bottom){
         this(skin, YokelUtilities.getBlock(top), YokelUtilities.getBlock(mid), YokelUtilities.getBlock(bottom));
     }
 
@@ -33,13 +33,13 @@ public class GamePiece extends Table implements GameObject {
 
     private void initialize(GameBlock top, GameBlock middle, GameBlock bottom){
         if(top == null){
-            top = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK);
+            top = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK, false);
         }
         if(middle == null){
-            middle = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK);
+            middle = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK, false);
         }
         if(bottom == null){
-            bottom = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK);
+            bottom = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK, false);
         }
         this.top = top;
         this.mid = middle;

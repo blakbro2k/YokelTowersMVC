@@ -1,6 +1,9 @@
 package net.asg.games.game.managers;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.Queue;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
@@ -95,6 +98,16 @@ public class GameManager {
         return gameBoards[i];
     }
 
+    public Array<YokelGameBoard> getActiveGameBoards(){
+        Array<YokelGameBoard> returnBoards = GdxArrays.newArray();
+        for(YokelGameBoard board : gameBoards){
+            if(board != null && board.hasGameStarted() && !board.hasPlayerDied()){
+                returnBoards.add(board);
+            }
+        }
+        return returnBoards;
+    }
+
     private long getSeed() {
         return 1L;
         //return System.currentTimeMillis();
@@ -124,6 +137,30 @@ public class GameManager {
 
     public void handleStopMoveDown(int boardIndex){
         getGameBoard(boardIndex).stopMoveDown();
+    }
+
+    public void handleRandomAttack(int boardIndex){
+        //given board, get player powers
+        YokelGameBoard gameBoard = getGameBoard(boardIndex);
+        Queue<Integer> powers = gameBoard.getPowers();
+        if(powers == null) return;
+        //pop next power
+        int block = YokelBlock.CLEAR_BLOCK;
+        if(!powers.isEmpty()){
+            block = powers.removeFirst();
+        }
+        //Get all active boards
+        if(block != YokelBlock.CLEAR_BLOCK){
+            Array<YokelGameBoard> activeBoards = getActiveGameBoards();
+            System.out.println("Power = " + block);
+            System.out.println("Powah? = " + block);
+            System.out.println("activeBoards = " + activeBoards);
+            gameBoard.handlePower(block);
+        }
+
+        //if attack, random non partnered board
+        //if defense, random partnered board
+        //getGameBoard(boardIndex).stopMoveDown();
     }
 
     public String[] getBoardState(){

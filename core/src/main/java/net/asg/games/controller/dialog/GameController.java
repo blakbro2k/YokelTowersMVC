@@ -1,7 +1,6 @@
 package net.asg.games.controller.dialog;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.autumn.annotation.Inject;
@@ -22,8 +21,6 @@ import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.provider.actors.GameBoard;
 import net.asg.games.provider.actors.GameClock;
-import net.asg.games.provider.actors.GamePiece;
-import net.asg.games.provider.actors.GamePowersQueue;
 import net.asg.games.service.SessionService;
 import net.asg.games.utils.YokelUtilities;
 
@@ -45,10 +42,6 @@ public class GameController implements ViewRenderer, ActionContainer {
     @LmlActor("6:area") private GameBoard area6;
     @LmlActor("7:area") private GameBoard area7;
     @LmlActor("8:area") private GameBoard area8;
-    @LmlActor("1:next") private GamePiece next1;
-    @LmlActor("2:next") private GamePiece next2;
-    @LmlActor("1:powers") private GamePowersQueue powersQueue1;
-    @LmlActor("2:powers") private GamePowersQueue powersQueue2;
     @LmlActor("gameClock") private GameClock gameClock;
 
     private float refresh = 500;
@@ -60,7 +53,7 @@ public class GameController implements ViewRenderer, ActionContainer {
 
     @Override
     public void render(Stage stage, float delta) {
-        initiate(stage);
+        initiate();
 
         if(++refresh > 300){
             refresh = 0;
@@ -87,7 +80,7 @@ public class GameController implements ViewRenderer, ActionContainer {
         }
     }
 
-    private void initiate(Stage stage){
+    private void initiate(){
         if(!isInitiated){
             isInitiated = true;
             areas = new GameBoard[]{area1, area2, area3, area4, area5, area6, area7, area8};

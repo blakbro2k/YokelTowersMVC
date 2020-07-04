@@ -22,7 +22,6 @@ import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.controller.LoadingController;
 import net.asg.games.game.objects.YokelObjectFactory;
-import net.asg.games.provider.actors.GameBlock;
 
 @Component
 public class UserInterfaceService {
@@ -146,7 +145,7 @@ public class UserInterfaceService {
         }
     }
 
-    public void loadDrawable(Actor actor, String name){
+    private void loadDrawable(Actor actor, String name){
         if(actor instanceof AnimatedImage){
             AnimatedImage image = (AnimatedImage) actor;
             image.setFrames(getDrawableFrames(name));
@@ -156,7 +155,7 @@ public class UserInterfaceService {
         }
     }
 
-    public Array<Drawable> getDrawableFrames(String regionName) {
+    private Array<Drawable> getDrawableFrames(String regionName) {
         int i = 1;
         regionName +=  "_";
         Drawable drawable = getDrawable(regionName, i);
@@ -169,7 +168,7 @@ public class UserInterfaceService {
         return drawables;
     }
 
-    public Drawable getDrawable(String regionNames, int i){
+    private Drawable getDrawable(String regionNames, int i){
         try{
             return interfaceService.getSkin().getDrawable(regionNames + i);
         } catch(GdxRuntimeException e) {

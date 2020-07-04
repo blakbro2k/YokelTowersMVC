@@ -14,27 +14,34 @@ import net.asg.games.utils.YokelUtilities;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Objects;
+
 /**
  * Created by Blakbro2k on 3/15/2018.
  */
 
-public class GameBlock extends Table implements Pool.Poolable, GameObject {
+public class GameBlock extends Table implements Pool.Poolable, GameObject, Cloneable {
     private final static float DEFAULT_ANIMATION_DELAY = 0.12f;
     private final static float DEFENSE_ANIMATION_DELAY = 0.32f;
 
     private AnimatedImage uiBlock;
     private boolean isActive;
+    private boolean isPreview;
 
-    public GameBlock(Skin skin, String blockName) {
+    //New block via image name
+    public GameBlock(Skin skin, String blockName, boolean isPreview) {
         super(skin);
         reset();
+        this.isPreview = isPreview;
         setImage(blockName);
         add(uiBlock);
     }
 
-    public GameBlock(Skin skin, int block) {
+    //New block via block type
+    public GameBlock(Skin skin, int block, boolean isPreview) {
         super(skin);
         reset();
+        this.isPreview = isPreview;
         setImage(block);
         add(uiBlock);
     }
@@ -44,15 +51,19 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject {
     }
 
     public void setImage(String blockName) {
-        setImage(UIUtil.getInstance().getBlockImage(blockName));
+        if(isPreview){
+            setImage(UIUtil.getInstance().getPreviewBlockImage(blockName));
+        } else {
+            setImage(UIUtil.getInstance().getBlockImage(blockName));
+        }
     }
 
     public void setImage(int blockValue) {
-        setImage(UIUtil.getInstance().getBlockImage(blockValue));
-    }
-
-    public void setPreviewImage(int blockValue) {
-        setImage(UIUtil.getInstance().getPreviewBlockImage(blockValue));
+        if(isPreview){
+            setImage(UIUtil.getInstance().getPreviewBlockImage(blockValue));
+        } else {
+            setImage(UIUtil.getInstance().getBlockImage(blockValue));
+        }
     }
 
     public AnimatedImage getImage() {
@@ -65,6 +76,14 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject {
 
     public boolean isActive() {
         return uiBlock != null && isActive;
+    }
+
+    public void setPreview(boolean b) {
+        this.isPreview = b;
+    }
+
+    public boolean isPreview() {
+        return isPreview;
     }
 
     private float getDelay(Image image){
@@ -80,6 +99,7 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject {
         setX(0);
         setY(0);
         uiBlock = null;
+        setPreview(false);
         setActive(false);
     }
 
@@ -125,12 +145,22 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject {
 
     @Override
     public float getPrefWidth() {
-        return getImage().getWidth();
+        Image image = getImage();
+        if(image != null){
+            return image.getWidth();
+        } else {
+            return 16;
+        }
     }
 
     @Override
     public float getPrefHeight() {
-        return getImage().getHeight();
+        Image image = getImage();
+        if(image != null){
+            return image.getHeight();
+        } else {
+            return 16;
+        }
     }
 
     @Override
@@ -147,7 +177,8 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject {
         if(needsUpdate(block, isPreview)){
             GameBlock blockUi = YokelUtilities.getBlock(block, isPreview);
             if(blockUi != null){
-                setImage(blockUi.getImage());
+                setImage(blockUi.clone().getImage());
+                //YokelUtilities.freeBlock(blockUi);
             }
         }
     }
@@ -156,14 +187,45 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject {
         String blockName = "";
         Image blockImage;
 
-        if(isPreview){
+        if (isPreview) {
             blockImage = UIUtil.getInstance().getPreviewBlockImage(block);
         } else {
             blockImage = UIUtil.getInstance().getBlockImage(block);
         }
-        if(blockImage != null){
+        if (blockImage != null) {
             blockName = blockImage.getName();
         }
         return !StringUtils.equalsIgnoreCase(blockName, uiBlock.getName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameBlock gameBlock = (GameBlock) o;
+        return uiBlock.getName().equals(gameBlock.getName()) && isPreview == gameBlock.isPreview();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uiBlock, isPreview);
+    }
+
+    @Override
+    public GameBlock clone(){
+        try {
+            Object c = super.clone();
+            if(c instanceof GameBlock){
+                GameBlock g = (GameBlock) c;
+                GameBlock r = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK, g.isPreview);
+                r.setImage(g.getImage());
+                r.setActive(g.isActive());
+                return r;
+            }
+            throw new RuntimeException("Unable to clone " + this.getClass().getSimpleName() + " not an instance of " + GameBlock.class.getSimpleName());
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Unable to clone " + this.getClass().getSimpleName() + " not an instance of " + GameBlock.class.getSimpleName());
+        }
     }
 }

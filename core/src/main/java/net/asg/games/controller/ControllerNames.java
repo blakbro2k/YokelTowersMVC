@@ -10,6 +10,7 @@ public class ControllerNames {
     public final static String POST_LOADER_VIEW = "postload";
     public final static String ROOM_VIEW = "room";
     public final static String UI_TEST_VIEW = "uitest";
+    public final static String UI_BLOCK_TEST_VIEW = "uiblocktest";
     public final static String CREATE_GAME_DIALOG = "createGame";
     public final static String ERROR_DIALOG = "error";
     public final static String GAME_DIALOG = "game";

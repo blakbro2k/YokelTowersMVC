@@ -139,6 +139,24 @@ public class YokelUtilities {
         }
     }
 
+    public static void freeBlock(GameBlock uiCell) {
+        UIUtil.getInstance().freeObject(uiCell);
+    }
+
+    public static void updateGameBlock(GameBlock original, int block, boolean isPreview) {
+        GameBlock incoming = YokelUtilities.getBlock(block, isPreview);
+        //System.out.println("original=" + original);
+        //System.out.println("incoming=" + incoming);
+        if(original != null && !original.equals(incoming)){
+            //System.out.println("equals?=" + original.equals(incoming));
+
+            YokelUtilities.freeBlock(original);
+            original = incoming;
+        } else {
+            YokelUtilities.freeBlock(incoming);
+        }
+    }
+
     public static class IDGenerator {
         private IDGenerator(){}
 

@@ -87,8 +87,6 @@ public class GameBlockArea extends Stack {
         float width = clear.getWidth() * YokelGameBoard.MAX_COLS;
         float height = clear.getHeight() * YokelGameBoard.MAX_PLAYABLE_ROWS;
 
-        //validate();
-
         //this.setBounds(sLoc.x, sLoc.y, width, height);
         //grid.setBounds(sLoc.x, sLoc.y, width, height);
         //setCullingArea(new Rectangle(sLoc.x, sLoc.y, width, height));
@@ -193,6 +191,7 @@ public class GameBlockArea extends Stack {
     @Override
     public void act(float delta){
         super.act(delta);
+
         for(GameBlock uiblock : uiBlocks.values()) {
             if(uiblock != null){
                 uiblock.act(delta * YokelUtilities.otof(0.03));

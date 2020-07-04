@@ -6,5 +6,6 @@
         <textfield id="password" message="Password" passwordmode="true"/>
         <textbutton onchange="registerUser">Login</textbutton>
         <button onchange="goto:uitest">debug</button>
+        <button onchange="goto:uiblocktest">test blocks</button>
     </table>
 </:window>

@@ -2,7 +2,6 @@ package net.asg.games.utils;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelObjectFactory;
 import net.asg.games.provider.actors.GameBlock;
 
@@ -25,6 +24,10 @@ public class UIUtil {
 
     public Image getBlockImage(String blockName){
         return (Image) factory.getUserInterfaceService().getActor(blockName);
+    }
+
+    public Image getPreviewBlockImage(String blockName){
+        return getBlockImage(blockName + PREVIEW_TAG);
     }
 
     public Image getBlockImage(int blockId){

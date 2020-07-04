@@ -94,6 +94,10 @@ public class YokelGameBoard extends AbstractYokelObject {
         }
     }
 
+    public boolean hasGameStarted(){
+        return hasGameStarted;
+    }
+
     public void end(){
         hasGameStarted = false;
     }
@@ -605,8 +609,7 @@ public class YokelGameBoard extends AbstractYokelObject {
 
                     break;
                 case YokelBlock.L_BLOCK:
-                    System.out.println
-                            ("Assertion failure: invalid CELL5 board attack " + i);
+                    System.out.println ("Assertion failure: invalid CELL5 board attack " + i);
                     break;
                 case YokelBlock.EX_BLOCK:
                     removeColorFromBoard();
@@ -1124,14 +1127,14 @@ public class YokelGameBoard extends AbstractYokelObject {
             boolean isAttack = YokelBlockEval.isOffensive(value);
 
             if (isAttack) {
-                if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS) {
+                if (YokelBlockEval.getCellFlag(cells[row][col]) < YokelBlock.CLEAR_BLOCK) {
                     releaseID(YokelBlockEval.getID(cells[row][col]));
                 }
 
-                if (YokelBlockEval.getCellFlag(cells[row][col]) != MAX_COLS) {
+                if (YokelBlockEval.getCellFlag(cells[row][col]) != YokelBlock.CLEAR_BLOCK) {
                     cells[row][col] = 7;
                 }
-            } else if (YokelBlockEval.getCellFlag(cells[row][col]) < MAX_COLS) {
+            } else if (YokelBlockEval.getCellFlag(cells[row][col]) < YokelBlock.CLEAR_BLOCK) {
                 cells[row][col] = YokelBlockEval.addArtificialFlag(YokelBlockEval.setValueFlag(cells[row][col], YokelBlock.L_BLOCK));
             }
 
@@ -1675,10 +1678,10 @@ public class YokelGameBoard extends AbstractYokelObject {
         if(block != null){
             int b = block.getBlockType();
             if(block.hasPower()){
-                //System.err.println("Adding power block=" + block);
                 powers.addFirst(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(b, block.getPower())));
             }
         }
+        System.out.println("powers queue=" + powers);
     }
 
     public int getDuration(){

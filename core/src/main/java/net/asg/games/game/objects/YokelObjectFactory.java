@@ -48,7 +48,7 @@ public class YokelObjectFactory implements Disposable {
     private final Pool<GameBlock> yokelGameBlockPool = new Pool<GameBlock>() {
         @Override
         protected GameBlock newObject() {
-            return new GameBlock(userInterfaceService.getSkin(), getBlockImageName(YokelBlock.CLEAR_BLOCK));
+            return new GameBlock(userInterfaceService.getSkin(), getBlockImageName(YokelBlock.CLEAR_BLOCK), false);
         }
     };
 
@@ -58,15 +58,10 @@ public class YokelObjectFactory implements Disposable {
         //System.out.println("block max=" + yokelGameBlockPool.max);
         //System.out.println("block peak=" + yokelGameBlockPool.peak);
 
-        if(isPreview){
-            block.setPreviewImage(blockType);
-        } else {
-            block.setImage(blockType);
-        }
+        block.setActive(true);
+        block.setPreview(isPreview);
+        block.setImage(blockType);
 
-        if(blockType != YokelBlock.CLEAR_BLOCK){
-            block.setActive(true);
-        }
         return block;
     }
 
