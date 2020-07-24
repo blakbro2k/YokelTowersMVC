@@ -139,7 +139,6 @@ public class GameBoard extends Table {
         for(int block : blocks){
             gameBlocks.addFirst(YokelUtilities.getBlock(block, area.isPreview()));
         }
-        //System.out.println(gameBlocks);
         return gameBlocks;
     }
 

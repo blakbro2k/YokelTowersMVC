@@ -215,6 +215,10 @@ public class GameBlockArea extends Stack {
         return pieceSprite != null && !isPreview && isActive && isPlayerView;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     private static class PieceDrawable extends Actor {
         private GameBlock[] blocks = new GameBlock[3];
         private int row;
@@ -358,7 +362,9 @@ public class GameBlockArea extends Stack {
     }
 
     void killPlayer(){
+        if(isActive && board.hasPlayerDied()){
+            bgColor.setBackground(skin.getDrawable(DEAD_BACKGROUND));
+        }
         setActive(false);
-        bgColor.setBackground(skin.getDrawable(DEAD_BACKGROUND));
     }
 }

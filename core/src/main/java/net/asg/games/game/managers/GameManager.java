@@ -7,6 +7,7 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
+import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 
@@ -15,8 +16,10 @@ import java.util.Vector;
 public class GameManager {
     private YokelTable table;
     private YokelGameBoard[] gameBoards = new YokelGameBoard[8];
+    private Array<YokelPlayer> winners = GdxArrays.newArray();
     private boolean isGameRunning;
     private boolean hasGameStarted;
+    private boolean showGameOver;
 
     public GameManager(YokelTable table){
         this.table = table;
@@ -74,8 +77,16 @@ public class GameManager {
         return false;
     }
 
+    public boolean showGameOver(){
+        boolean temp = showGameOver;
+        if(showGameOver){
+            showGameOver = false;
+        }
+        return temp;
+    }
+
     private boolean isPlayerDead(YokelGameBoard board){
-        if(board != null){
+        if(board != null && board.hasGameStarted()){
             return board.hasPlayerDied();
         }
         return true;
@@ -189,6 +200,7 @@ public class GameManager {
         for(YokelGameBoard gameboard : gameBoards){
             if(gameboard != null){
                 gameboard.end();
+                showGameOver = true;
             }
         }
         return isGameRunning = hasGameStarted = false;
@@ -198,7 +210,8 @@ public class GameManager {
         return isGameRunning;
     }
 
-    private boolean isGameOver(){
+    public boolean isGameOver(){
+        //TODO: implement action history to break tie with last placed block.
         boolean player1 = isPlayerDead(getGameBoard(0));
         boolean player2 = isPlayerDead(getGameBoard(1));
         boolean player3 = isPlayerDead(getGameBoard(2));
@@ -213,12 +226,69 @@ public class GameManager {
         boolean isGroup3Dead = player5 && player6;
         boolean isGroup4Dead = player7 && player8;
 
+        /*
+        System.out.println("player1 dead? " + player1);
+        System.out.println("player2 dead? " + player2);
+        System.out.println("player3 dead? " + player3);
+        System.out.println("player4 dead? " + player4);
+        System.out.println("player5 dead? " + player5);
+        System.out.println("player6 dead? " + player6);
+        System.out.println("player7 dead? " + player7);
+        System.out.println("player8 dead? " + player8);
+        *
+         */
+
         boolean group1won = !isGroup1Dead && isGroup2Dead && isGroup3Dead && isGroup4Dead;
         boolean group2won = isGroup1Dead && !isGroup2Dead && isGroup3Dead && isGroup4Dead;
         boolean group3won = isGroup1Dead && isGroup2Dead && !isGroup3Dead && isGroup4Dead;
         boolean group4won = isGroup1Dead && isGroup2Dead && isGroup3Dead && !isGroup4Dead;
 
+        /*
+        System.err.println("group1won dead? " + group1won);
+        System.err.println("group2won dead? " + group2won);
+        System.err.println("group3won dead? " + group3won);
+        System.err.println("group4won dead? " + group4won);
+        */
+
+        if(group1won){
+            setWinners(getPlayerFromBoard(table.getSeat(0)), getPlayerFromBoard(table.getSeat(1)));
+        }
+
+        if(group2won){
+            setWinners(getPlayerFromBoard(table.getSeat(2)), getPlayerFromBoard(table.getSeat(3)));
+        }
+
+        if(group3won){
+            setWinners(getPlayerFromBoard(table.getSeat(4)), getPlayerFromBoard(table.getSeat(5)));
+        }
+
+        if(group4won){
+            setWinners(getPlayerFromBoard(table.getSeat(6)), getPlayerFromBoard(table.getSeat(7)));
+        }
+
         return group1won || group2won || group3won || group4won;
+    }
+
+    private void setWinners(YokelPlayer player1, YokelPlayer player2) {
+        winners.clear();
+        if(player1 != null){
+            winners.add(player1);
+        }
+
+        if(player2 != null){
+            winners.add(player2);
+        }
+    }
+
+    public Array<YokelPlayer> getWinners(){
+        return winners;
+    }
+
+    private YokelPlayer getPlayerFromBoard(YokelSeat seat){
+        if(seat != null){
+            return seat.getSeatedPlayer();
+        }
+        return null;
     }
 
     private static class GameState{}

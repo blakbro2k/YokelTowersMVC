@@ -2,9 +2,15 @@ package net.asg.games.controller;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.autumn.annotation.Inject;
+import com.github.czyzby.autumn.mvc.component.sfx.MusicService;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
@@ -21,6 +27,7 @@ import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.provider.actors.GameBoard;
 import net.asg.games.provider.actors.GameClock;
+import net.asg.games.provider.actors.GameOverText;
 import net.asg.games.service.SessionService;
 import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.YokelUtilities;
@@ -31,6 +38,7 @@ import java.util.Iterator;
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
     @Inject private UserInterfaceService uiService;
     @Inject private SessionService sessionService;
+    @Inject private MusicService musicService;
 
     @LmlActor("gameClock") private GameClock gameClock;
     @LmlActor("1:area") private GameBoard area1;
@@ -43,6 +51,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("8:area") private GameBoard area8;
 
     private boolean isInitiated;
+    private boolean isGameOver = false;
+
     private PlayerKeyMap keyMap = new PlayerKeyMap();
     private GameManager game;
     private GameBoard[] gameBoards = new GameBoard[8];
@@ -52,11 +62,32 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     public void render(Stage stage, float delta) {
         initiate();
         checkForInput();
+
         game.update(delta);
         updateGameBoards();
-
+        if(game.showGameOver()){
+            toggleGameStart();
+            stage.addActor(getGameOverActor());
+        }
         stage.act(delta);
         stage.draw();
+    }
+
+    private Actor getGameOverActor() {
+        Array<YokelPlayer> winners = game.getWinners();
+        YokelPlayer player1 = null;
+        YokelPlayer player2 = null;
+
+        if(winners.size > 0){
+            player1 = winners.get(0);
+            if(winners.size > 1){
+                player2 = winners.get(1);
+            }
+        }
+
+        GameOverText gameOverText = new GameOverText(sessionService.getCurrentPlayer().equals(player1) || sessionService.getCurrentPlayer().equals(player2), player1, player2, uiService.getSkin());
+        gameOverText.setPosition(uiService.getStage().getWidth() / 2, uiService.getStage().getHeight() / 2);
+        return gameOverText;
     }
 
     private void updateGameBoards() {
@@ -85,7 +116,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
             //{0,1}{2,3}{4,5}{6,7}
             int cSeat = 6;
-            int pSeat = 7;
+            int pSeat = 5;
             int tSeat = 1;
 
             sessionService.setCurrentPlayer(player1);
@@ -99,7 +130,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             YokelSeat seat3 = table.getSeat(tSeat);
 
             seat1.sitDown(player1);
-            seat2.sitDown(player2);
+            //seat2.sitDown(player2);
             seat3.sitDown(player3);
 
             game = new GameManager(table);
@@ -185,32 +216,36 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private void toggleGameStart() {
         if(gameClock == null) return;
         if(!gameClock.isRunning()){
+            isGameOver = false;
             gameClock.start();
         } else {
+            isGameOver = true;
             gameClock.stop();
         }
     }
 
     private void checkForInput(){
-        int currentSeat = sessionService.getCurrentSeat();
-        if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
-            game.handleMoveRight(currentSeat);
+        if(!isGameOver){
+            int currentSeat = sessionService.getCurrentSeat();
+            if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
+                game.handleMoveRight(currentSeat);
+            }
+            if (Gdx.input.isKeyJustPressed(keyMap.getLeftKey())) {
+                game.handleMoveLeft(currentSeat);
+            }
+            if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
+                game.handleCycleDown(currentSeat);
+            }
+            if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
+                game.handleStartMoveDown(currentSeat);
+            }
+            if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
+                game.handleStopMoveDown(currentSeat);
+            }
+            if (Gdx.input.isKeyJustPressed(keyMap.getRandomAttackKey())) {
+                game.handleRandomAttack(currentSeat);
+            }
+            //System.out.println("key pressed:" + Gdx.input.isKeyPressed(Input.Keys.LEFT));
         }
-        if (Gdx.input.isKeyJustPressed(keyMap.getLeftKey())) {
-            game.handleMoveLeft(currentSeat);
-        }
-        if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
-            game.handleCycleDown(currentSeat);
-        }
-        if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-            game.handleStartMoveDown(currentSeat);
-        }
-        if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-            game.handleStopMoveDown(currentSeat);
-        }
-        if (Gdx.input.isKeyJustPressed(keyMap.getRandomAttackKey())) {
-            game.handleRandomAttack(currentSeat);
-        }
-        //System.out.println("key pressed:" + Gdx.input.isKeyPressed(Input.Keys.LEFT));
     }
 }

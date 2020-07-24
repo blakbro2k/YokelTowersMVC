@@ -53,7 +53,7 @@ public class GameTableListLmlTag extends TableLmlTag {
                         action.consume(actor);
                     }
                 });*/
-                //TODO: manually consume actor if listner on button does not exist instead of creating new Chagne attributes.
+                //TODO: manually consume actor if listener on button does not exist instead of creating new Chagne attributes.
                 OnChangeLmlAttribute onChange = new OnChangeLmlAttribute();
                 onChange.process(parser, null, button, LmlUtilities.toAction("requestJoinTable"));
             }

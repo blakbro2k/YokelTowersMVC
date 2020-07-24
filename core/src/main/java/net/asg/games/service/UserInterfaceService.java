@@ -28,7 +28,7 @@ public class UserInterfaceService {
     @Inject private AssetService assetService;
     @Inject private InterfaceService interfaceService;
     @Inject private SkinService skinService;
-    @Inject private LoadingController controller;
+    @Inject private LoadingController assetLoader;
 
     private final static String ATTR_IMAGE_NAMES = "imageNames";
     private final static String ATTR_ANIMATED_IMAGE_NAMES = "animatedImageNames";
@@ -80,7 +80,7 @@ public class UserInterfaceService {
 
     private ObjectMap<String, Integer> buildRegionsMap(){
         ObjectMap<String, Integer> regionsMap = GdxMaps.newObjectMap();
-        for(TextureAtlas.AtlasRegion region : controller.getGameAtlas().getRegions()){
+        for(TextureAtlas.AtlasRegion region : assetLoader.getGameAtlas().getRegions()){
             if(region != null){
                 String key = region.name;
                 if(!regionsMap.containsKey(key)){
