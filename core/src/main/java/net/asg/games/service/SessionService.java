@@ -1,5 +1,6 @@
 package net.asg.games.service;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.autumn.annotation.Component;
@@ -16,6 +17,8 @@ import com.github.czyzby.websocket.data.WebSocketException;
 
 import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.game.managers.ClientManager;
+import net.asg.games.game.managers.GameManager;
+import net.asg.games.game.objects.PlayerKeyMap;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelTable;
@@ -42,6 +45,7 @@ public class SessionService {
     private String userName;
     private YokelPlayer player;
     private ObjectMap<String, ViewController> views = GdxMaps.newObjectMap();
+    private PlayerKeyMap keyMap = new PlayerKeyMap();
     private String currentErrorMessage;
 
     @Initiate
@@ -204,5 +208,28 @@ public class SessionService {
         if(throwable == null) return;
         setCurrentError(throwable.getCause(), throwable.getMessage());
         interfaceService.showDialog(ErrorController.class);
+    }
+
+    public void checkForInput(GameManager game){
+        if(game == null) return;
+        int currentSeat = getCurrentSeat();
+        if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
+            game.handleMoveRight(currentSeat);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getLeftKey())) {
+            game.handleMoveLeft(currentSeat);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
+            game.handleCycleDown(currentSeat);
+        }
+        if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
+            game.handleStartMoveDown(currentSeat);
+        }
+        if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
+            game.handleStopMoveDown(currentSeat);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getRandomAttackKey())) {
+            game.handleRandomAttack(currentSeat);
+        }
     }
 }

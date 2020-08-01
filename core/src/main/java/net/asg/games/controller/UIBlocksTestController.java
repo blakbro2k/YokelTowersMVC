@@ -86,13 +86,15 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     @LmlActor("clear_block_preview") private Image clearBlockPreview;
     @LmlActor("1:area") private GameBlockArea area1;
     @LmlActor("2:area") private GameBlockArea area2;
+    GameBoard area;
+    YokelGameBoard boardState;
 
     private boolean isInitiated;
 
     @Override
     public void render(Stage stage, float delta) {
         initiate();
-
+        area.update(boardState);
         stage.act(delta);
         stage.draw();
     }
@@ -101,8 +103,15 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
         if(!isInitiated){
             isInitiated = true;
             initiateActors();
-            area1.setPreview(false);
-            area1.updateData(getTestBoard());
+            boardState = getTestBoard();
+            area = new GameBoard(uiService.getSkin());
+            YokelPlayer player = new YokelPlayer("Test Player One",2000, 5);
+            area.setPlayerLabel(player.getNameLabel().toString());
+            area.setBoardNumber(1);
+            area.setPlayerView(true);
+            area.setActive(true);
+            area.setPreview(false);
+            area.update(boardState);
             //area2.updateData(getTestBoard());
         }
     }

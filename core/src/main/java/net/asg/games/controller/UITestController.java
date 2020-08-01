@@ -53,7 +53,6 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private boolean isInitiated;
     private boolean isGameOver = false;
 
-    private PlayerKeyMap keyMap = new PlayerKeyMap();
     private GameManager game;
     private GameBoard[] gameBoards = new GameBoard[8];
     private GameBoard[] areas;
@@ -225,27 +224,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     }
 
     private void checkForInput(){
-        if(!isGameOver){
-            int currentSeat = sessionService.getCurrentSeat();
-            if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
-                game.handleMoveRight(currentSeat);
-            }
-            if (Gdx.input.isKeyJustPressed(keyMap.getLeftKey())) {
-                game.handleMoveLeft(currentSeat);
-            }
-            if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
-                game.handleCycleDown(currentSeat);
-            }
-            if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-                game.handleStartMoveDown(currentSeat);
-            }
-            if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-                game.handleStopMoveDown(currentSeat);
-            }
-            if (Gdx.input.isKeyJustPressed(keyMap.getRandomAttackKey())) {
-                game.handleRandomAttack(currentSeat);
-            }
-            //System.out.println("key pressed:" + Gdx.input.isKeyPressed(Input.Keys.LEFT));
+        if(!isGameOver) {
+            sessionService.checkForInput(game);
         }
     }
 }

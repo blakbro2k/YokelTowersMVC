@@ -49,24 +49,34 @@ public class GameOverText extends Table {
     }
 
     private void init(){
-        add(getGameOverLabel()).row();
-        add(getWinLossLabel()).row();
-        add(getCongratsLabel()).row();
-        row();
+        Table container = new Table();
+
+        Label gameOver = getGameOverLabel();
+        Label winLoss = getWinLossLabel();
+        Label congrats = getCongratsLabel();
+
+        container.add(gameOver).row();
+        container.add(winLoss).row();
+        container.add(congrats).row();
+
         if(player1Name != null && player2Name != null){
-            add(getPlayerNameLabel(player1Name)).row();
-            add(getPlayerNameLabel(AND_LABEL + " " + player2Name));
+            container.add(getPlayerNameLabel(player1Name)).row();
+            container.add(getPlayerNameLabel(AND_LABEL + " " + player2Name));
         } else {
-            add(getPlayerNameLabel(player1Name == null ? player2Name : player1Name));
+            container.add(getPlayerNameLabel(player1Name == null ? player2Name : player1Name));
         }
+        add(container);
+
+        Vector2 startPos = container.localToParentCoordinates(new Vector2(0,0));
+        //gameOver.setPosition(startPos.x / 2, 200);
+        gameOver.addAction(Actions.moveTo(startPos.x / 2, 200, 0.1f, Interpolation.bounceOut));
         hasAnimationStarted = true;
     }
 
     private Label getGameOverLabel(){
-        Table container = new Table();
         //add(container);
-        Vector2 pos = container.localToParentCoordinates(new Vector2(0, 0));
-        System.err.println("container x=" + pos);
+       //Vector2 pos = container.localToParentCoordinates(new Vector2(0, 0));
+        //System.err.println("container x=" + pos);
 /*
         for(int i=0; i < GAME_OVER_LABEL.length(); i++){
             Label charLabel = new Label(GAME_OVER_LABEL.charAt(i) + "", getSkin());
@@ -81,11 +91,11 @@ public class GameOverText extends Table {
             pos.x += charLabel.getWidth();
         }*/
 
-        Label gameOver = new Label(GAME_OVER_LABEL.charAt(0) +"", getSkin());
+        Label gameOver = new Label(GAME_OVER_LABEL, getSkin());
         gameOver.setFontScale(H1Scale);
         gameOver.setColor(PINK);
         //gameOver.setPosition(pos.x / 2, 0);
-        gameOver.addAction(Actions.moveTo(pos.x / 2, 0, 1f, Interpolation.linear));
+        //gameOver.addAction(Actions.moveTo(pos.x / 2, 0, 1f, Interpolation.linear));
         return gameOver;
     }
 
