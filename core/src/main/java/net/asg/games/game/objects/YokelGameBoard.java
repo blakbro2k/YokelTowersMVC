@@ -3,6 +3,7 @@ package net.asg.games.game.objects;
 import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.utils.RandomUtil;
+import net.asg.games.utils.YokelUtilities;
 
 import java.util.Arrays;
 import java.util.Stack;
@@ -20,6 +21,9 @@ public class YokelGameBoard extends AbstractYokelObject {
     public static final float FALL_RATE = 0.026f;
     public static final float FAST_FALL_RATE = 0.266f;
     private static final int MAX_FALL_VALUE = 1;
+
+    private final YokelPiece MEDUSA_PIECE = new YokelPiece(0, YokelBlock.MEDUSA, YokelBlock.MEDUSA, YokelBlock.MEDUSA);
+    private final YokelPiece MIDAS_PIECE = new YokelPiece(0, YokelBlock.MIDAS, YokelBlock.MIDAS, YokelBlock.MIDAS);
 
     private int[][] cells;
     private boolean[] ids;
@@ -67,6 +71,8 @@ public class YokelGameBoard extends AbstractYokelObject {
     private int yahooDuration = 0;
     private boolean hasGameStarted;
 
+    private Queue<Integer> specialPieces;
+
     //Empty Contructor required for Json.Serializable
     public YokelGameBoard(){}
 
@@ -76,6 +82,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         piece = null;
         fallNumber = MAX_FALL_VALUE;
         powers = new Queue<>();
+        specialPieces = new Queue<>();
         reset(seed);
     }
 
@@ -537,15 +544,6 @@ public class YokelGameBoard extends AbstractYokelObject {
              count++) {
             /* empty */
         }
-
-        /*
-        for (count = 1;
-             (isCellInBoard(x + count * _x, y + count * _y)
-                     && getPieceValue(x + count * _x, y + count * _y) == cell
-                     && CellEval.hasPowerBlockFlag(cells[y + count * _y][x + count * _x]) == false);
-             count++) {
-            /* empty *
-        }*/
 
         if (count >= 3) {
             for (int i = 0; i < count; i++) {
@@ -1070,17 +1068,17 @@ public class YokelGameBoard extends AbstractYokelObject {
         int v2 = block.getValueAt((2 + index) % 3);
         v2 = YokelBlockEval.setIDFlag(v2, incrementID());
 
-        if (YokelBlockEval.getCellFlag(cells[y][x]) != MAX_COLS) {
+        if (YokelBlockEval.getCellFlag(cells[y][x]) != YokelBlock.CLEAR_BLOCK) {
             Thread.dumpStack();
             System.out.println("Assertion failure: grid at " + x + "," + y
                     + " isn't empty for piece placement");
         }
-        if (YokelBlockEval.getCellFlag(cells[y + 1][x]) != MAX_COLS) {
+        if (YokelBlockEval.getCellFlag(cells[y + 1][x]) != YokelBlock.CLEAR_BLOCK) {
             Thread.dumpStack();
             System.out.println("Assertion failure: grid at " + x + "," + y
                     + " isn't empty for piece placement");
         }
-        if (YokelBlockEval.getCellFlag(cells[y + 2][x]) != MAX_COLS) {
+        if (YokelBlockEval.getCellFlag(cells[y + 2][x]) != YokelBlock.CLEAR_BLOCK) {
             Thread.dumpStack();
             System.out.println("Assertion failure: grid at " + x + "," + y
                     + " isn't empty for piece placement");
@@ -1088,9 +1086,11 @@ public class YokelGameBoard extends AbstractYokelObject {
         cells[y][x] = v2;
         cells[y + 1][x] = v1;
         cells[y + 2][x] = v0;
+
         updateBoard();
     }
 
+    //Medusa or Midas
     public void handlePlacedPowerBlock(int type) {
         for (int y = 0; y < MAX_ROWS; y++) {
             for (int x = 0; x < MAX_COLS; x++) {
@@ -1132,7 +1132,7 @@ public class YokelGameBoard extends AbstractYokelObject {
                 }
 
                 if (YokelBlockEval.getCellFlag(cells[row][col]) != YokelBlock.CLEAR_BLOCK) {
-                    cells[row][col] = 7;
+                    cells[row][col] = YokelBlock.STONE;
                 }
             } else if (YokelBlockEval.getCellFlag(cells[row][col]) < YokelBlock.CLEAR_BLOCK) {
                 cells[row][col] = YokelBlockEval.addArtificialFlag(YokelBlockEval.setValueFlag(cells[row][col], YokelBlock.L_BLOCK));
@@ -1515,6 +1515,10 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public YokelPiece fetchCurrentNextPiece(){
+        if(specialPieces.size > 0){
+            int special = peekSpecialQueue();
+            return special % 2 == 0 ? MIDAS_PIECE : MEDUSA_PIECE;
+        }
         return nextPiece;
     }
 
@@ -1608,23 +1612,80 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void setNextPiece() {
-        if(piece != null){
+        if(piece != null) {
+            int block = YokelBlockEval.getCellFlag(piece.getBlock1());
+            if (block == YokelBlock.MEDUSA) {
+                piece.setBlock1(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 3)));
+                piece.setBlock2(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 3)));
+                piece.setBlock3(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 3)));
+            } else if (block == YokelBlock.MIDAS) {
+                piece.setBlock1(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 2)));
+                piece.setBlock2(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 2)));
+                piece.setBlock3(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 2)));
+            }
+
             placeBlockAt(piece, piece.column, piece.row);
+            handlePlacedPowerBlock(piece.getBlock1());
+            //Remove powers from placed block
+            if (block == YokelBlock.MEDUSA || block == YokelBlock.MIDAS) {
+                cells[piece.row][piece.column] = YokelBlockEval.setIDFlag(YokelBlock.L_BLOCK, YokelBlockEval.getID(cells[piece.row][piece.column]));
+                cells[piece.row + 1][piece.column] = YokelBlockEval.setIDFlag(YokelBlock.L_BLOCK, YokelBlockEval.getID(cells[piece.row + 1][piece.column]));
+                cells[piece.row + 2][piece.column] = YokelBlockEval.setIDFlag(YokelBlock.L_BLOCK, YokelBlockEval.getID(cells[piece.row + 2][piece.column]));
+            }
         }
+    }
+
+    public int peekSpecialQueue(){
+        return specialPieces.first();
+    }
+
+    public void addSpecialPiece(int piece){
+        if(piece > 2 || piece < 1) {
+            System.out.println("Assertion Error: invalid special block: " + piece);
+            return;
+        }
+        specialPieces.addFirst(piece);
     }
 
     public void getNewNextPiece() {
-        if(nextPiece == null){
-            this.nextPiece = newPieceBock();
+        int isSpecial = 0;
+
+        if(!YokelUtilities.isQueueEmpty(specialPieces)){
+            isSpecial = specialPieces.removeFirst();
         }
-        this.piece = nextPiece;
-        this.nextPiece = newPieceBock();
+
+        if(nextPiece == null){
+            this.nextPiece = newPieceBock(isSpecial);
+        }
+
+        if(isSpecial == 0) {
+            this.piece = nextPiece;
+            this.nextPiece = newPieceBock(isSpecial);
+        } else {
+            this.piece = newPieceBock(isSpecial);
+        }
     }
 
-    private YokelPiece newPieceBock(){
-        int block1 = powerUpBlock(getNextBlock());
-        int block2 = powerUpBlock(getNextBlock());
-        int block3 = powerUpBlock(getNextBlock());
+    private YokelPiece newPieceBock(int isSpecial){
+        int block1;
+        int block2;
+        int block3;
+
+        if(isSpecial > 0){
+            if(isSpecial % 2 == 1){
+                block1 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MEDUSA, 3));
+                block2 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MEDUSA, 3));
+                block3 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MEDUSA, 3));
+            } else {
+                block1 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MIDAS, 2));
+                block2 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MIDAS, 2));
+                block3 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MIDAS, 2));
+            }
+        } else {
+            block1 = powerUpBlock(getNextBlock());
+            block2 = powerUpBlock(getNextBlock());
+            block3 = powerUpBlock(getNextBlock());
+        }
 
         YokelPiece piece = new YokelPiece(getIdIndex(), block1, block2, block3);
         fallNumber = MAX_FALL_VALUE;
@@ -1634,7 +1695,6 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     //TODO: Make this safe
     private int powerUpBlock(int block){
-
         if(countOfBreaks[block] > 3){
             //System.out.println("breaks" + Arrays.toString(countOfBreaks));
             //System.out.println("block[" + block + "] has broken." );

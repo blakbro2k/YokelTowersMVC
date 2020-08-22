@@ -143,6 +143,14 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
         if (block != null) setImage(YokelUtilities.otoi(block));
     }
 
+    public void setCurrentFrame(int frame){
+        uiBlock.setCurrentFrame(frame);
+    }
+
+    public int getCurrentFrame() {
+        return uiBlock.getCurrentFrame();
+    }
+
     @Override
     public float getPrefWidth() {
         Image image = getImage();

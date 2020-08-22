@@ -127,9 +127,11 @@ public class YokelObjectFactory implements Disposable {
             case YokelBlock.EX_BLOCK:
                 return "Bash_block";
             case YokelBlock.MIDAS:
-                return "Midas";
+            case YokelBlock.ACTIVE_MIDAS:
+                return "midas";
             case YokelBlock.MEDUSA:
-                return "Medusa";
+            case YokelBlock.ACTIVE_MEDUSA:
+                return "medusa";
             case YokelBlock.STONE:
                 return "stone";
             case YokelBlock.OFFENSIVE_Y_BLOCK_MINOR:

@@ -46,7 +46,6 @@ public class GameBlockArea extends Stack {
     private Table bgColor;
     private Label tableNumber;
 
-    private GamePiece gamePiece;
     private GameJoinWindow joinWindow;
 
     private ObjectMap<String, GameBlock> uiBlocks;
@@ -280,6 +279,18 @@ public class GameBlockArea extends Stack {
             if(index > -1 && index < blocks.length && blocks[index] != null){
                 blocks[index].update(block,false);
             }
+            /*
+            if(block == YokelBlock.MEDUSA){
+                switch (index) {
+                    case 0 :
+                        blocks[index].setCurrentFrame(index);
+                        break;
+                    case 1 :
+                        break;
+                    case 2 :
+                    default :
+                }
+            }*/
         }
 
         private void setParent(GameBlockArea area){

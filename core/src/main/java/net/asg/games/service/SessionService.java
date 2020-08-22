@@ -1,6 +1,7 @@
 package net.asg.games.service;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.autumn.annotation.Component;
@@ -19,6 +20,8 @@ import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.game.managers.ClientManager;
 import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.PlayerKeyMap;
+import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelTable;
@@ -230,6 +233,12 @@ public class SessionService {
         }
         if (Gdx.input.isKeyJustPressed(keyMap.getRandomAttackKey())) {
             game.handleRandomAttack(currentSeat);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            game.testMedusa(currentSeat);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+            game.testMidas(currentSeat);
         }
     }
 }

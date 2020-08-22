@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
 import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockEval;
@@ -17,6 +19,7 @@ import net.asg.games.game.objects.YokelTable;
 import net.asg.games.utils.YokelUtilities;
 
 import java.util.Iterator;
+import java.util.Stack;
 import java.util.Vector;
 
 public class GameManager {
@@ -115,12 +118,14 @@ public class GameManager {
         return gameBoards[i];
     }
 
-    public Array<YokelGameBoard> getActiveGameBoards(){
-        Array<YokelGameBoard> returnBoards = GdxArrays.newArray();
+    public ObjectMap<Integer, YokelGameBoard> getActiveGameBoards(){
+        ObjectMap<Integer, YokelGameBoard> returnBoards = GdxMaps.newObjectMap();
+        int index = 0;
         for(YokelGameBoard board : gameBoards){
             if(board != null && board.hasGameStarted() && !board.hasPlayerDied()){
-                returnBoards.add(board);
+                returnBoards.put(index, board);
             }
+            ++index;
         }
         return returnBoards;
     }
@@ -156,48 +161,72 @@ public class GameManager {
         getGameBoard(boardIndex).stopMoveDown();
     }
 
-    private int popPowerFromBoard(int boardIndex){
+    private Stack<Integer> popPowerFromBoard(int boardIndex, int amount){
+        Stack<Integer> powerStack = new Stack<>();
         int block = YokelBlock.CLEAR_BLOCK;
         //given board, get player powers
         YokelGameBoard gameBoard = getGameBoard(boardIndex);
         Queue<Integer> powers = gameBoard.getPowers();
         if(powers != null){
             //pop next power
-            if(!powers.isEmpty()){
-                block = powers.removeFirst();
+            while(amount > 0){
+                if(!powers.isEmpty()){
+                    powerStack.push(powers.removeFirst());
+                }
+                --amount;
             }
         }
-        return block;
+        return powerStack;
     }
 
     public void handleAttack(int boardIndex, int target){
-        int block = popPowerFromBoard(boardIndex);
+        Stack<Integer> blocks = popPowerFromBoard(boardIndex, 1);
+        int block = YokelBlock.CLEAR_BLOCK;
+        if(blocks.size() > 1){
+            block = blocks.pop();
+        }
+
         //Get all active boards
         if(block != YokelBlock.CLEAR_BLOCK){
-            Array<YokelGameBoard> activeBoards = getActiveGameBoards();
+            ObjectMap<Integer, YokelGameBoard> activeBoards = getActiveGameBoards();
+            YokelGameBoard gameBoard = activeBoards.get(target);
 
-            if(!YokelUtilities.isArrayEmpty(activeBoards)){
-                YokelGameBoard gameBoard = activeBoards.get(target);
+            if(gameBoard != null){
+                System.out.println("Power = " + block);
+                System.out.println("Powah? = " + block);
+                System.out.println("activeBoards = " + activeBoards);
 
-                if(gameBoard != null){
-                    System.out.println("Power = " + block);
-                    System.out.println("Powah? = " + block);
-                    System.out.println("activeBoards = " + activeBoards);
+                boolean isOffensive = YokelBlockEval.isOffensive(block);
+                int value = YokelBlockEval.getCellFlag(block);
 
+                if(value == YokelBlock.L_BLOCK) {
                     //If offensive Yokel.L, set medusa next piece to target
-                    //else
-                    //If defensive Yokel.L, set midas next piece to target
-                    //else
-                    //if offensive Yokel.Ex, need to remove powers from target
-                    //else
-                    gameBoard.handlePower(block);
+                    if(isOffensive){
+                        gameBoard.addSpecialPiece(1);
+                    } else {
+                        //If defensive Yokel.L, set midas next piece to target
+                        gameBoard.addSpecialPiece(2);
+                    }
+                } else {
+                    if(value == YokelBlock.EX_BLOCK && isOffensive) {
+                        //if offensive Yokel.Ex, need to remove powers from target
+                        int level = YokelBlockEval.getPowerLevel(value);
+                        Stack<Integer> blockStack = popPowerFromBoard(target, level);
+                        gameBoard.addRemovedPowersToBoard(blockStack);
+                    } else {
+                        gameBoard.handlePower(block);
+                    }
                 }
             }
         }
     }
 
     public void handleRandomAttack(int boardIndex){
-        int block = popPowerFromBoard(boardIndex);
+        Stack<Integer> blocks = popPowerFromBoard(boardIndex, 1);
+        int block = YokelBlock.CLEAR_BLOCK;
+        if(blocks.size() > 1){
+            block = blocks.pop();
+        }
         int partnerIndex = (boardIndex % 2 == 0)? boardIndex + 1 : boardIndex - 1;
 
         Array<Integer> boardIndexes = GdxArrays.newArray();
@@ -205,7 +234,6 @@ public class GameManager {
             boardIndexes.add(i);
         }
 
-        int target;
         Iterator<Integer> iter = boardIndexes.iterator();
         if(YokelBlockEval.isOffensive(block)){
             //if block is offensive, get random non partner or player board
@@ -344,6 +372,27 @@ public class GameManager {
             return seat.getSeatedPlayer();
         }
         return null;
+    }
+
+    //TODO: Remove test methods
+    public void testMedusa(int target) {
+        ObjectMap<Integer, YokelGameBoard> activeBoards = getActiveGameBoards();
+        YokelGameBoard gameBoard = activeBoards.get(target);
+
+        if(gameBoard != null){
+            System.out.println("Added a Medusa");
+            gameBoard.addSpecialPiece(1);
+        }
+    }
+
+    public void testMidas(int target) {
+        ObjectMap<Integer, YokelGameBoard> activeBoards = getActiveGameBoards();
+        YokelGameBoard gameBoard = activeBoards.get(target);
+
+        if(gameBoard != null){
+            System.out.println("Added a Midas");
+            gameBoard.addSpecialPiece(2);
+        }
     }
 
     private static class GameState{}
