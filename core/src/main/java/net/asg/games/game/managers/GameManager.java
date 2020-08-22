@@ -1,16 +1,22 @@
 package net.asg.games.game.managers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Queue;
+import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
 import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
+import net.asg.games.utils.YokelUtilities;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 public class GameManager {
@@ -150,28 +156,77 @@ public class GameManager {
         getGameBoard(boardIndex).stopMoveDown();
     }
 
-    public void handleRandomAttack(int boardIndex){
+    private int popPowerFromBoard(int boardIndex){
+        int block = YokelBlock.CLEAR_BLOCK;
         //given board, get player powers
         YokelGameBoard gameBoard = getGameBoard(boardIndex);
         Queue<Integer> powers = gameBoard.getPowers();
-        if(powers == null) return;
-        //pop next power
-        int block = YokelBlock.CLEAR_BLOCK;
-        if(!powers.isEmpty()){
-            block = powers.removeFirst();
+        if(powers != null){
+            //pop next power
+            if(!powers.isEmpty()){
+                block = powers.removeFirst();
+            }
         }
+        return block;
+    }
+
+    public void handleAttack(int boardIndex, int target){
+        int block = popPowerFromBoard(boardIndex);
         //Get all active boards
         if(block != YokelBlock.CLEAR_BLOCK){
             Array<YokelGameBoard> activeBoards = getActiveGameBoards();
-            System.out.println("Power = " + block);
-            System.out.println("Powah? = " + block);
-            System.out.println("activeBoards = " + activeBoards);
-            gameBoard.handlePower(block);
+
+            if(!YokelUtilities.isArrayEmpty(activeBoards)){
+                YokelGameBoard gameBoard = activeBoards.get(target);
+
+                if(gameBoard != null){
+                    System.out.println("Power = " + block);
+                    System.out.println("Powah? = " + block);
+                    System.out.println("activeBoards = " + activeBoards);
+
+                    //If offensive Yokel.L, set medusa next piece to target
+                    //else
+                    //If defensive Yokel.L, set midas next piece to target
+                    //else
+                    //if offensive Yokel.Ex, need to remove powers from target
+                    //else
+                    gameBoard.handlePower(block);
+                }
+            }
+        }
+    }
+
+    public void handleRandomAttack(int boardIndex){
+        int block = popPowerFromBoard(boardIndex);
+        int partnerIndex = (boardIndex % 2 == 0)? boardIndex + 1 : boardIndex - 1;
+
+        Array<Integer> boardIndexes = GdxArrays.newArray();
+        for(int i = 0; i < 8; i++){
+            boardIndexes.add(i);
         }
 
-        //if attack, random non partnered board
-        //if defense, random partnered board
-        //getGameBoard(boardIndex).stopMoveDown();
+        int target;
+        Iterator<Integer> iter = boardIndexes.iterator();
+        if(YokelBlockEval.isOffensive(block)){
+            //if block is offensive, get random non partner or player board
+            while(iter.hasNext()){
+                int x = iter.next();
+                if(x == boardIndex || x == partnerIndex){
+                    iter.remove();
+                }
+            }
+        } else {
+            //if block is defensive, get random partner or player
+            while(iter.hasNext()){
+                int x = iter.next();
+                if(x != boardIndex && x != partnerIndex){
+                    iter.remove();
+                }
+            }
+        }
+
+        int index = MathUtils.random(boardIndexes.size);
+        handleAttack(boardIndex, boardIndexes.get(index));
     }
 
     public String[] getBoardState(){

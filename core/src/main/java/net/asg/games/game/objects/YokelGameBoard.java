@@ -368,7 +368,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         markColorBlast();
 
         if (isColorBlastGridEmpty()){
-            pushCellToBottomOfBoard(YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+            pushCellToBottomOfBoard(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_MINOR)));
         } else {
             for (int row = 0; row < MAX_ROWS; row++) {
                 for (int col = 0; col < MAX_COLS; col++) {
@@ -422,7 +422,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         updateBoard();
 
         for (int i = cellsDefused; i < intensity; i++) {
-            pushCellToBottomOfBoard(YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+            pushCellToBottomOfBoard(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_MINOR)));
         }
     }
 

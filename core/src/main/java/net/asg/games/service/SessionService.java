@@ -210,7 +210,7 @@ public class SessionService {
         interfaceService.showDialog(ErrorController.class);
     }
 
-    public void checkForInput(GameManager game){
+    public void checkPlayerInputMap(GameManager game){
         if(game == null) return;
         int currentSeat = getCurrentSeat();
         if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {

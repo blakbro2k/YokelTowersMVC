@@ -46,7 +46,8 @@ public class GameController implements ViewRenderer, ActionContainer {
 
     private float refresh = 500;
     private boolean isInitiated;
-    private PlayerKeyMap keyMap = new PlayerKeyMap();
+    private boolean isGameOver = false;
+
     private GameManager game;
     private GameBoard[] gameBoards = new GameBoard[8];
     private GameBoard[] areas;
@@ -69,6 +70,10 @@ public class GameController implements ViewRenderer, ActionContainer {
         checkForInput();
         game.update(delta);
         updateGameBoards();
+        if(game.showGameOver()){
+            toggleGameStart();
+            //stage.addActor(getGameOverActor());
+        }
 
         stage.act(delta);
         stage.draw();
@@ -177,21 +182,8 @@ public class GameController implements ViewRenderer, ActionContainer {
     }
 
     private void checkForInput(){
-        int currentSeat = sessionService.getCurrentSeat();
-        if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
-            game.handleMoveRight(currentSeat);
-        }
-        if (Gdx.input.isKeyJustPressed(keyMap.getLeftKey())) {
-            game.handleMoveLeft(currentSeat);
-        }
-        if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
-            game.handleCycleDown(currentSeat);
-        }
-        if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-            game.handleStartMoveDown(currentSeat);
-        }
-        if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-            game.handleStopMoveDown(currentSeat);
+        if(!isGameOver) {
+            sessionService.checkPlayerInputMap(game);
         }
     }
 }

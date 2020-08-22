@@ -1,13 +1,8 @@
 package net.asg.games.controller;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.sfx.MusicService;
@@ -19,7 +14,6 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
 import net.asg.games.game.managers.GameManager;
-import net.asg.games.game.objects.PlayerKeyMap;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.game.objects.YokelPlayer;
@@ -225,7 +219,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
     private void checkForInput(){
         if(!isGameOver) {
-            sessionService.checkForInput(game);
+            sessionService.checkPlayerInputMap(game);
         }
     }
 }

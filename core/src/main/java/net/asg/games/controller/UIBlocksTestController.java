@@ -2,6 +2,7 @@ package net.asg.games.controller;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -18,6 +19,7 @@ import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.PlayerKeyMap;
 import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.game.objects.YokelPlayer;
@@ -84,9 +86,9 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     @LmlActor("gameClock") private GameClock gameClock;
     @LmlActor("clear_block") private Image clearBlock;
     @LmlActor("clear_block_preview") private Image clearBlockPreview;
-    @LmlActor("1:area") private GameBlockArea area1;
-    @LmlActor("2:area") private GameBlockArea area2;
-    GameBoard area;
+    @LmlActor("1") private GameBoard area1;
+    @LmlActor("2") private GameBoard area2;
+
     YokelGameBoard boardState;
 
     private boolean isInitiated;
@@ -94,7 +96,8 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     @Override
     public void render(Stage stage, float delta) {
         initiate();
-        area.update(boardState);
+        area1.update(boardState);
+        checkInput();
         stage.act(delta);
         stage.draw();
     }
@@ -103,15 +106,21 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
         if(!isInitiated){
             isInitiated = true;
             initiateActors();
-            boardState = getTestBoard();
-            area = new GameBoard(uiService.getSkin());
+            //boardState = getTestBoard();
+            boardState =  new YokelGameBoard(1L);
+            area1.setPlayerView(true);
+            area1.setActive(true);
+            area1.setPreview(false);
+            area1.update(boardState);
+
+            /*area = new GameBoard(uiService.getSkin());
             YokelPlayer player = new YokelPlayer("Test Player One",2000, 5);
             area.setPlayerLabel(player.getNameLabel().toString());
             area.setBoardNumber(1);
             area.setPlayerView(true);
             area.setActive(true);
             area.setPreview(false);
-            area.update(boardState);
+            area.update(boardState);*/
             //area2.updateData(getTestBoard());
         }
     }
@@ -221,7 +230,7 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
         board.setCell(5,5, getRandomBlockId());
 
         board.setCell(6,0, getRandomBlockId());
-        board.setCell(6,1, getRandomBlockId());
+        board.setCell(3,0, YokelBlock.STONE);
         board.setCell(6,2, getRandomBlockId());
         board.setCell(6,3, getRandomBlockId());
         board.setCell(6,4, getRandomBlockId());
@@ -244,7 +253,7 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
         board.setCell(9,0, getRandomBlockId());
         board.setCell(9,1, getRandomBlockId());
         board.setCell(9,2, getRandomBlockId());
-        board.setCell(9,3, getRandomBlockId());
+        board.setCell(3,0, YokelBlock.STONE);
         board.setCell(9,4, getRandomBlockId());
         board.setCell(9,5, getRandomBlockId());
 
@@ -266,7 +275,7 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
         board.setCell(12,1, getRandomBlockId());
         board.setCell(12,2, getRandomBlockId());
         board.setCell(12,3, getRandomBlockId());
-        board.setCell(12,4, getRandomBlockId());
+        board.setCell(3,0, YokelBlock.STONE);
         board.setCell(12,5, getRandomBlockId());
 
         board.setCell(13,0, getRandomBlockId());
@@ -295,5 +304,50 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
 
     private int getRandomBlockId(){
         return MathUtils.random(YokelBlock.EX_BLOCK);
+    }
+
+    public void checkInput(){
+        if(area1 == null) return;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, 3)));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, 2)));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, 3)));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, 2)));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, 5)));
+            System.out.println(boardState);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, 2)));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, 3)));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, 2)));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, 3)));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, 2)));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            System.out.println(12292);
+            System.out.println(YokelBlockEval.getID(12292));
+            System.out.println(YokelBlockEval.getIDFlag(YokelBlockEval.getID(12292), 12292));
+
+            System.out.println(32820);
+            System.out.println(YokelBlockEval.hasAddedByYahooFlag(32820));
+            System.out.println(YokelBlockEval.getID(32820));
+            System.out.println(YokelBlockEval.getIDFlag(YokelBlockEval.getID(32820), 32820));
+        }
     }
 }
