@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import net.asg.games.game.objects.YokelBlock;
@@ -279,18 +278,6 @@ public class GameBlockArea extends Stack {
             if(index > -1 && index < blocks.length && blocks[index] != null){
                 blocks[index].update(block,false);
             }
-            /*
-            if(block == YokelBlock.MEDUSA){
-                switch (index) {
-                    case 0 :
-                        blocks[index].setCurrentFrame(index);
-                        break;
-                    case 1 :
-                        break;
-                    case 2 :
-                    default :
-                }
-            }*/
         }
 
         private void setParent(GameBlockArea area){

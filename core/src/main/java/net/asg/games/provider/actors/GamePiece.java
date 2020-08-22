@@ -64,9 +64,6 @@ public class GamePiece extends Table implements GameObject {
             top.update(piece.getBlock3(), false);
             mid.update(piece.getBlock2(), false);
             bot.update(piece.getBlock1(), false);
-            int currentFrame = top.getCurrentFrame();
-            mid.setCurrentFrame(++currentFrame);
-            bot.setCurrentFrame(++currentFrame);
         }
     }
 }
