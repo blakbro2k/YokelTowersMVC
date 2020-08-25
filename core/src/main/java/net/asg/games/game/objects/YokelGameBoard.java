@@ -23,7 +23,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     private static final int MAX_FALL_VALUE = 1;
 
     private final YokelPiece MEDUSA_PIECE = new YokelPiece(0, YokelBlock.MEDUSA, YokelBlock.MEDUSA, YokelBlock.MEDUSA);
-    private final YokelPiece MIDAS_PIECE = new YokelPiece(0, YokelBlock.MIDAS, YokelBlock.MIDAS, YokelBlock.MIDAS);
+    private final YokelPiece MIDAS_PIECE = new YokelPiece(0, YokelBlock.BOT_MIDAS, YokelBlock.MID_MIDAS, YokelBlock.TOP_MIDAS);
 
     private int[][] cells;
     private boolean[] ids;
@@ -1092,6 +1092,7 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     //Medusa or Midas
     public void handlePlacedPowerBlock(int type) {
+        System.out.println("Handling weird cell: " + type);
         for (int y = 0; y < MAX_ROWS; y++) {
             for (int x = 0; x < MAX_COLS; x++) {
                 if (YokelBlockEval.hasPowerBlockFlag(cells[y][x])) {
@@ -1618,16 +1619,17 @@ public class YokelGameBoard extends AbstractYokelObject {
                 piece.setBlock1(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 3)));
                 piece.setBlock2(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 3)));
                 piece.setBlock3(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 3)));
-            } else if (block == YokelBlock.MIDAS) {
+            } else if (block == YokelBlock.TOP_MIDAS || block == YokelBlock.MID_MIDAS || block == YokelBlock.BOT_MIDAS) {
                 piece.setBlock1(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 2)));
                 piece.setBlock2(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 2)));
                 piece.setBlock3(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, 2)));
             }
 
             placeBlockAt(piece, piece.column, piece.row);
-            handlePlacedPowerBlock(piece.getBlock1());
+
             //Remove powers from placed block
-            if (block == YokelBlock.MEDUSA || block == YokelBlock.MIDAS) {
+            if (block == YokelBlock.MEDUSA || block == YokelBlock.TOP_MIDAS || block == YokelBlock.MID_MIDAS || block == YokelBlock.BOT_MIDAS) {
+                handlePlacedPowerBlock(piece.getBlock1());
                 cells[piece.row][piece.column] = YokelBlockEval.setIDFlag(YokelBlock.L_BLOCK, YokelBlockEval.getID(cells[piece.row][piece.column]));
                 cells[piece.row + 1][piece.column] = YokelBlockEval.setIDFlag(YokelBlock.L_BLOCK, YokelBlockEval.getID(cells[piece.row + 1][piece.column]));
                 cells[piece.row + 2][piece.column] = YokelBlockEval.setIDFlag(YokelBlock.L_BLOCK, YokelBlockEval.getID(cells[piece.row + 2][piece.column]));
@@ -1644,7 +1646,7 @@ public class YokelGameBoard extends AbstractYokelObject {
             System.out.println("Assertion Error: invalid special block: " + piece);
             return;
         }
-        specialPieces.addFirst(piece);
+        specialPieces.addLast(piece);
     }
 
     public void getNewNextPiece() {
@@ -1677,9 +1679,9 @@ public class YokelGameBoard extends AbstractYokelObject {
                 block2 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MEDUSA, 3));
                 block3 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MEDUSA, 3));
             } else {
-                block1 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MIDAS, 2));
-                block2 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MIDAS, 2));
-                block3 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MIDAS, 2));
+                block1 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.BOT_MIDAS, 2));
+                block2 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.MID_MIDAS, 2));
+                block3 = YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.TOP_MIDAS, 2));
             }
         } else {
             block1 = powerUpBlock(getNextBlock());
@@ -1718,8 +1720,6 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     private int getBlockPower(int block, int intensity){
-        //System.out.println("Powering up block[" + block + "] with intensity = " + intensity);
-        //System.out.println("powers keep" + Arrays.toString(powersKeep));
         if(intensity == 1) {
             intensity = 3;
         }

@@ -82,6 +82,10 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     @LmlActor("E_block_Broken") private AnimatedImage brokenEBlockImage;
     @LmlActor("L_block_Broken") private AnimatedImage brokenLBlockImage;
     @LmlActor("Bash_block_Broken") private AnimatedImage brokenBashBlockImage;
+    @LmlActor("medusa") private AnimatedImage medusaImage;
+    @LmlActor("top_midas") private AnimatedImage topMidasImage;
+    @LmlActor("mid_midas") private AnimatedImage midMidasImage;
+    @LmlActor("bottom_midas") private AnimatedImage bottomMidasImage;
     @LmlActor("stone") private Image stoneBlockImage;
     @LmlActor("gameClock") private GameClock gameClock;
     @LmlActor("clear_block") private Image clearBlock;
@@ -171,6 +175,10 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
         uiService.loadDrawable(defenseEBlockImagePreview);
         uiService.loadDrawable(defenseLBlockImagePreview);
         uiService.loadDrawable(defensebashBlockImagePreview);
+        uiService.loadDrawable(medusaImage);
+        uiService.loadDrawable(topMidasImage);
+        uiService.loadDrawable(midMidasImage);
+        uiService.loadDrawable(bottomMidasImage);
     }
 
     @LmlAction("toggleGameStart")

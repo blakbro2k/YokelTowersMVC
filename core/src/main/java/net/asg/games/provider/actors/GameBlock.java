@@ -23,6 +23,8 @@ import java.util.Objects;
 public class GameBlock extends Table implements Pool.Poolable, GameObject, Cloneable {
     private final static float DEFAULT_ANIMATION_DELAY = 0.12f;
     private final static float DEFENSE_ANIMATION_DELAY = 0.32f;
+    private final static float MEDUSA_ANIMATION_DELAY = 0.22f;
+    private final static float MIDAS_ANIMATION_DELAY = 0.2f;
 
     private AnimatedImage uiBlock;
     private boolean isActive;
@@ -90,17 +92,13 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
         if(image != null){
             if(StringUtils.containsIgnoreCase(image.getName(), "defense")){
                 return DEFENSE_ANIMATION_DELAY;
+            } else if(StringUtils.containsIgnoreCase(image.getName(), "medusa")){
+                return MEDUSA_ANIMATION_DELAY;
+            } else if(StringUtils.containsIgnoreCase(image.getName(), "midas")){
+                return MIDAS_ANIMATION_DELAY;
             }
         }
         return DEFAULT_ANIMATION_DELAY;
-    }
-    @Override
-    public void reset() {
-        setX(0);
-        setY(0);
-        uiBlock = null;
-        setPreview(false);
-        setActive(false);
     }
 
     private void setDrawable(Image image) {
@@ -123,6 +121,15 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
         uiBlock.setDrawable(drawable);
         YokelUtilities.setSizeFromDrawable(uiBlock, drawable);
         YokelUtilities.setSizeFromDrawable(this, drawable);
+    }
+
+    @Override
+    public void reset() {
+        setX(0);
+        setY(0);
+        uiBlock = null;
+        setPreview(false);
+        setActive(false);
     }
 
     @Override

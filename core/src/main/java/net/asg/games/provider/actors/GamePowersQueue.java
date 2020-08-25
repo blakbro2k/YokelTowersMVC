@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.SnapshotArray;
 
@@ -25,6 +26,8 @@ public class GamePowersQueue extends Table implements GameObject{
     private void initialize(){
         powers = new Queue<>();
         powersDisplay = new VerticalGroup();
+        powersDisplay.align(Align.bottom);
+        powersDisplay.columnAlign(Align.bottom);
         setSize(getPrefWidth(), getPrefHeight());
         add(powersDisplay).bottom();
     }
@@ -71,7 +74,7 @@ public class GamePowersQueue extends Table implements GameObject{
     }
 
     public float getPrefHeight() {
-        return YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK).getPrefHeight() * 6;
+        return YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK).getPrefHeight() * 8;
     }
 
     @Override

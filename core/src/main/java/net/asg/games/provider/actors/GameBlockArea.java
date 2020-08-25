@@ -26,7 +26,6 @@ public class GameBlockArea extends Stack {
     private static final String DEAD_BACKGROUND = "area_dead_bg";
     private static final String PLAYER_BACKGROUND = "area_player_bg";
 
-
     private static final float BLOCK_DROP_SPEED = .8f;
     private static final float MAX_BLOCK_DROP_SPEED = 6f;
     private static final float FALL_BLOCK_SPEED = 250f;
@@ -45,7 +44,7 @@ public class GameBlockArea extends Stack {
     private Table bgColor;
     private Label tableNumber;
 
-    private GameJoinWindow joinWindow;
+    private GameJoinWidget joinWindow;
 
     private ObjectMap<String, GameBlock> uiBlocks;
 
@@ -55,7 +54,7 @@ public class GameBlockArea extends Stack {
         this.skin = skin;
         this.isPreview = isPreview;
         init();
-        joinWindow = new GameJoinWindow(skin);
+        joinWindow = new GameJoinWidget(skin);
         //joinButton.clearChildren();
         //joinDialog.button("Join").setDebug(false);
         //joinDialog.set
@@ -308,7 +307,6 @@ public class GameBlockArea extends Stack {
                 this.setPosition(pos.x + offSetX, pos.y + offSetY);
             }
         }
-
         private void setFallOffset(float fallOffset) {
             this.fallOffset = fallOffset;
         }

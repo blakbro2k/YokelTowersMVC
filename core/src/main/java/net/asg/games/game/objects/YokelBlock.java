@@ -22,8 +22,12 @@ public class YokelBlock extends AbstractYokelObject implements Pool.Poolable {
     public static final int STONE = 7;
     public static final int MEDUSA = 9;
     public static final int ACTIVE_MEDUSA = 2105;
-    public static final int MIDAS = 8;
-    public static final int ACTIVE_MIDAS = 2104;
+    public static final int TOP_MIDAS = 8;
+    public static final int ACTIVE_TOP_MIDAS = 2088;
+    public static final int MID_MIDAS = 10;
+    public static final int ACTIVE_MID_MIDAS = 2090;
+    public static final int BOT_MIDAS = 11;
+    public static final int ACTIVE_BOT_MIDAS = 2091;
     public static final int OFFENSIVE_MINOR = 3;
     public static final int OFFENSIVE_REGULAR = 5;
     public static final int OFFENSIVE_MEGA = 7;

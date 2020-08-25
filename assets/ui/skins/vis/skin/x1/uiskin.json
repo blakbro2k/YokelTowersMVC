@@ -45,6 +45,13 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	noborder: {background: window-noborder, titleFont: default-font, titleFontColor: white },
 	dialog: {stageBackground: dialogDim, titleFont: default-font, background: window, titleFontColor: white }
 },
+net.asg.games.provider.actors.GameJoinWidget$GameWindowStyle: {
+	default: {titleFont: default-font, background: window, titleFontColor: white },
+	window: {background: window, previewBackground: window },
+	resizable: {background: window-resizable, titleFont: default-font, titleFontColor: white },
+	noborder: {background: window-noborder, titleFont: default-font, titleFontColor: white },
+	dialog: {stageBackground: dialogDim, titleFont: default-font, background: window, titleFontColor: white }
+},
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: {background: progressbar, knob: progressbar-filled, knobBefore: progressbar-filled },
 	default-vertical: {background: progressbar-vertical, knob: progressbar-filled-vertical, knobBefore: progressbar-filled-vertical }

@@ -97,9 +97,13 @@ public class YokelObjectFactory implements Disposable {
             case "power_bash_block":
             case "defense_bash_block":
                 return YokelBlock.EX_BLOCK;
-            case "Midas":
-                return YokelBlock.MIDAS;
-            case "Medusa":
+            case "top_midas":
+                return YokelBlock.TOP_MIDAS;
+            case "mid_midas":
+                return YokelBlock.MID_MIDAS;
+            case "bot_midas":
+                return YokelBlock.BOT_MIDAS;
+                case "medusa":
                 return YokelBlock.MEDUSA;
             case "stone":
                 return YokelBlock.STONE;
@@ -126,9 +130,15 @@ public class YokelObjectFactory implements Disposable {
                 return "L_block";
             case YokelBlock.EX_BLOCK:
                 return "Bash_block";
-            case YokelBlock.MIDAS:
-            case YokelBlock.ACTIVE_MIDAS:
-                return "midas";
+            case YokelBlock.TOP_MIDAS:
+            case YokelBlock.ACTIVE_TOP_MIDAS:
+                return "top_midas";
+            case YokelBlock.MID_MIDAS:
+            case YokelBlock.ACTIVE_MID_MIDAS:
+                return "mid_midas";
+            case YokelBlock.BOT_MIDAS:
+            case YokelBlock.ACTIVE_BOT_MIDAS:
+                return "bottom_midas";
             case YokelBlock.MEDUSA:
             case YokelBlock.ACTIVE_MEDUSA:
                 return "medusa";

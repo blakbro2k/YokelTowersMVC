@@ -141,7 +141,7 @@ public class SessionService {
             return views.get(viewId);
         } else {
             for(ViewController ctrl : interfaceService.getControllers()){
-                if(StringUtils.equalsIgnoreCase(viewId, ctrl.getViewId())){
+                if(ctrl != null && StringUtils.equalsIgnoreCase(viewId, ctrl.getViewId())){
                     views.put(viewId, ctrl);
                     return ctrl;
                 }

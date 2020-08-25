@@ -2,6 +2,7 @@
     <table row="true" height="300">
         <gameboard id="1" areanumber="1" debug="true"/>
         <gameboard id="2" areanumber="2"/>
+        <gameJoinButton id="join" debug="true"/>
     </table>
     <table>
         <image width="8" height="8" id="power_Y_block_preview"/>
@@ -27,19 +28,25 @@
         <image width="16" height="16" id="K_block"/>
         <image width="16" height="16" id="E_block"/>
         <image width="16" height="16" id="L_block"/>
-        <image width="16" height="16" id="Bash_block" row="true"/>
+        <image width="16" height="16" id="Bash_block"/>
+        <animatedimage width="16" height="16" id="medusa"/>
+        <animatedimage width="16" height="16" id="top_midas" row="true"/>
         <animatedimage width="16" height="16" id="defense_Y_block"/>
         <animatedimage width="16" height="16" id="defense_O_block"/>
         <animatedimage width="16" height="16" id="defense_K_block"/>
         <animatedimage width="16" height="16" id="defense_E_block"/>
         <animatedimage width="16" height="16" id="defense_L_block"/>
-        <animatedimage width="16" height="16" id="defense_Bash_block" row="true"/>
+        <animatedimage width="16" height="16" id="defense_Bash_block"/>
+        <animatedimage width="16" height="16" id="medusa"/>
+        <animatedimage width="16" height="16" id="mid_midas" row="true"/>
         <animatedimage width="16" height="16" id="power_Y_block"/>
         <animatedimage width="16" height="16" id="power_O_block"/>
         <animatedimage width="16" height="16" id="power_K_block"/>
         <animatedimage width="16" height="16" id="power_E_block"/>
         <animatedimage width="16" height="16" id="power_L_block"/>
-        <animatedimage width="16" height="16" id="power_bash_block" row="true"/>
+        <animatedimage width="16" height="16" id="power_bash_block"/>
+        <animatedimage width="16" height="16" id="medusa"/>
+        <animatedimage width="16" height="16" id="bottom_midas" row="true"/>
         <animatedimage width="16" height="16" id="Y_block_Broken"/>
         <animatedimage width="16" height="16" id="O_block_Broken"/>
         <animatedimage width="16" height="16" id="K_block_Broken"/>

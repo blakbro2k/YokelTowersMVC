@@ -36,6 +36,7 @@ import net.asg.games.provider.attributes.GameBlockAreaDataLmlAttribute;
 import net.asg.games.provider.attributes.GameBlockAreaNumberLmlAttribute;
 import net.asg.games.provider.tags.GameBoardLmlTagProvider;
 import net.asg.games.provider.tags.GameClockLmlTagProvider;
+import net.asg.games.provider.tags.GameJoinWindowLmlTagProvider;
 import net.asg.games.provider.tags.GameNameLabelmlTagProvider;
 import net.asg.games.provider.tags.GamePieceLmlTagProvider;
 import net.asg.games.provider.tags.GameLoungeLmlTagProvider;
@@ -100,7 +101,7 @@ import net.asg.games.service.ScaleService;
             skinService.addSkin("default", VisUI.getSkin());
             //skinService.addSkin("default", YahooUi.getSkin());
 
-            //skinService.addSkin("default", new Skin(Gdx.files.internal("C:\\Users\\bigg_\\StudioProjects\\YokelTowersMVC\\assets\\ui\\skins\\sgx\\skin\\sgx-ui.json")));
+            //skinService.addSkin("default", new Skin(Gdx.files.internal("U:\\YokelTowersMVC\\assets\\ui\\skins\\sgx\\skin\\sgx-ui.json")));
             //skinService.addSkin("default", new Skin(Gdx.files.internal("C:\\Users\\bigg_\\StudioProjects\\YokelTowersMVC\\assets\\ui\\skins\\Neutralizer_UI_Skin\\neutralizerui\\neutralizer-ui.json")));
 
             // Thanks to this setting, only methods annotated with @LmlAction will be available in views, significantly
@@ -127,6 +128,7 @@ import net.asg.games.service.ScaleService;
             syntax.addTagProvider(new GamePlayerListLmlTagProvider(), "gameplayerlist");
             syntax.addTagProvider(new GameTableListLmlTagProvider(), "gametablelist");
             syntax.addTagProvider(new GameNameLabelmlTagProvider(), "gamenametag");
+            syntax.addTagProvider(new GameJoinWindowLmlTagProvider(), "gameJoinButton");
 
             syntax.addAttributeProcessor(new GameBlockTypeLmlAttribute(), "blocktype");
             syntax.addAttributeProcessor(new GameBlockAreaNumberLmlAttribute(), "areanumber");
