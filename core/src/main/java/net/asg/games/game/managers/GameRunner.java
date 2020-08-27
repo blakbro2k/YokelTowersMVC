@@ -66,5 +66,6 @@ public class GameRunner implements ApplicationListener {
 
     @Override
     public void dispose() {
+        daemon.shutDownServer(-1);
     }
 }

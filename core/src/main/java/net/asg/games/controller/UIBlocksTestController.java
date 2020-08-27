@@ -6,34 +6,21 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
-import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
-import net.asg.games.game.managers.GameManager;
-import net.asg.games.game.objects.PlayerKeyMap;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelGameBoard;
-import net.asg.games.game.objects.YokelPiece;
-import net.asg.games.game.objects.YokelPlayer;
-import net.asg.games.game.objects.YokelSeat;
-import net.asg.games.game.objects.YokelTable;
-import net.asg.games.provider.actors.GameBlock;
-import net.asg.games.provider.actors.GameBlockArea;
 import net.asg.games.provider.actors.GameBoard;
 import net.asg.games.provider.actors.GameClock;
-import net.asg.games.provider.actors.GamePowersQueue;
 import net.asg.games.service.SessionService;
 import net.asg.games.service.UserInterfaceService;
-
-import java.util.Iterator;
 
 @View(id = ControllerNames.UI_BLOCK_TEST_VIEW, value = "ui/templates/uiblocktest.lml")
 public class UIBlocksTestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
@@ -196,10 +183,10 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
         YokelGameBoard board = new YokelGameBoard(1L);
 
         board.setCell(0,0, YokelBlock.Y_BLOCK);
-        board.setCell(0,1, YokelBlock.O_BLOCK);
-        board.setCell(0,2, YokelBlock.K_BLOCK);
-        board.setCell(0,3, YokelBlock.E_BLOCK);
-        board.setCell(0,4, YokelBlock.L_BLOCK);
+        board.setCell(0,1, YokelBlock.A_BLOCK);
+        board.setCell(0,2, YokelBlock.H_BLOCK);
+        board.setCell(0,3, YokelBlock.Op_BLOCK);
+        board.setCell(0,4, YokelBlock.Oy_BLOCK);
         board.setCell(0,5, YokelBlock.EX_BLOCK);
 
         board.setCell(1,0, YokelBlock.DEFENSIVE_Y_BLOCK_MINOR);
@@ -323,23 +310,23 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
             boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, 2)));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, 3)));
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.A_BLOCK, 3)));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, 2)));
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.A_BLOCK, 2)));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, 5)));
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.H_BLOCK, 5)));
             System.out.println(boardState);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, 2)));
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.H_BLOCK, 2)));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, 3)));
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Op_BLOCK, 3)));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, 2)));
+            boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Op_BLOCK, 2)));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             boardState.handlePower(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, 3)));

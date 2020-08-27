@@ -1,5 +1,6 @@
 package net.asg.games.game.managers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -10,11 +11,14 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockEval;
+import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
+import net.asg.games.utils.YokelUtilities;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
@@ -22,6 +26,7 @@ import java.util.Vector;
 public class GameManager {
     private YokelTable table;
     private YokelGameBoard[] gameBoards = new YokelGameBoard[8];
+    private boolean[] areCellDropsHandled = new boolean[]{true, true, true, true, true, true, true, true};
     private Array<YokelPlayer> winners = GdxArrays.newArray();
     private boolean isGameRunning;
     private boolean hasGameStarted;
@@ -45,7 +50,7 @@ public class GameManager {
 
                 if(board != null){
                     board.begin();
-                    updateBoard(board, delta);
+                    updateBoard(board, delta, i);
                 }
             }
         }
@@ -55,25 +60,44 @@ public class GameManager {
         }
     }
 
-    private void updateBoard(YokelGameBoard board, float delta){
+    private void updateBoard(YokelGameBoard board, float delta, int index){
         if(board != null){
             board.update(delta);
 
-            //Check broken Pieces
-            board.flagBoardMatches();
-            board.checkForYahoos();
+            //check for yahoo
+            int duration = board.checkForYahoos();
+            if(duration > 0){
+                System.err.println("YAHOOOOOOOOOOO!: " + duration);
+            }
 
+            //Check if cells need to drop
+            Vector<YokelBlockMove> toDrop = board.getCellsToBeDropped();
+            if(toDrop != null && toDrop.size() > 0){
+                //Animate Falls before calling
+                setIsCellsBrokenHandled(false, index);
+            }
+
+            //Clear broken from board if animation is finished
+            if(areCellDropsHandled[index]) {
+                handleBrokenCellDrops(board);
+            }
+
+            //Handle broken cells logic
             if(board.getBrokenCellCount() > 0){
                 Vector<YokelBlock> broken = board.getBrokenCells();
 
-                System.out.println("Broken Cells: " + broken);
                 for (YokelBlock b : broken) {
-                    board.addPowerToQueue(b);
-                    board.incrementBreakCount(b.getBlockType());
+                    if(b != null){
+                        board.addPowerToQueue(b);
+                        board.incrementBreakCount(b.getBlockType());
+                    }
                 }
             }
-            board.handleBrokenCellDrops();
         }
+    }
+
+    public void setIsCellsBrokenHandled(boolean b, int index) {
+        areCellDropsHandled[index] = b;
     }
 
     private boolean isOccupied(YokelSeat seat){
@@ -134,6 +158,12 @@ public class GameManager {
 
     public void resetGameBoards(){}
 
+    public void handleBrokenCellDrops(YokelGameBoard board){
+        if(board != null){
+            board.handleBrokenCellDrops();
+        }
+    }
+
     public void handleMoveRight(int boardIndex){
         getGameBoard(boardIndex).movePieceRight();
     }
@@ -160,23 +190,21 @@ public class GameManager {
 
     private Stack<Integer> popPowersFromBoard(int boardIndex, int amount){
         Stack<Integer> powerStack = new Stack<>();
-        int block = YokelBlock.CLEAR_BLOCK;
         //given board, get player powers
         YokelGameBoard gameBoard = getGameBoard(boardIndex);
         Queue<Integer> powers = gameBoard.getPowers();
         if(powers != null){
             //pop next power
-            while(amount > 0){
+            while(amount-- > 0){
                 if(!powers.isEmpty()){
                     powerStack.push(powers.removeFirst());
                 }
-                --amount;
             }
         }
         return powerStack;
     }
 
-    public void handleAttackGivenAttack(int target, int attackBlock){
+    private void handleAttackGivenAttack(int target, int attackBlock){
         //Get all active boards
         if(attackBlock != YokelBlock.CLEAR_BLOCK){
             ObjectMap<Integer, YokelGameBoard> activeBoards = getActiveGameBoards();
@@ -186,7 +214,7 @@ public class GameManager {
                 boolean isOffensive = YokelBlockEval.isOffensive(attackBlock);
                 int value = YokelBlockEval.getCellFlag(attackBlock);
 
-                if(value == YokelBlock.L_BLOCK) {
+                if(value == YokelBlock.Oy_BLOCK) {
                     //If offensive Yokel.L, set medusa next piece to target
                     if(isOffensive){
                         gameBoard.addSpecialPiece(1);
@@ -194,8 +222,8 @@ public class GameManager {
                         //If defensive Yokel.L, set midas next piece to target
                         gameBoard.addSpecialPiece(2);
                     }
-                } else {
-                    if(value == YokelBlock.EX_BLOCK && isOffensive) {
+                } else if(value == YokelBlock.EX_BLOCK) {
+                    if(isOffensive){
                         //if offensive Yokel.Ex, need to remove powers from target
                         int level = YokelBlockEval.getPowerLevel(value);
                         Stack<Integer> blockStack = popPowersFromBoard(target, level);
@@ -203,6 +231,8 @@ public class GameManager {
                     } else {
                         gameBoard.handlePower(attackBlock);
                     }
+                } else {
+                    gameBoard.handlePower(attackBlock);
                 }
             }
         }
@@ -254,6 +284,10 @@ public class GameManager {
                     active.remove();
                 }
             }
+
+            YokelUtilities.flushIterator(iter);
+            YokelUtilities.flushIterator(activeBoards.iterator());
+            YokelUtilities.flushIterator(active);
 
             int index = MathUtils.random(boardIndexes.size - 1);
             handleAttackGivenAttack(boardIndexes.get(index), block);
@@ -396,6 +430,20 @@ public class GameManager {
             System.out.println("Added a Midas");
             gameBoard.addSpecialPiece(2);
         }
+    }
+
+    public void showGameBoard(int target) {
+        System.out.println(gameBoards[target]);
+    }
+
+    public void testGameBoard(int target) {
+        System.out.println(gameBoards[target]);
+        int[][] cells = gameBoards[target].getCells();
+
+        for(int[] inner : cells){
+            System.out.println(Arrays.toString(inner));
+        }
+        Gdx.app.exit();
     }
 
     private static class GameState{}

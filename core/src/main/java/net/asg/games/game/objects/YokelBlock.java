@@ -13,10 +13,10 @@ public class YokelBlock extends AbstractYokelObject implements Pool.Poolable {
      * ( MINOR, REGULAR, MEGA )*/
 
     public static final int Y_BLOCK = 0;
-    public static final int O_BLOCK = 1;
-    public static final int K_BLOCK = 2;
-    public static final int E_BLOCK = 3;
-    public static final int L_BLOCK = 4;
+    public static final int A_BLOCK = 1;
+    public static final int H_BLOCK = 2;
+    public static final int Op_BLOCK = 3;
+    public static final int Oy_BLOCK = 4;
     public static final int EX_BLOCK = 5;
     public static final int CLEAR_BLOCK = 6;
     public static final int STONE = 7;

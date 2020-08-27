@@ -14,6 +14,7 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
 import net.asg.games.game.managers.GameManager;
+import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.game.objects.YokelPlayer;
@@ -27,6 +28,7 @@ import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.YokelUtilities;
 
 import java.util.Iterator;
+import java.util.Vector;
 
 @View(id = ControllerNames.UI_TEST_VIEW, value = "ui/templates/uitester.lml")
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
@@ -66,28 +68,51 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         stage.draw();
     }
 
-    private Actor getGameOverActor() {
-        Array<YokelPlayer> winners = game.getWinners();
-        YokelPlayer player1 = null;
-        YokelPlayer player2 = null;
+    private void animateBrokenCells(GameBoard gameBoard, int boardIndex) {
+        if(gameBoard != null){
+            //We only care about animating the players board
+            YokelGameBoard board = gameBoard.getYokelGameBoard();
+            if(boardIndex == sessionService.getCurrentSeat()){
+                //Animate Cells first before setting done
+                Vector<YokelBlockMove> toDrop = board.getCellsToBeDropped();
+                if(toDrop != null && toDrop.size() > 0)            System.out.println("dropped Cells: " + toDrop);
+                //System.out.println(board);
+                gameBoard.pushCellsToMove(toDrop);
 
-        if(winners.size > 0){
-            player1 = winners.get(0);
-            if(winners.size > 1){
-                player2 = winners.get(1);
+                //game.setIsCellsBrokenHandled(true, boardIndex);
+                //game.handleBrokenCellDrops(board);
+            } else {
+                game.setIsCellsBrokenHandled(true, boardIndex);
+                game.handleBrokenCellDrops(board);
             }
         }
+    }
+
+    private Actor getGameOverActor() {
+        Array<YokelPlayer> winners = game.getWinners();
+        YokelPlayer player1 = getPlayer(winners, 0);
+        YokelPlayer player2 = getPlayer(winners, 1);
 
         GameOverText gameOverText = new GameOverText(sessionService.getCurrentPlayer().equals(player1) || sessionService.getCurrentPlayer().equals(player2), player1, player2, uiService.getSkin());
         gameOverText.setPosition(uiService.getStage().getWidth() / 2, uiService.getStage().getHeight() / 2);
         return gameOverText;
     }
 
+    private YokelPlayer getPlayer(Array<YokelPlayer> players, int index){
+        if(players != null && players.size > 0){
+            if(index < players.size) return players.get(index);
+        }
+        return null;
+    }
+
     private void updateGameBoards() {
         for(int board = 0; board < gameBoards.length; board++){
             gameBoards[board].update(game.getGameBoard(board));
+
             if(game.isPlayerDead(board)){
                 gameBoards[board].killPlayer();
+            } else { //Animate Cell drops if needed
+                animateBrokenCells(gameBoards[board], board);
             }
         }
     }
@@ -97,7 +122,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             isInitiated = true;
             areas = new GameBoard[]{area1, area2, area3, area4, area5, area6, area7, area8};
 
-            YokelUtilities.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
+            //YokelUtilities.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
 
             YokelPiece piece1 = new YokelPiece(1,32,84,112);
             YokelPiece piece2 = new YokelPiece(2,68,53,51);
@@ -221,5 +246,9 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         if(!isGameOver) {
             sessionService.checkPlayerInputMap(game);
         }
+    }
+
+    private YokelGameBoard getCurrentGameBoard(){
+        return game.getGameBoard(sessionService.getCurrentSeat());
     }
 }

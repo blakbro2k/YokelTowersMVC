@@ -12,10 +12,13 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockEval;
+import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.YokelUtilities;
+
+import java.util.Vector;
 
 public class GameBlockArea extends Stack {
     private static final String CELL_ATTR = "uiCell";
@@ -154,9 +157,6 @@ public class GameBlockArea extends Stack {
     }
 
     private void setBlock(int block, int r, int c){
-        if(block != YokelBlock.CLEAR_BLOCK){
-            block = YokelBlockEval.getIDFlag(YokelBlockEval.getID(block), block);
-        }
         GameBlock uiCell = uiBlocks.get(getCellAttrName(r, c));
 
         if(uiCell != null){
@@ -214,6 +214,9 @@ public class GameBlockArea extends Stack {
 
     public boolean isActive() {
         return isActive;
+    }
+
+    public void pushCellsToMove(Vector<YokelBlockMove> toDrop) {
     }
 
     private static class PieceDrawable extends Actor {
@@ -295,10 +298,8 @@ public class GameBlockArea extends Stack {
                 pos.y = pos.y / 2;
 
                 pos.x -= block.getWidth();
-                if(parent != null){
-                    if(parent.isDownCellFree(col, row)){
-                        pos.y -= ((1 - fallOffset) * block.getHeight() / 2);
-                    }
+                if(parent != null && parent.isDownCellFree(col, row)){
+                    pos.y -= ((1 - fallOffset) * block.getHeight() / 2);
                 }
 
                 float offSetX = block.getWidth() / 2 * col;
@@ -362,5 +363,9 @@ public class GameBlockArea extends Stack {
             bgColor.setBackground(skin.getDrawable(DEAD_BACKGROUND));
         }
         setActive(false);
+    }
+
+    YokelGameBoard getBoard(){
+        return board;
     }
 }

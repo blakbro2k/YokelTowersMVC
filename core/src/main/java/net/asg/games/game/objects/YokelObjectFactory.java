@@ -58,9 +58,21 @@ public class YokelObjectFactory implements Disposable {
         //System.out.println("block max=" + yokelGameBlockPool.max);
         //System.out.println("block peak=" + yokelGameBlockPool.peak);
 
+        boolean isBroken = false;
+        if(blockType != YokelBlock.CLEAR_BLOCK){
+            if(YokelBlockEval.hasAddedByYahooFlag(blockType) || YokelBlockEval.hasBrokenFlag(blockType)){
+                isBroken = YokelBlockEval.hasBrokenFlag(blockType);
+                blockType = YokelBlockEval.getCellFlag(blockType);
+            } else {
+                blockType = YokelBlockEval.getIDFlag(YokelBlockEval.getID(blockType), blockType);
+            }
+        }
+
         block.setActive(true);
         block.setPreview(isPreview);
+        if(isBroken) blockType = YokelBlockEval.addBrokenFlag(blockType);
         block.setImage(blockType);
+        block.setBroken(isBroken);
 
         return block;
     }
@@ -80,19 +92,19 @@ public class YokelObjectFactory implements Disposable {
             case "O_block":
             case "power_O_block":
             case "defense_O_block":
-                return YokelBlock.O_BLOCK;
+                return YokelBlock.A_BLOCK;
             case "K_block":
             case "power_K_block":
             case "defense_K_block":
-                return YokelBlock.K_BLOCK;
+                return YokelBlock.H_BLOCK;
             case "E_block":
             case "power_E_block":
             case "defense_E_block":
-                return YokelBlock.E_BLOCK;
+                return YokelBlock.Op_BLOCK;
             case "L_block":
             case "power_L_block":
             case "defense_L_block":
-                return YokelBlock.L_BLOCK;
+                return YokelBlock.Oy_BLOCK;
             case "Bash_block":
             case "power_bash_block":
             case "defense_bash_block":
@@ -114,19 +126,21 @@ public class YokelObjectFactory implements Disposable {
     }
 
     public String getBlockImageName(int blockValue){
-        int brokenK = YokelBlockEval.addBrokenFlag(YokelBlock.K_BLOCK);
-        switch (blockValue){
+         if(YokelBlockEval.hasBrokenFlag(blockValue)){
+             return getBrokenBlockImageName(YokelBlockEval.getCellFlag(blockValue));
+         }
+        switch (blockValue) {
             case YokelBlock.CLEAR_BLOCK:
                 return "clear_block";
             case YokelBlock.Y_BLOCK:
                 return "Y_block";
-            case YokelBlock.O_BLOCK:
+            case YokelBlock.A_BLOCK:
                 return "O_block";
-            case YokelBlock.K_BLOCK:
+            case YokelBlock.H_BLOCK:
                 return "K_block";
-            case YokelBlock.E_BLOCK:
+            case YokelBlock.Op_BLOCK:
                 return "E_block";
-            case YokelBlock.L_BLOCK:
+            case YokelBlock.Oy_BLOCK:
                 return "L_block";
             case YokelBlock.EX_BLOCK:
                 return "Bash_block";
@@ -192,8 +206,26 @@ public class YokelObjectFactory implements Disposable {
             case YokelBlock.DEFENSIVE_BASH_BLOCK_REGULAR:
             case YokelBlock.DEFENSIVE_BASH_BLOCK_MEGA:
                 return "defense_Bash_block";
-            case 258:
+            default:
+                return "";
+        }
+    }
+
+    private String getBrokenBlockImageName(int cellFlag) {
+        //System.err.println("###BROKEN#### " + cellFlag);
+        switch (cellFlag) {
+            case YokelBlock.Y_BLOCK:
+                return "Y_block_Broken";
+            case YokelBlock.A_BLOCK:
+                return "O_block_Broken";
+            case YokelBlock.H_BLOCK:
                 return "K_block_Broken";
+            case YokelBlock.Op_BLOCK:
+                return "E_block_Broken";
+            case YokelBlock.Oy_BLOCK:
+                return "L_block_Broken";
+            case YokelBlock.EX_BLOCK:
+                return "Bash_block_Broken";
             default:
                 return "";
         }

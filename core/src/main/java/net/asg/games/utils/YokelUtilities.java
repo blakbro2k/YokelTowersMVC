@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
+import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelObject;
 import net.asg.games.provider.actors.GameBlock;
@@ -32,6 +33,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -154,6 +156,20 @@ public class YokelUtilities {
             original = incoming;
         } else {
             YokelUtilities.freeBlock(incoming);
+        }
+    }
+
+    public static void flushIterator(Iterator<?> iter) {
+        while(iter != null && iter.hasNext()){
+            iter.remove();
+        }
+    }
+
+    public static int getTrueBlock(int block) {
+        if(YokelBlockEval.hasAddedByYahooFlag(block) || YokelBlockEval.hasBrokenFlag(block)){
+            return YokelBlockEval.getCellFlag(block);
+        } else {
+            return YokelBlockEval.getIDFlag(YokelBlockEval.getID(block), block);
         }
     }
 

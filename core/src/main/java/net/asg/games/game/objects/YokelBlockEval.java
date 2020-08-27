@@ -114,14 +114,14 @@ public class YokelBlockEval {
         switch(i){
             case YokelBlock.Y_BLOCK:
                 return 'Y';
-            case YokelBlock.O_BLOCK:
+            case YokelBlock.A_BLOCK:
+                return 'A';
+            case YokelBlock.H_BLOCK:
+                return 'H';
+            case YokelBlock.Op_BLOCK:
+                return '0';
+            case YokelBlock.Oy_BLOCK:
                 return 'O';
-            case YokelBlock.K_BLOCK:
-                return 'K';
-            case YokelBlock.E_BLOCK:
-                return 'E';
-            case YokelBlock.L_BLOCK:
-                return 'L';
             case YokelBlock.EX_BLOCK:
                 return '!';
             case YokelBlock.CLEAR_BLOCK:

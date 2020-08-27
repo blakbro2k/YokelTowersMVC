@@ -31,33 +31,33 @@ public class YokelBlockEvalTest {
 
         System.out.println("Offensive Y minor=" + YokelBlockEval.setPowerFlag(YokelBlock.Y_BLOCK, YokelBlock.OFFENSIVE_MINOR));
 
-        System.out.println("O_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.OFFENSIVE_MINOR));
-        System.out.println("O_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
-        System.out.println("O_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.OFFENSIVE_MEGA));
-        System.out.println("O_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.DEFENSIVE_MINOR));
-        System.out.println("O_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
-        System.out.println("O_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.O_BLOCK, YokelBlock.DEFENSIVE_MEGA));
+        System.out.println("O_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.A_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+        System.out.println("O_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.A_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
+        System.out.println("O_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.A_BLOCK, YokelBlock.OFFENSIVE_MEGA));
+        System.out.println("O_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.A_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+        System.out.println("O_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.A_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
+        System.out.println("O_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.A_BLOCK, YokelBlock.DEFENSIVE_MEGA));
 
-        System.out.println("K_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.OFFENSIVE_MINOR));
-        System.out.println("K_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
-        System.out.println("K_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.OFFENSIVE_MEGA));
-        System.out.println("K_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.DEFENSIVE_MINOR));
-        System.out.println("K_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
-        System.out.println("K_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.DEFENSIVE_MEGA));
+        System.out.println("K_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.H_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+        System.out.println("K_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.H_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
+        System.out.println("K_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.H_BLOCK, YokelBlock.OFFENSIVE_MEGA));
+        System.out.println("K_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.H_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+        System.out.println("K_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.H_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
+        System.out.println("K_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.H_BLOCK, YokelBlock.DEFENSIVE_MEGA));
 
-        System.out.println("E_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_MINOR));
-        System.out.println("E_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
-        System.out.println("E_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_MEGA));
-        System.out.println("E_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_MINOR));
-        System.out.println("E_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
-        System.out.println("E_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_MEGA));
+        System.out.println("E_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Op_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+        System.out.println("E_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Op_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
+        System.out.println("E_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.Op_BLOCK, YokelBlock.OFFENSIVE_MEGA));
+        System.out.println("E_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Op_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+        System.out.println("E_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Op_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
+        System.out.println("E_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.Op_BLOCK, YokelBlock.DEFENSIVE_MEGA));
 
-        System.out.println("L_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.OFFENSIVE_MINOR));
-        System.out.println("L_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
-        System.out.println("L_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.OFFENSIVE_MEGA));
-        System.out.println("L_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.DEFENSIVE_MINOR));
-        System.out.println("L_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
-        System.out.println("L_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.L_BLOCK, YokelBlock.DEFENSIVE_MEGA));
+        System.out.println("L_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, YokelBlock.OFFENSIVE_MINOR));
+        System.out.println("L_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
+        System.out.println("L_BLOCK-(OFFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, YokelBlock.OFFENSIVE_MEGA));
+        System.out.println("L_BLOCK-(DEFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, YokelBlock.DEFENSIVE_MINOR));
+        System.out.println("L_BLOCK-(DEFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, YokelBlock.DEFENSIVE_REGULAR));
+        System.out.println("L_BLOCK-(DEFENSIVE_MEGA)=" + YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, YokelBlock.DEFENSIVE_MEGA));
 
         System.out.println("EX_BLOCK-(OFFENSIVE_MINOR)=" + YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, YokelBlock.OFFENSIVE_MINOR));
         System.out.println("EX_BLOCK-(OFFENSIVE_REGULAR)=" + YokelBlockEval.setPowerFlag(YokelBlock.EX_BLOCK, YokelBlock.OFFENSIVE_REGULAR));
@@ -167,30 +167,30 @@ public class YokelBlockEvalTest {
     @Test
     public void yokelblock_O_Test() throws Exception {
         System.out.println("Start yokelblock_O_Test()");
-        int o_block = YokelBlock.O_BLOCK;
+        int o_block = YokelBlock.A_BLOCK;
         int block = o_block;
-        Assert.assertEquals(YokelBlock.O_BLOCK, block);
+        Assert.assertEquals(YokelBlock.A_BLOCK, block);
 
-        System.out.println("O Block: " + YokelBlock.O_BLOCK);
+        System.out.println("O Block: " + YokelBlock.A_BLOCK);
         printBlockLabel(block);
 
         //OFFENSIVE_MINOR = 3;
-        testBlockPowers(YokelBlock.O_BLOCK, YokelBlock.OFFENSIVE_MINOR);
+        testBlockPowers(YokelBlock.A_BLOCK, YokelBlock.OFFENSIVE_MINOR);
 
         //OFFENSIVE_REGULAR = 5;
-        testBlockPowers(YokelBlock.O_BLOCK, YokelBlock.OFFENSIVE_REGULAR);
+        testBlockPowers(YokelBlock.A_BLOCK, YokelBlock.OFFENSIVE_REGULAR);
 
         //OFFENSIVE_MEGA = 7;
-        testBlockPowers(YokelBlock.O_BLOCK, YokelBlock.OFFENSIVE_MEGA);
+        testBlockPowers(YokelBlock.A_BLOCK, YokelBlock.OFFENSIVE_MEGA);
 
         //DEFENSIVE_MINOR = 2;
-        testBlockPowers(YokelBlock.O_BLOCK, YokelBlock.DEFENSIVE_MINOR);
+        testBlockPowers(YokelBlock.A_BLOCK, YokelBlock.DEFENSIVE_MINOR);
 
         //DEFENSIVE_REGULAR = 4;
-        testBlockPowers(YokelBlock.O_BLOCK, YokelBlock.DEFENSIVE_REGULAR);
+        testBlockPowers(YokelBlock.A_BLOCK, YokelBlock.DEFENSIVE_REGULAR);
 
         //DEFENSIVE_MEGA = 6;
-        testBlockPowers(YokelBlock.O_BLOCK, YokelBlock.DEFENSIVE_MEGA);
+        testBlockPowers(YokelBlock.A_BLOCK, YokelBlock.DEFENSIVE_MEGA);
 
         Assert.assertFalse(YokelBlockEval.hasBrokenFlag(o_block));
         o_block = YokelBlockEval.addBrokenFlag(o_block);
@@ -204,13 +204,13 @@ public class YokelBlockEvalTest {
     @Test
     public void yokelblock_K_Test() throws Exception {
         System.out.println("Start yokelblock_K_Test()");
-        int k_block = YokelBlock.K_BLOCK;
+        int k_block = YokelBlock.H_BLOCK;
         int block = k_block;
-        Assert.assertEquals(YokelBlock.K_BLOCK, block);
+        Assert.assertEquals(YokelBlock.H_BLOCK, block);
 
-        System.out.println("K Block: " + YokelBlock.K_BLOCK);
+        System.out.println("K Block: " + YokelBlock.H_BLOCK);
         //OFFENSIVE_MINOR = 3;
-        block = YokelBlockEval.setPowerFlag(YokelBlock.K_BLOCK, YokelBlock.OFFENSIVE_MINOR);
+        block = YokelBlockEval.setPowerFlag(YokelBlock.H_BLOCK, YokelBlock.OFFENSIVE_MINOR);
         System.out.println("OFFENSIVE_MINOR: " + block);
         printBlockLabel(block);
 
@@ -218,30 +218,30 @@ public class YokelBlockEvalTest {
         block = YokelBlockEval.addPowerBlockFlag(block);
         System.out.println("OFFENSIVE_MINOR: " + block);
         System.out.println("CELL: " + YokelBlockEval.getCellFlag(block));
-        Assert.assertEquals(YokelBlock.K_BLOCK, YokelBlockEval.getCellFlag(block));
+        Assert.assertEquals(YokelBlock.H_BLOCK, YokelBlockEval.getCellFlag(block));
         printBlockLabel(block);
 
         Assert.assertTrue(YokelBlockEval.hasPowerBlockFlag(block));
         Assert.assertEquals(1, YokelBlockEval.getPowerLevel(block));
-        Assert.assertEquals(YokelBlock.K_BLOCK, YokelBlockEval.getCellFlag(block));
+        Assert.assertEquals(YokelBlock.H_BLOCK, YokelBlockEval.getCellFlag(block));
 
         //OFFENSIVE_MINOR = 3;
-        testBlockPowers(YokelBlock.K_BLOCK, YokelBlock.OFFENSIVE_MINOR);
+        testBlockPowers(YokelBlock.H_BLOCK, YokelBlock.OFFENSIVE_MINOR);
 
         //OFFENSIVE_REGULAR = 5;
-        testBlockPowers(YokelBlock.K_BLOCK, YokelBlock.OFFENSIVE_REGULAR);
+        testBlockPowers(YokelBlock.H_BLOCK, YokelBlock.OFFENSIVE_REGULAR);
 
         //OFFENSIVE_MEGA = 7;
-        testBlockPowers(YokelBlock.K_BLOCK, YokelBlock.OFFENSIVE_MEGA);
+        testBlockPowers(YokelBlock.H_BLOCK, YokelBlock.OFFENSIVE_MEGA);
 
         //DEFENSIVE_MINOR = 2;
-        testBlockPowers(YokelBlock.K_BLOCK, YokelBlock.DEFENSIVE_MINOR);
+        testBlockPowers(YokelBlock.H_BLOCK, YokelBlock.DEFENSIVE_MINOR);
 
         //DEFENSIVE_REGULAR = 4;
-        testBlockPowers(YokelBlock.K_BLOCK, YokelBlock.DEFENSIVE_REGULAR);
+        testBlockPowers(YokelBlock.H_BLOCK, YokelBlock.DEFENSIVE_REGULAR);
 
         //DEFENSIVE_MEGA = 6;
-        testBlockPowers(YokelBlock.K_BLOCK, YokelBlock.DEFENSIVE_MEGA);;
+        testBlockPowers(YokelBlock.H_BLOCK, YokelBlock.DEFENSIVE_MEGA);;
 
         Assert.assertFalse(YokelBlockEval.hasBrokenFlag(k_block));
         k_block = YokelBlockEval.addBrokenFlag(k_block);
@@ -254,29 +254,29 @@ public class YokelBlockEvalTest {
     @Test
     public void yokelblock_E_Test() throws Exception {
         System.out.println("Start yokelblock_E_Test()");
-        int e_block = YokelBlock.E_BLOCK;
+        int e_block = YokelBlock.Op_BLOCK;
         int block = e_block;
-        Assert.assertEquals(YokelBlock.E_BLOCK, block);
+        Assert.assertEquals(YokelBlock.Op_BLOCK, block);
 
-        System.out.println("E Block: " + YokelBlock.E_BLOCK);
+        System.out.println("E Block: " + YokelBlock.Op_BLOCK);
 
         //OFFENSIVE_MINOR = 3;
-        testBlockPowers(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_MINOR);
+        testBlockPowers(YokelBlock.Op_BLOCK, YokelBlock.OFFENSIVE_MINOR);
 
         //OFFENSIVE_REGULAR = 5;
-        testBlockPowers(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_REGULAR);
+        testBlockPowers(YokelBlock.Op_BLOCK, YokelBlock.OFFENSIVE_REGULAR);
 
         //OFFENSIVE_MEGA = 7;
-        testBlockPowers(YokelBlock.E_BLOCK, YokelBlock.OFFENSIVE_MEGA);
+        testBlockPowers(YokelBlock.Op_BLOCK, YokelBlock.OFFENSIVE_MEGA);
 
         //DEFENSIVE_MINOR = 2;
-        testBlockPowers(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_MINOR);
+        testBlockPowers(YokelBlock.Op_BLOCK, YokelBlock.DEFENSIVE_MINOR);
 
         //DEFENSIVE_REGULAR = 4;
-        testBlockPowers(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_REGULAR);
+        testBlockPowers(YokelBlock.Op_BLOCK, YokelBlock.DEFENSIVE_REGULAR);
 
         //DEFENSIVE_MEGA = 6;
-        testBlockPowers(YokelBlock.E_BLOCK, YokelBlock.DEFENSIVE_MEGA);
+        testBlockPowers(YokelBlock.Op_BLOCK, YokelBlock.DEFENSIVE_MEGA);
 
         Assert.assertFalse(YokelBlockEval.hasBrokenFlag(e_block));
         e_block = YokelBlockEval.addBrokenFlag(e_block);
@@ -289,28 +289,28 @@ public class YokelBlockEvalTest {
     @Test
     public void yokelblock_L_Test() throws Exception {
         System.out.println("Start yokelblock_L_Test()");
-        int l_block = YokelBlock.L_BLOCK;
+        int l_block = YokelBlock.Oy_BLOCK;
         int block = l_block;
-        Assert.assertEquals(YokelBlock.L_BLOCK, block);
+        Assert.assertEquals(YokelBlock.Oy_BLOCK, block);
 
-        System.out.println("L Block: " + YokelBlock.L_BLOCK);
+        System.out.println("L Block: " + YokelBlock.Oy_BLOCK);
         //OFFENSIVE_MINOR = 3;
-        testBlockPowers(YokelBlock.L_BLOCK, YokelBlock.OFFENSIVE_MINOR);
+        testBlockPowers(YokelBlock.Oy_BLOCK, YokelBlock.OFFENSIVE_MINOR);
 
         //OFFENSIVE_REGULAR = 5;
-        testBlockPowers(YokelBlock.L_BLOCK, YokelBlock.OFFENSIVE_REGULAR);
+        testBlockPowers(YokelBlock.Oy_BLOCK, YokelBlock.OFFENSIVE_REGULAR);
 
         //OFFENSIVE_MEGA = 7;
-        testBlockPowers(YokelBlock.L_BLOCK, YokelBlock.OFFENSIVE_MEGA);
+        testBlockPowers(YokelBlock.Oy_BLOCK, YokelBlock.OFFENSIVE_MEGA);
 
         //DEFENSIVE_MINOR = 2;
-        testBlockPowers(YokelBlock.L_BLOCK, YokelBlock.DEFENSIVE_MINOR);
+        testBlockPowers(YokelBlock.Oy_BLOCK, YokelBlock.DEFENSIVE_MINOR);
 
         //DEFENSIVE_REGULAR = 4;
-        testBlockPowers(YokelBlock.L_BLOCK, YokelBlock.DEFENSIVE_REGULAR);
+        testBlockPowers(YokelBlock.Oy_BLOCK, YokelBlock.DEFENSIVE_REGULAR);
 
         //DEFENSIVE_MEGA = 6;
-        testBlockPowers(YokelBlock.L_BLOCK, YokelBlock.DEFENSIVE_MEGA);
+        testBlockPowers(YokelBlock.Oy_BLOCK, YokelBlock.DEFENSIVE_MEGA);
 
         Assert.assertFalse(YokelBlockEval.hasBrokenFlag(l_block));
         l_block = YokelBlockEval.addBrokenFlag(l_block);
@@ -406,28 +406,28 @@ public class YokelBlockEvalTest {
 
         //block = YokelBlockEval.addPowerBlockFlag(block, YokelBlockEval.OFFENSIVE_MINOR);
 
-        block = YokelBlock.O_BLOCK;
+        block = YokelBlock.A_BLOCK;
         Assert.assertEquals(false, YokelBlockEval.hasPartnerBreakFlag(actual));
         actual = YokelBlockEval.addPartnerBreakFlag(block);
         Assert.assertEquals(true, YokelBlockEval.hasPartnerBreakFlag(actual));
         actual = YokelBlockEval.removePartnerBreakFlag(block);
         Assert.assertEquals(false, YokelBlockEval.hasPartnerBreakFlag(actual));
 
-        block = YokelBlock.K_BLOCK;
+        block = YokelBlock.H_BLOCK;
         Assert.assertEquals(false, YokelBlockEval.hasPartnerBreakFlag(actual));
         actual = YokelBlockEval.addPartnerBreakFlag(block);
         Assert.assertEquals(true, YokelBlockEval.hasPartnerBreakFlag(actual));
         actual = YokelBlockEval.removePartnerBreakFlag(block);
         Assert.assertEquals(false, YokelBlockEval.hasPartnerBreakFlag(actual));
 
-        block = YokelBlock.E_BLOCK;
+        block = YokelBlock.Op_BLOCK;
         Assert.assertEquals(false, YokelBlockEval.hasPartnerBreakFlag(actual));
         actual = YokelBlockEval.addPartnerBreakFlag(block);
         Assert.assertEquals(true, YokelBlockEval.hasPartnerBreakFlag(actual));
         actual = YokelBlockEval.removePartnerBreakFlag(block);
         Assert.assertEquals(false, YokelBlockEval.hasPartnerBreakFlag(actual));
 
-        block = YokelBlock.L_BLOCK;
+        block = YokelBlock.Oy_BLOCK;
         Assert.assertEquals(false, YokelBlockEval.hasPartnerBreakFlag(actual));
         actual = YokelBlockEval.addPartnerBreakFlag(block);
         Assert.assertEquals(true, YokelBlockEval.hasPartnerBreakFlag(actual));
@@ -563,8 +563,8 @@ public class YokelBlockEvalTest {
         System.out.println("BLOCK: " + block);
         System.out.println("POWER_BLOCK: " + actual);
         System.out.println("HAS Block Flag: " + YokelBlockEval.hasPowerBlockFlag(actual));
-        System.out.println("BLOCK: " + YokelBlock.O_BLOCK);
-        System.out.println("POWER_BLOCK: " + YokelBlockEval.addPowerBlockFlag(YokelBlock.O_BLOCK));
+        System.out.println("BLOCK: " + YokelBlock.A_BLOCK);
+        System.out.println("POWER_BLOCK: " + YokelBlockEval.addPowerBlockFlag(YokelBlock.A_BLOCK));
 
         System.out.println("End testAddPowerBlockFlag()");
 

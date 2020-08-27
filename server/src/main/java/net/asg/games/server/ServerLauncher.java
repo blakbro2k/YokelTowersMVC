@@ -32,7 +32,7 @@ public class ServerLauncher {
     private ServerManager serverDaemon;
     private final static Vertx vertx = Vertx.vertx();
     private final static ManualSerializer serializer = new ManualSerializer();
-    private final static YokelStorageAdapter storage = new YokelMemoryStorage();
+    private final YokelStorageAdapter storage = new YokelMemoryStorage();
     private static GameRunner gameRunner;
     //private ExecutorService threadPool;
 
@@ -42,11 +42,14 @@ public class ServerLauncher {
 
     public static void main(final String... args) throws Exception {
         try{
+            Logger.info("Entering Main()");
             new ServerLauncher().launch(args);
         } catch (Exception e) {
-            gameRunner.dispose();
             Logger.error(e,"Failed to launch server: ");
             throw new Exception("Failed to launch server: ", e);
+        } finally {
+            Logger.info("Disposing GameRunner");
+            gameRunner.dispose();
         }
     }
 

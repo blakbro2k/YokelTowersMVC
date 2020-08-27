@@ -5,9 +5,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.utils.YokelUtilities;
+
+import java.util.Vector;
 
 /**
  * Created by eboateng on 3/19/2018.
@@ -134,6 +137,14 @@ public class GameBoard extends Table {
         area.setBoardNumber(boardNumber);
     }
 
+    public int getBoardNumber() {
+        return area.getBoardNumber();
+    }
+
+    public YokelGameBoard getYokelGameBoard() {
+        return area.getBoard();
+    }
+
     private Queue<GameBlock> blockToGameBlocks(Queue<Integer> blocks){
         Queue<GameBlock> gameBlocks = new Queue<>();
         for(int block : blocks){
@@ -152,5 +163,9 @@ public class GameBoard extends Table {
 
     public void killPlayer(){
         area.killPlayer();
+    }
+
+    public void pushCellsToMove(Vector<YokelBlockMove> toDrop) {
+        area.pushCellsToMove(toDrop);
     }
 }

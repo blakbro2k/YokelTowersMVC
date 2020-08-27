@@ -240,5 +240,11 @@ public class SessionService {
         if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
             game.testMidas(currentSeat);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+            game.showGameBoard(currentSeat);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
+            game.testGameBoard(currentSeat);
+        }
     }
 }

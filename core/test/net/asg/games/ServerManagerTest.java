@@ -378,59 +378,6 @@ public class ServerManagerTest {
 
     }
 
-    private static class GameRunner implements Runnable{
-        ServerManager serverManager;
-        GameManager gameManager;
-        boolean running;
-        float tickRate;
-
-
-        public GameRunner(ServerManager manager, YokelTable table){
-            this.serverManager = manager;
-            this.gameManager = new GameManager(table);
-            tickRate = daemon.getTickRate();
-        }
-
-        public void setRunning(boolean b){
-            this.running = b;
-        }
-
-        private void tick(){
-            gameManager.update(1);
-        }
-
-        public void run() {
-            /**
-             * while(true)
-             *     check for client commands
-             *     sanity check client commands
-             *     move all entities
-             *     resolve collisions
-             *     sanity check world data
-             *     send updates about the game to the clients
-             *     handle client disconnects
-             * end while
-             */
-            double ns = 1000000000.0 / 60.0;
-            double delta = 0;
-
-            long lastTime = System.nanoTime();
-            long timer = System.currentTimeMillis();
-            setRunning(true);
-
-            while(running){
-                long now = System.nanoTime();
-                delta += (now - lastTime) / ns;
-                lastTime = now;
-
-                while(delta >= tickRate){
-                    tick();
-                    delta--;
-                }
-            }
-        }
-    }
-
     private void printInvocationResult(Object o){
         if(o instanceof String[]){
             System.out.println(Arrays.toString((String[]) o));

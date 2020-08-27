@@ -9,6 +9,7 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.YokelUtilities;
 
@@ -29,6 +30,7 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
     private AnimatedImage uiBlock;
     private boolean isActive;
     private boolean isPreview;
+    private boolean isBroken;
 
     //New block via image name
     public GameBlock(Skin skin, String blockName, boolean isPreview) {
@@ -106,8 +108,8 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
             uiBlock = new AnimatedImage();
         }
         uiBlock.setDelay(getDelay(image));
-        if(image == null) return;
 
+        if(image == null) return;
         Drawable drawable;
         if (image instanceof AnimatedImage) {
             drawable = ((AnimatedImage) image).getFrames().get(0);
@@ -119,6 +121,10 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
 
         setName(image.getName());
         uiBlock.setDrawable(drawable);
+        if(StringUtils.containsIgnoreCase("Broken", image.getName())){
+            System.err.println(getName());
+            uiBlock.setPlayOnce(true);
+        }
         YokelUtilities.setSizeFromDrawable(uiBlock, drawable);
         YokelUtilities.setSizeFromDrawable(this, drawable);
     }
@@ -148,6 +154,10 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
     public void setData(String data) {
         YokelBlock block = YokelUtilities.getObjectFromJsonString(YokelBlock.class, data);
         if (block != null) setImage(YokelUtilities.otoi(block));
+    }
+
+    public void setBroken(boolean isBroken){
+        this.isBroken = isBroken;
     }
 
     public void setCurrentFrame(int frame){
@@ -190,9 +200,33 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
 
     public void update(int block, boolean isPreview) {
         if(needsUpdate(block, isPreview)){
+            System.err.println("updating needed:");
+            System.out.println("block: " + block);
+            Image blockImage;
+
+            if (isPreview) {
+                blockImage = UIUtil.getInstance().getPreviewBlockImage(block);
+            } else {
+                blockImage = UIUtil.getInstance().getBlockImage(block);
+            }
+            System.out.println("blockImage: " + blockImage);
+            String blockName = "";
+            if (blockImage != null) {
+                blockName = blockImage.getName();
+            }
+            System.out.println("blockName: " + blockName);
+
+
+            System.err.println("end updating needed:");
+
             GameBlock blockUi = YokelUtilities.getBlock(block, isPreview);
             if(blockUi != null){
-                setImage(blockUi.clone().getImage());
+                if(YokelBlockEval.hasBrokenFlag(block)) System.err.println(blockUi.getName() + ":" + block);
+                blockUi.setBroken(YokelBlockEval.hasBrokenFlag(block));
+                AnimatedImage clone = blockUi.clone().getImage();
+                setImage(clone);
+                setName(blockUi.getName());
+
                 //YokelUtilities.freeBlock(blockUi);
             }
         }
@@ -201,6 +235,7 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
     private boolean needsUpdate(int block, boolean isPreview) {
         String blockName = "";
         Image blockImage;
+        block = YokelUtilities.getTrueBlock(block);
 
         if (isPreview) {
             blockImage = UIUtil.getInstance().getPreviewBlockImage(block);
