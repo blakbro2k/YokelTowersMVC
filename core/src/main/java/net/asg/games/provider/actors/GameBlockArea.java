@@ -18,6 +18,8 @@ import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.YokelUtilities;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Vector;
 
 public class GameBlockArea extends Stack {
@@ -192,6 +194,7 @@ public class GameBlockArea extends Stack {
         for(GameBlock uiblock : uiBlocks.values()) {
             if(uiblock != null){
                 uiblock.act(delta * YokelUtilities.otof(0.03));
+                if(StringUtils.containsIgnoreCase(uiblock.getImage().getName(), "broken")) System.out.println("Brtoken");
             }
         }
         //joinWindow.setPosition(getX(), getY());

@@ -30,7 +30,6 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
     private AnimatedImage uiBlock;
     private boolean isActive;
     private boolean isPreview;
-    private boolean isBroken;
 
     //New block via image name
     public GameBlock(Skin skin, String blockName, boolean isPreview) {
@@ -156,10 +155,6 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
         if (block != null) setImage(YokelUtilities.otoi(block));
     }
 
-    public void setBroken(boolean isBroken){
-        this.isBroken = isBroken;
-    }
-
     public void setCurrentFrame(int frame){
         uiBlock.setCurrentFrame(frame);
     }
@@ -200,33 +195,12 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
 
     public void update(int block, boolean isPreview) {
         if(needsUpdate(block, isPreview)){
-            System.err.println("updating needed:");
-            System.out.println("block: " + block);
-            Image blockImage;
-
-            if (isPreview) {
-                blockImage = UIUtil.getInstance().getPreviewBlockImage(block);
-            } else {
-                blockImage = UIUtil.getInstance().getBlockImage(block);
-            }
-            System.out.println("blockImage: " + blockImage);
-            String blockName = "";
-            if (blockImage != null) {
-                blockName = blockImage.getName();
-            }
-            System.out.println("blockName: " + blockName);
-
-
-            System.err.println("end updating needed:");
-
             GameBlock blockUi = YokelUtilities.getBlock(block, isPreview);
+
             if(blockUi != null){
-                if(YokelBlockEval.hasBrokenFlag(block)) System.err.println(blockUi.getName() + ":" + block);
-                blockUi.setBroken(YokelBlockEval.hasBrokenFlag(block));
                 AnimatedImage clone = blockUi.clone().getImage();
                 setImage(clone);
                 setName(blockUi.getName());
-
                 //YokelUtilities.freeBlock(blockUi);
             }
         }
@@ -235,16 +209,21 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
     private boolean needsUpdate(int block, boolean isPreview) {
         String blockName = "";
         Image blockImage;
+        boolean isBroken = YokelBlockEval.hasBrokenFlag(block);
         block = YokelUtilities.getTrueBlock(block);
+        if(isBroken) block = YokelBlockEval.addBrokenFlag(block);
 
         if (isPreview) {
             blockImage = UIUtil.getInstance().getPreviewBlockImage(block);
         } else {
             blockImage = UIUtil.getInstance().getBlockImage(block);
         }
+
         if (blockImage != null) {
             blockName = blockImage.getName();
         }
+
+        //System.err.println(blockName+":"+uiBlock.getName()+"{"+block+"}"+isBroken+"-");
         return !StringUtils.equalsIgnoreCase(blockName, uiBlock.getName());
     }
 

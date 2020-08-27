@@ -58,10 +58,9 @@ public class YokelObjectFactory implements Disposable {
         //System.out.println("block max=" + yokelGameBlockPool.max);
         //System.out.println("block peak=" + yokelGameBlockPool.peak);
 
-        boolean isBroken = false;
+        boolean isBroken = YokelBlockEval.hasBrokenFlag(blockType);
         if(blockType != YokelBlock.CLEAR_BLOCK){
             if(YokelBlockEval.hasAddedByYahooFlag(blockType) || YokelBlockEval.hasBrokenFlag(blockType)){
-                isBroken = YokelBlockEval.hasBrokenFlag(blockType);
                 blockType = YokelBlockEval.getCellFlag(blockType);
             } else {
                 blockType = YokelBlockEval.getIDFlag(YokelBlockEval.getID(blockType), blockType);
@@ -72,7 +71,7 @@ public class YokelObjectFactory implements Disposable {
         block.setPreview(isPreview);
         if(isBroken) blockType = YokelBlockEval.addBrokenFlag(blockType);
         block.setImage(blockType);
-        block.setBroken(isBroken);
+        //block.setBroken(isBroken);
 
         return block;
     }
