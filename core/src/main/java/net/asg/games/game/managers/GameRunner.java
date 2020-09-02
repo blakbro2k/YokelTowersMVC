@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import org.mockito.Mockito;
@@ -24,7 +25,7 @@ import org.mockito.Mockito;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-public class GameRunner implements ApplicationListener {
+public class GameRunner implements ApplicationListener, Disposable {
     private ServerManager daemon;
 
     public GameRunner(ServerManager manager) {
@@ -48,11 +49,16 @@ public class GameRunner implements ApplicationListener {
 
     @Override
     public void render() {
-        final ObjectMap.Values<GameManager> games = daemon.getAllGames();
-        for(GameManager game : games){
-            if(game != null){
-                game.update(Gdx.app.getGraphics().getDeltaTime());
+        try {
+            final ObjectMap.Values<GameManager> games = daemon.getAllGames();
+            for(GameManager game : games){
+                if(game != null){
+                    game.update(Gdx.app.getGraphics().getDeltaTime());
+                }
             }
+            daemon.putAllGames(games);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

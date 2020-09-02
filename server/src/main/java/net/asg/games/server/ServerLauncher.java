@@ -11,6 +11,7 @@ import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.storage.YokelMemoryStorage;
 import net.asg.games.storage.YokelStorageAdapter;
 import net.asg.games.utils.PayloadUtil;
+import net.asg.games.utils.YokelUtilities;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,9 +48,6 @@ public class ServerLauncher {
         } catch (Exception e) {
             Logger.error(e,"Failed to launch server: ");
             throw new Exception("Failed to launch server: ", e);
-        } finally {
-            Logger.info("Disposing GameRunner");
-            gameRunner.dispose();
         }
     }
 

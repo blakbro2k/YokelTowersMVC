@@ -29,14 +29,14 @@ public abstract class AbstractStorage implements Storage {
     abstract public void rollTransactions();
 
     String getNameOrIdFromInstance(Object o, boolean getName) {
-        Object var = null;
+        Object var;
         try {
             Class<?> c = getClassFromSuper(AbstractYokelObject.class, o);
             String methodName = getName ? STORAGE_NAME_METHOD : STORAGE_ID_METHOD;
             Method m = c.getDeclaredMethod(methodName);
             var = m.invoke(o);
         } catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return YokelUtilities.otos(var);
     }

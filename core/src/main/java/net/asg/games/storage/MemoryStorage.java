@@ -32,7 +32,7 @@ public class MemoryStorage extends AbstractStorage {
         try{
             return clazz.cast(_nameStore.get(name));
         } catch (ClassCastException c){
-            return null;
+            throw new RuntimeException(c);
         }
     }
 
@@ -41,7 +41,7 @@ public class MemoryStorage extends AbstractStorage {
         try{
             return clazz.cast(_idStore.get(id));
         } catch (ClassCastException c){
-            return null;
+            throw new RuntimeException(c);
         }
     }
 
@@ -61,7 +61,7 @@ public class MemoryStorage extends AbstractStorage {
                 iterator.remove();
             }
         } catch (Exception e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

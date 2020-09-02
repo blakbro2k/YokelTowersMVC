@@ -172,6 +172,11 @@ public class YokelMemoryStorage extends MemoryStorage implements YokelStorageAda
     }
 
     @Override
+    public void putAllGames(ObjectMap.Values<GameManager> games) {
+
+    }
+
+    @Override
     public void dispose() {
         if(room_idx != null){
             room_idx.clear();

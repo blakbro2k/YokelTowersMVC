@@ -1,6 +1,5 @@
 package net.asg.games.game.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.utils.RandomUtil;
@@ -75,7 +74,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     private boolean brokenCellsHandled = true;
     private boolean isPieceSet = false;
 
-    //Empty Contructor required for Json.Serializable
+    //Empty Constructor required for Json.Serializable
     public YokelGameBoard(){}
 
     public YokelGameBoard(long seed){
@@ -1748,5 +1747,9 @@ public class YokelGameBoard extends AbstractYokelObject {
     public int checkForYahoos(){
         yahooDuration += getYahooDuration();
         return yahooDuration;
+    }
+
+    public boolean isPieceSet() {
+        return isPieceSet;
     }
 }

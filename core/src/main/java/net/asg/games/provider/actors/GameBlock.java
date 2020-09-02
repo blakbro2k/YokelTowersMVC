@@ -119,9 +119,9 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
         }
 
         setName(image.getName());
+
         uiBlock.setDrawable(drawable);
-        if(StringUtils.containsIgnoreCase("Broken", image.getName())){
-            System.err.println(getName());
+        if(StringUtils.containsIgnoreCase(getName(), "broken")){
             uiBlock.setPlayOnce(true);
         }
         YokelUtilities.setSizeFromDrawable(uiBlock, drawable);
@@ -223,7 +223,6 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
             blockName = blockImage.getName();
         }
 
-        //System.err.println(blockName+":"+uiBlock.getName()+"{"+block+"}"+isBroken+"-");
         return !StringUtils.equalsIgnoreCase(blockName, uiBlock.getName());
     }
 

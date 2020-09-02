@@ -11,14 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import net.asg.games.game.objects.YokelBlock;
-import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.YokelUtilities;
-
-import org.apache.commons.lang.StringUtils;
 
 import java.util.Vector;
 
@@ -156,6 +153,9 @@ public class GameBlockArea extends Stack {
         this.bgNumber.setName(BOARD_NUMBER_NAME);
         this.boardNumber = number;
         this.tableNumber.setText(number);
+        if(board != null) {
+            this.board.setName(this.board.getId() + " : " + number);
+        }
     }
 
     private void setBlock(int block, int r, int c){
@@ -194,7 +194,6 @@ public class GameBlockArea extends Stack {
         for(GameBlock uiblock : uiBlocks.values()) {
             if(uiblock != null){
                 uiblock.act(delta * YokelUtilities.otof(0.03));
-                if(StringUtils.containsIgnoreCase(uiblock.getImage().getName(), "broken")) System.out.println("Brtoken");
             }
         }
         //joinWindow.setPosition(getX(), getY());
@@ -316,19 +315,37 @@ public class GameBlockArea extends Stack {
         }
     }
 
-    private void setPieceSprite(YokelPiece piece, float fallOffset){
-        if(piece != null){
-            pieceSprite.setBlocks(piece);
-            pieceSprite.setParent(this);
-            pieceSprite.setFallOffset(fallOffset);
+    private void setPieceSprite(YokelGameBoard board, float fallOffset){
+        if(board != null) {
+            YokelPiece piece = board.fetchCurrentPiece();
+            if(piece != null){
+                pieceSprite.setBlocks(piece);
+                pieceSprite.setParent(this);
+                pieceSprite.setFallOffset(fallOffset);
+                pieceSprite.setVisible(!board.isPieceSet());
+            }
         }
     }
 
     public void updateData(YokelGameBoard gameBoard) {
         if(gameBoard != null) {
             this.board = gameBoard;
-            setPieceSprite(gameBoard.fetchCurrentPiece(), board.fetchCurrentFallnumber());
             update();
+            setPieceSprite(gameBoard, board.fetchCurrentFallnumber());
+            setBrokenBlocks(gameBoard.getBrokenCells());
+            dropCells(gameBoard.getCellsToBeDropped());
+        }
+    }
+
+    private void dropCells(Vector<YokelBlockMove> cellsToBeDropped) {
+        if(cellsToBeDropped != null && cellsToBeDropped.size() > 0) {
+            YokelBlockMove cell = cellsToBeDropped.remove(0);
+        }
+    }
+
+    private void setBrokenBlocks(Vector<YokelBlock> brokenCells) {
+        if(brokenCells != null && brokenCells.size() > 0){
+            YokelBlock block = brokenCells.remove(0);
         }
     }
 

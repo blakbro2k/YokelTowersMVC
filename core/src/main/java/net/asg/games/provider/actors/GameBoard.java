@@ -93,11 +93,12 @@ public class GameBoard extends Table {
         if(board != null){
             area.updateData(board);
             powers.updateQueue(blockToGameBlocks(board.getPowers()));
-            setUpNext(board.fetchCurrentNextPiece());
+            setUpNext(board);
         }
     }
 
-    private void setUpNext(YokelPiece piece){
+    private void setUpNext(YokelGameBoard board){
+        YokelPiece piece = board.fetchCurrentNextPiece();
         if(piece != null){
             next.setData(piece.toString());
         }

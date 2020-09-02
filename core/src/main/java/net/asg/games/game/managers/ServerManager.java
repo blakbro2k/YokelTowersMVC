@@ -74,8 +74,16 @@ public class ServerManager {
         }
     }
 
-    public ObjectMap.Values<GameManager> getAllGames(){
+    ObjectMap.Values<GameManager> getAllGames() throws Exception {
+        if(storage == null) throw new Exception("Cannot access storage object!");
         return storage.getAllGames();
+    }
+
+    void putAllGames(ObjectMap.Values<GameManager> games) throws Exception{
+        if(storage == null) throw new Exception("Cannot access storage object!");
+        if(games != null){
+            storage.putAllGames(games);
+        }
     }
 
     private void initializeGameRooms() throws Exception {

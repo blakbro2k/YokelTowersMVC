@@ -52,6 +52,9 @@ public interface YokelStorage {
     /** Releases all resources of this object. */
     GameManager getGame(String gameId);
 
-    /** Releases all resources of this object. */
+    /** Get all active GameManager objects from the store. */
     ObjectMap.Values<GameManager> getAllGames();
+
+    /** Save all given GameManger objects into store. */
+    void putAllGames(ObjectMap.Values<GameManager> games);
 }

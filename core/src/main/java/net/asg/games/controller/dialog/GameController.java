@@ -68,6 +68,7 @@ public class GameController implements ViewRenderer, ActionContainer {
         }
 
         checkForInput();
+        //TODO: fetch game manager from server, handle multiplayer collisions
         game.update(delta);
         updateGameBoards();
         if(game.showGameOver()){
