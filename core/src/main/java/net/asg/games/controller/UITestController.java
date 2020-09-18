@@ -1,6 +1,8 @@
 package net.asg.games.controller;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -25,7 +27,6 @@ import net.asg.games.provider.actors.GameClock;
 import net.asg.games.provider.actors.GameOverText;
 import net.asg.games.service.SessionService;
 import net.asg.games.service.UserInterfaceService;
-import net.asg.games.utils.YokelUtilities;
 
 import java.util.Iterator;
 import java.util.Vector;
@@ -48,6 +49,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
     private boolean isInitiated;
     private boolean isGameOver = false;
+    private boolean isCellsDropping = false;
 
     private GameManager game;
     private GameBoard[] gameBoards = new GameBoard[8];
@@ -58,33 +60,33 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         initiate();
         checkForInput();
 
+        //Simulation: fetch game from server.
+        //if live, an updated gameManager will be fetched
         game.update(delta);
+        //End Simulation:
+
         updateGameBoards();
+        /*
         if(game.showGameOver()){
             toggleGameStart();
             stage.addActor(getGameOverActor());
-        }
+        }*/
         stage.act(delta);
         stage.draw();
     }
 
-    private void animateBrokenCells(GameBoard gameBoard, int boardIndex) {
-        if(gameBoard != null){
-            //We only care about animating the players board
-            YokelGameBoard board = gameBoard.getYokelGameBoard();
-            if(boardIndex == sessionService.getCurrentSeat()){
-                //Animate Cells first before setting done
-                Vector<YokelBlockMove> toDrop = board.getCellsToBeDropped();
-                if(toDrop != null && toDrop.size() > 0)            System.out.println("dropped Cells: " + toDrop);
-                //System.out.println(board);
-                gameBoard.pushCellsToMove(toDrop);
+    private void animateBrokenCells(GameBoard gameBoard, Vector<YokelBlockMove> cellsToDrop, int board) {
+        if(cellsToDrop != null && cellsToDrop.size() > 0){
+            isCellsDropping = true;
+            gameBoard.addBlocksToDrop(cellsToDrop);
+        }
 
-                //game.setIsCellsBrokenHandled(true, boardIndex);
-                //game.handleBrokenCellDrops(board);
-            } else {
-                game.setIsCellsBrokenHandled(true, boardIndex);
-                game.handleBrokenCellDrops(board);
-            }
+        if(gameBoard.isActionFinished()){
+            isCellsDropping = false;
+        }
+
+        if(!isCellsDropping){
+            handleBrokenCells(board);
         }
     }
 
@@ -111,10 +113,19 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
             if(game.isPlayerDead(board)){
                 gameBoards[board].killPlayer();
-            } else { //Animate Cell drops if needed
-                animateBrokenCells(gameBoards[board], board);
+            } else {
+                //Animate Cell drops if needed and is this
+                if(sessionService.getCurrentSeat() == board){
+                    animateBrokenCells(gameBoards[board], game.getCellsToDrop(board), board);
+                } else {
+                    handleBrokenCells(board);
+                }
             }
         }
+    }
+
+    private void handleBrokenCells(int boardIndex) {
+        game.handleBrokenCellDrops(boardIndex);
     }
 
     private void initiate(){
@@ -130,7 +141,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             YokelPlayer player2 = new YokelPlayer("lholtham", 1400,5);
             YokelPlayer player3 = new YokelPlayer("rmeyers", 1700,7);
 
-            System.out.println(sessionService.getView(ControllerNames.UI_TEST_VIEW));
+            //System.out.println(sessionService.getView(ControllerNames.UI_TEST_VIEW));
 
             //{0,1}{2,3}{4,5}{6,7}
             int cSeat = 6;
@@ -219,6 +230,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
         if(area != null){
             YokelGameBoard board = game.getGameBoard(boardIndex);
+            board.setName("BoardNumber: " + boardIndex);
+            System.out.println("Setting up board: " + boardIndex);
             area.setPreview(isPreview);
 
             if(player != null){
@@ -246,9 +259,5 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         if(!isGameOver) {
             sessionService.checkPlayerInputMap(game);
         }
-    }
-
-    private YokelGameBoard getCurrentGameBoard(){
-        return game.getGameBoard(sessionService.getCurrentSeat());
     }
 }

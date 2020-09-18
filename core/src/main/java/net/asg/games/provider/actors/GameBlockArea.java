@@ -1,9 +1,12 @@
 package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -218,7 +221,36 @@ public class GameBlockArea extends Stack {
         return isActive;
     }
 
-    public void pushCellsToMove(Vector<YokelBlockMove> toDrop) {
+    public void pushCellsToMove(Vector<YokelBlockMove> cellsToDrop) {
+        for(YokelBlockMove toMove : cellsToDrop){
+            if(toMove != null) {
+                System.out.println("[" + toMove.x + "," + toMove.y + "] to row: " + toMove.targetRow);
+                //System.err.println("uiBlock: " + uiBlocks.get(getCellAttrName(toMove.y, toMove.x)));
+                GameBlock uiCell = uiBlocks.get(getCellAttrName(toMove.y, toMove.x));
+                if(uiCell != null) {
+                    uiCell.hasActions();
+                    System.err.println("[" + uiCell.getX() + "," + uiCell.getX() + "] to row: " + toMove.targetRow);
+                    System.out.println("{" + grid.getCell(uiCell).getActorX() + "}");
+                    uiCell.addAction(Actions.moveTo(uiCell.getX() / 2, (uiCell.getX() - 16) / 2, 0.8f, Interpolation.linear));
+                }
+            }
+        }
+    }
+
+    public boolean isActionFinished(){
+        boolean isFinished = false;
+        for(Cell cell : grid.getCells()) {
+            if(cell != null){
+                if(cell.hasActor()){
+                    Actor actor = cell.getActor();
+                    if(actor != null && actor.hasActions()) {
+                        isFinished = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return isFinished;
     }
 
     private static class PieceDrawable extends Actor {
@@ -331,7 +363,7 @@ public class GameBlockArea extends Stack {
         if(gameBoard != null) {
             this.board = gameBoard;
             update();
-            setPieceSprite(gameBoard, board.fetchCurrentFallnumber());
+            setPieceSprite(gameBoard, board.fetchCurrentFallNumber());
             setBrokenBlocks(gameBoard.getBrokenCells());
             dropCells(gameBoard.getCellsToBeDropped());
         }

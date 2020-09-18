@@ -67,9 +67,15 @@ public class GameOverText extends Table {
         }
         add(container);
 
-        Vector2 startPos = container.localToParentCoordinates(new Vector2(0,0));
+        Label charTest = new Label("G", getSkin());
+        charTest.addAction(Actions.sequence(Actions.moveTo(0, 0, 2)));
+        charTest.setPosition(container.getX(), 0);
+        charTest.setFontScale(H1Scale);
+        charTest.setColor(new Color(0.87f, 0, 0, 1));
+        add(charTest);
+        //Vector2 startPos = container.localToParentCoordinates(new Vector2(0,0));
         //gameOver.setPosition(startPos.x / 2, 200);
-        gameOver.addAction(Actions.moveTo(startPos.x / 2, 200, 0.1f, Interpolation.bounceOut));
+        //gameOver.addAction(Actions.moveTo(startPos.x / 2, 200, 0.1f, Interpolation.bounceOut));
         hasAnimationStarted = true;
     }
 

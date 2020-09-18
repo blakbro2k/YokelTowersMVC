@@ -14,7 +14,7 @@ public class YokelLounge extends AbstractYokelObject {
 
     final private OrderedMap<String, YokelRoom> rooms = GdxMaps.newOrderedMap();
 
-    //Empty Contructor required for Json.Serializable
+    //Empty Constructor required for Json.Serializable
     public YokelLounge(){}
 
     public YokelLounge(String name) {

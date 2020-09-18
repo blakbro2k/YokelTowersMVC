@@ -8,7 +8,7 @@ public class YokelSeat extends AbstractYokelObject {
     private int seatNumber;
     private YokelPlayer seatedPlayer;
 
-    //Empty Contructor required for Json.Serializable
+    //Empty Constructor required for Json.Serializable
     public YokelSeat(){}
 
     public YokelSeat(int seatNumber){

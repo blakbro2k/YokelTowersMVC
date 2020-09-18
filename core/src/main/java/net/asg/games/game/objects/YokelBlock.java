@@ -79,7 +79,7 @@ public class YokelBlock extends AbstractYokelObject implements Pool.Poolable {
     private int blockType;
     private int powerIntensity = 0;
 
-    //Empty Contructor required for Json.Serializable
+    //Empty Constructor required for Json.Serializable
     public YokelBlock() {}
 
     public YokelBlock(int x, int y, int blockType) {

@@ -3,15 +3,15 @@ package net.asg.games.game.objects;
 public class YokelBlockMove extends AbstractYokelObject {
     public int x;
     public int y;
-    public int block;
+    public int targetRow;
 
-    //Empty Contructor required for Json.Serializable
+    //Empty Constructor required for Json.Serializable
     public YokelBlockMove(){}
 
-    public YokelBlockMove(int x, int y, int block){
+    public YokelBlockMove(int x, int y, int targetRow){
         this.x = x;
         this.y = y;
-        this.block = block;
+        this.targetRow = targetRow;
     }
 
     @Override

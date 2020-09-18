@@ -16,7 +16,7 @@ public class YokelRoom extends AbstractYokelObject {
     private OrderedMap<Integer, YokelTable> tables = new OrderedMap<>();
     private int curTableNum = 0;
 
-    //Empty Contructor required for Json.Serializable
+    //Empty Constructor required for Json.Serializable
     public YokelRoom(){}
 
     public YokelRoom(String name){

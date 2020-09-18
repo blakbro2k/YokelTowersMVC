@@ -6,7 +6,7 @@ public class YokelClock extends AbstractYokelObject {
     private long start = -1;
     private boolean isRunning = false;
 
-    //Empty Contructor required for Json.Serializable
+    //Empty Constructor required for Json.Serializable
     public YokelClock(){}
 
     public void start(){

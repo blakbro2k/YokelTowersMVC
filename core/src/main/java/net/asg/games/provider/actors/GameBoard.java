@@ -169,4 +169,12 @@ public class GameBoard extends Table {
     public void pushCellsToMove(Vector<YokelBlockMove> toDrop) {
         area.pushCellsToMove(toDrop);
     }
+
+    public void addBlocksToDrop(Vector<YokelBlockMove> cellsToDrop) {
+        area.pushCellsToMove(cellsToDrop);
+    }
+
+    public boolean isActionFinished(){
+        return area.isActionFinished();
+    }
 }

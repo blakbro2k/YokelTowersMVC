@@ -12,7 +12,7 @@ public class YokelPlayer extends AbstractYokelObject {
     private int icon;
     private YokelNameLabel nameLabel;
 
-    //Empty Contructor required for Json.Serializable
+    //Empty Constructor required for Json.Serializable
     public YokelPlayer(){}
 
     public YokelPlayer(String name){

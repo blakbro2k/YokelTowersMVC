@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import org.mockito.Mockito;
@@ -50,12 +51,16 @@ public class GameRunner implements ApplicationListener, Disposable {
     @Override
     public void render() {
         try {
+            if (daemon == null) throw new GdxRuntimeException("Server daemon has evaporated!");
+            //Get all games from source
             final ObjectMap.Values<GameManager> games = daemon.getAllGames();
+            //Update Game step
             for(GameManager game : games){
                 if(game != null){
                     game.update(Gdx.app.getGraphics().getDeltaTime());
                 }
             }
+            //Put updated game in source
             daemon.putAllGames(games);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -72,6 +77,8 @@ public class GameRunner implements ApplicationListener, Disposable {
 
     @Override
     public void dispose() {
-        daemon.shutDownServer(-1);
+        if(daemon != null){
+            daemon.shutDownServer(-1);
+        }
     }
 }

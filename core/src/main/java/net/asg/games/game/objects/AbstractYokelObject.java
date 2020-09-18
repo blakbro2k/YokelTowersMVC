@@ -17,7 +17,7 @@ public abstract class AbstractYokelObject implements YokelObject {
     @Override
     public abstract void dispose();
 
-    public void setId(){ setId(YokelUtilities.IDGenerator.getID());}
+    private void setId(){ setId(YokelUtilities.IDGenerator.getID());}
 
     public void setId(String id){ this.id = id;}
 

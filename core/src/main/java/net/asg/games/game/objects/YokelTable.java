@@ -8,8 +8,9 @@ import net.asg.games.utils.YokelUtilities;
 import org.apache.commons.lang.StringUtils;
 
 public class YokelTable extends AbstractYokelObject {
-    public static final String ARG_TYPE = "type";
-    public static final String ARG_RATED = "rated";
+    private static final String ARG_TYPE = "type";
+    private static final String ARG_RATED = "rated";
+    private static final int MAX_SEATS = 8;
 
     public enum ACCESS_TYPE {PRIVATE("PRIVATE"), PUBLIC("PUBLIC"), PROTECTED("PROTECTED");
         private String accessType;
@@ -23,7 +24,6 @@ public class YokelTable extends AbstractYokelObject {
         }
     }
 
-    public static final int MAX_SEATS = 8;
 
     private int tableNumber;
 
@@ -32,7 +32,7 @@ public class YokelTable extends AbstractYokelObject {
     private boolean isRated;
     private boolean isSoundOn;
 
-    //Empty Contructor required for Json.Serializable
+    //Empty Constructor required for Json.Serializable
     public YokelTable(){}
 
     public YokelTable(int tableNumber){
@@ -80,7 +80,7 @@ public class YokelTable extends AbstractYokelObject {
         return getId();
     }
 
-    public void setTableNumber(int number){this.tableNumber = number;}
+    private void setTableNumber(int number){this.tableNumber = number;}
 
     public int getTableNumber(){ return this.tableNumber;}
 

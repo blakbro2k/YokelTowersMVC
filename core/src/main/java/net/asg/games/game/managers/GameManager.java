@@ -26,11 +26,12 @@ import java.util.Vector;
 public class GameManager {
     private YokelTable table;
     private YokelGameBoard[] gameBoards = new YokelGameBoard[8];
-    private boolean[] areCellDropsHandled = new boolean[]{true, true, true, true, true, true, true, true};
+    private Vector[] boardCellsToDrop = new Vector[8];
     private Array<YokelPlayer> winners = GdxArrays.newArray();
     private boolean isGameRunning;
     private boolean hasGameStarted;
     private boolean showGameOver;
+    private long seed = 1L;
 
     public GameManager(YokelTable table){
         this.table = table;
@@ -62,25 +63,8 @@ public class GameManager {
 
     private void updateBoard(YokelGameBoard board, float delta, int index){
         if(board != null){
+            //Move Piece down, flag matches
             board.update(delta);
-
-            //check for yahoo
-            int duration = board.checkForYahoos();
-            if(duration > 0){
-                System.err.println("YAHOOOOOOOOOOO!: " + duration);
-            }
-
-            //Check if cells need to drop
-            Vector<YokelBlockMove> toDrop = board.getCellsToBeDropped();
-            if(toDrop != null && toDrop.size() > 0){
-                //Animate Falls before calling
-                setIsCellsBrokenHandled(false, index);
-            }
-
-            //Clear broken from board if animation is finished
-            if(areCellDropsHandled[index]) {
-                handleBrokenCellDrops(board);
-            }
 
             //Handle broken cells logic
             if(board.getBrokenCellCount() > 0){
@@ -93,11 +77,20 @@ public class GameManager {
                     }
                 }
             }
+
+            //check for yahoo
+            int duration = board.checkForYahoos();
+            if(duration > 0){
+                System.err.println("YAHOOOOOOOOOOO!: " + duration);
+            }
+
+            //Check if cells need to drop
+            boardCellsToDrop[index] = board.getCellsToBeDropped();
         }
     }
 
-    public void setIsCellsBrokenHandled(boolean b, int index) {
-        areCellDropsHandled[index] = b;
+    public Vector getCellsToDrop(int board){
+        return boardCellsToDrop[board];
     }
 
     private boolean isOccupied(YokelSeat seat){
@@ -127,11 +120,7 @@ public class GameManager {
     }
 
     private void init(){
-        long seed = getSeed();
-        isGameRunning = false;
-        for(int i = 0; i < 8; i++){
-            gameBoards[i] = new YokelGameBoard(seed);
-        }
+        resetGameBoards();
     }
 
     public YokelGameBoard getGameBoard(int i){
@@ -152,16 +141,25 @@ public class GameManager {
     }
 
     private long getSeed() {
-        return 1L;
-        //return System.currentTimeMillis();
+        return seed;
     }
 
-    public void resetGameBoards(){}
+    public void setSeed(long seed){
+        this.seed = seed;
+        resetGameBoards();
+    }
 
-    public void handleBrokenCellDrops(YokelGameBoard board){
-        if(board != null){
-            board.handleBrokenCellDrops();
+    public void resetGameBoards(){
+        long seed = getSeed();
+        isGameRunning = false;
+        for(int i = 0; i < 8; i++){
+            gameBoards[i] = new YokelGameBoard(seed);
         }
+    }
+
+    public void handleBrokenCellDrops(int boardIndex){
+        getGameBoard(boardIndex).handleBrokenCellDrops();
+        getGameBoard(boardIndex).setBrokenCellsHandled(true);
     }
 
     public void handleMoveRight(int boardIndex){

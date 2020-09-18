@@ -211,7 +211,6 @@ public class YokelObjectFactory implements Disposable {
     }
 
     private String getBrokenBlockImageName(int cellFlag) {
-        //System.err.println("###BROKEN#### " + cellFlag);
         switch (cellFlag) {
             case YokelBlock.Y_BLOCK:
                 return "Y_block_Broken";
