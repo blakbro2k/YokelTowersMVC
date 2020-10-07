@@ -1,6 +1,5 @@
 package net.asg.games.controller.dialog;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.autumn.annotation.Inject;
@@ -14,7 +13,6 @@ import com.github.czyzby.lml.parser.action.ActionContainer;
 
 import net.asg.games.controller.ControllerNames;
 import net.asg.games.game.managers.GameManager;
-import net.asg.games.game.objects.PlayerKeyMap;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelSeat;
@@ -184,7 +182,7 @@ public class GameController implements ViewRenderer, ActionContainer {
 
     private void checkForInput(){
         if(!isGameOver) {
-            sessionService.checkPlayerInputMap(game);
+            sessionService.handlePlayerInput(game);
         }
     }
 }

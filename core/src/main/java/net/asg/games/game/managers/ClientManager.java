@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ClientManager implements Disposable {
     //private static final com.github.czyzby.kiwi.log.Logger LOGGER = LoggerService.forClass(ClientManager.class);
-    public final static String[] EMPTY_PAYLOAD = new String[]{""};
-    public final static PayloadType EMPTY_PAYLOAD_TYPE = new PayloadType(ServerRequest.REQUEST_EMPTY, new String[]{""});
+    private final static String[] EMPTY_PAYLOAD = new String[]{""};
+    private final static PayloadType EMPTY_PAYLOAD_TYPE = new PayloadType(ServerRequest.REQUEST_EMPTY, new String[]{""});
 
     private final static int DEFAULT_WAIT = 30;
     private WebSocket socket;
@@ -80,8 +80,8 @@ public class ClientManager implements Disposable {
         socket.setSerializer(serializer);
         // Registering all expected packets:
         // Connecting with the server.
-
         socket.connect();
+        // Add response handler
         socket.addListener(getServerListener());
         Packets.register(serializer);
 
@@ -95,6 +95,12 @@ public class ClientManager implements Disposable {
 
     public boolean isAlive() {
         return isConnected;
+    }
+
+    private void send(ClientRequest request){
+        if(isAlive()){
+            socket.send(request);
+        }
     }
 
     public void requestServerPing() throws WebSocketException {
@@ -204,7 +210,7 @@ public class ClientManager implements Disposable {
     private void sendClientRequest(ServerRequest serverRequest, String[] payload) throws InterruptedException {
         checkConnection();
         final ClientRequest request = new ClientRequest(++requestId, "1", serverRequest.toString(), payload, clientId);
-        socket.send(request);
+        send(request);
     }
 
     public String[] getNextRequest(ServerRequest message) {

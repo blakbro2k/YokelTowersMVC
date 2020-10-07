@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockMove;
@@ -52,7 +53,7 @@ public class GameBlockArea extends Stack {
     private GameJoinWidget joinWindow;
 
     private ObjectMap<String, GameBlock> uiBlocks;
-
+    private Queue<GameBlock> dropCells;
     private PieceDrawable pieceSprite;
 
     public GameBlockArea(Skin skin, boolean isPreview) {
@@ -101,6 +102,7 @@ public class GameBlockArea extends Stack {
         this.bgColor = new Table(skin);
         this.bgNumber = new Table(skin);
         this.pieceSprite = new PieceDrawable();
+        this.dropCells = new Queue<>();
     }
 
     public void setDebug (boolean enabled) {
@@ -228,21 +230,29 @@ public class GameBlockArea extends Stack {
                 //System.err.println("uiBlock: " + uiBlocks.get(getCellAttrName(toMove.y, toMove.x)));
                 GameBlock uiCell = uiBlocks.get(getCellAttrName(toMove.y, toMove.x));
                 if(uiCell != null) {
-                    uiCell.hasActions();
+                    System.err.println("HAS ACTION!!" + uiCell.hasActions());
                     System.err.println("[" + uiCell.getX() + "," + uiCell.getX() + "] to row: " + toMove.targetRow);
                     System.out.println("{" + grid.getCell(uiCell).getActorX() + "}");
                     uiCell.addAction(Actions.moveTo(uiCell.getX() / 2, (uiCell.getX() - 16) / 2, 0.8f, Interpolation.linear));
+                    System.err.println("HAS ACTION!!" + uiCell.hasActions());
                 }
+                //dropCells.addLast(uiCell);
             }
         }
     }
 
     public boolean isActionFinished(){
-        boolean isFinished = false;
+        //System.out.println("dropCells{" + dropCells + "}");
+        return dropCells.isEmpty();
+    }
+
+    /*        boolean isFinished = false;
         for(Cell cell : grid.getCells()) {
             if(cell != null){
                 if(cell.hasActor()){
                     Actor actor = cell.getActor();
+                    System.out.println("actor{" + actor.getName() + "}");
+
                     if(actor != null && actor.hasActions()) {
                         isFinished = true;
                         break;
@@ -251,8 +261,8 @@ public class GameBlockArea extends Stack {
             }
         }
         return isFinished;
-    }
 
+     */
     private static class PieceDrawable extends Actor {
         private GameBlock[] blocks = new GameBlock[3];
         private int row;

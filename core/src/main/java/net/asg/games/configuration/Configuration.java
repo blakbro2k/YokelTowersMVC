@@ -19,6 +19,10 @@ import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.MusicEnabled;
 import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.MusicVolume;
 import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundEnabled;
 import com.github.czyzby.autumn.mvc.stereotype.preference.sfx.SoundVolume;
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerFactory;
+import com.github.czyzby.kiwi.log.LoggerService;
+import com.github.czyzby.kiwi.log.impl.DefaultLogger;
 import com.github.czyzby.kiwi.util.gdx.asset.lazy.provider.ObjectProvider;
 import com.github.czyzby.lml.parser.LmlSyntax;
 import com.github.czyzby.lml.util.Lml;
@@ -80,7 +84,7 @@ import net.asg.games.service.ScaleService;
         /** These i18n-related fields will allow LocaleService to save game's locale in preferences file. Locale changing
          * actions will be automatically added to LML templates - see settings.lml template. */
         @I18nLocale(propertiesPath = PREFERENCES, defaultLocale = "en") private final String localePreference = "locale";
-        @AvailableLocales private final String[] availableLocales = new String[] { "en", "pl" };
+        @AvailableLocales private final String[] availableLocales = new String[] { "en" };
 
         /** Setting the default Preferences object path. */
         @Preference private final String preferencesPath = PREFERENCES;
@@ -107,6 +111,8 @@ import net.asg.games.service.ScaleService;
             // Thanks to this setting, only methods annotated with @LmlAction will be available in views, significantly
             // speeding up method look-up:
             Lml.EXTRACT_UNANNOTATED_METHODS = false;
+
+            //LoggerService
 
             addCustomLmlTags();
         }

@@ -39,7 +39,7 @@ public class SessionService {
     private static final Logger LOGGER = LoggerService.forClass(SessionService.class);
     @Inject private InterfaceService interfaceService;
 
-    private String message = "Connecting...";
+    private final String CONNECT_MSG = "Connecting...";
     private ClientManager client;
     private String currentLoungeName;
     private String currentRoomName;
@@ -213,7 +213,7 @@ public class SessionService {
         interfaceService.showDialog(ErrorController.class);
     }
 
-    public void checkPlayerInputMap(GameManager game){
+    public void handlePlayerInput(GameManager game){
         if(game == null) return;
         int currentSeat = getCurrentSeat();
         if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {

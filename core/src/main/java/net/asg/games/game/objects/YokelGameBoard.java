@@ -1469,7 +1469,6 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     public String toString(){
         StringBuilder out = new StringBuilder();
-        //System.out.println("out = " + out);
         if(piece != null){
             out.append("piece pos(").append(piece.column).append(",").append(piece.row).append(")").append("\n");
         }
@@ -1641,8 +1640,8 @@ public class YokelGameBoard extends AbstractYokelObject {
                 cells[piece.row + 2][piece.column] = YokelBlockEval.setIDFlag(YokelBlock.Oy_BLOCK, YokelBlockEval.getID(cells[piece.row + 2][piece.column]));
             }
             //piece = null;
-            //System.out.println(this);
             setBrokenCellsHandled(false);
+            System.out.println("is handled=" + brokenCellsHandled);
         }
     }
 

@@ -4,7 +4,7 @@ import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
 /** Utility class. Allows to easily register packets in the same order on both client and server.
  *
- * @author MJ */
+ * @author blakbro2k */
 public class Packets {
     public static void register(final ManualSerializer serializer) {
         // Note that the packets use simple, primitive data, but nothing stops you from using more complex types like
