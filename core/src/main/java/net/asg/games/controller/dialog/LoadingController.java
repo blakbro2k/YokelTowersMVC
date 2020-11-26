@@ -35,8 +35,7 @@ public class LoadingController implements ViewDialogController {
         final Batch batch = stage.getBatch();
         batch.setColor(stage.getRoot().getColor()); // We want the logo to share color alpha with the stage.
         batch.begin();
-        batch.draw(refresh, (int) (stage.getWidth() - refresh.getWidth()) / 2,
-                (int) (stage.getHeight() - refresh.getHeight()) / 2);
+        batch.draw(refresh, (int) (stage.getWidth() - refresh.getWidth()) / 2, (int) (stage.getHeight() - refresh.getHeight()) / 2);
         batch.end();
 
         stage.draw();

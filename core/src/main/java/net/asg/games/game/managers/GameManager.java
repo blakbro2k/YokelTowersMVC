@@ -6,6 +6,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 
@@ -23,7 +25,11 @@ import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
+import sun.rmi.runtime.Log;
+
 public class GameManager {
+    private final Logger logger = LoggerService.forClass(GameManager.class);
+
     private YokelTable table;
     private YokelGameBoard[] gameBoards = new YokelGameBoard[8];
     private Vector[] boardCellsToDrop = new Vector[8];
@@ -158,8 +164,10 @@ public class GameManager {
     }
 
     public void handleBrokenCellDrops(int boardIndex){
+        logger.debug("Enter handleBrokenCellDrops()");
         getGameBoard(boardIndex).handleBrokenCellDrops();
         getGameBoard(boardIndex).setBrokenCellsHandled(true);
+        logger.debug("Exit handleBrokenCellDrops()");
     }
 
     public void handleMoveRight(int boardIndex){

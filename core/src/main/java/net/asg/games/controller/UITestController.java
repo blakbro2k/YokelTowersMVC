@@ -27,12 +27,16 @@ import net.asg.games.provider.actors.GameClock;
 import net.asg.games.provider.actors.GameOverText;
 import net.asg.games.service.SessionService;
 import net.asg.games.service.UserInterfaceService;
+import net.asg.games.utils.YokelUtilities;
 
 import java.util.Iterator;
 import java.util.Vector;
 
 @View(id = ControllerNames.UI_TEST_VIEW, value = "ui/templates/uitester.lml")
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
+    // Getting a utility logger:
+    private Logger logger = LoggerService.forClass(UITestController.class);
+
     @Inject private UserInterfaceService uiService;
     @Inject private SessionService sessionService;
     @Inject private MusicService musicService;
@@ -56,9 +60,6 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private GameBoard[] gameBoards = new GameBoard[8];
     private GameBoard[] areas;
 
-    // Getting a utility logger:
-    private final Logger logger = LoggerService.forClass(UITestController.class);
-
     @Override
     public void render(Stage stage, float delta) {
         initiate();
@@ -80,53 +81,65 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     }
 
     private void animateBrokenCells(GameBoard gameBoard, Vector<YokelBlockMove> cellsToDrop, int board) {
-        if(logger.isDebugOn()){
-            logger.debug("Enter animateBrokenCells");
-        }
+        logger.debug("Enter animateBrokenCells()");
+
         if(cellsToDrop != null && cellsToDrop.size() > 0 && !isCellsDropping){
             isCellsDropping = true;
-            if(logger.isInfoOn()){
-                logger.info("Starting to animate drop cells.");
-                logger.info("isCellsDropping={0}", isCellsDropping);
-            }
+            logger.debug("Starting to animate drop cells.");
+            logger.debug("isCellsDropping={0}", isCellsDropping);
+
             gameBoard.addBlocksToDrop(cellsToDrop);
             handleBrokenCells(board);
         }
 
         if(gameBoard.isActionFinished()){
             isCellsDropping = false;
-            if(logger.isInfoOn()){
-                logger.info("ending animate drop cells.");
-                logger.info("isCellsDropping={0}", isCellsDropping);
-            }
+            logger.debug("ending animate drop cells.");
+            logger.debug("isCellsDropping={0}", isCellsDropping);
         }
-        if(logger.isDebugOn()){
-            logger.debug("Exit animateBrokenCells");
-        }
+        logger.debug("Exit animateBrokenCells()");
     }
 
     private Actor getGameOverActor() {
+        logger.debug("Enter getGameOverActor()");
+
         Array<YokelPlayer> winners = game.getWinners();
         YokelPlayer player1 = getPlayer(winners, 0);
         YokelPlayer player2 = getPlayer(winners, 1);
+        logger.debug("winners={0}", winners);
+        logger.debug("player1={0}", player1);
+        logger.debug("player2={0}", player2);
 
         GameOverText gameOverText = new GameOverText(sessionService.getCurrentPlayer().equals(player1) || sessionService.getCurrentPlayer().equals(player2), player1, player2, uiService.getSkin());
         gameOverText.setPosition(uiService.getStage().getWidth() / 2, uiService.getStage().getHeight() / 2);
+
+        logger.debug("Exit getGameOverActor()");
         return gameOverText;
     }
 
     private YokelPlayer getPlayer(Array<YokelPlayer> players, int index){
+        logger.debug("Enter getPlayer()");
+
         if(players != null && players.size > 0){
+            logger.debug("player={0}", players.get(index));
             if(index < players.size) return players.get(index);
         }
+
+        logger.debug("Exit getPlayer()");
         return null;
     }
 
     private void updateGameBoards() {
+        logger.debug("Enter updateGameBoards()");
+
         for(int board = 0; board < gameBoards.length; board++){
             if(game.isPlayerDead(board)){
+                logger.debug("is board[{0}] dead: {1}", board, game.isPlayerDead(board));
+
                 gameBoards[board].killPlayer();
             } else {
+                logger.debug("Updating board[{0}]", board);
+                logger.debug("Current seat[{0}]", sessionService.getCurrentSeat());
                 gameBoards[board].update(game.getGameBoard(board));
 
                 //Animate Cell drops if needed and is this
@@ -137,14 +150,20 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
                 }
             }
         }
+        logger.debug("Exit updateGameBoards()");
     }
 
     private void handleBrokenCells(int boardIndex) {
+        logger.debug("Enter handleBrokenCells()");
         game.handleBrokenCellDrops(boardIndex);
+        logger.debug("Exit handleBrokenCells()");
     }
 
     private void initiate(){
         if(!isInitiated){
+            logger = LoggerService.forClass(UITestController.class);
+
+            //YokelUtilities.setDebug(logger);
             logger.debug("Enter initiate");
             isInitiated = true;
             areas = new GameBoard[]{area1, area2, area3, area4, area5, area6, area7, area8};
@@ -188,9 +207,12 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
 
     private void setUpGameArea(YokelTable table){
+        logger.debug("Enter setUpGameArea()");
+
         //If table does not exist, keep it moving
         if(table == null) return;
         int playerSeat = sessionService.getCurrentSeat();
+        logger.debug("playerSeat={0}", playerSeat);
 
         //Set up Player View
         setUpPlayerArea(sessionService.getCurrentPlayer(), playerSeat,true);
@@ -198,6 +220,9 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         //Set up Partner View
         int partnerSeat = getPlayerPartnerSeatNum(playerSeat);
         YokelPlayer partner = getSeatedPlayer(partnerSeat, table);
+
+        logger.debug("partnerSeat={0}", partnerSeat);
+        logger.debug("partner={0}", partner);
         setUpPlayerArea(partner, partnerSeat,false);
 
         //Set up rest of active players
@@ -216,6 +241,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
                 }
             }
         }
+        logger.debug("Exit setUpGameArea()");
     }
 
     private int getPlayerPartnerSeatNum(int playerSeat) {
@@ -227,26 +253,42 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     }
 
     private YokelPlayer getSeatedPlayer(int seatNum, YokelTable table){
+        logger.debug("Enter getSeatedPlayer()");
+
         if(table != null){
             YokelSeat seat = table.getSeat(seatNum);
             if(seat != null){
+                logger.debug("seat={0}", seat);
+                logger.debug("Exit getSeatedPlayer()");
                 return seat.getSeatedPlayer();
             }
         }
+        logger.debug("Exit getSeatedPlayer()");
         return null;
     }
 
     private void setUpPlayerArea(YokelPlayer player, int playerSeat, boolean isPlayerView){
+        logger.debug("Enter setUpPlayerArea()");
+
         //Even seats are on the left
         activateArea(playerSeat, playerSeat % 2, true, player, isPlayerView, false);
+        logger.debug("Exit setUpPlayerArea()");
     }
 
     private void activateArea(int playerSeat, int areaNum, boolean isActive, YokelPlayer player, boolean isPlayerView, boolean isPreview){
+        logger.debug("Enter activateArea()");
+
         gameBoards[playerSeat] = areas[areaNum];
         GameBoard area = gameBoards[playerSeat];
 
+        logger.debug("areaNum={0}", areaNum);
+        logger.debug("areas[areaNum]=\n{0}", areas[areaNum]);
+        logger.debug("area=\n{0}", area);
+
         if(area != null){
             YokelGameBoard board = game.getGameBoard(playerSeat);
+            logger.debug("board=\n{0}", board);
+
             if(board != null){
                 area.setPreview(isPreview);
 
@@ -255,9 +297,11 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
                     area.setPlayerView(isPlayerView);
                     area.setActive(isActive);
                 }
+                logger.debug("area\n={0}", area);
                 area.update(board);
             }
         }
+        logger.debug("Exit activateArea()");
     }
 
     @LmlAction("toggleGameStart")
@@ -273,8 +317,10 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     }
 
     private void handlePlayerInput(){
+        logger.debug("Enter handlePlayerInput()");
         if(!isGameOver) {
             sessionService.handlePlayerInput(game);
         }
+        logger.debug("Exit handlePlayerInput()");
     }
 }

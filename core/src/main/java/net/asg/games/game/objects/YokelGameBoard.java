@@ -1,6 +1,8 @@
 package net.asg.games.game.objects;
 
 import com.badlogic.gdx.utils.Queue;
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerService;
 
 import net.asg.games.utils.RandomUtil;
 import net.asg.games.utils.YokelUtilities;
@@ -9,6 +11,8 @@ import java.util.Stack;
 import java.util.Vector;
 
 public class YokelGameBoard extends AbstractYokelObject {
+    private final Logger logger = LoggerService.forClass(YokelGameBoard.class);
+
     public static final int MAX_RANDOM_BLOCK_NUMBER = 2048;
     public static final int MAX_COLS = 6;
     public static final int MAX_ROWS = 16;
@@ -1618,18 +1622,24 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void setNextPiece() {
+        logger.debug("Enter setNextPiece()");
         if(piece != null) {
             int block = YokelBlockEval.getCellFlag(piece.getBlock1());
+            logger.debug("Block 1 = {0}", block);
+
             if (block == YokelBlock.MEDUSA) {
+                logger.debug("is medusa");
                 piece.setBlock1(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, 3)));
                 piece.setBlock2(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, 3)));
                 piece.setBlock3(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, 3)));
             } else if (block == YokelBlock.TOP_MIDAS || block == YokelBlock.MID_MIDAS || block == YokelBlock.BOT_MIDAS) {
+                logger.debug("is midas");
                 piece.setBlock1(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, 2)));
                 piece.setBlock2(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, 2)));
                 piece.setBlock3(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(YokelBlock.Oy_BLOCK, 2)));
             }
 
+            logger.info("placing piece at (c:{0}, r:{1})", piece.column, piece.row);
             placeBlockAt(piece, piece.column, piece.row);
 
             //Remove powers from placed block
@@ -1641,8 +1651,8 @@ public class YokelGameBoard extends AbstractYokelObject {
             }
             //piece = null;
             setBrokenCellsHandled(false);
-            System.out.println("is handled=" + brokenCellsHandled);
         }
+        logger.debug("Exit setNextPiece()");
     }
 
     public int peekSpecialQueue(){
@@ -1660,6 +1670,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     public void getNewNextPiece() {
         int isSpecial = 0;
 
+        //Pop a special next piece if it exists
         if(!YokelUtilities.isQueueEmpty(specialPieces)){
             isSpecial = specialPieces.removeFirst();
         }

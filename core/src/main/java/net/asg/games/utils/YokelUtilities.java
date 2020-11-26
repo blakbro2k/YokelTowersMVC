@@ -20,6 +20,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.SnapshotArray;
 
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
@@ -61,11 +63,11 @@ public class YokelUtilities {
         return array;
     }
 
-    public static <T> Array.ArrayIterator<T> safeIterable(Array<T> collection){
+    public static <T> Iterable<T> safeIterable(Iterable<T> collection){
         if(collection != null){
-            return new Array.ArrayIterator<T>(collection);
+            return (Iterable) collection;
         } else {
-            return new Array.ArrayIterator<>(GdxArrays.newArray());
+            return (Iterable) GdxArrays.newArray();
         }
     }
 
@@ -510,5 +512,45 @@ public class YokelUtilities {
             }
         }
         return drawables;
+    }
+
+    //Logging Utils
+    private static Log4LibGDXLogger validateLogger(Logger logger){
+        if(logger instanceof Log4LibGDXLogger){
+            return (Log4LibGDXLogger) logger;
+        }
+        System.out.println("logger logger: " + logger);
+        System.out.println("logger logger Class: " + logger.getClass());
+        System.out.println("logger factory: " + LoggerService.INSTANCE.getFactory());
+
+        Log4LibGDXLogger.Log4LibGDXLoggerFactory logFactory = new Log4LibGDXLogger.Log4LibGDXLoggerFactory();
+
+        //LoggerService
+        LoggerService.INSTANCE.clearLoggersCache();
+        LoggerService.INSTANCE.setFactory(logFactory);
+        //logFactory.newLogger()
+        System.out.println("logger factory2: " + LoggerService.INSTANCE.getFactory());
+        //Only turn log on error
+        LoggerService.disable();
+        LoggerService.error(true);
+
+        //return logFactory.newLogger();
+        throw new GdxRuntimeException("Cannot use Utils on non Log4LibGDXLogger logger.");
+    }
+
+    public static void setError(Logger logger){
+        validateLogger(logger).setError();
+    }
+
+    public static void setDebug(Logger logger){
+        validateLogger(logger).setDebug();
+    }
+
+    public static void setInfo(Logger logger){
+        validateLogger(logger).setInfo();
+    }
+
+    public static int getLoggerLevel(Logger logger){
+        return validateLogger(logger).getLoggerLevel();
     }
 }

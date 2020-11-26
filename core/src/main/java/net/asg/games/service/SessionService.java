@@ -16,6 +16,7 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.websocket.data.WebSocketException;
 
+import net.asg.games.controller.UITestController;
 import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.game.managers.ClientManager;
 import net.asg.games.game.managers.GameManager;
@@ -36,7 +37,9 @@ import org.apache.commons.lang.StringUtils;
  * @author Blakbro2k */
 @Component
 public class SessionService {
-    private static final Logger LOGGER = LoggerService.forClass(SessionService.class);
+    // Getting a utility logger:
+    private Logger logger;
+
     @Inject private InterfaceService interfaceService;
 
     private final String CONNECT_MSG = "Connecting...";
@@ -54,6 +57,8 @@ public class SessionService {
     @Initiate
     public void initialize() throws WebSocketException {
         client = new ClientManager("localhost", 8000);
+        logger = LoggerService.forClass(SessionService.class);
+
         //TODO: Create PHPSESSION token6
         //TODO: Create CSRF Token
         //TODO: Get host and port from configuration or preferences
@@ -208,14 +213,21 @@ public class SessionService {
     }
 
     public void showError(Throwable throwable) {
+        logger.debug("Enter showError()");
+
         if(throwable == null) return;
         setCurrentError(throwable.getCause(), throwable.getMessage());
         interfaceService.showDialog(ErrorController.class);
+        logger.debug("Exit showError()");
     }
 
     public void handlePlayerInput(GameManager game){
+        logger.debug("Enter handlePlayerInput()");
+
         if(game == null) return;
         int currentSeat = getCurrentSeat();
+        logger.debug("currentSeat={0}", currentSeat);
+
         if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
             game.handleMoveRight(currentSeat);
         }
@@ -246,5 +258,6 @@ public class SessionService {
         if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
             game.testGameBoard(currentSeat);
         }
+        logger.debug("Exit handlePlayerInput()");
     }
 }

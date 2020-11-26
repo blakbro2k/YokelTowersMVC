@@ -49,6 +49,7 @@ import net.asg.games.provider.tags.GamePlayerListLmlTagProvider;
 import net.asg.games.provider.tags.GamePowersQueueLmlTagProvider;
 import net.asg.games.provider.tags.GameTableListLmlTagProvider;
 import net.asg.games.service.ScaleService;
+import net.asg.games.utils.Log4LibGDXLogger;
 
 /** Thanks to the Component annotation, this class will be automatically found and processed.
      *
@@ -111,13 +112,22 @@ import net.asg.games.service.ScaleService;
             // Thanks to this setting, only methods annotated with @LmlAction will be available in views, significantly
             // speeding up method look-up:
             Lml.EXTRACT_UNANNOTATED_METHODS = false;
-
-            //LoggerService
-
+            setUpLogger();
             addCustomLmlTags();
         }
 
-        @Destroy
+    private void setUpLogger() {
+        //Log4LibGDXLogger.Log4LibGDXLoggerFactory logFactory = new Log4LibGDXLogger.Log4LibGDXLoggerFactory();
+        //LoggerService
+        //LoggerService.INSTANCE.clearLoggersCache();
+        //LoggerService.INSTANCE.setFactory(logFactory);
+        //System.out.println("logger factory: " + LoggerService.INSTANCE.getFactory());
+        //Only turn log on error
+        //LoggerService.disable();
+        //LoggerService.error(true);
+    }
+
+    @Destroy
         public static void destroyColorPicker() {
             ColorPickerContainer.dispose();
         }

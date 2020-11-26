@@ -55,7 +55,6 @@ public class GdxTestRunner extends BlockJUnit4ClassRunner implements Application
     @Override
     public void render() {
         synchronized (invokeInRender) {
-            System.out.println("invokeInRender=" + invokeInRender);
             for (Map.Entry<FrameworkMethod, RunNotifier> each : invokeInRender.entrySet()) {
                 super.runChild(each.getKey(), each.getValue());
             }

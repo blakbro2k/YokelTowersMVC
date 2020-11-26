@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerService;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockMove;
@@ -24,6 +26,8 @@ import net.asg.games.utils.YokelUtilities;
 import java.util.Vector;
 
 public class GameBlockArea extends Stack {
+    private final Logger logger = LoggerService.forClass(GameBlockArea.class);
+
     private static final String CELL_ATTR = "uiCell";
     private static final String CELL_ATTR_SEPARATOR = "_";
     private static final String GRID_NAME = "grid";
@@ -242,7 +246,7 @@ public class GameBlockArea extends Stack {
     }
 
     public boolean isActionFinished(){
-        //System.out.println("dropCells{" + dropCells + "}");
+        logger.debug("Enter isActionFinished()={0}", dropCells.isEmpty());
         return dropCells.isEmpty();
     }
 
