@@ -104,7 +104,17 @@ public class GameManager {
     }
 
     public Vector getCellsToDrop(int board){
-        return boardCellsToDrop[board];
+        logger.debug("Enter getCellsToDrop()");
+        logger.debug("vector=" + boardCellsToDrop[board]);
+        Vector drops = new Vector();
+        if(boardCellsToDrop[board] != null){
+            drops = (Vector) boardCellsToDrop[board].clone();
+            boardCellsToDrop[board].clear();
+        }
+        logger.debug("vector=" + boardCellsToDrop[board]);
+        logger.debug("drops=" + drops);
+        logger.debug("Exit getCellsToDrop()");
+        return drops;
     }
 
     private boolean isOccupied(YokelSeat seat){

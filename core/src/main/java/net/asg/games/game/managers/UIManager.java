@@ -241,15 +241,15 @@ public class UIManager implements Disposable {
                     //Animate Cell drops if this client is
                     if(config.getCurrentSeat() == board){
                         logger.debug(game.getGameBoard(board));
-                        animateBrokenCells(gameBoards[board], game.getCellsToDrop(board), board, game);
+                        logger.debug(gameBoards[board]);
+                        animateBrokenCells(gameBoards[board], board, game);
                     } else {
                         //handle internal game movement for now.
-                        //handleBrokenCells(board, game);
+                        handleBrokenCells(board, game);
                     }
                 }
             }
         }
-
         logger.debug("Exit updateGameBoards()");
     }
 
@@ -268,17 +268,19 @@ public class UIManager implements Disposable {
         logger.debug("Exit handleBrokenCells()");
     }
 
-    private void animateBrokenCells(GameBoard gameBoard, Vector<YokelBlockMove> cellsToDrop, int board, GameManager game) {
-        logger.debug("Enter animateBrokenCells(cellsToDrop="+ cellsToDrop+", boardNum="+ board+")");
+    private void animateBrokenCells(GameBoard gameBoard, int board, GameManager game) {
+        logger.debug("Enter animateBrokenCells(boardNum="+ board+")");
 
-        if(!YokelUtilities.isEmpty(cellsToDrop)){
-            isCellsDropping = true;
-            logger.debug("Starting to animate drop cells.");
-            logger.debug("isCellsDropping={0}", isCellsDropping);
-            gameBoard.addBlocksToDrop(cellsToDrop);
+        if(!isCellsDropping){
+            Vector<YokelBlockMove> cellsToDrop = game.getCellsToDrop(board);
+            if(!YokelUtilities.isEmpty(cellsToDrop)){
+                logger.debug("game drops=" + cellsToDrop);
+                isCellsDropping = true;
+                logger.debug("Starting to animate drop cells.");
+                logger.debug("isCellsDropping={0}", isCellsDropping);
+                gameBoard.addBlocksToDrop(cellsToDrop);
+            }
         }
-
-
 
         if(gameBoard.isActionFinished()){
             isCellsDropping = false;

@@ -1,5 +1,6 @@
 package net.asg.games.provider.actors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
@@ -25,6 +26,7 @@ import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.YokelUtilities;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 public class GameBlockArea extends Stack {
@@ -61,6 +63,7 @@ public class GameBlockArea extends Stack {
     private ObjectMap<String, GameBlock> uiBlocks;
     private Queue<GameBlock> dropCells;
     private PieceDrawable pieceSprite;
+    private int globalTimer = 0;
 
     public GameBlockArea(Skin skin, boolean isPreview) {
         this.skin = skin;
@@ -235,6 +238,8 @@ public class GameBlockArea extends Stack {
                 logger.debug("[" + toMove.x + "," + toMove.y + "] to row: " + toMove.targetRow);
                 //System.err.println("uiBlock: " + uiBlocks.get(getCellAttrName(toMove.y, toMove.x)));
                 GameBlock uiCell = uiBlocks.get(getCellAttrName(toMove.y, toMove.x));
+                logger.debug("uiCell=" + uiCell);
+
                 if(uiCell != null) {
                     logger.debug("[" + uiCell.getX() + "," + uiCell.getX() + "] to row: " + toMove.targetRow);
                     logger.debug("{" + grid.getCell(uiCell).getActorX() + "}");
@@ -242,39 +247,29 @@ public class GameBlockArea extends Stack {
                     uiCell.addAction(Actions.sequence(action, Actions.removeAction(action, uiCell)));
                     //uiCell.addAction(Actions.moveTo(uiCell.getX() / 2, (uiCell.getX() - 16) / 2, 0.8f, Interpolation.linear));
                     logger.debug("HAS ACTION!!" + uiCell.hasActions());
+                    logger.debug("HAS ACTION!!" + uiCell.getActions());
                     dropCells.addLast(uiCell);
                 }
             }
         }
-    }
-
-    public static class ClearAction implements Runnable {
-        private final Logger logger = LoggerService.forClass(ClearAction.class);
-
-        GameBlock cell;
-
-        ClearAction(GameBlock uiCell) {
-            this.cell = uiCell;
-
-        }
-
-        public void run(){
-            logger.debug("Clear action calld for :" + cell.getName());
-            for(Action action : cell.getActions()){
-                if(action != null){
-                    logger.debug("Removing " + action + " Action.");
-                    cell.removeAction(action);
-                    //Actions.removeAction(action);
-                }
-            }
+        //isActionFinished();
+        if(++globalTimer > 3){
+            Gdx.app.exit();
         }
     }
 
     public boolean isActionFinished(){
         logger.debug("Enter isActionFinished()={0}", dropCells.isEmpty());
-        for(GameBlock cell : dropCells){
+        Iterator<GameBlock> iterator = dropCells.iterator();
+        while(iterator.hasNext()){
+            GameBlock cell = iterator.next();
             if(cell != null){
                 logger.debug(cell.getName() + " hasActions={0}", cell.hasActions());
+                logger.debug(cell.getName() + " hasActions={0}", cell.getActions().size);
+                logger.debug(cell.getName() + " hasActions={0}", cell.getActions());
+                if(!cell.hasActions()){
+                    iterator.remove();
+                }
             }
         }
         return dropCells.isEmpty();
