@@ -1,7 +1,6 @@
 package net.asg.games;
 
 import com.badlogic.gdx.utils.ObjectMap;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import net.asg.games.game.objects.AbstractYokelObject;
 import net.asg.games.game.objects.YokelBlock;
@@ -18,8 +17,6 @@ import net.asg.games.storage.YokelStorageAdapter;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import static sun.audio.AudioPlayer.player;
 
 public class StorageTest {
 
@@ -48,7 +45,7 @@ public class StorageTest {
         Assert.assertEquals(AbstractYokelObject.class, storage.getClassFromSuper(AbstractYokelObject.class, new YokelBlockMove()));
         storage.saveObject(player);
         Assert.assertEquals(1, storage.getTransactions());
-        storage.rollTransactions();
+        storage.rollBackTransactions();
         Assert.assertEquals(0, storage.getTransactions());
         storage.saveObject(player);
         Assert.assertEquals(1, storage.getTransactions());

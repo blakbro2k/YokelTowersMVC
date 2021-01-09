@@ -143,6 +143,34 @@ public class ClientManager implements Disposable {
         sendClientRequest(ServerRequest.REQUEST_TABLE_INFO, PayloadUtil.createTableInfoRequest(loungeName, roomName));
     }
 
+    public void requestMoveRight(String loungeName, String roomName, int tableNumber, int seat) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_MOVE_RIGHT, PayloadUtil.createTableMoveRequest(loungeName, roomName, tableNumber, seat, ServerRequest.REQUEST_TABLE_MOVE_RIGHT.toString()));
+    }
+
+    public void requestMoveLeft(String loungeName, String roomName, int tableNumber, int seat) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_MOVE_LEFT, PayloadUtil.createTableMoveRequest(loungeName, roomName, tableNumber, seat, ServerRequest.REQUEST_TABLE_MOVE_LEFT.toString()));
+    }
+
+    public void requestCycleDown(String loungeName, String roomName, int tableNumber, int seat) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_CYCLE_DOWN, PayloadUtil.createTableMoveRequest(loungeName, roomName, tableNumber, seat, ServerRequest.REQUEST_TABLE_CYCLE_DOWN.toString()));
+    }
+
+    public void requestCycleUp(String loungeName, String roomName, int tableNumber, int seat) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_CYCLE_UP, PayloadUtil.createTableMoveRequest(loungeName, roomName, tableNumber, seat, ServerRequest.REQUEST_TABLE_CYCLE_UP.toString()));
+    }
+
+    public void requestMoveStartDown(String loungeName, String roomName, int tableNumber, int seat) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_MOVE_START_DOWN, PayloadUtil.createTableMoveRequest(loungeName, roomName, tableNumber, seat, ServerRequest.REQUEST_TABLE_MOVE_START_DOWN.toString()));
+    }
+
+    public void requestMoveStopDown(String loungeName, String roomName, int tableNumber, int seat) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_MOVE_STOP_DOWN, PayloadUtil.createTableMoveRequest(loungeName, roomName, tableNumber, seat, ServerRequest.REQUEST_TABLE_MOVE_STOP_DOWN.toString()));
+    }
+
+    public void requestGameManager(String loungeName, String roomName, int tableNumber, int seat) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_GAME_MANAGER, PayloadUtil.createGameManagerRequest(loungeName, roomName, tableNumber, seat));
+    }
+
     public void handleServerResponse(ServerResponse request) {
         if(request != null){
             String message = request.getMessage();

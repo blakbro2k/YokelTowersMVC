@@ -10,5 +10,5 @@ public interface Saveable<T> {
     void commitTransactions();
 
     /** Delete transactions */
-    void rollTransactions();
+    void rollBackTransactions();
 }

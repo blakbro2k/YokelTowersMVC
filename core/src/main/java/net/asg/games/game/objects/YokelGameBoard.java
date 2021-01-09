@@ -1560,21 +1560,27 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     private void movePieceDown(){
+        logger.debug("Enter movePieceDown()");
         if(piece != null){
             if(isDownCellFree(piece.column, piece.row)){
+                logger.debug("DownCell is Free");
                 this.fallNumber = MAX_FALL_VALUE;
                 piece.setPosition(piece.row - 1, piece.column);
             } else {
+                logger.debug("DownCell is Not Free");
                 if(!isPieceSet){
+                    logger.debug("Piece is not Set: Setting");
                     setNextPiece();
                     isPieceSet = true;
                 }
                 if(brokenCellsHandled) {
+                    logger.debug("Broken Cells handled, getting New Next Piece");
                     getNewNextPiece();
                     isPieceSet = false;
                 }
             }
         }
+        logger.debug("Exit movePieceDown()");
     }
 
     public void movePieceRight(){
@@ -1671,7 +1677,7 @@ public class YokelGameBoard extends AbstractYokelObject {
         int isSpecial = 0;
 
         //Pop a special next piece if it exists
-        if(!YokelUtilities.isQueueEmpty(specialPieces)){
+        if(!YokelUtilities.isEmpty(specialPieces)){
             isSpecial = specialPieces.removeFirst();
         }
 
@@ -1717,9 +1723,6 @@ public class YokelGameBoard extends AbstractYokelObject {
     //TODO: Make this safe
     private int powerUpBlock(int block){
         if(countOfBreaks[block] > 3){
-            //System.out.println("breaks" + Arrays.toString(countOfBreaks));
-            //System.out.println("block[" + block + "] has broken." );
-            //System.out.println("powers keep" + Arrays.toString(powersKeep));
 
             //powerUp
             countOfBreaks[block] -= 4;
@@ -1750,19 +1753,23 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void addPowerToQueue(YokelBlock block){
+        logger.debug("Enter addPowerToQueue(block=" + block + ")");
         if(block != null){
             int b = block.getBlockType();
             if(block.hasPower()){
                 powers.addFirst(YokelBlockEval.addPowerBlockFlag(YokelBlockEval.setPowerFlag(b, block.getPower())));
             }
         }
+        logger.debug("Exit addPowerToQueue()");
     }
 
     public int checkForYahoos(){
+        logger.debug("Enter checkForYahoos()=" + getYahooDuration());
         return yahooDuration = getYahooDuration();
     }
 
     public boolean isPieceSet() {
+        logger.debug("isPieceSet()=" + isPieceSet);
         return isPieceSet;
     }
 

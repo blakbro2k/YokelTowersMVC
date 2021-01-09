@@ -10,7 +10,6 @@ import com.github.czyzby.kiwi.log.impl.DebugLogger;
 import com.github.czyzby.kiwi.log.impl.DefaultLogger;
 
 import java.util.Arrays;
-import java.util.function.ToDoubleBiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

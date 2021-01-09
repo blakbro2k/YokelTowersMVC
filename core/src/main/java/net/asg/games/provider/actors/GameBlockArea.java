@@ -4,8 +4,10 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -230,23 +232,51 @@ public class GameBlockArea extends Stack {
     public void pushCellsToMove(Vector<YokelBlockMove> cellsToDrop) {
         for(YokelBlockMove toMove : cellsToDrop){
             if(toMove != null) {
-                System.out.println("[" + toMove.x + "," + toMove.y + "] to row: " + toMove.targetRow);
+                logger.debug("[" + toMove.x + "," + toMove.y + "] to row: " + toMove.targetRow);
                 //System.err.println("uiBlock: " + uiBlocks.get(getCellAttrName(toMove.y, toMove.x)));
                 GameBlock uiCell = uiBlocks.get(getCellAttrName(toMove.y, toMove.x));
                 if(uiCell != null) {
-                    System.err.println("HAS ACTION!!" + uiCell.hasActions());
-                    System.err.println("[" + uiCell.getX() + "," + uiCell.getX() + "] to row: " + toMove.targetRow);
-                    System.out.println("{" + grid.getCell(uiCell).getActorX() + "}");
-                    uiCell.addAction(Actions.moveTo(uiCell.getX() / 2, (uiCell.getX() - 16) / 2, 0.8f, Interpolation.linear));
-                    System.err.println("HAS ACTION!!" + uiCell.hasActions());
+                    logger.debug("[" + uiCell.getX() + "," + uiCell.getX() + "] to row: " + toMove.targetRow);
+                    logger.debug("{" + grid.getCell(uiCell).getActorX() + "}");
+                    Action action = Actions.moveTo(uiCell.getX() / 2, (uiCell.getX() - 16) / 2, 0.8f, Interpolation.linear);
+                    uiCell.addAction(Actions.sequence(action, Actions.removeAction(action, uiCell)));
+                    //uiCell.addAction(Actions.moveTo(uiCell.getX() / 2, (uiCell.getX() - 16) / 2, 0.8f, Interpolation.linear));
+                    logger.debug("HAS ACTION!!" + uiCell.hasActions());
+                    dropCells.addLast(uiCell);
                 }
-                //dropCells.addLast(uiCell);
+            }
+        }
+    }
+
+    public static class ClearAction implements Runnable {
+        private final Logger logger = LoggerService.forClass(ClearAction.class);
+
+        GameBlock cell;
+
+        ClearAction(GameBlock uiCell) {
+            this.cell = uiCell;
+
+        }
+
+        public void run(){
+            logger.debug("Clear action calld for :" + cell.getName());
+            for(Action action : cell.getActions()){
+                if(action != null){
+                    logger.debug("Removing " + action + " Action.");
+                    cell.removeAction(action);
+                    //Actions.removeAction(action);
+                }
             }
         }
     }
 
     public boolean isActionFinished(){
         logger.debug("Enter isActionFinished()={0}", dropCells.isEmpty());
+        for(GameBlock cell : dropCells){
+            if(cell != null){
+                logger.debug(cell.getName() + " hasActions={0}", cell.hasActions());
+            }
+        }
         return dropCells.isEmpty();
     }
 

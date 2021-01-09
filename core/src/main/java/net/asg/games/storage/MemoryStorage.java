@@ -82,7 +82,7 @@ public class MemoryStorage extends AbstractStorage {
     }
 
     @Override
-    public void rollTransactions() {
+    public void rollBackTransactions() {
         _transactions.clear();
     }
 

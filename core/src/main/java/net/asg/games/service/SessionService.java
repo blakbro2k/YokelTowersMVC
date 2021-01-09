@@ -16,13 +16,10 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.websocket.data.WebSocketException;
 
-import net.asg.games.controller.UITestController;
 import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.game.managers.ClientManager;
 import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.PlayerKeyMap;
-import net.asg.games.game.objects.YokelBlock;
-import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelTable;
@@ -38,7 +35,7 @@ import org.apache.commons.lang.StringUtils;
 @Component
 public class SessionService {
     // Getting a utility logger:
-    private Logger logger;
+    private Logger logger = LoggerService.forClass(SessionService.class);
 
     @Inject private InterfaceService interfaceService;
 
@@ -56,8 +53,8 @@ public class SessionService {
 
     @Initiate
     public void initialize() throws WebSocketException {
+        logger.debug("initialize called()");
         client = new ClientManager("localhost", 8000);
-        logger = LoggerService.forClass(SessionService.class);
 
         //TODO: Create PHPSESSION token6
         //TODO: Create CSRF Token
@@ -66,7 +63,14 @@ public class SessionService {
 
     @Destroy
     public void destroy() {
+        logger.debug("destroy called()");
         closeClient();
+        if(currentTable != null){
+            currentTable.dispose();
+        }
+        if(player != null){
+            player.dispose();
+        }
         views.clear();
     }
 
@@ -129,6 +133,49 @@ public class SessionService {
         return PayloadUtil.getAllTablesRequest(client.getNextRequest(ServerRequest.REQUEST_TABLE_INFO));
     }
 
+    private void asyncMoveRightRequest() throws InterruptedException {
+        client.requestMoveRight(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    }
+
+    private void asyncMoveLeftRequest() throws InterruptedException {
+        client.requestMoveLeft(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    }
+
+    private void asyncCycleDownRequest() throws InterruptedException {
+        client.requestCycleDown(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    }
+
+    private void asyncCycleUpRequest() throws InterruptedException {
+        client.requestCycleUp(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    }
+
+    private void asyncMoveStartDownRequest() throws InterruptedException {
+        client.requestMoveStartDown(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    }
+
+    private void asyncMoveStopDownRequest() throws InterruptedException {
+        client.requestMoveStopDown(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    }
+
+    private void asyncTargetAttackRequest() throws InterruptedException {
+        //client.requestMoveRight(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    }
+
+    private void asyncRandomAttackRequest() throws InterruptedException {
+        //client.requestMoveRight(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    }
+
+    public void asyncGameManagerFromServerRequest() throws InterruptedException {
+        client.requestGameManager(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    }
+
+    public GameManager asyncGetGameManagerFromServerRequest() {
+        return PayloadUtil.getGameManagerRequest(client.getNextRequest(ServerRequest.REQUEST_TABLE_GAME_MANAGER));
+    }
+
+
+
+
     public Array<String> toPlayerNames(Array<YokelPlayer> players) {
         Array<String> playerNames = GdxArrays.newArray();
         if(players != null){
@@ -180,6 +227,15 @@ public class SessionService {
         return currentTable;
     }
 
+    public int getCurrentTableNumber(){
+        currentTable = getCurrentTable();
+        if(currentTable != null){
+            return currentTable.getTableNumber();
+        } else {
+            return -1;
+        }
+    }
+
     public void setCurrentRoomName(String currentRoomName){
         this.currentRoomName = currentRoomName;
     }
@@ -214,14 +270,13 @@ public class SessionService {
 
     public void showError(Throwable throwable) {
         logger.debug("Enter showError()");
-
         if(throwable == null) return;
         setCurrentError(throwable.getCause(), throwable.getMessage());
         interfaceService.showDialog(ErrorController.class);
         logger.debug("Exit showError()");
     }
 
-    public void handlePlayerInput(GameManager game){
+    public void handleLocalPlayerInput(GameManager game){
         logger.debug("Enter handlePlayerInput()");
 
         if(game == null) return;
@@ -257,6 +312,33 @@ public class SessionService {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
             game.testGameBoard(currentSeat);
+        }
+        logger.debug("Exit handlePlayerInput()");
+    }
+
+    public void handlePlayerInputToServer() throws InterruptedException {
+        logger.debug("Enter handlePlayerInput()");
+
+        int currentSeat = getCurrentSeat();
+        logger.debug("currentSeat={0}", currentSeat);
+
+        if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
+            asyncMoveRightRequest();
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getLeftKey())) {
+            asyncMoveLeftRequest();
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
+            asyncCycleDownRequest();
+        }
+        if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
+            asyncMoveStartDownRequest();
+        }
+        if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
+            asyncMoveStopDownRequest();
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getRandomAttackKey())) {
+            asyncRandomAttackRequest();
         }
         logger.debug("Exit handlePlayerInput()");
     }

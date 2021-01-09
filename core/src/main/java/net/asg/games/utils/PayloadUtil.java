@@ -2,9 +2,11 @@ package net.asg.games.utils;
 
 import com.badlogic.gdx.utils.Array;
 
+import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelTable;
+import net.asg.games.utils.enums.ServerRequest;
 
 import org.pmw.tinylog.Logger;
 
@@ -89,6 +91,20 @@ public class PayloadUtil {
         return EMPTY_ARRAY;
     }
 
+    public static String[] createTableMoveRequest(String loungeName, String roomName, int tableNumber, int seatNumber, String action){
+        if(validatedInputs(loungeName, roomName)){
+            return new String[]{loungeName, roomName, YokelUtilities.otos(tableNumber), YokelUtilities.otos(seatNumber), action};
+        }
+        return EMPTY_ARRAY;
+    }
+
+    public static String[] createGameManagerRequest(String loungeName, String roomName, int tableNumber, int seatNumber){
+        if(validatedInputs(loungeName, roomName)){
+            return new String[]{loungeName, roomName, YokelUtilities.otos(tableNumber), YokelUtilities.otos(seatNumber)};
+        }
+        return EMPTY_ARRAY;
+    }
+
     //From payload
     public static YokelPlayer getRegisterPlayerFromPayload(String[] clientPayload){
         if(YokelUtilities.isValidPayload(clientPayload, 2)){
@@ -140,6 +156,17 @@ public class PayloadUtil {
             }
         }
         Logger.trace("Exit getAllTablesRequest()");
+        return ret;
+    }
+
+    public static GameManager getGameManagerRequest(String[] clientPayload) {
+        Logger.trace("Enter getGameManagerRequest()");
+
+        GameManager ret = null;
+        if(validatedInputs(clientPayload, 1)){
+            ret = YokelUtilities.getObjectFromJsonString(GameManager.class, clientPayload[1]);
+        }
+        Logger.trace("Exit getGameManagerRequest()=" + ret);
         return ret;
     }
 }

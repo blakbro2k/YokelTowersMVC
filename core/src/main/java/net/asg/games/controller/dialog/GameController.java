@@ -1,11 +1,15 @@
 package net.asg.games.controller.dialog;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
+import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogShower;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.ViewDialog;
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
@@ -28,7 +32,9 @@ import java.util.Iterator;
  * through InterfaceService.showDialog(Class) method. Thanks to the fact that it implements ActionContainer, its methods
  * will be available in the LML template. */
 @ViewDialog(id = ControllerNames.GAME_DIALOG, value = "ui/templates/dialogs/game.lml")
-public class GameController implements ViewRenderer, ActionContainer {
+public class GameController implements ViewRenderer, ActionContainer, ViewDialogShower {
+    private Logger logger = LoggerService.forClass(GameController.class);
+
     @Inject private InterfaceService interfaceService;
     @Inject private SessionService sessionService;
 
@@ -45,10 +51,14 @@ public class GameController implements ViewRenderer, ActionContainer {
     private float refresh = 500;
     private boolean isInitiated;
     private boolean isGameOver = false;
-
     private GameManager game;
     private GameBoard[] gameBoards = new GameBoard[8];
     private GameBoard[] areas;
+
+    @Override
+    public void doBeforeShow(Window dialog) {
+        logger.debug("doBeforeShow() called");
+    }
 
     @Override
     public void render(Stage stage, float delta) {
@@ -65,22 +75,35 @@ public class GameController implements ViewRenderer, ActionContainer {
             }
         }
 
-        checkForInput();
-        //TODO: fetch game manager from server, handle multiplayer collisions
-        game.update(delta);
-        updateGameBoards();
+        /*
+        //Fetch GameManager from Server
+        GameManager game = fetchGameManagerFromServer();
+
+        //Handle Player input
+        handlePlayerInput(game);
+
+        //Update UI base on Game State
+        updateGameBoards(game);
+
+        //If Game Over, show it
         if(game.showGameOver()){
             toggleGameStart();
             //stage.addActor(getGameOverActor());
-        }
+        }*/
 
         stage.act(delta);
         stage.draw();
     }
 
-    private void updateGameBoards() {
-        for(int board = 0; board < gameBoards.length; board++){
-            gameBoards[board].update(game.getGameBoard(board));
+    private GameManager fetchGameManagerFromServer() {
+        return null;
+    }
+
+    private void updateGameBoards(GameManager game) {
+        if(game != null){
+            for(int board = 0; board < gameBoards.length; board++){
+                gameBoards[board].update(game.getGameBoard(board));
+            }
         }
     }
 
@@ -180,9 +203,11 @@ public class GameController implements ViewRenderer, ActionContainer {
         }
     }
 
-    private void checkForInput(){
+    private void handlePlayerInput(GameManager game){
+        logger.debug("Enter handlePlayerInput()");
         if(!isGameOver) {
-            sessionService.handlePlayerInput(game);
+            sessionService.handleLocalPlayerInput(game);
         }
+        logger.debug("Exit handlePlayerInput()");
     }
 }

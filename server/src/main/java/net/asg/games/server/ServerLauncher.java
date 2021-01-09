@@ -70,6 +70,7 @@ public class ServerLauncher {
             serverDaemon.shutDownServer(1);
             throw new Exception("Error Launching Server: ", e);
         }
+        System.err.println("###Finally block Called###");
     }
 
     private void initializeNetwork() throws Exception{
@@ -85,18 +86,14 @@ public class ServerLauncher {
                 // Printing received packets to console, sending response:
                 webSocket.frameHandler(frame -> {
                     try {
-                        String handlerID = webSocket.binaryHandlerID();
                         if(frame.isBinary()){
                             Logger.trace("is Binary");
                             handleFrame(webSocket, frame);
                         } else if(frame.isText()){
                             Logger.trace("is Text");
-                            final String frameText = frame.textData();
-                            if(StringUtils.equalsIgnoreCase(frameText, ServerRequest.REQUEST_CLIENT_ID.toString())){
-                                Logger.info("Sending Client [" + handlerID + "]");
-                                sendClientId(webSocket, handlerID);
-                            }
+                            handleTextFrame(webSocket, frame);
                         } else if(frame.isClose()){
+                            String handlerID = webSocket.binaryHandlerID();
                             Logger.info("Client [" + handlerID + "] closing connection");
                             handleFrame(webSocket, createDisconnectFrame(handlerID));
                         } else {
@@ -210,6 +207,26 @@ public class ServerLauncher {
         } catch (Exception e){
             Logger.error(e,"Error handling websocket frame.");
             throw new Exception("Error handling websocket frame.", e);
+        }
+    }
+
+    private void handleTextFrame(final ServerWebSocket webSocket, final WebSocketFrame frame) throws Exception {
+        try {
+            Logger.trace("Enter handleTextFrame()");
+
+            final String frameText = frame.textData();
+            Logger.trace("Websocket text frame: {}", frameText);
+
+            String handlerID = webSocket.binaryHandlerID();
+            if(StringUtils.equalsIgnoreCase(frameText, ServerRequest.REQUEST_CLIENT_ID.toString())){
+                Logger.info("Sending Client [" + handlerID + "]");
+                sendClientId(webSocket, handlerID);
+            }
+
+            Logger.trace("Exit handleTextFrame()");
+        } catch (Exception e){
+            Logger.error(e,"Error handling websocket text frame.");
+            throw new Exception("Error handling websocket text frame.", e);
         }
     }
 

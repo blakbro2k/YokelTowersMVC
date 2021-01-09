@@ -10,22 +10,20 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.SnapshotArray;
-
 import com.github.czyzby.kiwi.log.Logger;
 import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlockEval;
+import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelObject;
 import net.asg.games.provider.actors.GameBlock;
@@ -37,9 +35,11 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.Vector;
 
 public class YokelUtilities {
     private final static String LEFT_CURLY_BRACET_HTML = "&#123;";
@@ -227,12 +227,8 @@ public class YokelUtilities {
         return ret;
     }
 
-    public static <T> boolean isArrayEmpty(Array<T> collection){
-        return collection != null && collection.isEmpty();
-    }
-
-    public static <T> boolean isQueueEmpty(Queue<T> collection){
-        return collection != null && collection.isEmpty();
+    public static boolean isEmpty(Iterable<?> collection) {
+        return collection != null && !collection.iterator().hasNext();
     }
 
     public static boolean isStaticArrayEmpty(Object[] array){

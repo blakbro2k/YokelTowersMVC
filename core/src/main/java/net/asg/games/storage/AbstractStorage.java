@@ -26,7 +26,7 @@ public abstract class AbstractStorage implements Storage {
     abstract public void commitTransactions();
 
     @Override
-    abstract public void rollTransactions();
+    abstract public void rollBackTransactions();
 
     String getNameOrIdFromInstance(Object o, boolean getName) {
         Object var;

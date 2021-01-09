@@ -2,12 +2,16 @@ package net.asg.games.game.objects;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedMap;
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerService;
 
 import net.asg.games.utils.YokelUtilities;
 
 import org.apache.commons.lang.StringUtils;
 
 public class YokelTable extends AbstractYokelObject {
+    private final Logger logger = LoggerService.forClass(YokelTable.class);
+
     private static final String ARG_TYPE = "type";
     private static final String ARG_RATED = "rated";
     private static final int MAX_SEATS = 8;
@@ -133,6 +137,12 @@ public class YokelTable extends AbstractYokelObject {
     }
 
     public boolean isTableStartReady(){
+        logger.debug("Enter isTableStartReady");
+        logger.debug("Group 1: " + isGroupReady(0));
+        logger.debug("Group 2: " + isGroupReady(1));
+        logger.debug("Group 3: " + isGroupReady(2));
+        logger.debug("Group 4: " + isGroupReady(3));
+
         if(isGroupReady(0)){
             return isGroupReady(1) || isGroupReady(2) || isGroupReady(3);
         }
@@ -145,6 +155,7 @@ public class YokelTable extends AbstractYokelObject {
         if(isGroupReady(3)){
             return isGroupReady(0) || isGroupReady(1) || isGroupReady(2);
         }
+        logger.debug("Exit isTableStartReady");
         return false;
     }
 

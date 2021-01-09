@@ -25,8 +25,6 @@ import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
-import sun.rmi.runtime.Log;
-
 public class GameManager {
     private final Logger logger = LoggerService.forClass(GameManager.class);
 
@@ -40,8 +38,16 @@ public class GameManager {
     private long seed = 1L;
 
     public GameManager(YokelTable table){
-        this.table = table;
+        setTable(table);
         init();
+    }
+
+    private void setTable(YokelTable table) {
+        this.table = table;
+    }
+
+    private YokelTable getTable() {
+        return this.table;
     }
 
     private void loadGameData() {}
@@ -68,6 +74,7 @@ public class GameManager {
     }
 
     private void updateBoard(YokelGameBoard board, float delta, int index){
+        logger.debug("Enter updateBoard(delta="+delta+", index="+index+")");
         if(board != null){
             //Move Piece down, flag matches
             board.update(delta);
@@ -87,12 +94,13 @@ public class GameManager {
             //check for yahoo
             int duration = board.checkForYahoos();
             if(duration > 0){
-                System.err.println("YAHOOOOOOOOOOO!: " + duration);
+                logger.debug("Yahoo Duration=" + duration);
             }
 
             //Check if cells need to drop
             boardCellsToDrop[index] = board.getCellsToBeDropped();
         }
+        logger.debug("Exit updateBoard(delta="+delta+", index="+index+")");
     }
 
     public Vector getCellsToDrop(int board){
@@ -115,13 +123,17 @@ public class GameManager {
     }
 
     private boolean isPlayerDead(YokelGameBoard board){
+        logger.debug("Checking gameBoard if player has died.");
         if(board != null && board.hasGameStarted()){
+            logger.debug("Game started and player is dead=" + board.hasPlayerDied());
             return board.hasPlayerDied();
         }
+        logger.debug("Game has not started");
         return true;
     }
 
     public boolean isPlayerDead(int i){
+        logger.debug("entering isPlayerDead for board index=" + i);
         return isPlayerDead(getGameBoard(i));
     }
 
@@ -159,6 +171,8 @@ public class GameManager {
         long seed = getSeed();
         isGameRunning = false;
         for(int i = 0; i < 8; i++){
+            YokelGameBoard gameBoard = gameBoards[i];
+            if (gameBoard != null) gameBoard.dispose();
             gameBoards[i] = new YokelGameBoard(seed);
         }
     }
@@ -244,7 +258,7 @@ public class GameManager {
         }
     }
 
-    public void handleAttack(int currentBoardSeat, int seatTarget){
+    public void handleTargetAttack(int currentBoardSeat, int seatTarget){
         Stack<Integer> blocks = popPowersFromBoard(currentBoardSeat, 1);
 
         if(blocks.size() > 0) {
@@ -265,6 +279,8 @@ public class GameManager {
                 boardIndexes.add(i);
             }
 
+            //Offensive should only random enemies.
+            //Defensive should only random you and your partner.
             Iterator<Integer> iter = boardIndexes.iterator();
             while(iter.hasNext()){
                 int x = iter.next();
@@ -316,9 +332,13 @@ public class GameManager {
     }
 
     public boolean startGame() {
+        logger.debug("Enter startGame()");
         if(!isGameRunning){
+            logger.debug("isTableReady=" + table.isTableStartReady());
             isGameRunning = table.isTableStartReady();
         }
+        logger.debug("isGameRunning=" + isGameRunning);
+        logger.debug("Exit startGame()=");
         return isGameRunning;
     }
 

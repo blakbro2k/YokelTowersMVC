@@ -380,6 +380,17 @@ public class ServerManager {
                     case REQUEST_LOUNGE_ALL:
                         responsePayload = YokelUtilities.toStringArray(loungesToJSON());
                         break;
+                    case REQUEST_TABLE_MOVE_RIGHT:
+                    case REQUEST_TABLE_MOVE_LEFT:
+                    case REQUEST_TABLE_CYCLE_UP:
+                    case REQUEST_TABLE_CYCLE_DOWN:
+                    case REQUEST_TABLE_MOVE_START_DOWN:
+                    case REQUEST_TABLE_MOVE_STOP_DOWN:
+                        responsePayload = handleGamePieceMove(clientPayload);
+                        break;
+                    case REQUEST_TABLE_GAME_MANAGER:
+                        responsePayload = getGameManager(clientPayload);
+                        break;
                     default:
                         Logger.error("Unknown Client Request: " + value);
                         throw new Exception("Unknown Client Request: " + value);
@@ -567,7 +578,6 @@ public class ServerManager {
         return false;
     }
 
-    //TODO:Complete
     private boolean startGameAtTable(String loungeName, String roomName, int tableNumber) throws Exception {
         Logger.trace("Enter startGameAtTable()");
         YokelTable table = getTable(loungeName, roomName, tableNumber);
@@ -575,10 +585,14 @@ public class ServerManager {
         if(table != null){
             Logger.info("attempting to start game at " + roomName + ":table:" + table.getTableNumber());
             GameManager game = getGameFromTable(loungeName, roomName, table);
-            //store thead id for runner
-            //if(){
 
-            //}
+            //store thread id for runner
+            if(game != null){
+                game.resetGameBoards();
+            } else {
+                GameManager gameManager = new GameManager(table);
+                storage.putGame(loungeName+roomName+tableNumber, gameManager);
+            }
         }
         Logger.trace("Exit startGameAtTable()=" + false);
         return false;
@@ -589,6 +603,12 @@ public class ServerManager {
         if(roomName == null) throw new Exception("Error getting game from table: Room is null.");
         int tableNumber = table.getTableNumber();
 
+        return getGameFromTableNumber(loungeName,roomName, tableNumber);
+    }
+
+    private GameManager getGameFromTableNumber(String loungeName, String roomName, int tableNumber) throws Exception{
+        if(loungeName == null) throw new Exception("Error getting game from table: Lounge is null.");
+        if(roomName == null) throw new Exception("Error getting game from table: Room is null.");
         return storage.getGame(loungeName+roomName+tableNumber);
     }
 
@@ -608,6 +628,42 @@ public class ServerManager {
 
     private YokelPlayer getRegisteredPlayer(String playerId){
         return storage.getRegisteredPlayerGivenId(playerId);
+    }
+
+
+    private boolean handleGameMove(String loungeName, String roomName, int tableNumber, int seatNumber, String action) throws Exception {
+        Logger.trace("Enter handleGameMove()");
+        GameManager game = getGameFromTableNumber(loungeName, roomName, tableNumber);
+
+        if(game != null){
+            switch (ServerRequest.valueOf(action)) {
+                case REQUEST_TABLE_MOVE_RIGHT :
+                    game.handleMoveRight(seatNumber);
+                    break;
+                case REQUEST_TABLE_MOVE_LEFT :
+                    game.handleMoveLeft(seatNumber);
+                    break;
+                case REQUEST_TABLE_CYCLE_DOWN :
+                    game.handleCycleDown(seatNumber);
+                    break;
+                case REQUEST_TABLE_CYCLE_UP :
+                    game.handleCycleUp(seatNumber);
+                    break;
+                case REQUEST_TABLE_MOVE_START_DOWN :
+                    game.handleStartMoveDown(seatNumber);
+                    break;
+                case REQUEST_TABLE_MOVE_STOP_DOWN :
+                    game.handleStopMoveDown(seatNumber);
+                    break;
+                case REQUEST_TABLE_ATTACK_RANDOM :
+                    game.handleRandomAttack(seatNumber);
+                    break;
+                default:
+                    Logger.error("Invalid Action give, ignoring.");
+            }
+        }
+        Logger.trace("Exit handleGameMove()");
+        return true;
     }
 
     //0 = Client ID
@@ -660,6 +716,24 @@ public class ServerManager {
         return ret;
     }
 
+    //0 = GameLounge Name
+    //1 = GameRoom Name
+    //2 = GameTable number
+    private String[] getGameManager(String[] clientPayload) throws Exception {
+        Logger.trace("Enter getGameManager()");
+        String[] ret = new String[1];
+        if(YokelUtilities.isValidPayload(clientPayload, 3)){
+            String loungeName = clientPayload[0];
+            String roomName = clientPayload[1];
+            int tableNumber = YokelUtilities.otoi(clientPayload[2]);
+            GameManager game = getGameFromTableNumber(loungeName, roomName, tableNumber);
+
+            ret[0] = game == null ? null : game.toString();
+        }
+        Logger.trace("Exit getGameManager()");
+        return ret;
+    }
+
     //0 = loungeName
     //1 = roomName
     private String[] getRoomRequest(String[] clientPayload) throws Exception {
@@ -683,7 +757,7 @@ public class ServerManager {
     //3 = isRated
     private String[] createGameRequest(String[] clientPayload) throws Exception {
         Logger.trace("Enter createGameRequest()");
-        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
+        Logger.trace("Received payload=" + Arrays.toString(clientPayload));
         try{
             String[] ret = new String[1];
             ret[0] = "false";
@@ -849,6 +923,29 @@ public class ServerManager {
             ret[0] = "" + startGameAtTable(loungeName, roomName, tableNumber);
         }
         Logger.trace("Exit startGameRequest()");
+        return ret;
+    }
+
+    //0 = GameLounge Name
+    //1 = Room Name
+    //2 = Table Number
+    //3 = Seat Number
+    //4 = Action
+    private String[] handleGamePieceMove(String[] clientPayload) throws Exception {
+        Logger.trace("Enter moveGamePieceRight()");
+        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
+        String[] ret = new String[1];
+
+        if(YokelUtilities.isValidPayload(clientPayload, 4)){
+            String loungeName = clientPayload[0];
+            String roomName = clientPayload[1];
+            int tableNumber = YokelUtilities.otoi(clientPayload[2]);
+            int seatNumber = YokelUtilities.otoi(clientPayload[3]);
+            String action = clientPayload[4];
+
+            ret[0] = "" + handleGameMove(loungeName, roomName, tableNumber, seatNumber, action);
+        }
+        Logger.trace("Exit moveGamePieceRight()");
         return ret;
     }
 
