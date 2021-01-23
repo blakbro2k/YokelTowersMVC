@@ -227,26 +227,16 @@ public class UIManager implements Disposable {
         if(game != null){
             updateState(game);
             serverGameManger.update(delta);
+
             for(int board = 0; board < gameBoards.length; board++){
                 if(game.isPlayerDead(board)){
                     //logger.debug("board={0}", gameBoards[board]);
                     logger.debug("is board[{0}] dead: {1}", board, game.isPlayerDead(board));
-
                     gameBoards[board].killPlayer();
                 } else {
                     logger.debug("Updating board[{0}]", board);
                     logger.debug("Current seat[{0}]", config.getCurrentSeat());
                     gameBoards[board].update(game.getGameBoard(board));
-
-                    //Animate Cell drops if this client is
-                    if(config.getCurrentSeat() == board){
-                        logger.debug(game.getGameBoard(board));
-                        logger.debug(gameBoards[board]);
-                        animateBrokenCells(gameBoards[board], board, game);
-                    } else {
-                        //handle internal game movement for now.
-                        handleBrokenCells(board, game);
-                    }
                 }
             }
         }
@@ -327,8 +317,6 @@ public class UIManager implements Disposable {
         }
         logger.debug("Exit setUpGameArea()");
     }
-
-
 
     private int getPlayerPartnerSeatNum(int playerSeat) {
         if (playerSeat % 2 == 0) {

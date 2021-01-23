@@ -3,6 +3,7 @@ package net.asg.games.game.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
@@ -25,7 +26,7 @@ import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
-public class GameManager {
+public class GameManager implements Disposable {
     private final Logger logger = LoggerService.forClass(GameManager.class);
 
     private YokelTable table;
@@ -74,12 +75,13 @@ public class GameManager {
     }
 
     private void updateBoard(YokelGameBoard board, float delta, int index){
-        logger.debug("Enter updateBoard(delta="+delta+", index="+index+")");
+        logger.debug("Enter updateBoard(delta=" + delta + ", index=" + index + ")");
         if(board != null){
             //Move Piece down, flag matches
             board.update(delta);
 
             //Handle broken cells logic
+            /*
             if(board.getBrokenCellCount() > 0){
                 Vector<YokelBlock> broken = board.getBrokenCells();
 
@@ -89,7 +91,7 @@ public class GameManager {
                         board.incrementBreakCount(b.getBlockType());
                     }
                 }
-            }
+            }*/
 
             //check for yahoo
             int duration = board.checkForYahoos();
@@ -98,9 +100,9 @@ public class GameManager {
             }
 
             //Check if cells need to drop
-            boardCellsToDrop[index] = board.getCellsToBeDropped();
+            //boardCellsToDrop[index] = board.getCellsToBeDropped();
         }
-        logger.debug("Exit updateBoard(delta="+delta+", index="+index+")");
+        logger.debug("Exit updateBoard(delta=" + delta + ", index="+ index + ")");
     }
 
     public Vector getCellsToDrop(int board){
@@ -480,6 +482,13 @@ public class GameManager {
             System.out.println(Arrays.toString(inner));
         }
         Gdx.app.exit();
+    }
+
+    @Override
+    public void dispose() {
+        if(winners != null) {
+            winners.clear();
+        }
     }
 
     private static class GameState{}

@@ -4,9 +4,13 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.autumn.annotation.Inject;
+import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
+import com.github.czyzby.autumn.mvc.component.ui.controller.ViewInitializer;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.github.czyzby.lml.annotation.LmlAction;
@@ -23,7 +27,7 @@ import net.asg.games.service.SessionService;
 import net.asg.games.service.UserInterfaceService;
 
 @View(id = ControllerNames.UI_BLOCK_TEST_VIEW, value = "ui/templates/uiblocktest.lml")
-public class UIBlocksTestController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
+public class UIBlocksTestController extends ApplicationAdapter implements ViewRenderer, ViewInitializer, ActionContainer {
     @Inject private UserInterfaceService uiService;
     @Inject private SessionService sessionService;
 
@@ -82,11 +86,8 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
 
     YokelGameBoard boardState;
 
-    private boolean isInitiated;
-
     @Override
     public void render(Stage stage, float delta) {
-        initiate();
         area1.update(boardState);
         checkInput();
         stage.act(delta);
@@ -94,15 +95,13 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     }
 
     private void initiate(){
-        if(!isInitiated){
-            isInitiated = true;
-            initiateActors();
-            //boardState = getTestBoard();
-            boardState =  new YokelGameBoard(1L);
-            area1.setPlayerView(true);
-            area1.setActive(true);
-            area1.setPreview(false);
-            area1.update(boardState);
+        initiateActors();
+        //boardState = getTestBoard();
+        boardState =  new YokelGameBoard(1L);
+        area1.setPlayerView(true);
+        area1.setActive(true);
+        area1.setPreview(false);
+        area1.update(boardState);
 
             /*area = new GameBoard(uiService.getSkin());
             YokelPlayer player = new YokelPlayer("Test Player One",2000, 5);
@@ -113,7 +112,6 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
             area.setPreview(false);
             area.update(boardState);*/
             //area2.updateData(getTestBoard());
-        }
     }
 
     private void initiateActors() {
@@ -344,5 +342,15 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
             System.out.println(YokelBlockEval.getID(32820));
             System.out.println(YokelBlockEval.getIDFlag(YokelBlockEval.getID(32820), 32820));
         }
+    }
+
+    @Override
+    public void initialize(Stage stage, ObjectMap<String, Actor> actorMappedByIds) {
+        initiate();
+    }
+
+    @Override
+    public void destroy(ViewController viewController) {
+
     }
 }

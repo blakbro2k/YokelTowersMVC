@@ -173,9 +173,6 @@ public class SessionService {
         return PayloadUtil.getGameManagerRequest(client.getNextRequest(ServerRequest.REQUEST_TABLE_GAME_MANAGER));
     }
 
-
-
-
     public Array<String> toPlayerNames(Array<YokelPlayer> players) {
         Array<String> playerNames = GdxArrays.newArray();
         if(players != null){
@@ -282,6 +279,7 @@ public class SessionService {
         if(game == null) return;
         int currentSeat = getCurrentSeat();
         logger.debug("currentSeat={0}", currentSeat);
+        game.handleMoveRight(1);
 
         if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
             game.handleMoveRight(currentSeat);

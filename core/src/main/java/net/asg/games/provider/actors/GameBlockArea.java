@@ -8,8 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -233,17 +231,20 @@ public class GameBlockArea extends Stack {
     }
 
     public void pushCellsToMove(Vector<YokelBlockMove> cellsToDrop) {
+        logger.debug("Enter pushCellsToMove()");
         for(YokelBlockMove toMove : cellsToDrop){
             if(toMove != null) {
                 logger.debug("[" + toMove.x + "," + toMove.y + "] to row: " + toMove.targetRow);
-                //System.err.println("uiBlock: " + uiBlocks.get(getCellAttrName(toMove.y, toMove.x)));
                 GameBlock uiCell = uiBlocks.get(getCellAttrName(toMove.y, toMove.x));
                 logger.debug("uiCell=" + uiCell);
 
                 if(uiCell != null) {
+                    float targetY = (toMove.targetRow) * uiCell.getHeight();
                     logger.debug("[" + uiCell.getX() + "," + uiCell.getX() + "] to row: " + toMove.targetRow);
                     logger.debug("{" + grid.getCell(uiCell).getActorX() + "}");
-                    Action action = Actions.moveTo(uiCell.getX() / 2, (uiCell.getX() - 16) / 2, 0.8f, Interpolation.linear);
+                    logger.debug("()targetY = " + targetY);
+                    logger.debug("targetY = " + targetY);
+                    Action action = Actions.moveTo(uiCell.getX(), targetY, 0.2f, Interpolation.linear);
                     uiCell.addAction(Actions.sequence(action, Actions.removeAction(action, uiCell)));
                     //uiCell.addAction(Actions.moveTo(uiCell.getX() / 2, (uiCell.getX() - 16) / 2, 0.8f, Interpolation.linear));
                     logger.debug("HAS ACTION!!" + uiCell.hasActions());
@@ -253,9 +254,10 @@ public class GameBlockArea extends Stack {
             }
         }
         //isActionFinished();
-        if(++globalTimer > 3){
+        if(++globalTimer > 5){
             Gdx.app.exit();
         }
+        logger.debug("Exit pushCellsToMove()");
     }
 
     public boolean isActionFinished(){
@@ -272,26 +274,10 @@ public class GameBlockArea extends Stack {
                 }
             }
         }
+        logger.debug("Exiting isActionFinished()={0}", dropCells.isEmpty());
         return dropCells.isEmpty();
     }
 
-    /*        boolean isFinished = false;
-        for(Cell cell : grid.getCells()) {
-            if(cell != null){
-                if(cell.hasActor()){
-                    Actor actor = cell.getActor();
-                    System.out.println("actor{" + actor.getName() + "}");
-
-                    if(actor != null && actor.hasActions()) {
-                        isFinished = true;
-                        break;
-                    }
-                }
-            }
-        }
-        return isFinished;
-
-     */
     private static class PieceDrawable extends Actor {
         private GameBlock[] blocks = new GameBlock[3];
         private int row;
@@ -402,9 +388,9 @@ public class GameBlockArea extends Stack {
         if(gameBoard != null) {
             this.board = gameBoard;
             update();
-            setPieceSprite(gameBoard, board.fetchCurrentFallNumber());
-            setBrokenBlocks(gameBoard.getBrokenCells());
-            dropCells(gameBoard.getCellsToBeDropped());
+            setPieceSprite(gameBoard, board.fetchCurrentPieceFallTimer());
+            //setBrokenBlocks(gameBoard.getBrokenCells());
+            //dropCells(gameBoard.getCellsToBeDropped());
         }
     }
 

@@ -7,7 +7,6 @@ import com.github.czyzby.lml.parser.tag.LmlTag;
 
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.provider.actors.GameBlockArea;
-import net.asg.games.provider.actors.GamePiece;
 
 public class GameBlockAreaDataLmlAttribute implements LmlAttribute<GameBlockArea> {
     public GameBlockAreaDataLmlAttribute() {}

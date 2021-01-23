@@ -1,11 +1,15 @@
 package net.asg.games.controller.dialog;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
+import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogShower;
+import com.github.czyzby.autumn.mvc.component.ui.controller.ViewInitializer;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.ViewDialog;
 import com.github.czyzby.kiwi.log.Logger;
@@ -32,7 +36,7 @@ import java.util.Iterator;
  * through InterfaceService.showDialog(Class) method. Thanks to the fact that it implements ActionContainer, its methods
  * will be available in the LML template. */
 @ViewDialog(id = ControllerNames.GAME_DIALOG, value = "ui/templates/dialogs/game.lml")
-public class GameController implements ViewRenderer, ActionContainer, ViewDialogShower {
+public class GameController implements ViewRenderer, ViewInitializer, ActionContainer, ViewDialogShower {
     private Logger logger = LoggerService.forClass(GameController.class);
 
     @Inject private InterfaceService interfaceService;
@@ -49,7 +53,6 @@ public class GameController implements ViewRenderer, ActionContainer, ViewDialog
     @LmlActor("gameClock") private GameClock gameClock;
 
     private float refresh = 500;
-    private boolean isInitiated;
     private boolean isGameOver = false;
     private GameManager game;
     private GameBoard[] gameBoards = new GameBoard[8];
@@ -62,8 +65,6 @@ public class GameController implements ViewRenderer, ActionContainer, ViewDialog
 
     @Override
     public void render(Stage stage, float delta) {
-        initiate();
-
         if(++refresh > 300){
             refresh = 0;
             try {
@@ -108,18 +109,15 @@ public class GameController implements ViewRenderer, ActionContainer, ViewDialog
     }
 
     private void initiate(){
-        if(!isInitiated){
-            isInitiated = true;
-            areas = new GameBoard[]{area1, area2, area3, area4, area5, area6, area7, area8};
+        areas = new GameBoard[]{area1, area2, area3, area4, area5, area6, area7, area8};
 
-            YokelUtilities.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
+        YokelUtilities.setDebug(true, area1, area2, area3, area4, area5, area6, area7, area8);
 
-            YokelTable table = sessionService.getCurrentTable();
-            game = new GameManager(table);
-            setUpGameArea(table);
-            toggleGameStart();
-            game.startGame();
-        }
+        YokelTable table = sessionService.getCurrentTable();
+        game = new GameManager(table);
+        setUpGameArea(table);
+        toggleGameStart();
+        game.startGame();
     }
 
 
@@ -209,5 +207,15 @@ public class GameController implements ViewRenderer, ActionContainer, ViewDialog
             sessionService.handleLocalPlayerInput(game);
         }
         logger.debug("Exit handlePlayerInput()");
+    }
+
+    @Override
+    public void initialize(Stage stage, ObjectMap<String, Actor> actorMappedByIds) {
+        initiate();
+    }
+
+    @Override
+    public void destroy(ViewController viewController) {
+
     }
 }

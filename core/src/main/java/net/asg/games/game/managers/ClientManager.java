@@ -237,8 +237,12 @@ public class ClientManager implements Disposable {
 
     private void sendClientRequest(ServerRequest serverRequest, String[] payload) throws InterruptedException {
         checkConnection();
-        final ClientRequest request = new ClientRequest(++requestId, "1", serverRequest.toString(), payload, clientId);
+        final ClientRequest request = new ClientRequest(++requestId, getSessionId(), serverRequest.toString(), payload, clientId);
         send(request);
+    }
+
+    private String getSessionId() {
+        return "1";
     }
 
     public String[] getNextRequest(ServerRequest message) {

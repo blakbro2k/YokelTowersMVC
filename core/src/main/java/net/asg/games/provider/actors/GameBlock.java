@@ -243,6 +243,7 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
     public GameBlock clone(){
         try {
             Object c = super.clone();
+
             if(c instanceof GameBlock){
                 GameBlock g = (GameBlock) c;
                 GameBlock r = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK, g.isPreview);

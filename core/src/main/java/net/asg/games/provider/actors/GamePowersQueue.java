@@ -8,13 +8,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.github.czyzby.kiwi.log.Logger;
+import com.github.czyzby.kiwi.log.LoggerService;
 
+import net.asg.games.game.managers.UIManager;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.utils.YokelUtilities;
 
 import org.apache.commons.lang.StringUtils;
 
 public class GamePowersQueue extends Table implements GameObject{
+    private Logger logger = LoggerService.forClass(GamePowersQueue.class);
+
     private Queue<GameBlock> powers;
     private VerticalGroup powersDisplay;
 
@@ -33,6 +38,7 @@ public class GamePowersQueue extends Table implements GameObject{
     }
 
     public void updateQueue(Queue<GameBlock> powerUps){
+        logger.debug("Entering updateQueue(powerUps=" + powerUps + ")");
         if(powerUps != null) {
             this.powers = powerUps;
         }
@@ -52,6 +58,7 @@ public class GamePowersQueue extends Table implements GameObject{
         for(int f = powers.size; f < children.size; f++){
             children.removeIndex(f);
         }
+        logger.debug("Exiting updateQueue()");
     }
 
     private void updateGameBlock(Actor gameBlock, GameBlock block) {

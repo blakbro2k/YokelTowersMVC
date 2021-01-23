@@ -51,11 +51,19 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private UIManager uiManager;
 
     @Override
+    public void initialize(Stage stage, ObjectMap<String, Actor> actorMappedByIds) {
+        logger.debug("initializing viewID: " + ControllerNames.UI_TEST_VIEW);
+        initialize();
+    }
+
+    @Override
+    public void destroy(ViewController viewController) {
+        logger.debug("destroying viewID: " + ControllerNames.UI_TEST_VIEW);
+    }
+
+    @Override
     public void render(Stage stage, float delta) {
         try{
-            //Fetch GameManager from Server
-            //sessionService.asyncGameManagerFromServerRequest();
-
             //Fetch GameManager from Server
             GameManager game = fetchGameManagerFromServer();
 
@@ -64,12 +72,6 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
             //Update UI base on Game State
             uiManager.updateGameBoards(game, delta);
-
-            //If animating drops, don't send for next block
-            logger.debug("isCellDropping=" + uiManager.isCellsDropping());
-            if(!uiManager.isCellsDropping()){
-                handleCellDrops();
-            }
 
             //If Game Over, show it
             showGameOver(stage, game);
@@ -112,9 +114,9 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     }
 
     private YokelPlayer getPlayer(Array<YokelPlayer> players, int index){
-        logger.debug("Enter getPlayer()");
+        logger.debug("Enter getPlayer(players={0}, index={1})", players, index);
 
-        if(players != null && players.size > 0){
+        if(players != null && players.size > 0 && index != players.size){
             logger.debug("player={0}", players.get(index));
             if(index < players.size) return players.get(index);
         }
@@ -196,27 +198,5 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         } else {
             return uiManager.getSimulatedGameManager();
         }
-    }
-
-    private void handleCellDrops() {
-        logger.debug("Enter handleCellDrops");
-        if(uiManager.isUsingServer()) {
-            logger.debug("Sending Server message to handle broken blocks");
-            sessionService.asyncGetGameManagerFromServerRequest();
-        } else {
-            uiManager.handleCellDrops();
-        }
-        logger.debug("Exit handleCellDrops");
-    }
-
-    @Override
-    public void initialize(Stage stage, ObjectMap<String, Actor> actorMappedByIds) {
-        logger.debug("initializing viewID: " + ControllerNames.UI_TEST_VIEW);
-        initialize();
-    }
-
-    @Override
-    public void destroy(ViewController viewController) {
-        logger.debug("destroying viewID: " + ControllerNames.UI_TEST_VIEW);
     }
 }
