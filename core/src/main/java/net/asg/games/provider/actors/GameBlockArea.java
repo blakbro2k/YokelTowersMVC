@@ -14,13 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
-import com.github.czyzby.kiwi.log.Logger;
-import com.github.czyzby.kiwi.log.LoggerService;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
+import net.asg.games.utils.Log4LibGDXLoggerService;
+import net.asg.games.utils.Log4LibGDXLogger;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.YokelUtilities;
 
@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 public class GameBlockArea extends Stack {
-    private final Logger logger = LoggerService.forClass(GameBlockArea.class);
+    private final Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(GameBlockArea.class);
 
     private static final String CELL_ATTR = "uiCell";
     private static final String CELL_ATTR_SEPARATOR = "_";
@@ -68,11 +68,12 @@ public class GameBlockArea extends Stack {
         this.isPreview = isPreview;
         init();
         joinWindow = new GameJoinWidget(skin);
+        add(joinWindow);
+
         //joinButton.clearChildren();
         //joinDialog.button("Join").setDebug(false);
         //joinDialog.set
         //joinDialog.show(factory.getUserInterfaceService().getStage());
-        //add(joinWindow);this
         //System.out.println("Adding block " + this.getName() + "w: " + this.getWidth() + " h: " + this.getHeight());
     }
 
@@ -231,7 +232,7 @@ public class GameBlockArea extends Stack {
     }
 
     public void pushCellsToMove(Vector<YokelBlockMove> cellsToDrop) {
-        logger.debug("Enter pushCellsToMove()");
+        logger.enter("Enter pushCellsToMove()");
         for(YokelBlockMove toMove : cellsToDrop){
             if(toMove != null) {
                 logger.debug("[" + toMove.x + "," + toMove.y + "] to row: " + toMove.targetRow);

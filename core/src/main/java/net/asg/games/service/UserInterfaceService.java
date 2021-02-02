@@ -16,12 +16,14 @@ import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.asset.AssetService;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.SkinService;
+import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.controller.LoadingController;
 import net.asg.games.game.objects.YokelObjectFactory;
+import net.asg.games.utils.YokelUtilities;
 
 @Component
 public class UserInterfaceService {
@@ -63,7 +65,7 @@ public class UserInterfaceService {
 
         ObjectMap<String, Integer> regionMap = buildRegionsMap();
 
-        for(String regionName : regionMap.keys()){
+        for(String regionName : YokelUtilities.iterateObjectMapKeys(regionMap)){
             if(regionName != null){
                 int index = regionMap.get(regionName);
                 if(index > 1){

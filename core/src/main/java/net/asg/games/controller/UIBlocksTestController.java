@@ -23,6 +23,7 @@ import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.provider.actors.GameBoard;
 import net.asg.games.provider.actors.GameClock;
+import net.asg.games.provider.actors.GameJoinWidget;
 import net.asg.games.service.SessionService;
 import net.asg.games.service.UserInterfaceService;
 
@@ -83,6 +84,7 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     @LmlActor("clear_block_preview") private Image clearBlockPreview;
     @LmlActor("1") private GameBoard area1;
     @LmlActor("2") private GameBoard area2;
+    @LmlActor("joinReady") private GameJoinWidget joinReady;
 
     YokelGameBoard boardState;
 
@@ -103,6 +105,7 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
         area1.setPreview(false);
         area1.update(boardState);
 
+        joinReady.setIsGameReady(true);
             /*area = new GameBoard(uiService.getSkin());
             YokelPlayer player = new YokelPlayer("Test Player One",2000, 5);
             area.setPlayerLabel(player.getNameLabel().toString());
@@ -351,6 +354,6 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
 
     @Override
     public void destroy(ViewController viewController) {
-
+        boardState.dispose();
     }
 }

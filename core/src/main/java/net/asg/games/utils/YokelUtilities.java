@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.github.czyzby.kiwi.log.Logger;
 import com.github.czyzby.kiwi.log.LoggerService;
@@ -23,7 +22,6 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.game.objects.YokelBlockEval;
-import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelObject;
 import net.asg.games.provider.actors.GameBlock;
@@ -35,11 +33,9 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.Vector;
 
 public class YokelUtilities {
     private final static String LEFT_CURLY_BRACET_HTML = "&#123;";
@@ -175,6 +171,16 @@ public class YokelUtilities {
         } else {
             return YokelBlockEval.getIDFlag(YokelBlockEval.getID(block), block);
         }
+    }
+
+    public static Iterable<? extends String> iterateObjectMapKeys(ObjectMap objectMap) {
+        ObjectMap.Keys<?> keys = objectMap.keys();
+        return new Array.ArrayIterator(keys.toArray());
+    }
+
+    public static String[] getObjectMapKeys(ObjectMap<String, Object> arguments) {
+        Array<String> keys = GdxArrays.newArray(arguments.keys());
+        return keys.toArray();
     }
 
     public static class IDGenerator {

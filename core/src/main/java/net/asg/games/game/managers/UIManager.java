@@ -79,7 +79,7 @@ public class UIManager implements Disposable {
         }
 
         if(serverGameManger != null){
-            serverGameManger.startGame();
+            //serverGameManger.startGame();
         } else {
             logger.error("Unable to start GameManger!");
         }

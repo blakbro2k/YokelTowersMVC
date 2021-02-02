@@ -3,6 +3,7 @@
         <gameboard id="1" areanumber="1" debug="true"/>
         <gameboard id="2" areanumber="2"/>
         <gameJoinButton id="join" debug="true"/>
+        <gameJoinButton id="joinReady" debug="true"/>
     </table>
     <table>
         <image width="8" height="8" id="power_Y_block_preview"/>

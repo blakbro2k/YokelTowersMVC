@@ -1,6 +1,7 @@
 package net.asg.games.provider.actors;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -34,11 +35,13 @@ public class GamePowersQueue extends Table implements GameObject{
         powersDisplay.align(Align.bottom);
         powersDisplay.columnAlign(Align.bottom);
         setSize(getPrefWidth(), getPrefHeight());
+        setClip(true);
+        setCullingArea(new Rectangle(getX(), getY(), getWidth(), getHeight()));
         add(powersDisplay).bottom();
     }
 
     public void updateQueue(Queue<GameBlock> powerUps){
-        logger.debug("Entering updateQueue(powerUps=" + powerUps + ")");
+        //logger.debug("Entering updateQueue(powerUps=" + powerUps + ")");
         if(powerUps != null) {
             this.powers = powerUps;
         }
@@ -58,7 +61,7 @@ public class GamePowersQueue extends Table implements GameObject{
         for(int f = powers.size; f < children.size; f++){
             children.removeIndex(f);
         }
-        logger.debug("Exiting updateQueue()");
+        //logger.debug("Exiting updateQueue()");
     }
 
     private void updateGameBlock(Actor gameBlock, GameBlock block) {

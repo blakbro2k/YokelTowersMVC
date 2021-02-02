@@ -5,11 +5,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
+import net.asg.games.controller.UITestController;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockEval;
+import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.YokelUtilities;
 
@@ -22,6 +26,8 @@ import java.util.Objects;
  */
 
 public class GameBlock extends Table implements Pool.Poolable, GameObject, Cloneable {
+    private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(UITestController.class);
+
     private final static float DEFAULT_ANIMATION_DELAY = 0.12f;
     private final static float DEFENSE_ANIMATION_DELAY = 0.32f;
     private final static float MEDUSA_ANIMATION_DELAY = 0.22f;
@@ -30,6 +36,9 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
     private AnimatedImage uiBlock;
     private boolean isActive;
     private boolean isPreview;
+
+    //No-arg constructor required for Pools
+    public GameBlock() {}
 
     //New block via image name
     public GameBlock(Skin skin, String blockName, boolean isPreview) {
@@ -246,12 +255,14 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
 
             if(c instanceof GameBlock){
                 GameBlock g = (GameBlock) c;
-                GameBlock r = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK, g.isPreview);
+                //GameBlock r = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK, g.isPreview);
+                GameBlock r = Pools.obtain(GameBlock.class);
+                r.setName(g.getName());
                 r.setImage(g.getImage());
                 r.setActive(g.isActive());
                 return r;
             }
-            throw new RuntimeException("Unable to clone " + this.getClass().getSimpleName() + " not an instance of " + GameBlock.class.getSimpleName());
+            throw new CloneNotSupportedException();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
             throw new RuntimeException("Unable to clone " + this.getClass().getSimpleName() + " not an instance of " + GameBlock.class.getSimpleName());

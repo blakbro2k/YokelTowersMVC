@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.service.UserInterfaceService;
@@ -53,10 +54,8 @@ public class YokelObjectFactory implements Disposable {
     };
 
     public GameBlock getGameBlock(int blockType, boolean isPreview){
-        GameBlock block = yokelGameBlockPool.obtain();
-        //System.out.println("block pool=" + yokelGameBlockPool.getFree());
-        //System.out.println("block max=" + yokelGameBlockPool.max);
-        //System.out.println("block peak=" + yokelGameBlockPool.peak);
+        GameBlock block = Pools.obtain(GameBlock.class);
+        //GameBlock block = yokelGameBlockPool.obtain();
 
         boolean isBroken = YokelBlockEval.hasBrokenFlag(blockType);
         if(blockType != YokelBlock.CLEAR_BLOCK){
@@ -71,8 +70,6 @@ public class YokelObjectFactory implements Disposable {
         block.setPreview(isPreview);
         if(isBroken) blockType = YokelBlockEval.addBrokenFlag(blockType);
         block.setImage(blockType);
-        //block.setBroken(isBroken);
-
         return block;
     }
 

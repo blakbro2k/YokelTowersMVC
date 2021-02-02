@@ -1,20 +1,15 @@
 package net.asg.games.provider.actors;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 
@@ -42,21 +37,25 @@ import com.badlogic.gdx.utils.Align;
 public class GameJoinWidget extends Window {
     static private final String WAITING_TEXT = "Waiting for\nMore\nPlayers";
     static private final String JOIN_TEXT = "Join";
+    static private final String READY_TEXT = "Ready";
+    private ClickListener switchJoinText;
 
     static private final Vector2 tmpPosition = new Vector2();
     static private final Vector2 tmpSize = new Vector2();
     static private final int MOVE = 1 << 5;
 
     private GameWindowStyle style;
-    boolean isMovable = true, isModal, isResizable;
+    boolean isMovable = true;//, isModal, isResizable;
     int resizeBorder = 8;
     boolean keepWithinStage = true;
     boolean isSeated = false;
     boolean preview = false;
+    boolean isGameReady = false;
 
     private TextButton joinButton;
     private final TextButton spaceButton;
     private final Label waitingLabel;
+    private final Label readyLabel;
 
     public GameJoinWidget(Skin skin) {
         this(skin, new GameWindowStyle(skin.getDrawable("window-bg")));
@@ -75,30 +74,52 @@ public class GameJoinWidget extends Window {
 
         setTouchable(Touchable.enabled);
         setClip(true);
+        //setUpClickListner();
 
         joinButton = new TextButton(JOIN_TEXT, getSkin());
+        //joinButton.addListener(switchJoinText);
         spaceButton = new TextButton("", getSkin());
         spaceButton.setDisabled(true);
 
 
         waitingLabel = new Label(WAITING_TEXT, getSkin());
         waitingLabel.setAlignment(Align.center);
-        setUpJoinButton();
+
+        readyLabel = new Label(READY_TEXT, getSkin());
+        readyLabel.setAlignment(Align.center);
+        //setUpJoinButton();
     }
 
     private void setUpJoinButton(){
-        clearChildren();
+        //clearChildren();
         if(isSeated){
-            add(waitingLabel).row();
+            if(!isGameReady){
+                add(waitingLabel).row();
+            } else {
+                add(readyLabel).row();
+            }
         } else {
             add(joinButton).row();
-            add(spaceButton);
+            add(spaceButton).fillX();
         }
 
     }
 
+    private void setUpClickListner(){
+        switchJoinText = new ClickListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                //handleButtonClick();
+                return true;
+            }
+        };
+    }
+
     public void setSeated(boolean isSeated){
         this.isSeated = isSeated;
+    }
+
+    public void setIsGameReady(boolean isGameReady){
+        this.isGameReady = isGameReady;
     }
 
     public void setStyle (GameWindowStyle style) {
@@ -112,8 +133,14 @@ public class GameJoinWidget extends Window {
         return style;
     }
 
+    public void handleButtonClick(){
+        setSeated(true);
+        setUpJoinButton();
+    }
+
     public void setButtonListener(InputListener listener){
         joinButton.clearListeners();
+        joinButton.addListener(switchJoinText);
         joinButton.addListener(listener);
     }
 

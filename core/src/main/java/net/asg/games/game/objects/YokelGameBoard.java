@@ -1,8 +1,10 @@
 package net.asg.games.game.objects;
 
+import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.utils.Queue;
 import com.github.czyzby.kiwi.log.Logger;
 import com.github.czyzby.kiwi.log.LoggerService;
+import com.github.czyzby.kiwi.util.gdx.asset.Disposables;
 
 import net.asg.games.utils.RandomUtil;
 import net.asg.games.utils.YokelUtilities;
@@ -101,12 +103,9 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     @Override
     public void dispose() {
+        Disposables.disposeOf(piece, nextPiece, MEDUSA_PIECE, MIDAS_PIECE);
         specialPieces.clear();
         powers.clear();
-        piece.dispose();
-        nextPiece.dispose();
-        MEDUSA_PIECE.dispose();
-        MIDAS_PIECE.dispose();
     }
 
     public void begin(){

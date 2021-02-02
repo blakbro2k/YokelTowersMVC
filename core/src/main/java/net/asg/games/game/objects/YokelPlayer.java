@@ -80,5 +80,7 @@ public class YokelPlayer extends AbstractYokelObject {
     }
 
     @Override
-    public void dispose() { nameLabel.dispose();}
+    public void dispose() {
+        nameLabel.dispose();
+    }
 }

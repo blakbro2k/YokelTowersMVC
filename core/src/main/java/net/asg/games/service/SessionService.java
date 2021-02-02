@@ -2,7 +2,9 @@ package net.asg.games.service;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.autumn.annotation.Component;
 import com.github.czyzby.autumn.annotation.Destroy;
@@ -12,6 +14,7 @@ import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
 import com.github.czyzby.kiwi.log.Logger;
 import com.github.czyzby.kiwi.log.LoggerService;
+import com.github.czyzby.kiwi.util.gdx.asset.Disposables;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.websocket.data.WebSocketException;
@@ -23,6 +26,8 @@ import net.asg.games.game.objects.PlayerKeyMap;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelTable;
+import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.PayloadUtil;
 import net.asg.games.utils.enums.ServerRequest;
 
@@ -35,7 +40,7 @@ import org.apache.commons.lang.StringUtils;
 @Component
 public class SessionService {
     // Getting a utility logger:
-    private Logger logger = LoggerService.forClass(SessionService.class);
+    private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(SessionService.class);
 
     @Inject private InterfaceService interfaceService;
 
@@ -53,25 +58,22 @@ public class SessionService {
 
     @Initiate
     public void initialize() throws WebSocketException {
-        logger.debug("initialize called()");
+        logger.enter("initialize");
         client = new ClientManager("localhost", 8000);
 
         //TODO: Create PHPSESSION token6
         //TODO: Create CSRF Token
         //TODO: Get host and port from configuration or preferences
+        logger.exit("initialize");
     }
 
     @Destroy
     public void destroy() {
-        logger.debug("destroy called()");
+        logger.enter("destroy");
         closeClient();
-        if(currentTable != null){
-            currentTable.dispose();
-        }
-        if(player != null){
-            player.dispose();
-        }
+        Disposables.disposeOf(currentTable, player);
         views.clear();
+        logger.enter("destroy");
     }
 
     public void closeClient() {
@@ -266,15 +268,15 @@ public class SessionService {
     }
 
     public void showError(Throwable throwable) {
-        logger.debug("Enter showError()");
+        logger.enter("showError");
         if(throwable == null) return;
         setCurrentError(throwable.getCause(), throwable.getMessage());
         interfaceService.showDialog(ErrorController.class);
-        logger.debug("Exit showError()");
+        logger.exit("showError");
     }
 
     public void handleLocalPlayerInput(GameManager game){
-        logger.debug("Enter handlePlayerInput()");
+        logger.enter("handleLocalPlayerInput");
 
         if(game == null) return;
         int currentSeat = getCurrentSeat();
@@ -311,7 +313,7 @@ public class SessionService {
         if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
             game.testGameBoard(currentSeat);
         }
-        logger.debug("Exit handlePlayerInput()");
+        logger.exit("handleLocalPlayerInput");
     }
 
     public void handlePlayerInputToServer() throws InterruptedException {
