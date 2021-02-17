@@ -68,7 +68,7 @@ public class GameBlockArea extends Stack {
         this.isPreview = isPreview;
         init();
         joinWindow = new GameJoinWidget(skin);
-        add(joinWindow);
+        //add(joinWindow);
 
         //joinButton.clearChildren();
         //joinDialog.button("Join").setDebug(false);
@@ -97,7 +97,6 @@ public class GameBlockArea extends Stack {
         GameBlock clear = getClearBlock();
         float width = clear.getWidth() * YokelGameBoard.MAX_COLS;
         float height = clear.getHeight() * YokelGameBoard.MAX_PLAYABLE_ROWS;
-
         //this.setBounds(sLoc.x, sLoc.y, width, height);
         //grid.setBounds(sLoc.x, sLoc.y, width, height);
         //setCullingArea(new Rectangle(sLoc.x, sLoc.y, width, height));
@@ -137,12 +136,14 @@ public class GameBlockArea extends Stack {
     }
 
     private void setAreaBounds(){
+        logger.enter("setAreaBounds");
         GameBlock block = getClearBlock();
         float width = block.getWidth();
         float height = block.getHeight();
         Rectangle bounds = new Rectangle(0, 0, width * YokelGameBoard.MAX_COLS, height * YokelGameBoard.MAX_PLAYABLE_ROWS);
         grid.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
         grid.setCullingArea(bounds);
+        logger.exit("setAreaBounds");
     }
 
     private GameBlock getClearBlock(){
@@ -160,13 +161,13 @@ public class GameBlockArea extends Stack {
     void setBoardNumber(int number){
         if(tableNumber == null){
             tableNumber = new Label("", skin);
-            tableNumber.setFontScale(2);
+            tableNumber.setFontScale(4);
             tableNumber.setColor(0,0,0,1);
         }
         this.bgNumber.setName(BOARD_NUMBER_NAME);
         this.boardNumber = number;
         this.tableNumber.setText(number);
-        if(board != null) {
+        if(this.board != null) {
             this.board.setName(this.board.getId() + " : " + number);
         }
     }
@@ -195,9 +196,11 @@ public class GameBlockArea extends Stack {
     }
 
     public void setPreview(boolean isPreview){
+        logger.enter("setPreview");
         this.isPreview = isPreview;
         setAreaBounds();
         update();
+        logger.exit("setPreview");
     }
 
     @Override
@@ -217,6 +220,7 @@ public class GameBlockArea extends Stack {
         super.draw(batch, alpha);
         //this.drawChildren();
         //joinWindow.setPosition(getX(), getY() / 2);
+        //joinWindow.draw(batch, alpha);
         //if(!isActive) return;
         //System.err.println("s=" + super.getX());
         //drawGamePiece(batch, alpha);
@@ -232,19 +236,19 @@ public class GameBlockArea extends Stack {
     }
 
     public void pushCellsToMove(Vector<YokelBlockMove> cellsToDrop) {
-        logger.enter("Enter pushCellsToMove()");
+        logger.enter("pushCellsToMove");
         for(YokelBlockMove toMove : cellsToDrop){
             if(toMove != null) {
-                logger.debug("[" + toMove.x + "," + toMove.y + "] to row: " + toMove.targetRow);
+                logger.debug("[{}, {}] to row: {}", toMove.x, toMove.y, toMove.targetRow);
                 GameBlock uiCell = uiBlocks.get(getCellAttrName(toMove.y, toMove.x));
-                logger.debug("uiCell=" + uiCell);
+                logger.debug("uiCell={}", uiCell);
 
                 if(uiCell != null) {
                     float targetY = (toMove.targetRow) * uiCell.getHeight();
-                    logger.debug("[" + uiCell.getX() + "," + uiCell.getX() + "] to row: " + toMove.targetRow);
-                    logger.debug("{" + grid.getCell(uiCell).getActorX() + "}");
-                    logger.debug("()targetY = " + targetY);
-                    logger.debug("targetY = " + targetY);
+                    logger.debug("[{},{}] to row: {}",  uiCell.getX() , uiCell.getX() , toMove.targetRow);
+                    logger.debug("[{}]", grid.getCell(uiCell).getActorX());
+                    logger.debug("targetY={}",  targetY);
+                    logger.debug("targetY={}", targetY);
                     Action action = Actions.moveTo(uiCell.getX(), targetY, 0.2f, Interpolation.linear);
                     uiCell.addAction(Actions.sequence(action, Actions.removeAction(action, uiCell)));
                     //uiCell.addAction(Actions.moveTo(uiCell.getX() / 2, (uiCell.getX() - 16) / 2, 0.8f, Interpolation.linear));
@@ -258,24 +262,24 @@ public class GameBlockArea extends Stack {
         if(++globalTimer > 5){
             Gdx.app.exit();
         }
-        logger.debug("Exit pushCellsToMove()");
+        logger.exit("pushCellsToMove");
     }
 
     public boolean isActionFinished(){
-        logger.debug("Enter isActionFinished()={0}", dropCells.isEmpty());
+        logger.debug("Enter isActionFinished()={}", dropCells.isEmpty());
         Iterator<GameBlock> iterator = dropCells.iterator();
         while(iterator.hasNext()){
             GameBlock cell = iterator.next();
             if(cell != null){
-                logger.debug(cell.getName() + " hasActions={0}", cell.hasActions());
-                logger.debug(cell.getName() + " hasActions={0}", cell.getActions().size);
-                logger.debug(cell.getName() + " hasActions={0}", cell.getActions());
+                logger.debug(cell.getName() + " hasActions={}", cell.hasActions());
+                logger.debug(cell.getName() + " hasActions={}", cell.getActions().size);
+                logger.debug(cell.getName() + " hasActions={}", cell.getActions());
                 if(!cell.hasActions()){
                     iterator.remove();
                 }
             }
         }
-        logger.debug("Exiting isActionFinished()={0}", dropCells.isEmpty());
+        logger.debug("Exiting isActionFinished()={}", dropCells.isEmpty());
         return dropCells.isEmpty();
     }
 
@@ -420,6 +424,8 @@ public class GameBlockArea extends Stack {
     void setActive(boolean b){
         this.isActive = b;
         if(isActive){
+            joinWindow.setIsGameReady(true);
+            joinWindow.setSeated(true);
             if(isPlayerView){
                 bgColor.setBackground(skin.getDrawable(PLAYER_BACKGROUND));
             } else {

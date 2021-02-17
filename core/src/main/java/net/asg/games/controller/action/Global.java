@@ -11,6 +11,7 @@ import net.asg.games.controller.ControllerNames;
 import net.asg.games.controller.dialog.GameController;
 import net.asg.games.provider.actors.GameTableList;
 import net.asg.games.service.SessionService;
+import net.asg.games.utils.GlobalConstants;
 import net.asg.games.utils.PostLoader;
 
 /**
@@ -33,7 +34,7 @@ public class Global implements ActionContainer {
 
     @LmlAction("quitToRoom")
     public void quitToRoom() {
-        interfaceService.show(sessionService.getView(ControllerNames.ROOM_VIEW));
+        interfaceService.show(sessionService.getView(GlobalConstants.ROOM_VIEW));
     }
 
     @LmlAction("isUITest")

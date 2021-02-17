@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!DOCTYPE dialog SYSTEM "core/lml.dtd">
+<dialog id="dialog" title="" style="dialog">
+    <!-- "close" action is defined in Global class. -->
+    <textbutton onresult="close">join</textbutton>
+</dialog>

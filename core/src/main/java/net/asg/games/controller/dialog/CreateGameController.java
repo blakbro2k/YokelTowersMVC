@@ -9,15 +9,15 @@ import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
 
-import net.asg.games.controller.ControllerNames;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.provider.actors.GamePlayerList;
 import net.asg.games.service.SessionService;
+import net.asg.games.utils.GlobalConstants;
 
 /** This is a settings dialog, which can be shown in any views by using "show:settings" LML action or - in Java code -
  * through InterfaceService.showDialog(Class) method. Thanks to the fact that it implements ActionContainer, its methods
  * will be available in the LML template. */
-@ViewDialog(id = ControllerNames.CREATE_GAME_DIALOG, value = "ui/templates/dialogs/createGame.lml")
+@ViewDialog(id = GlobalConstants.CREATE_GAME_DIALOG, value = GlobalConstants.CREATE_GAME_DIALOG_PATH)
 public class CreateGameController implements ActionContainer {
     @Inject private InterfaceService interfaceService;
     @Inject private SessionService sessionService;

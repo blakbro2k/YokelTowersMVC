@@ -22,16 +22,17 @@ public class Log4LibGDXLogger extends DefaultLogger {
     private final TextFormatter formatter;
     private final String TOKEN_PATTERN_STR = "\\{([^{}]*)}";
     private final Pattern tokenPattern = Pattern.compile(TOKEN_PATTERN_STR);
-    private final String ENTER_METHOD_TAG = "Enter Method ";
-    private final String EXIT_METHOD_TAG = "Exit Method ";
+    private final String ENTER_METHOD_TAG = "Enter ";
+    private final String EXIT_METHOD_TAG = "Exit ";
     private final String METHOD_OPEN_TAG = "(";
     private final String METHOD_CLOSE_TAG = ")";
+    private final String METHOD_EQUALS_TAG = "=";
+    private final String METHOD_COMMA_TAG = ", ";
 
     public Log4LibGDXLogger(final LoggerService service, final Class<?> forClass) {
         super(service, forClass);
         formatter = service.getFormatter();
         //System.err.println(this + ": " + ((Log4LibGDXLoggerService)service).INSTANCE.isProductionMode());
-
         //setError();
     }
 
@@ -127,12 +128,12 @@ public class Log4LibGDXLogger extends DefaultLogger {
                 StringBuilder sb = new StringBuilder();
 
                 for(String key : arguments.keys()){
-                   sb.append(key).append("=").append(arguments.get(key)).append(", ");
+                   sb.append(key).append(METHOD_EQUALS_TAG).append(arguments.get(key)).append(METHOD_COMMA_TAG);
                 }
                 sb.deleteCharAt(sb.length() - 1);
                 sb.deleteCharAt(sb.length() - 1);
 
-                logDebug(getDebugTag(), ENTER_METHOD_TAG + methodName + METHOD_OPEN_TAG + sb + METHOD_CLOSE_TAG);
+                logDebug(getDebugTag(), ENTER_METHOD_TAG + methodName + METHOD_OPEN_TAG + sb.toString() + METHOD_CLOSE_TAG);
             } else {
                 enter(methodName);
             }
@@ -147,7 +148,7 @@ public class Log4LibGDXLogger extends DefaultLogger {
 
     public void exit(final String methodName, Object result){
         if (isDebugOn()) {
-            logDebug(getDebugTag(), EXIT_METHOD_TAG + methodName + METHOD_OPEN_TAG + METHOD_CLOSE_TAG + "=" + result);
+            logDebug(getDebugTag(), EXIT_METHOD_TAG + methodName + METHOD_OPEN_TAG + METHOD_CLOSE_TAG + METHOD_EQUALS_TAG + result);
         }
     }
 
@@ -167,7 +168,7 @@ public class Log4LibGDXLogger extends DefaultLogger {
             sb.append("{").append(0).append("}");
         } else {
             for(int i = 1; i < splitMessage.length; i++){
-                sb.append("{").append(i-1).append("}").append(splitMessage[i]);
+                sb.append("{").append(i - 1).append("}").append(splitMessage[i]);
             }
         }
         return sb.toString();

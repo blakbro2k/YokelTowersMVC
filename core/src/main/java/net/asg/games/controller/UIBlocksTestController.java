@@ -7,9 +7,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.github.czyzby.autumn.annotation.Inject;
+import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
+import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogController;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewInitializer;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
@@ -18,6 +22,8 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
+import net.asg.games.controller.dialog.JoinGameController;
+import net.asg.games.controller.dialog.NextGameController;
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.game.objects.YokelGameBoard;
@@ -26,11 +32,17 @@ import net.asg.games.provider.actors.GameClock;
 import net.asg.games.provider.actors.GameJoinWidget;
 import net.asg.games.service.SessionService;
 import net.asg.games.service.UserInterfaceService;
+import net.asg.games.utils.GlobalConstants;
+import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 
-@View(id = ControllerNames.UI_BLOCK_TEST_VIEW, value = "ui/templates/uiblocktest.lml")
+@View(id = GlobalConstants.UI_BLOCK_TEST_VIEW, value = GlobalConstants.UI_BLOCK_TEST_VIEW_PATH)
 public class UIBlocksTestController extends ApplicationAdapter implements ViewRenderer, ViewInitializer, ActionContainer {
+    private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(UIBlocksTestController.class);
+
     @Inject private UserInterfaceService uiService;
     @Inject private SessionService sessionService;
+    @Inject private InterfaceService interfaceService;
 
     @LmlActor("Y_block") private Image yBlockImage;
     @LmlActor("O_block") private Image oBlockImage;
@@ -85,27 +97,84 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     @LmlActor("1") private GameBoard area1;
     @LmlActor("2") private GameBoard area2;
     @LmlActor("joinReady") private GameJoinWidget joinReady;
+    @LmlActor("timerLabel") private Label timerLabel;
 
-    YokelGameBoard boardState;
+    private YokelGameBoard boardState;
+    private boolean nextGameDialog, attemptGameStart = false;
+    private long nextGame = 0;
 
     @Override
     public void render(Stage stage, float delta) {
+        //logger.enter("render");
         area1.update(boardState);
         checkInput();
+        checkGameStart();
+
         stage.act(delta);
         stage.draw();
+        //logger.exit("render");
+    }
+
+    private void checkGameStart() {
+        if(gameClock == null) return;
+
+        //logger.enter("checkNextGameDialogTimer");
+        //logger.debug("nextGame={}", nextGame);
+
+        //ViewController controller = interfaceService.getController(MenuController.class);
+        //logger.debug("controller={}", controller);
+
+        if(attemptGameStart){
+            if(!nextGameDialog) {
+                logger.debug("Showing next Game Dialog");
+                nextGameDialog = true;
+                interfaceService.showDialog(NextGameController.class);
+                nextGame = TimeUtils.millis();
+            }
+
+            if(getElapsedSeconds() > NextGameController.NEXT_GAME_SECONDS){
+                interfaceService.destroyDialog(NextGameController.class);
+                attemptGameStart = false;
+                startGame();
+            }
+        }
+
+
+        //controller.show(null);
+        //nextGameDialogObject.
+        //logger.debug("nextGameDialogObject={}", nextGameDialogObject.getClass());
+        //logger.debug("nextGameDialogObjectId={}", nextGameDialogObject.getId());
+        //logger.exit("checkNextGameDialogTimer");
+    }
+
+    int getElapsedSeconds(){
+        return (int) ((TimeUtils.millis() - nextGame) / 1000);
+    }
+
+    private void startGame(){
+        if(!gameClock.isRunning()) {
+            logger.debug("Starting clock now");
+            gameClock.start();
+        }
+    }
+
+    private void stopGame(){
+        if(gameClock.isRunning()) {
+            logger.debug("Starting clock now");
+            gameClock.stop();
+        }
     }
 
     private void initiate(){
         initiateActors();
         //boardState = getTestBoard();
-        boardState =  new YokelGameBoard(1L);
+        boardState = new YokelGameBoard(1L);
         area1.setPlayerView(true);
         area1.setActive(true);
         area1.setPreview(false);
         area1.update(boardState);
 
-        joinReady.setIsGameReady(true);
+        //joinReady.setIsGameReady(true);
             /*area = new GameBoard(uiService.getSkin());
             YokelPlayer player = new YokelPlayer("Test Player One",2000, 5);
             area.setPlayerLabel(player.getNameLabel().toString());
@@ -115,6 +184,7 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
             area.setPreview(false);
             area.update(boardState);*/
             //area2.updateData(getTestBoard());
+
     }
 
     private void initiateActors() {
@@ -171,12 +241,16 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
 
     @LmlAction("toggleGameStart")
     private void toggleGameStart() {
-        if(gameClock == null) return;
-        if(!gameClock.isRunning()){
-            gameClock.start();
-        } else {
-            gameClock.stop();
+        logger.enter("toggleGameStart");
+        if(!attemptGameStart){
+            attemptGameStart = true;
         }
+        if(nextGameDialog){
+            nextGameDialog = false;
+            stopGame();
+        }
+        logger.debug("attemptGameStart={}", attemptGameStart);
+        logger.exit("toggleGameStart");
     }
 
     @LmlAction("getTestBoard")

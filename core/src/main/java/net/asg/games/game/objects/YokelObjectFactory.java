@@ -53,9 +53,18 @@ public class YokelObjectFactory implements Disposable {
         }
     };
 
-    public GameBlock getGameBlock(int blockType, boolean isPreview){
+    private GameBlock getNewBlock(){
         GameBlock block = Pools.obtain(GameBlock.class);
-        //GameBlock block = yokelGameBlockPool.obtain();
+        block.setSkin(userInterfaceService.getSkin());
+        block.reset();
+        block.setImage(YokelBlock.CLEAR_BLOCK);
+        //block.setPreview(false);
+        return block;
+    }
+
+    public GameBlock getGameBlock(int blockType, boolean isPreview){
+        //GameBlock block = getNewBlock();
+        GameBlock block = yokelGameBlockPool.obtain();
 
         boolean isBroken = YokelBlockEval.hasBrokenFlag(blockType);
         if(blockType != YokelBlock.CLEAR_BLOCK){

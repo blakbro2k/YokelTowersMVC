@@ -21,6 +21,7 @@ import com.github.czyzby.lml.parser.impl.tag.Dtd;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
 
 import net.asg.games.service.UserInterfaceService;
+import net.asg.games.utils.GlobalConstants;
 import net.asg.games.utils.UIUtil;
 
 import java.io.Writer;
@@ -29,7 +30,7 @@ import java.io.Writer;
  *
  * This is the first application's views, shown right after the application starts. It will hide after all assests are
  * loaded. */
-@View(id = ControllerNames.LOADING_VIEW, value = "ui/templates/loading.lml", first = true)
+@View(id = GlobalConstants.LOADING_VIEW, value = GlobalConstants.LOADING_VIEW_PATH, first = true)
 public class LoadingController implements ViewRenderer {
     /** Kiwi logger for this class. */
     private static final Logger LOGGER = LoggerService.forClass(LoadingController.class);

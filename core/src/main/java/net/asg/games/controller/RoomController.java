@@ -17,9 +17,10 @@ import net.asg.games.provider.actors.GamePlayerList;
 import net.asg.games.provider.actors.GameTableList;
 import net.asg.games.provider.tags.GameTableListLmlTag;
 import net.asg.games.service.SessionService;
+import net.asg.games.utils.GlobalConstants;
 import net.asg.games.utils.YokelUtilities;
 
-@View(id = ControllerNames.ROOM_VIEW, value = "ui/templates/room.lml")
+@View(id = GlobalConstants.ROOM_VIEW, value = GlobalConstants.ROOM_VIEW_PATH)
 public class RoomController implements ViewRenderer, ActionContainer {
     @Inject private InterfaceService interfaceService;
     @Inject private SessionService sessionService;

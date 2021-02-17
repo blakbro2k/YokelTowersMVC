@@ -67,17 +67,17 @@ public class GameJoinWidget extends Window {
         setStyle(style);
         setMovable(false);
 
-        setWidth(150);
-        setHeight(50);
+        //setWidth(150);
+        //setHeight(50);
 
         pad(4f);
 
         setTouchable(Touchable.enabled);
         setClip(true);
-        //setUpClickListner();
+        setUpClickListner();
 
         joinButton = new TextButton(JOIN_TEXT, getSkin());
-        //joinButton.addListener(switchJoinText);
+        joinButton.addListener(switchJoinText);
         spaceButton = new TextButton("", getSkin());
         spaceButton.setDisabled(true);
 
@@ -87,7 +87,7 @@ public class GameJoinWidget extends Window {
 
         readyLabel = new Label(READY_TEXT, getSkin());
         readyLabel.setAlignment(Align.center);
-        //setUpJoinButton();
+        setUpJoinButton();
     }
 
     private void setUpJoinButton(){
@@ -108,7 +108,7 @@ public class GameJoinWidget extends Window {
     private void setUpClickListner(){
         switchJoinText = new ClickListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                //handleButtonClick();
+                handleButtonClick();
                 return true;
             }
         };
@@ -150,8 +150,6 @@ public class GameJoinWidget extends Window {
         public Drawable previewBackground;
         /** Optional */
         public Button.ButtonStyle buttonStyle;
-
-
         public GameWindowStyle (Drawable background) {
             this.background = background;
         }

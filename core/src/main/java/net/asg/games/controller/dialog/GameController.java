@@ -28,6 +28,9 @@ import net.asg.games.game.objects.YokelTable;
 import net.asg.games.provider.actors.GameBoard;
 import net.asg.games.provider.actors.GameClock;
 import net.asg.games.service.SessionService;
+import net.asg.games.utils.GlobalConstants;
+import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.YokelUtilities;
 
 import java.util.Iterator;
@@ -35,9 +38,9 @@ import java.util.Iterator;
 /** This is a settings dialog, which can be shown in any views by using "show:settings" LML action or - in Java code -
  * through InterfaceService.showDialog(Class) method. Thanks to the fact that it implements ActionContainer, its methods
  * will be available in the LML template. */
-@ViewDialog(id = ControllerNames.GAME_DIALOG, value = "ui/templates/dialogs/game.lml")
+@ViewDialog(id = GlobalConstants.GAME_DIALOG, value = GlobalConstants.GAME_DIALOG_PATH)
 public class GameController implements ViewRenderer, ViewInitializer, ActionContainer, ViewDialogShower {
-    private Logger logger = LoggerService.forClass(GameController.class);
+    private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(GameController.class);
 
     @Inject private InterfaceService interfaceService;
     @Inject private SessionService sessionService;
@@ -60,11 +63,12 @@ public class GameController implements ViewRenderer, ViewInitializer, ActionCont
 
     @Override
     public void doBeforeShow(Window dialog) {
-        logger.debug("doBeforeShow() called");
+        logger.enter("doBeforeShow");
     }
 
     @Override
     public void render(Stage stage, float delta) {
+        logger.enter("render");
         if(++refresh > 300){
             refresh = 0;
             try {
@@ -94,6 +98,7 @@ public class GameController implements ViewRenderer, ViewInitializer, ActionCont
 
         stage.act(delta);
         stage.draw();
+        logger.exit("render");
     }
 
     private GameManager fetchGameManagerFromServer() {

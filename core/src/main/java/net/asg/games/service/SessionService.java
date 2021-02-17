@@ -73,7 +73,7 @@ public class SessionService {
         closeClient();
         Disposables.disposeOf(currentTable, player);
         views.clear();
-        logger.enter("destroy");
+        logger.exit("destroy");
     }
 
     public void closeClient() {

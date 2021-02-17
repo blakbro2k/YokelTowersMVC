@@ -7,10 +7,12 @@ package net.asg.games.controller;
     import com.github.czyzby.autumn.mvc.stereotype.Asset;
     import com.github.czyzby.autumn.mvc.stereotype.View;
 
-    /** Thanks to View annotation, this class will be automatically found and initiated.
+    import net.asg.games.utils.GlobalConstants;
+
+/** Thanks to View annotation, this class will be automatically found and initiated.
      *
      * This is application's main views, displaying a menu with several options. */
-    @View(id = ControllerNames.MENU_VIEW, value = "ui/templates/menu.lml", themes = "music/theme.ogg")
+    @View(id = GlobalConstants.MENU_VIEW, value = GlobalConstants.MENU_VIEW_PATH, themes = "music/theme.ogg")
     public class MenuController implements ViewRenderer {
         /** Asset-annotated files will be found and automatically loaded by the AssetsService. */
         @Asset("ui/icons/libgdx.png") private Texture logo;

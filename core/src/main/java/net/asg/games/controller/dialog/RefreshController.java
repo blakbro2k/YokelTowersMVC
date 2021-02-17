@@ -5,15 +5,14 @@ import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogController;
 import com.github.czyzby.autumn.mvc.stereotype.ViewDialog;
 import com.github.czyzby.lml.annotation.LmlAction;
-import com.github.czyzby.lml.parser.action.ActionContainer;
 
-import net.asg.games.controller.ControllerNames;
 import net.asg.games.service.SessionService;
+import net.asg.games.utils.GlobalConstants;
 
 /** This is a settings dialog, which can be shown in any views by using "show:settings" LML action or - in Java code -
  * through InterfaceService.showDialog(Class) method. Thanks to the fact that it implements ActionContainer, its methods
  * will be available in the LML template. */
-@ViewDialog(id = ControllerNames.REFRESH_DIALOG, value = "ui/templates/dialogs/refresh.lml")
+@ViewDialog(id = GlobalConstants.REFRESH_DIALOG, value = GlobalConstants.REFRESH_DIALOG_PATH)
 public class RefreshController implements ViewDialogController {
     @Inject private SessionService sessionService;
 
@@ -30,7 +29,7 @@ public class RefreshController implements ViewDialogController {
 
     @Override
     public String getId() {
-        return ControllerNames.REFRESH_DIALOG;
+        return GlobalConstants.REFRESH_DIALOG;
     }
 
     @Override

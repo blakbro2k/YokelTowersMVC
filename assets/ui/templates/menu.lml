@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE table SYSTEM "core/lml.dtd">
-<table onecolumn="true" defaultpad="2" tablealign="bottomRight" fillparent="true" defaultfillx="true">
+<!--<table onecolumn="true" defaultpad="2" tablealign="bottomRight" fillparent="true" defaultfillx="true">-->
+<table onecolumn="true" defaultpad="2" tablealign="bottomRight" width="150" height="200">
+
     <!-- "show:settings" will automatically show the settings.lml dialog when button is clicked. -->
     <textbutton onchange="show:settings">@settings</textbutton>
     <!-- "app:exit" will automatically try to exit the application when the button is clicked. -->

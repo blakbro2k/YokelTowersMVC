@@ -6,8 +6,10 @@ import com.github.czyzby.kiwi.log.LoggerService;
 import com.google.gwt.storage.client.Storage;
 
 import net.asg.games.controller.LoungeController;
+import net.asg.games.controller.UITestController;
 import net.asg.games.game.managers.GameManager;
 import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.YokelUtilities;
 
 import org.junit.Before;
@@ -22,20 +24,31 @@ import java.util.regex.Pattern;
 
 @RunWith(GdxTestRunner.class)
 public class Log4LibGDXTest {
+    private final Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(UITestController.class);
 
     @Before
     public void startUp(){
         //LoggerService
-        Log4LibGDXLogger.Log4LibGDXLoggerFactory logFactory = new Log4LibGDXLogger.Log4LibGDXLoggerFactory();
+        //Log4LibGDXLogger.Log4LibGDXLoggerFactory logFactory = new Log4LibGDXLogger.Log4LibGDXLoggerFactory();
 
-        LoggerService.INSTANCE.setFactory(logFactory);
-        LoggerService.disable();
+        //LoggerService.INSTANCE.setFactory(logFactory);
+        //LoggerService.disable();
+    }
+
+    @Test
+    public void enterTest() throws Exception {
+        String methodName = "initialize";
+        logger.enter(methodName);
+    }
+
+    @Test
+    public void exitTest() throws Exception {
+        String methodName = "initialize";
+        logger.exit(methodName);
     }
 
     @Test
     public void setErrorTest() throws Exception {
-        final Logger logger = LoggerService.forClass(GameManager.class);
-
         //Test default
         Assert.assertEquals(YokelUtilities.getLoggerLevel(logger), Application.LOG_ERROR);
         Assert.assertEquals(logger.isErrorOn(), false);
@@ -61,8 +74,6 @@ public class Log4LibGDXTest {
 
     @Test
     public void setInfoTest() throws Exception {
-        final Logger logger = LoggerService.forClass(LoungeController.class);
-
         //Test default
         Assert.assertEquals(YokelUtilities.getLoggerLevel(logger), Application.LOG_ERROR);
         Assert.assertEquals(logger.isErrorOn(), false);
@@ -84,8 +95,6 @@ public class Log4LibGDXTest {
 
     @Test
     public void setDebugTest() throws Exception {
-        final Logger logger = LoggerService.forClass(Storage.class);
-
         //Test default
         Assert.assertEquals(YokelUtilities.getLoggerLevel(logger), Application.LOG_ERROR);
         Assert.assertEquals(logger.isErrorOn(), false);

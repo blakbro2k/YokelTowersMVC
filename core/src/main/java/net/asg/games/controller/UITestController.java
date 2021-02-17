@@ -5,8 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.sfx.MusicService;
+import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewInitializer;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
@@ -17,6 +19,7 @@ import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
+import net.asg.games.controller.dialog.NextGameController;
 import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.managers.UIManager;
 import net.asg.games.game.objects.YokelPlayer;
@@ -25,10 +28,11 @@ import net.asg.games.provider.actors.GameClock;
 import net.asg.games.provider.actors.GameOverText;
 import net.asg.games.service.SessionService;
 import net.asg.games.service.UserInterfaceService;
+import net.asg.games.utils.GlobalConstants;
 import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.Log4LibGDXLogger;
 
-@View(id = ControllerNames.UI_TEST_VIEW, value = "ui/templates/uitester.lml")
+@View(id = GlobalConstants.UI_TEST_VIEW, value = GlobalConstants.UI_TEST_VIEW_PATH)
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ViewInitializer, ActionContainer {
     // Getting a utility logger:
     private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(UITestController.class);
@@ -37,6 +41,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @Inject private SessionService sessionService;
     @Inject private MusicService musicService;
     @Inject private LoggerService loggerService;
+    @Inject private InterfaceService interfaceService;
 
     @LmlActor("gameClock") private GameClock gameClock;
     @LmlActor("1:area") private GameBoard area1;
@@ -48,19 +53,27 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @LmlActor("7:area") private GameBoard area7;
     @LmlActor("8:area") private GameBoard area8;
 
-    private boolean isGameOver = false;
+    private boolean isGameOver, nextGameDialog, attemptGameStart = false;
+    private long nextGame = 0;
 
     private UIManager uiManager;
 
     @Override
     public void initialize(Stage stage, ObjectMap<String, Actor> actorMappedByIds) {
-        logger.debug("initializing viewID: {}", ControllerNames.UI_TEST_VIEW);
+        logger.debug("initializing viewID: {}", GlobalConstants.UI_TEST_VIEW);
+        /*
+        try {
+            sessionService.asyncGameManagerFromServerRequest();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            sessionService.showError(e);
+        }*/
         initialize();
     }
 
     @Override
     public void destroy(ViewController viewController) {
-        logger.debug("destroying viewID: {}", ControllerNames.UI_TEST_VIEW);
+        logger.debug("destroying viewID: {}", GlobalConstants.UI_TEST_VIEW);
     }
 
     @Override
@@ -70,6 +83,8 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         try{
             //Fetch GameManager from Server
             GameManager game = fetchGameManagerFromServer();
+
+            checkGameStart();
 
             //Handle Player input
             handlePlayerInput();
@@ -89,7 +104,42 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         //logger.exit("render");
     }
 
+    private void checkGameStart() {
+        if(gameClock == null) return;
 
+        if(attemptGameStart){
+            if(!nextGameDialog) {
+                logger.debug("Showing next Game Dialog");
+                nextGameDialog = true;
+                interfaceService.showDialog(NextGameController.class);
+                nextGame = TimeUtils.millis();
+            }
+
+            if(getElapsedSeconds() > NextGameController.NEXT_GAME_SECONDS){
+                interfaceService.destroyDialog(NextGameController.class);
+                attemptGameStart = false;
+                startGame();
+            }
+        }
+    }
+
+    private int getElapsedSeconds(){
+        return (int) ((TimeUtils.millis() - nextGame) / 1000);
+    }
+
+    private void startGame(){
+        if(!gameClock.isRunning()) {
+            logger.debug("Starting clock now");
+            gameClock.start();
+        }
+    }
+
+    private void stopGame(){
+        if(gameClock.isRunning()) {
+            logger.debug("Starting clock now");
+            gameClock.stop();
+        }
+    }
     private void showGameOver(Stage stage, GameManager game){
         logger.enter("showGameOver");
 
@@ -151,24 +201,25 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
             //setTable
             config.setTableNumber(1);
+            int currentSeatNumber = 3;
 
             //this needs to be set outside of the UI manager
             sessionService.setCurrentPlayer(player1);
             sessionService.setCurrentLoungeName("Social");
             sessionService.setCurrentRoomName("Eiffel Tower");
-            int currentSeatNumber = 6;
             sessionService.setCurrentSeat(currentSeatNumber);
 
-            //config.setSeat(6, player1);
-            config.setSeat(1, player3);
-            //config.setCurrentPlayer(player1);
-            //config.setCurrentSeat(currentSeatNumber);
+            config.setSeat(currentSeatNumber, player1);
+            //config.setSeat(7, player3);
+            config.setSeat(1, player2);
+            config.setCurrentPlayer(sessionService.getCurrentPlayer());
+            config.setCurrentSeat(sessionService.getCurrentSeat());
         } else {
             //TODO: Fetch table state from server
             isUsingServer = true;
         }
         uiManager = new UIManager(new GameBoard[]{area1, area2, area3, area4, area5, area6, area7, area8}, isUsingServer, config);
-        //toggleGameStart();
+        toggleGameStart();
 
         logger.exit("initialize");
     }
@@ -203,10 +254,12 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         logger.exit("handlePlayerInput");
     }
 
-    private GameManager fetchGameManagerFromServer() {
+    private GameManager fetchGameManagerFromServer() throws InterruptedException {
         logger.enter("fetchGameManagerFromServer");
 
         if(uiManager.isUsingServer()) {
+            sessionService.asyncGameManagerFromServerRequest();
+
             //TODO: Check if received new GameManager, return current simulation if null.
             logger.exit("fetchGameManagerFromServer");
             return sessionService.asyncGetGameManagerFromServerRequest();

@@ -13,9 +13,10 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.service.SessionService;
+import net.asg.games.utils.GlobalConstants;
 import net.asg.games.utils.YokelUtilities;
 
-@View(id = ControllerNames.LOUNGE_VIEW, value = "ui/templates/lounge.lml")
+@View(id = GlobalConstants.LOUNGE_VIEW, value = GlobalConstants.LOUNGE_VIEW_PATH)
 public class LoungeController implements ViewRenderer, ActionContainer {
     @Inject private SessionService sessionService;
     @Inject private InterfaceService interfaceService;
@@ -45,7 +46,7 @@ public class LoungeController implements ViewRenderer, ActionContainer {
                 sessionService.setCurrentLoungeName(button.getName());
                 sessionService.setCurrentRoomName(button.getLabel().getText().toString());
                 sessionService.asyncTableAllRequest();
-                interfaceService.show(sessionService.getView(ControllerNames.ROOM_VIEW));
+                interfaceService.show(sessionService.getView(GlobalConstants.ROOM_VIEW));
             }
         } catch (Exception e){
             e.printStackTrace();

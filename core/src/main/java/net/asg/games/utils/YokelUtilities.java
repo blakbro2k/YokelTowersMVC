@@ -151,7 +151,6 @@ public class YokelUtilities {
         //System.out.println("incoming=" + incoming);
         if(original != null && !original.equals(incoming)){
             //System.out.println("equals?=" + original.equals(incoming));
-
             YokelUtilities.freeBlock(original);
             original = incoming;
         } else {
@@ -521,6 +520,7 @@ public class YokelUtilities {
         if(logger instanceof Log4LibGDXLogger){
             return (Log4LibGDXLogger) logger;
         }
+
         System.out.println("logger logger: " + logger);
         System.out.println("logger logger Class: " + logger.getClass());
         System.out.println("logger factory: " + LoggerService.INSTANCE.getFactory());

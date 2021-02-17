@@ -7,9 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class GameClock extends Table {
-    public final static String NO_DIGIT_NME = "no_digit";
-    public final static String COLON_NME = "colon";
-    public final static String DIGIT_NME = "_digit";
+    private final static String NO_DIGIT_NME = "no_digit";
+    private final static String COLON_NME = "colon";
+    private final static String DIGIT_NME = "_digit";
 
     private long start;
     private boolean isRunning;

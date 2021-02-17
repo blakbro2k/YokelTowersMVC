@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE window SYSTEM "core/lml.dtd">
-<window defaultgrowx="true">
+<window defaultgrowx="true" title="">
     <table defaultalign="left" defaultfillx="true" defaultgrowx="true" height="800">
         <table row="true" tablealign="left" colspan="2">
             <image id="yahoo_games" style="yahoo_games" row="true" height="40"/>
         </table>
         <table row="true" tablealign="left" defaultfillx="true" colspan="2">
-            <label scale="1">YAHOO! TOWERS -</label>
+            <label scale="1">YAHOO! TOWERS - </label>
             <label id="roomName">[Null]</label>
         </table>
         <table onecolumn="true" tablealign="left" align="top" height="500">

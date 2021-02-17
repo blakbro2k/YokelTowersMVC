@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE dialog SYSTEM "core/lml.dtd">
+<dialog id="dialog" title="" style="dialog" align="bottom">
+    <label row="true">@nextGameStart</label>
+    <label id="timerLabel" row="true" size="4">11</label>
+    <label row="true">@nextGameSeconds</label>
+</dialog>

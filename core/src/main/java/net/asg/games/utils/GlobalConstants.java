@@ -20,8 +20,6 @@ public class GlobalConstants {
     public static final int VIEWPORT_WIDTH = APP_WIDTH;
     public static final int VIEWPORT_HEIGHT = APP_HEIGHT;
 
-
-
     public static final String DEFAULT_FONT_PATH = "default.fnt";
     public static final String DEFAULT_FONT_IMAGE_PATH = "default.png";
     public static final String DEFAULT_UISKIN_ATLAS = "uiskin.atlas";
@@ -50,4 +48,44 @@ public class GlobalConstants {
     public static final int GET_TABLES = 92;
     public static final int GET_SEATS = 93;
     public static final int REGISTER_PLAYER = 94;
+
+    //View Names
+    public final static String CREATE_SESSION_VIEW = "createSession";
+    public final static String DEBUG_VIEW = "debug";
+    public final static String LOADING_VIEW = "loading";
+    public final static String LOGIN_VIEW = "login";
+    public final static String LOUNGE_VIEW = "lounge";
+    public final static String MENU_VIEW = "menu";
+    public final static String POST_LOADER_VIEW = "postload";
+    public final static String ROOM_VIEW = "room";
+    public final static String UI_TEST_VIEW = "uitest";
+    public final static String UI_BLOCK_TEST_VIEW = "uiblocktest";
+    public final static String CREATE_GAME_DIALOG = "createGame";
+    public final static String ERROR_DIALOG = "error";
+    public final static String GAME_DIALOG = "game";
+    public final static String LOADING_DIALOG = "webRefresh";
+    public final static String REFRESH_DIALOG = "refresh";
+    public final static String SETTINGS_DIALOG = "settings";
+    public final static String JOIN_GAME_DIALOG = "joinGame";
+    public final static String NEXT_GAME_DIALOG = "nextGame";
+
+    //View Paths
+    public final static String CREATE_SESSION_VIEW_PATH = "ui/templates/createSession.lml";
+    public final static String DEBUG_VIEW_PATH = "ui/templates/debug.lml";
+    public final static String LOADING_VIEW_PATH = "ui/templates/loading.lml";
+    public final static String LOGIN_VIEW_PATH = "ui/templates/login.lml";
+    public final static String LOUNGE_VIEW_PATH = "ui/templates/lounge.lml";
+    public final static String MENU_VIEW_PATH = "ui/templates/menu.lml";
+    public final static String POST_LOADER_VIEW_PATH = "ui/templates/postloader.lml";
+    public final static String ROOM_VIEW_PATH = "ui/templates/room.lml";
+    public final static String UI_TEST_VIEW_PATH = "ui/templates/uitester.lml";
+    public final static String UI_BLOCK_TEST_VIEW_PATH = "ui/templates/uiblocktest.lml";
+    public final static String CREATE_GAME_DIALOG_PATH = "ui/templates/dialogs/createGame.lml";
+    public final static String ERROR_DIALOG_PATH = "ui/templates/dialogs/error.lml";
+    public final static String GAME_DIALOG_PATH = "ui/templates/dialogs/game.lml";
+    public final static String LOADING_DIALOG_PATH = "ui/templates/loading.lml";
+    public final static String REFRESH_DIALOG_PATH = "ui/templates/dialogs/refresh.lml";
+    public final static String SETTINGS_DIALOG_PATH = "ui/templates/dialogs/settings.lml";
+    public final static String JOIN_GAME_PATH = "ui/templates/dialogs/joinGame.lml";
+    public final static String NEXT_GAME_PATH = "ui/templates/dialogs/nextGame.lml";
 }

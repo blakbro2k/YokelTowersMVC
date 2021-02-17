@@ -3,17 +3,17 @@ package net.asg.games.game.managers;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.github.czyzby.kiwi.log.Logger;
-import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
+import net.asg.games.controller.UITestController;
 import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.provider.actors.GameBoard;
-import net.asg.games.service.SessionService;
+import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.YokelUtilities;
 
 import java.util.Iterator;
@@ -21,7 +21,7 @@ import java.util.Vector;
 
 public class UIManager implements Disposable {
     // Getting a utility logger:
-    private Logger logger = LoggerService.forClass(UIManager.class);
+    private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(UITestController.class);
 
     private static final int GAME_BOARDS_LENGTH = 8;
     private GameBoard[] gameBoards = new GameBoard[GAME_BOARDS_LENGTH];
@@ -32,12 +32,12 @@ public class UIManager implements Disposable {
     private UIManagerUserConfiguration config;
 
     public UIManager(GameBoard[] areas, boolean useServer, UIManagerUserConfiguration config) {
-        logger.debug("Enter UIManager()");
+        logger.enter("UIManager");
         if(areas == null || areas.length != GAME_BOARDS_LENGTH) throw new GdxRuntimeException("Cannot initialize UIManager, gameboards are of wrong size.");
         setUseServer(useServer);
         this.areas = areas;
         init(config);
-        logger.debug("Exit UIManager()");
+        logger.exit("UIManager");
     }
 
     /*public UIManager(GameBoard[] areas){
@@ -45,7 +45,16 @@ public class UIManager implements Disposable {
     }*/
 
     public void setDebug(boolean isDebug){
-        //YokelUtilities.setDebug(isDebug, area1, area2, area3, area4, area5, area6, area7, area8);
+        for(GameBoard gameboard : gameBoards){
+            if(gameboard != null){
+                YokelUtilities.setDebug(isDebug, gameboard);
+            }
+        }
+        for(GameBoard area : areas){
+            if(area != null){
+                YokelUtilities.setDebug(isDebug, area);
+            }
+        }
     }
 
     private void init(UIManagerUserConfiguration config){
@@ -66,7 +75,7 @@ public class UIManager implements Disposable {
 
             YokelTable table = new YokelTable(config.getTableNumber());
 
-            for(int i = 1; i < 9; i++) {
+            for(int i = 0; i < 8; i++) {
                 YokelPlayer seatedPlayer = config.getSeat(i);
                 if(seatedPlayer != null) {
                     YokelSeat seat = table.getSeat(i);
@@ -117,15 +126,6 @@ public class UIManager implements Disposable {
 
     }
 
-    public boolean isCellsDropping() {
-        return isCellsDropping;
-    }
-
-    public void handleCellDrops() {
-        logger.debug("handling drops for seat: " + config.getCurrentSeat());
-        handleBrokenCells(config.getCurrentSeat(), serverGameManger);
-    }
-
     public static class UIManagerUserConfiguration {
         private YokelPlayer seat1;
         private YokelPlayer seat2;
@@ -136,63 +136,63 @@ public class UIManager implements Disposable {
         private YokelPlayer seat7;
         private YokelPlayer seat8;
         private YokelPlayer currentPlayer;
-        private int tableNumber;
-        private int currentSeat;
+        private int tableNumber = -1;
+        private int currentSeat = -1;
 
         public UIManagerUserConfiguration() {
         }
 
         public void setSeat(int seatNumber, YokelPlayer player){
             switch (seatNumber) {
-                case 1:
+                case 0:
                     seat1 = player;
                     break;
-                case 2:
+                case 1:
                     seat2 = player;
                     break;
-                case 3:
+                case 2:
                     seat3 = player;
                     break;
-                case 4:
+                case 3:
                     seat4 = player;
                     break;
-                case 5:
+                case 4:
                     seat5 = player;
                     break;
-                case 6:
+                case 5:
                     seat6 = player;
                     break;
-                case 7:
+                case 6:
                     seat7 = player;
                     break;
-                case 8:
+                case 7:
                     seat8 = player;
                     break;
                 default:
-                    throw new GdxRuntimeException("invalid seat number.");
+                    //throw new GdxRuntimeException("invalid seat number.");
             }
         }
 
         public YokelPlayer getSeat(int seatNumber) {
             switch (seatNumber) {
-                case 1:
+                case 0:
                     return seat1;
-                case 2:
+                case 1:
                     return seat2;
-                case 3:
+                case 2:
                     return seat3;
-                case 4:
+                case 3:
                     return seat4;
-                case 5:
+                case 4:
                     return seat5;
-                case 6:
+                case 5:
                     return seat6;
-                case 7:
+                case 6:
                     return seat7;
-                case 8:
+                case 7:
                     return seat8;
                 default:
-                    throw new GdxRuntimeException("invalid seat number.");
+                    return null;
             }
         }
 
@@ -231,11 +231,11 @@ public class UIManager implements Disposable {
             for(int board = 0; board < gameBoards.length; board++){
                 if(game.isPlayerDead(board)){
                     //logger.debug("board={0}", gameBoards[board]);
-                    logger.debug("is board[{0}] dead: {1}", board, game.isPlayerDead(board));
+                    logger.debug("is board[{}] dead: {}", board, game.isPlayerDead(board));
                     gameBoards[board].killPlayer();
                 } else {
-                    logger.debug("Updating board[{0}]", board);
-                    logger.debug("Current seat[{0}]", config.getCurrentSeat());
+                    logger.debug("Updating board[{}]", board);
+                    logger.debug("Current seat[{}]", config.getCurrentSeat());
                     gameBoards[board].update(game.getGameBoard(board));
                 }
             }
@@ -250,53 +250,32 @@ public class UIManager implements Disposable {
         }
     }
 
-    private void handleBrokenCells(int boardIndex, GameManager game) {
-        logger.debug("Enter handleBrokenCells()");
-        if(game != null){
-            game.handleBrokenCellDrops(boardIndex);
-        }
-        logger.debug("Exit handleBrokenCells()");
-    }
-
-    private void animateBrokenCells(GameBoard gameBoard, int board, GameManager game) {
-        logger.debug("Enter animateBrokenCells(boardNum="+ board+")");
-
-        if(!isCellsDropping){
-            Vector<YokelBlockMove> cellsToDrop = game.getCellsToDrop(board);
-            if(!YokelUtilities.isEmpty(cellsToDrop)){
-                logger.debug("game drops=" + cellsToDrop);
-                isCellsDropping = true;
-                logger.debug("Starting to animate drop cells.");
-                logger.debug("isCellsDropping={0}", isCellsDropping);
-                gameBoard.addBlocksToDrop(cellsToDrop);
-            }
-        }
-
-        if(gameBoard.isActionFinished()){
-            isCellsDropping = false;
-            logger.debug("ending animate drop cells.");
-            logger.debug("isCellsDropping={0}", isCellsDropping);
-        }
-        logger.debug("Exit animateBrokenCells()");
-    }
-
     private void setUpGameArea(YokelTable table){
-        logger.debug("Enter setUpGameArea()");
+        logger.enter("setUpGameArea");
 
         //If table does not exist, keep it moving
         if(table == null) return;
         int playerSeat = config.getCurrentSeat();
-        logger.debug("playerSeat={0}", playerSeat);
+        YokelPlayer currentPlayer = config.getCurrentPlayer();
 
-        //Set up Player View
-        setUpPlayerArea(config.getCurrentPlayer(), playerSeat,true);
+        if(playerSeat < 0){
+            logger.debug("No Player seated, setting player seat to 1");
+            playerSeat = 0;
+            //currentPlayer = null;
+        }
+
+        logger.debug("playerSeat={}", playerSeat);
+        logger.debug("currentPlayer={}", currentPlayer);
+
+        //Set up Player View with
+        setUpPlayerArea(currentPlayer, playerSeat,true);
 
         //Set up Partner View
         int partnerSeat = getPlayerPartnerSeatNum(playerSeat);
         YokelPlayer partner = getSeatedPlayer(partnerSeat, table);
 
-        logger.debug("partnerSeat={0}", partnerSeat);
-        logger.debug("partner={0}", partner);
+        logger.debug("partnerSeat={}", partnerSeat);
+        logger.debug("partner={}", partner);
         setUpPlayerArea(partner, partnerSeat,false);
 
         //Set up rest of active players+
@@ -315,7 +294,8 @@ public class UIManager implements Disposable {
                 }
             }
         }
-        logger.debug("Exit setUpGameArea()");
+        logger.exit("setUpGameArea");
+        //throw new GdxRuntimeException("done");
     }
 
     private int getPlayerPartnerSeatNum(int playerSeat) {
@@ -342,11 +322,10 @@ public class UIManager implements Disposable {
     }
 
     private void setUpPlayerArea(YokelPlayer player, int playerSeat, boolean isPlayerView){
-        logger.debug("Enter setUpPlayerArea()");
-
+        logger.enter("setUpPlayerArea");
         //Even seats are on the left
         activateArea(playerSeat, playerSeat % 2, true, player, isPlayerView, false);
-        logger.debug("Exit setUpPlayerArea()");
+        logger.exit("setUpPlayerArea");
     }
 
     private void activateArea(int playerSeat, int areaNum, boolean isActive, YokelPlayer player, boolean isPlayerView, boolean isPreview){

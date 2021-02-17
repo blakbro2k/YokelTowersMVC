@@ -14,9 +14,10 @@ import com.kotcrab.vis.ui.widget.VisTextField;
 
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.service.SessionService;
+import net.asg.games.utils.GlobalConstants;
 
 
-@View(id = ControllerNames.LOGIN_VIEW, value = "ui/templates/login.lml")
+@View(id = GlobalConstants.LOGIN_VIEW, value = GlobalConstants.LOGIN_VIEW_PATH)
 public class LoginController implements ViewRenderer, ActionContainer {
     @Inject private SessionService sessionService;
     @Inject private InterfaceService interfaceService;
@@ -49,7 +50,7 @@ public class LoginController implements ViewRenderer, ActionContainer {
                 sessionService.registerPlayer();
                 sessionService.setCurrentUserName(username.getText());
                 sessionService.asyncPlayerAllRequest();
-                interfaceService.show(sessionService.getView(ControllerNames.LOUNGE_VIEW));
+                interfaceService.show(sessionService.getView(GlobalConstants.LOUNGE_VIEW));
             }
         } catch (Exception e){
             e.printStackTrace();

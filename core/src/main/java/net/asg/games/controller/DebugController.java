@@ -9,8 +9,9 @@ import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
 import net.asg.games.service.SessionService;
+import net.asg.games.utils.GlobalConstants;
 
-@View(id = ControllerNames.DEBUG_VIEW, value = "ui/templates/debug.lml")
+@View(id = GlobalConstants.DEBUG_VIEW, value = GlobalConstants.DEBUG_VIEW_PATH)
 public class DebugController extends ApplicationAdapter implements ViewRenderer, ActionContainer {
     @Inject private SessionService sessionService;
 

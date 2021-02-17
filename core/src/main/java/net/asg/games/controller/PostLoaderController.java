@@ -4,12 +4,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
 
+import net.asg.games.utils.GlobalConstants;
+
 /** Thanks to View annotation, this class will be automatically found and initiated.
  *
  * This is the first application's views, it will check if the debug Players will be shown, the UI tester, or the normal login Page
  * shown right after the application starts. It will hide after all assests are
  * loaded. */
-@View(id = ControllerNames.POST_LOADER_VIEW, value = "ui/templates/postloader.lml")
+@View(id = GlobalConstants.POST_LOADER_VIEW, value = GlobalConstants.POST_LOADER_VIEW_PATH)
 public class PostLoaderController implements ViewRenderer {
 
     @Override
