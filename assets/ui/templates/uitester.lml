@@ -45,7 +45,7 @@
         </table>
         <table>
             <table row="true">
-                <gameboard id="1:area" areanumber="1" preview="false" debug="true"/>
+                <gameboard id="1:area" areanumber="1" preview="false"/>
                 <gameboard id="2:area" areanumber="2" preview="false" left="false"/>
             </table>
             <table>
