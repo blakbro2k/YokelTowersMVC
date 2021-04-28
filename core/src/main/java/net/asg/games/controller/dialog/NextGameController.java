@@ -7,11 +7,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogShower;
 import com.github.czyzby.autumn.mvc.stereotype.ViewDialog;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
+import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.GlobalConstants;
 import net.asg.games.utils.Log4LibGDXLogger;
 import net.asg.games.utils.Log4LibGDXLoggerService;
@@ -21,14 +23,15 @@ import net.asg.games.utils.Log4LibGDXLoggerService;
  * will be available in the LML template. */
 @ViewDialog(id = GlobalConstants.NEXT_GAME_DIALOG, value = GlobalConstants.NEXT_GAME_PATH)
 public class NextGameController implements ActionContainer, ViewDialogShower {
-    public static final int NEXT_GAME_SECONDS = 13;
+    public static final int NEXT_GAME_SECONDS = 1;
     private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(NextGameController.class);
+    @Inject private UserInterfaceService uiService;
     @LmlActor("timerLabel") private Label timerLabel;
 
     @Override
     public void doBeforeShow(Window dialog) {
         logger.enter("doBeforeShow");
-        logger.debug("dialog={}", dialog);
+        uiService.getSoundFXFactory().playGameStartSound();
 
         if(timerLabel != null) {
             CountLabelToAction countLabelToAction = countDownTo();

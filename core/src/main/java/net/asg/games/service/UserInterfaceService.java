@@ -11,18 +11,18 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.github.czyzby.autumn.annotation.Component;
 import com.github.czyzby.autumn.annotation.Destroy;
-import com.github.czyzby.autumn.annotation.Initiate;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.asset.AssetService;
+import com.github.czyzby.autumn.mvc.component.sfx.MusicService;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.SkinService;
-import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.controller.LoadingController;
 import net.asg.games.game.objects.YokelObjectFactory;
+import net.asg.games.game.objects.YokelSoundFXFactory;
 import net.asg.games.utils.YokelUtilities;
 
 @Component
@@ -31,20 +31,17 @@ public class UserInterfaceService {
     @Inject private InterfaceService interfaceService;
     @Inject private SkinService skinService;
     @Inject private LoadingController assetLoader;
+    @Inject private MusicService musicService;
 
     private final static String ATTR_IMAGE_NAMES = "imageNames";
     private final static String ATTR_ANIMATED_IMAGE_NAMES = "animatedImageNames";
 
-    private ObjectMap<String, Actor> uiAssetMap;
+    private ObjectMap<String, Actor> uiAssetMap = new ObjectMap<>();
     private YokelObjectFactory factory;
-
-    @Initiate
-    private void initialize() {
-        this.uiAssetMap = new ObjectMap<>();
-    }
+    private YokelSoundFXFactory sfxFactory;
 
     //Get Objects Factory
-    public YokelObjectFactory getFactory(){
+    public YokelObjectFactory getObjectsFactory(){
         if(factory == null){
             ObjectMap<String, Array<String>> imageMap = buildImageNames();
             factory = new YokelObjectFactory(this, imageMap.get(ATTR_IMAGE_NAMES), imageMap.get(ATTR_ANIMATED_IMAGE_NAMES));
@@ -52,10 +49,19 @@ public class UserInterfaceService {
         return this.factory;
     }
 
+    //Get Sound FX Factory
+    public YokelSoundFXFactory getSoundFXFactory(){
+        if(sfxFactory == null){
+            sfxFactory = new YokelSoundFXFactory(musicService, assetLoader);
+        }
+        return this.sfxFactory;
+    }
+
     @Destroy
     private void destroy(){
         uiAssetMap.clear();
         factory.dispose();
+        //sfxFactory.dispose();
     }
 
     private ObjectMap<String, Array<String>> buildImageNames(){
@@ -65,7 +71,7 @@ public class UserInterfaceService {
 
         ObjectMap<String, Integer> regionMap = buildRegionsMap();
 
-        for(String regionName : YokelUtilities.iterateObjectMapKeys(regionMap)){
+        for(String regionName : GdxArrays.newSnapshotArray(YokelUtilities.getMapKeys(regionMap))){
             if(regionName != null){
                 int index = regionMap.get(regionName);
                 if(index > 1){
@@ -82,7 +88,7 @@ public class UserInterfaceService {
 
     private ObjectMap<String, Integer> buildRegionsMap(){
         ObjectMap<String, Integer> regionsMap = GdxMaps.newObjectMap();
-        for(TextureAtlas.AtlasRegion region : assetLoader.getGameAtlas().getRegions()){
+        for(TextureAtlas.AtlasRegion region : GdxArrays.newSnapshotArray(assetLoader.getGameAtlas().getRegions())){
             if(region != null){
                 String key = region.name;
                 if(!regionsMap.containsKey(key)){
@@ -183,10 +189,6 @@ public class UserInterfaceService {
     }
 
     public ObjectMap.Values<Actor> getAssets(){
-        if(this.uiAssetMap != null){
-            return uiAssetMap.values();
-        } else {
-            return GdxMaps.<String, Actor>newObjectMap().values();
-        }
+        return YokelUtilities.getMapValues(uiAssetMap);
     }
 }

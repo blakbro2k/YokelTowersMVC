@@ -7,7 +7,7 @@ package net.asg.games.utils;
 public class GlobalConstants {
     public static final String USER_AGENT = "LMozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0";
 
-    //prevent instantation
+    //prevent instanc
     private GlobalConstants(){}
 
     public static final int MAX_WIDTH = 1024;
@@ -29,6 +29,8 @@ public class GlobalConstants {
     public static final String SHADE_UISKIN_ATLAS = "shade/uiskin.atlas";
     public static final String SHADE_UISKIN_JSON = "shade/uiskin.json";
     public static final String SHADE_ATLAS_PATH = "shade/imageAssets.atlas";
+
+    public static final String DTD_SAVE_PATH = "dtd/lml.dtd";
 
     public static final String GAME_TITLE = "RodKast Alpha";
     public static final String SOURCE_ASSETS_FOLDER_PATH = "raw/game";
@@ -88,4 +90,17 @@ public class GlobalConstants {
     public final static String SETTINGS_DIALOG_PATH = "ui/templates/dialogs/settings.lml";
     public final static String JOIN_GAME_PATH = "ui/templates/dialogs/joinGame.lml";
     public final static String NEXT_GAME_PATH = "ui/templates/dialogs/nextGame.lml";
+
+    //Game Atlas Path
+    public final static String GAME_ATLAS_PATH = "ui/game/game.atlas";
+
+    //Sound Effects path
+    public final static String CYCLE_CLICK_PATH = "music/sounds/cycleClick.ogg";
+    public final static String MENACING_PATH = "music/menacing.ogg";
+    public final static String BLOCK_SPEED_DOWN_PATH = "music/sounds/blockDown.ogg";
+    public final static String GAME_START_PATH = "music/gameStart.ogg";
+    public final static String BLOCK_BREAK_PATH = "music/sounds/blockBreak.ogg";
+    public final static String YAHOO_YAH_PATH = "music/sounds/yah.ogg";
+    public final static String YAHOO_PATH = "music/sounds/yahoo!.ogg";
+
 }

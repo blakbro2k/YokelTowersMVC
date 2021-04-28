@@ -16,6 +16,7 @@ import net.asg.games.server.serialization.Packets;
 import net.asg.games.server.serialization.PayloadType;
 import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.utils.PayloadUtil;
+import net.asg.games.utils.YokelUtilities;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,7 +28,7 @@ public class ClientManager implements Disposable {
     //private static final com.github.czyzby.kiwi.log.Logger LOGGER = LoggerService.forClass(ClientManager.class);
     private final static String[] EMPTY_PAYLOAD = new String[]{""};
     private final static PayloadType EMPTY_PAYLOAD_TYPE = new PayloadType(ServerRequest.REQUEST_EMPTY, new String[]{""});
-
+    private final static long CONFIG_SLEEP_SECONDS = 1;
     private final static int DEFAULT_WAIT = 30;
     private WebSocket socket;
     private boolean isConnected  = false;;
@@ -171,6 +172,14 @@ public class ClientManager implements Disposable {
         sendClientRequest(ServerRequest.REQUEST_TABLE_GAME_MANAGER, PayloadUtil.createGameManagerRequest(loungeName, roomName, tableNumber, seat));
     }
 
+    public void requestTargetAttack(String currentLoungeName, String currentRoomName, int currentTableNumber, int currentSeat, int targetSeat) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_ATTACK_TARGET, PayloadUtil.createTargetAttackRequest(currentLoungeName, currentRoomName, currentTableNumber, currentSeat, targetSeat));
+    }
+
+    public void requestRandomAttack(String currentLoungeName, String currentRoomName, int currentTableNumber, int currentSeat) throws InterruptedException {
+        sendClientRequest(ServerRequest.REQUEST_TABLE_ATTACK_RANDOM, PayloadUtil.createRandomAttackRequest(currentLoungeName, currentRoomName, currentTableNumber, currentSeat));
+    }
+
     public void handleServerResponse(ServerResponse request) {
         if(request != null){
             String message = request.getMessage();
@@ -214,7 +223,7 @@ public class ClientManager implements Disposable {
                 if(timeout > maxWait){
                     throw new InterruptedException("Timed out waiting for WebSocket Request.");
                 } else {
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.SECONDS.sleep(CONFIG_SLEEP_SECONDS);
                     ++timeout;
                 }
             }
@@ -222,10 +231,10 @@ public class ClientManager implements Disposable {
     }
 
     public void waitForOneRequest() throws InterruptedException {
-        waitForRequest(DEFAULT_WAIT);
+        waitForOneRequest(DEFAULT_WAIT);
     }
 
-    public void waitForRequest(int maxWait) throws InterruptedException {
+    public void waitForOneRequest(int maxWait) throws InterruptedException {
         waitForRequest(maxWait, 1);
     }
 
@@ -246,7 +255,7 @@ public class ClientManager implements Disposable {
     }
 
     public String[] getNextRequest(ServerRequest message) {
-        for(PayloadType request : requests){
+        for(PayloadType request : YokelUtilities.safeIterable(requests)){
             if(request != null){
                 ServerRequest type = request.getRequestType();
                 if(type.equals(message)){

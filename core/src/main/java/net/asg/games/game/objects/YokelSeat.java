@@ -7,6 +7,7 @@ package net.asg.games.game.objects;
 public class YokelSeat extends AbstractYokelObject {
     private int seatNumber;
     private YokelPlayer seatedPlayer;
+    private boolean isSeatReady = false;
 
     //Empty Constructor required for Json.Serializable
     public YokelSeat(){}
@@ -27,11 +28,20 @@ public class YokelSeat extends AbstractYokelObject {
     public YokelPlayer standUp(){
         YokelPlayer var = seatedPlayer;
         seatedPlayer = null;
+        setSeatReady(false);
         return var;
     }
 
     public boolean isOccupied(){
         return seatedPlayer != null;
+    }
+
+    public void setSeatReady(boolean isSeatReady){
+        this.isSeatReady = isSeatReady;
+    }
+
+    public boolean isSeatReady(){
+        return isOccupied() && isSeatReady;
     }
 
     public YokelPlayer getSeatedPlayer(){

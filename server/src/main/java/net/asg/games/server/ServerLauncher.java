@@ -2,7 +2,7 @@ package net.asg.games.server;
 
 import com.github.czyzby.websocket.serialization.impl.ManualSerializer;
 
-import net.asg.games.game.managers.GameRunner;
+import net.asg.games.game.managers.ServerGameRunner;
 import net.asg.games.game.managers.ServerManager;
 import net.asg.games.server.serialization.AdminClientRequest;
 import net.asg.games.server.serialization.ClientRequest;
@@ -11,7 +11,6 @@ import net.asg.games.server.serialization.ServerResponse;
 import net.asg.games.storage.YokelMemoryStorage;
 import net.asg.games.storage.YokelStorageAdapter;
 import net.asg.games.utils.PayloadUtil;
-import net.asg.games.utils.YokelUtilities;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,8 +32,8 @@ public class ServerLauncher {
     private ServerManager serverDaemon;
     private final static Vertx vertx = Vertx.vertx();
     private final static ManualSerializer serializer = new ManualSerializer();
-    private final YokelStorageAdapter storage = new YokelMemoryStorage();
-    private static GameRunner gameRunner;
+    private YokelStorageAdapter storage;
+    private static ServerGameRunner serverGameRunner;
     //private ExecutorService threadPool;
 
     private ServerLauncher() {
@@ -59,11 +58,12 @@ public class ServerLauncher {
         try {
             Logger.trace("Enter launch()");
             Logger.info("Launching YokelTowers-server build: {}", SERVER_BUILD);
+            initializeStorage();
             initialize(args);
             initializeNetwork();
 
-            //Start GameRunner
-            gameRunner = new GameRunner(serverDaemon);
+            //Start ServerGameRunner
+            serverGameRunner = new ServerGameRunner(serverDaemon);
             Logger.trace("Exit launch()");
         } catch (Exception e) {
             Logger.error(e,"Error Launching Server: ");
@@ -71,6 +71,21 @@ public class ServerLauncher {
             throw new Exception("Error Launching Server: ", e);
         }
         System.err.println("###Finally block Called###");
+    }
+
+    private void initializeStorage() throws Exception {
+        try {
+            Logger.trace("Enter launch()");
+            Logger.info("Launching YokelTowers-server build: {}", SERVER_BUILD);
+
+            //Start ServerGameRunner
+            storage = new YokelMemoryStorage();
+            Logger.trace("Exit launch()");
+        } catch (Exception e) {
+            Logger.error(e,"Error Launching Server: ");
+            serverDaemon.shutDownServer(1);
+            throw new Exception("Error Initializing Storage: ", e);
+        }
     }
 
     private void initializeNetwork() throws Exception{
@@ -164,8 +179,8 @@ public class ServerLauncher {
             ServerResponse response = new ServerResponse(-1,
                     handlerID,
                     ServerRequest.REQUEST_CLIENT_ID.toString(),
-                    getServerId(),
-                    new String[]{handlerID});
+                    new String[]{handlerID},
+                    getServerId());
             sendServerResponse(webSocket, response);
             Logger.trace("Exit sendClentId()");
         } catch (Exception e) {
@@ -274,7 +289,7 @@ public class ServerLauncher {
                 String message = request.getMessage();
                 String sessionId = request.getSessionId();
                 int requestSequence = request.getRequestSequence();
-                response = new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
+                response = new ServerResponse(requestSequence, sessionId, message, serverPayload, getServerId());
             }
             Logger.trace("Exit handleAdminRequest()");
             return response;

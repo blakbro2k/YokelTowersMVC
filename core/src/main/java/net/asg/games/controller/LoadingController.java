@@ -1,6 +1,8 @@
 package net.asg.games.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -42,7 +44,14 @@ public class LoadingController implements ViewRenderer {
 
     /** This is a widget injected from the loading.lml template. "loadingBar" is its ID. */
     @LmlActor("loadingBar") private VisProgressBar loadingBar;
-    @Asset("ui/game/game.atlas") private TextureAtlas gameAtlas;
+    @Asset(GlobalConstants.GAME_ATLAS_PATH) private TextureAtlas gameAtlas;
+    @Asset(GlobalConstants.CYCLE_CLICK_PATH) private Sound cycleClickSound;
+    @Asset(GlobalConstants.BLOCK_SPEED_DOWN_PATH) private Sound blockDown;
+    @Asset(GlobalConstants.MENACING_PATH) private Music menacing;
+    @Asset(GlobalConstants.GAME_START_PATH) private Sound gameStartSound;
+    @Asset(GlobalConstants.BLOCK_BREAK_PATH) private Sound blockBreakSound;
+    @Asset(GlobalConstants.YAHOO_YAH_PATH) private Sound yahooYahSound;
+    @Asset(GlobalConstants.YAHOO_PATH) private Sound yahooSound;
 
     private boolean regionsAssigned;
     private boolean dtdSaved = true;
@@ -66,10 +75,10 @@ public class LoadingController implements ViewRenderer {
         if (!regionsAssigned) {
             regionsAssigned = true;
             interfaceService.getSkin().addRegions(gameAtlas);
-            UIUtil.getInstance().setFactory(uiService.getFactory());
+            UIUtil.getInstance().setFactory(uiService.getObjectsFactory());
         }
         if(!dtdSaved){
-            saveDtdSchema(Gdx.files.local("dtd/lml.dtd"));
+            saveDtdSchema(Gdx.files.local(GlobalConstants.DTD_SAVE_PATH));
             dtdSaved = true;
         }
     }
@@ -115,9 +124,33 @@ public class LoadingController implements ViewRenderer {
      * @see #saveDtdSchema(FileHandle)
      * @throws Exception if your saving method throws any exception, it will wrapped with {@link GdxRuntimeException}
      *             and rethrown. */
-    protected void createDtdSchema(final LmlParser parser, final Appendable appendable) throws Exception {
+    private void createDtdSchema(final LmlParser parser, final Appendable appendable) throws Exception {
         //LOGGER.info("Creating DTD Schema");
         Dtd.saveSchema(parser, appendable);
+    }
+
+    public Sound getCycleClickSound(){
+        return cycleClickSound;
+    }
+
+    public Sound getBlockDown(){
+        return blockDown;
+    }
+
+    public Music getMenacing() {
+        if(menacing == null){
+            menacing = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.MENACING_PATH));
+            menacing.setLooping(true);
+        }
+        return menacing;
+    }
+
+    public Sound getGameStart() {
+        return gameStartSound;
+    }
+
+    public Sound getYahooSound() {
+        return yahooSound;
     }
 }
 

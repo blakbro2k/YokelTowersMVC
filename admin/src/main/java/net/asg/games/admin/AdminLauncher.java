@@ -180,7 +180,7 @@ public class AdminLauncher {
                 requestSequence = request.getRequestSequence();
                 //serverPayload = null; //buildPayload(message, request.getPayload());
 
-                ServerResponse serverResponse = new ServerResponse(requestSequence, sessionId, message, -1, serverPayload);
+                ServerResponse serverResponse = new ServerResponse(requestSequence, sessionId, message, serverPayload, -1);
                 Logger.debug("serverResponse: {}", serverResponse);
 
                 final byte[] serialized = serializer.serialize(serverResponse);

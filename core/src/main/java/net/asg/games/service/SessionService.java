@@ -2,10 +2,9 @@ package net.asg.games.service;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.github.czyzby.autumn.annotation.Component;
 import com.github.czyzby.autumn.annotation.Destroy;
 import com.github.czyzby.autumn.annotation.Initiate;
@@ -13,7 +12,6 @@ import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
 import com.github.czyzby.kiwi.log.Logger;
-import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.asset.Disposables;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
@@ -22,13 +20,14 @@ import com.github.czyzby.websocket.data.WebSocketException;
 import net.asg.games.controller.dialog.ErrorController;
 import net.asg.games.game.managers.ClientManager;
 import net.asg.games.game.managers.GameManager;
-import net.asg.games.game.objects.PlayerKeyMap;
+import net.asg.games.game.objects.YokelKeyMap;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelTable;
 import net.asg.games.utils.Log4LibGDXLogger;
 import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.PayloadUtil;
+import net.asg.games.utils.YokelUtilities;
 import net.asg.games.utils.enums.ServerRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,10 +38,13 @@ import org.apache.commons.lang.StringUtils;
  * @author Blakbro2k */
 @Component
 public class SessionService {
+    long lastBlockDown = 0;
+
     // Getting a utility logger:
     private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(SessionService.class);
 
     @Inject private InterfaceService interfaceService;
+    @Inject private UserInterfaceService userInterfaceService;
 
     private final String CONNECT_MSG = "Connecting...";
     private ClientManager client;
@@ -53,7 +55,7 @@ public class SessionService {
     private String userName;
     private YokelPlayer player;
     private ObjectMap<String, ViewController> views = GdxMaps.newObjectMap();
-    private PlayerKeyMap keyMap = new PlayerKeyMap();
+    private YokelKeyMap keyMap = new YokelKeyMap();
     private String currentErrorMessage;
 
     @Initiate
@@ -159,12 +161,12 @@ public class SessionService {
         client.requestMoveStopDown(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
     }
 
-    private void asyncTargetAttackRequest() throws InterruptedException {
-        //client.requestMoveRight(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    private void asyncTargetAttackRequest(int currentSeat, int targetSeat) throws InterruptedException {
+        client.requestTargetAttack(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat, targetSeat);
     }
 
-    private void asyncRandomAttackRequest() throws InterruptedException {
-        //client.requestMoveRight(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
+    private void asyncRandomAttackRequest(int currentSeat) throws InterruptedException {
+        client.requestRandomAttack(currentLoungeName, currentRoomName, getCurrentTableNumber(), currentSeat);
     }
 
     public void asyncGameManagerFromServerRequest() throws InterruptedException {
@@ -178,7 +180,7 @@ public class SessionService {
     public Array<String> toPlayerNames(Array<YokelPlayer> players) {
         Array<String> playerNames = GdxArrays.newArray();
         if(players != null){
-            for(YokelPlayer player : players){
+            for(YokelPlayer player : YokelUtilities.safeIterable(players)){
                 if(player != null){
                     playerNames.add(player.getName());
                 }
@@ -263,25 +265,23 @@ public class SessionService {
         this.player = yokelPlayer;
     }
 
+    public boolean isCurrentPlayer(YokelPlayer player) {
+        return player != null && player.equals(getCurrentPlayer());
+    }
+
     public YokelPlayer getCurrentPlayer() {
         return player;
     }
 
-    public void showError(Throwable throwable) {
-        logger.enter("showError");
-        if(throwable == null) return;
-        setCurrentError(throwable.getCause(), throwable.getMessage());
-        interfaceService.showDialog(ErrorController.class);
-        logger.exit("showError");
-    }
-
     public void handleLocalPlayerInput(GameManager game){
         logger.enter("handleLocalPlayerInput");
-
-        if(game == null) return;
         int currentSeat = getCurrentSeat();
-        logger.debug("currentSeat={0}", currentSeat);
-        game.handleMoveRight(1);
+        logger.debug("currentSeat={}", currentSeat);
+
+        if(game == null || currentSeat < 0) return;
+
+        //TODO: Remove, moves test player's key to the right
+        game.handleMoveRight(7);
 
         if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
             game.handleMoveRight(currentSeat);
@@ -290,12 +290,22 @@ public class SessionService {
             game.handleMoveLeft(currentSeat);
         }
         if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
+            userInterfaceService.getSoundFXFactory().playCycleClickSound();
             game.handleCycleDown(currentSeat);
         }
+        if (Gdx.input.isKeyJustPressed(keyMap.getCycleUpKey())) {
+            userInterfaceService.getSoundFXFactory().playCycleClickSound();
+            game.handleCycleUp(currentSeat);
+        }
         if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
+            if(TimeUtils.millis() - 1500 > lastBlockDown){
+                lastBlockDown = TimeUtils.millis();
+                userInterfaceService.getSoundFXFactory().playBlockDownSound();
+            }
             game.handleStartMoveDown(currentSeat);
         }
         if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
+            lastBlockDown = TimeUtils.millis();
             game.handleStopMoveDown(currentSeat);
         }
         if (Gdx.input.isKeyJustPressed(keyMap.getRandomAttackKey())) {
@@ -313,14 +323,39 @@ public class SessionService {
         if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
             game.testGameBoard(currentSeat);
         }
+        /*
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget1())) {
+            game.handleTargetAttack(currentSeat,1);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget2())) {
+            game.handleTargetAttack(currentSeat,2);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget3())) {
+            game.handleTargetAttack(currentSeat,3);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget4())) {
+            game.handleTargetAttack(currentSeat,4);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget5())) {
+            game.handleTargetAttack(currentSeat,5);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget6())) {
+            game.handleTargetAttack(currentSeat,6);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget7())) {
+            game.handleTargetAttack(currentSeat,7);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget8())) {
+            game.handleTargetAttack(currentSeat,8);
+        }*/
         logger.exit("handleLocalPlayerInput");
     }
 
     public void handlePlayerInputToServer() throws InterruptedException {
-        logger.debug("Enter handlePlayerInput()");
+        logger.enter("handlePlayerInput");
 
         int currentSeat = getCurrentSeat();
-        logger.debug("currentSeat={0}", currentSeat);
+        logger.debug("currentSeat={}", currentSeat);
 
         if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
             asyncMoveRightRequest();
@@ -331,6 +366,9 @@ public class SessionService {
         if (Gdx.input.isKeyJustPressed(keyMap.getCycleDownKey())) {
             asyncCycleDownRequest();
         }
+        if (Gdx.input.isKeyJustPressed(keyMap.getCycleUpKey())) {
+            asyncCycleUpRequest();
+        }
         if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
             asyncMoveStartDownRequest();
         }
@@ -338,8 +376,55 @@ public class SessionService {
             asyncMoveStopDownRequest();
         }
         if (Gdx.input.isKeyJustPressed(keyMap.getRandomAttackKey())) {
-            asyncRandomAttackRequest();
+            asyncRandomAttackRequest(currentSeat);
         }
-        logger.debug("Exit handlePlayerInput()");
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget1())) {
+            asyncTargetAttackRequest(currentSeat,1);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget2())) {
+            asyncTargetAttackRequest(currentSeat,2);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget3())) {
+            asyncTargetAttackRequest(currentSeat,3);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget4())) {
+            asyncTargetAttackRequest(currentSeat,4);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget5())) {
+            asyncTargetAttackRequest(currentSeat,5);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget6())) {
+            asyncTargetAttackRequest(currentSeat,6);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget7())) {
+            asyncTargetAttackRequest(currentSeat,7);
+        }
+        if (Gdx.input.isKeyJustPressed(keyMap.getTarget8())) {
+            asyncTargetAttackRequest(currentSeat,8);
+        }
+        logger.exit("handlePlayerInput");
+    }
+
+    public void handleException(Logger logger, Throwable throwable) {
+        if(logger != null) {
+            logger.error(throwable, throwable.getMessage());
+            throwable.printStackTrace();
+            showError(logger, throwable);
+        } else {
+            showError(throwable);
+        }
+    }
+
+
+    public void showError(Logger logger, Throwable throwable) {
+        if(throwable == null) return;
+        String errorMsg = throwable.getMessage();
+        if(logger != null) logger.error(throwable, errorMsg);
+        setCurrentError(throwable.getCause(), errorMsg);
+        interfaceService.showDialog(ErrorController.class);
+    }
+
+    public void showError(Throwable throwable) {
+        showError(null, throwable);
     }
 }

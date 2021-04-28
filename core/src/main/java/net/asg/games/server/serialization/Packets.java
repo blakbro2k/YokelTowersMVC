@@ -11,6 +11,6 @@ public class Packets {
         // strings, arrays or even other transferables. Both Serializer and Deserializer APIs are well documented: make
         // sure to check them out.
         serializer.register(new ClientRequest(-1, null,null, null, null));
-        serializer.register(new ServerResponse(-1, null, null, -1, null));
+        serializer.register(new ServerResponse(-1, null, null, null, -1));
     }
 }

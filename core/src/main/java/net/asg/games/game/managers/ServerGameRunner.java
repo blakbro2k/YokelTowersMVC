@@ -26,10 +26,10 @@ import org.mockito.Mockito;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-public class GameRunner implements ApplicationListener, Disposable {
+public class ServerGameRunner implements ApplicationListener, Disposable {
     private ServerManager daemon;
 
-    public GameRunner(ServerManager manager) {
+    public ServerGameRunner(ServerManager manager) {
         //super(klass);
         this.daemon = manager;
         HeadlessApplicationConfiguration conf = new HeadlessApplicationConfiguration();
@@ -52,11 +52,22 @@ public class GameRunner implements ApplicationListener, Disposable {
     public void render() {
         try {
             if (daemon == null) throw new GdxRuntimeException("Server daemon has evaporated!");
-            //Get all games from source
+            //Get all games from Server Manager
             final ObjectMap.Values<GameManager> games = daemon.getAllGames();
-            //Update Game step
+
+            //For each game, lets perform our state actions
             for(GameManager game : games){
                 if(game != null){
+                    //Check if game is ready to start
+                    //checkIsGameReady(game);
+
+                    //Check if Count down is starting
+                    //checkGameStart(game);
+
+                    //Handle Player input From Network
+                    //daemon.handleServerMessages(game);
+
+                    //Update game state per
                     game.update(Gdx.app.getGraphics().getDeltaTime());
                 }
             }

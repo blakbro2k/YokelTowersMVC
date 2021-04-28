@@ -7,18 +7,18 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
-import com.github.czyzby.kiwi.log.Logger;
-import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 
 import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelBlockEval;
-import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
+import net.asg.games.provider.actors.GameBlockArea;
+import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.YokelUtilities;
 
 import java.util.Arrays;
@@ -27,7 +27,10 @@ import java.util.Stack;
 import java.util.Vector;
 
 public class GameManager implements Disposable {
-    private final Logger logger = LoggerService.forClass(GameManager.class);
+    private final Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(GameBlockArea.class);
+
+    private final int MEDUSA_GAME_PIECE = 1;
+    private final int MIDAS_GAME_PIECE = 2;
 
     private YokelTable table;
     private YokelGameBoard[] gameBoards = new YokelGameBoard[8];
@@ -39,15 +42,16 @@ public class GameManager implements Disposable {
     private long seed = 1L;
 
     public GameManager(YokelTable table){
+        if(table == null) throw new GdxRuntimeException("Table cannot be null for GameManager.");
         setTable(table);
         init();
     }
 
-    private void setTable(YokelTable table) {
+    public void setTable(YokelTable table) {
         this.table = table;
     }
 
-    private YokelTable getTable() {
+    public YokelTable getTable() {
         return this.table;
     }
 
@@ -56,7 +60,7 @@ public class GameManager implements Disposable {
     public void update(float delta){
         if(!isGameRunning) return;
 
-        for(int i = 0; i < 8; i++){
+        for(int i = 0; i < YokelTable.MAX_SEATS; i++){
             YokelSeat seat = table.getSeat(i);
 
             if(isOccupied(seat)){
@@ -79,44 +83,8 @@ public class GameManager implements Disposable {
         if(board != null){
             //Move Piece down, flag matches
             board.update(delta);
-
-            //Handle broken cells logic
-            /*
-            if(board.getBrokenCellCount() > 0){
-                Vector<YokelBlock> broken = board.getBrokenCells();
-
-                for (YokelBlock b : broken) {
-                    if(b != null){
-                        board.addPowerToQueue(b);
-                        board.incrementBreakCount(b.getBlockType());
-                    }
-                }
-            }*/
-
-            //check for yahoo
-            int duration = board.checkForYahoos();
-            if(duration > 0){
-                logger.debug("Yahoo Duration=" + duration);
-            }
-
-            //Check if cells need to drop
-            //boardCellsToDrop[index] = board.getCellsToBeDropped();
         }
         logger.debug("Exit updateBoard(delta=" + delta + ", index="+ index + ")");
-    }
-
-    public Vector getCellsToDrop(int board){
-        logger.debug("Enter getCellsToDrop()");
-        logger.debug("vector=" + boardCellsToDrop[board]);
-        Vector drops = new Vector();
-        if(boardCellsToDrop[board] != null){
-            drops = (Vector) boardCellsToDrop[board].clone();
-            boardCellsToDrop[board].clear();
-        }
-        logger.debug("vector=" + boardCellsToDrop[board]);
-        logger.debug("drops=" + drops);
-        logger.debug("Exit getCellsToDrop()");
-        return drops;
     }
 
     private boolean isOccupied(YokelSeat seat){
@@ -159,6 +127,7 @@ public class GameManager implements Disposable {
     }
 
     public ObjectMap<Integer, YokelGameBoard> getActiveGameBoards(){
+        //TODO: Should be a persisted map in the object, not new everytime
         ObjectMap<Integer, YokelGameBoard> returnBoards = GdxMaps.newObjectMap();
         int index = 0;
         for(YokelGameBoard board : gameBoards){
@@ -185,15 +154,10 @@ public class GameManager implements Disposable {
         for(int i = 0; i < 8; i++){
             YokelGameBoard gameBoard = gameBoards[i];
             if (gameBoard != null) gameBoard.dispose();
-            gameBoards[i] = new YokelGameBoard(seed);
+            YokelGameBoard newBoard = new YokelGameBoard(seed);
+            newBoard.setName(i + "");
+            gameBoards[i] = newBoard;
         }
-    }
-
-    public void handleBrokenCellDrops(int boardIndex){
-        logger.debug("Enter handleBrokenCellDrops()");
-        getGameBoard(boardIndex).handleBrokenCellDrops();
-        getGameBoard(boardIndex).setBrokenCellsHandled(true);
-        logger.debug("Exit handleBrokenCellDrops()");
     }
 
     public void handleMoveRight(int boardIndex){
@@ -249,10 +213,10 @@ public class GameManager implements Disposable {
                 if(value == YokelBlock.Oy_BLOCK) {
                     //If offensive Yokel.L, set medusa next piece to target
                     if(isOffensive){
-                        gameBoard.addSpecialPiece(1);
+                        gameBoard.addSpecialPiece(MEDUSA_GAME_PIECE);
                     } else {
                         //If defensive Yokel.L, set midas next piece to target
-                        gameBoard.addSpecialPiece(2);
+                        gameBoard.addSpecialPiece(MIDAS_GAME_PIECE);
                     }
                 } else if(value == YokelBlock.EX_BLOCK) {
                     if(isOffensive){
@@ -291,9 +255,9 @@ public class GameManager implements Disposable {
                 boardIndexes.add(i);
             }
 
-            //Offensive should only random enemies.
-            //Defensive should only random you and your partner.
-            Iterator<Integer> iter = boardIndexes.iterator();
+            //Offensive should only hit random enemies.
+            //Defensive should only hit you and your partner.
+            Iterator<Integer> iter = YokelUtilities.getArrayIterator(boardIndexes);
             while(iter.hasNext()){
                 int x = iter.next();
 
@@ -309,8 +273,8 @@ public class GameManager implements Disposable {
             }
 
             ObjectMap<Integer, YokelGameBoard> activeGameboards = getActiveGameBoards();
-            Array<Integer> activeBoards = activeGameboards.keys().toArray();
-            Iterator<Integer> active = boardIndexes.iterator();
+            Array<Integer> activeBoards = YokelUtilities.getMapKeys(activeGameboards).toArray();
+            Iterator<Integer> active = YokelUtilities.getArrayIterator(boardIndexes);
 
             while(active.hasNext()){
                 int a = active.next();
@@ -320,7 +284,7 @@ public class GameManager implements Disposable {
             }
 
             YokelUtilities.flushIterator(iter);
-            YokelUtilities.flushIterator(activeBoards.iterator());
+            YokelUtilities.flushIterator(YokelUtilities.getArrayIterator(activeBoards));
             YokelUtilities.flushIterator(active);
 
             int index = MathUtils.random(boardIndexes.size - 1);
@@ -346,8 +310,8 @@ public class GameManager implements Disposable {
     public boolean startGame() {
         logger.debug("Enter startGame()");
         if(!isGameRunning){
-            logger.debug("isTableReady=" + table.isTableStartReady());
-            isGameRunning = table.isTableStartReady();
+            logger.debug("isTableReady=" + isGameReady());
+            isGameRunning = isGameReady();
         }
         logger.debug("isGameRunning=" + isGameRunning);
         logger.debug("Exit startGame()=");
@@ -384,29 +348,10 @@ public class GameManager implements Disposable {
         boolean isGroup3Dead = player5 && player6;
         boolean isGroup4Dead = player7 && player8;
 
-        /*
-        System.out.println("player1 dead? " + player1);
-        System.out.println("player2 dead? " + player2);
-        System.out.println("player3 dead? " + player3);
-        System.out.println("player4 dead? " + player4);
-        System.out.println("player5 dead? " + player5);
-        System.out.println("player6 dead? " + player6);
-        System.out.println("player7 dead? " + player7);
-        System.out.println("player8 dead? " + player8);
-        *
-         */
-
         boolean group1won = !isGroup1Dead && isGroup2Dead && isGroup3Dead && isGroup4Dead;
         boolean group2won = isGroup1Dead && !isGroup2Dead && isGroup3Dead && isGroup4Dead;
         boolean group3won = isGroup1Dead && isGroup2Dead && !isGroup3Dead && isGroup4Dead;
         boolean group4won = isGroup1Dead && isGroup2Dead && isGroup3Dead && !isGroup4Dead;
-
-        /*
-        System.err.println("group1won dead? " + group1won);
-        System.err.println("group2won dead? " + group2won);
-        System.err.println("group3won dead? " + group3won);
-        System.err.println("group4won dead? " + group4won);
-        */
 
         if(group1won){
             setWinners(getPlayerFromBoard(table.getSeat(0)), getPlayerFromBoard(table.getSeat(1)));
@@ -456,7 +401,7 @@ public class GameManager implements Disposable {
 
         if(gameBoard != null){
             System.out.println("Added a Medusa");
-            gameBoard.addSpecialPiece(1);
+            gameBoard.addSpecialPiece(MEDUSA_GAME_PIECE);
         }
     }
 
@@ -466,7 +411,7 @@ public class GameManager implements Disposable {
 
         if(gameBoard != null){
             System.out.println("Added a Midas");
-            gameBoard.addSpecialPiece(2);
+            gameBoard.addSpecialPiece(MIDAS_GAME_PIECE);
         }
     }
 
@@ -489,6 +434,14 @@ public class GameManager implements Disposable {
         if(winners != null) {
             winners.clear();
         }
+    }
+
+    public boolean isGameReady() {
+        return table.isTableStartReady();
+    }
+
+    public boolean isStartable() {
+        return this.table.isStartable();
     }
 
     private static class GameState{}

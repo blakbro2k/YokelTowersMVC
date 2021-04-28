@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.badlogic.gdx.utils.Array.ArrayIterator;
 import com.github.czyzby.kiwi.log.Logger;
 import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
@@ -61,9 +62,9 @@ public class YokelUtilities {
 
     public static <T> Iterable<T> safeIterable(Iterable<T> collection){
         if(collection != null){
-            return (Iterable) collection;
+            return GdxArrays.newArray(collection);
         } else {
-            return (Iterable) GdxArrays.newArray();
+            return GdxArrays.newArray();
         }
     }
 
@@ -73,7 +74,7 @@ public class YokelUtilities {
 
     public static String printYokelObjects(Array<? extends YokelObject> yokelObjects){
         StringBuilder sb = new StringBuilder();
-        for(YokelObject yObject : yokelObjects){
+        for(YokelObject yObject : safeIterable(yokelObjects)){
             sb.append(printYokelObject(yObject)).append('\n');
         }
         return sb.toString();
@@ -81,7 +82,7 @@ public class YokelUtilities {
 
     public static Array<String> toPlainTextArray(Array<? extends YokelObject> objects) {
         Array<String> plainTexts = GdxArrays.newArray();
-        for(YokelObject yokelObject : objects){
+        for(YokelObject yokelObject : safeIterable(objects)){
             plainTexts.add(jsonToString(yokelObject.toString()));
         }
         return plainTexts;
@@ -96,10 +97,6 @@ public class YokelUtilities {
         return label;
     }
 
-    public static boolean isEmpty(String text) {
-        return text == null || text.isEmpty();
-    }
-
     /** @param actor might have an ID attached using name setter.
      * @return actor's ID or null. */
     public static String getActorId(Actor actor) {
@@ -110,9 +107,9 @@ public class YokelUtilities {
         return id;
     }
 
-    public static <T extends Actor> T getActorFromCell(Class<T> tableClass, Cell cell) {
-        if(cell != null && tableClass != null && tableClass.isInstance(cell.getActor())){
-            return (T) cell.getActor();
+    public static <T extends Actor> T getActorFromCell(Class<T> klass, Cell cell) {
+        if(cell != null && klass != null && klass.isInstance(cell.getActor())){
+            return klass.cast(cell.getActor());
         }
         return null;
     }
@@ -135,7 +132,7 @@ public class YokelUtilities {
         return UIUtil.getInstance().getGameBlock(block, isPreview);
     }
 
-    public static void setActorName(Actor actor, Actor actorToName) {
+    public static void setActorNameFromActor(Actor actor, Actor actorToName) {
         if(actor != null && actorToName != null){
             actor.setName(actorToName.getName());
         }
@@ -158,9 +155,9 @@ public class YokelUtilities {
         }
     }
 
-    public static void flushIterator(Iterator<?> iter) {
-        while(iter != null && iter.hasNext()){
-            iter.remove();
+    public static void flushIterator(Iterator<?> iterator) {
+        while(iterator != null && iterator.hasNext()){
+            iterator.remove();
         }
     }
 
@@ -172,14 +169,16 @@ public class YokelUtilities {
         }
     }
 
-    public static Iterable<? extends String> iterateObjectMapKeys(ObjectMap objectMap) {
-        ObjectMap.Keys<?> keys = objectMap.keys();
-        return new Array.ArrayIterator(keys.toArray());
+    public static <Type> ObjectMap.Values<Type> getMapValues(ObjectMap<?, Type> objectMap) {
+        return new ObjectMap.Values<>(objectMap);
     }
 
-    public static String[] getObjectMapKeys(ObjectMap<String, Object> arguments) {
-        Array<String> keys = GdxArrays.newArray(arguments.keys());
-        return keys.toArray();
+    public static <Type> ObjectMap.Keys<Type> getMapKeys(ObjectMap<Type, ?> objectMap) {
+        return new ObjectMap.Keys<>(objectMap);
+    }
+
+    public static <Type> Iterator<Type> getArrayIterator(Array<Type> array) {
+        return new ArrayIterator<>(array);
     }
 
     public static class IDGenerator {
@@ -204,7 +203,7 @@ public class YokelUtilities {
     public static boolean containsAny(Array<Object> c1, Array<Object> c2, boolean identity){
         boolean containsAny = false;
         if(null != c1 && null != c2){
-            for(Object o : c2){
+            for(Object o : safeIterable(c2)){
                 if (!c1.contains(o, identity)) {
                     continue;
                 }
@@ -231,13 +230,16 @@ public class YokelUtilities {
         }
         return ret;
     }
+    public static boolean isEmpty(String text) {
+        return text == null || text.isEmpty();
+    }
 
     public static boolean isEmpty(Iterable<?> collection) {
-        return collection != null && !collection.iterator().hasNext();
+        return collection == null || !collection.iterator().hasNext();
     }
 
     public static boolean isStaticArrayEmpty(Object[] array){
-        return array != null && array.length < 1;
+        return array == null || array.length < 1;
     }
 
     public static <T> String[] toStringArray(Array<T> collection) {
@@ -309,13 +311,6 @@ public class YokelUtilities {
         }
         return false;
     }
-
-    /*public static<T> Array<T> getValuesArray(ObjectMap.Values<T> values) {
-        if(values != null){
-            return values.toArray();
-        }
-        return GdxArrays.newArray();
-    }*/
 
     public static String getLoungeName(String key) {
         if(StringUtils.equalsIgnoreCase(key, "Beginner")){
@@ -506,7 +501,7 @@ public class YokelUtilities {
     public static Array<Drawable> getAniImageFrames(AnimatedImage image){
         Array<Drawable> drawables = new Array<>();
         if(image != null){
-            for(Drawable frame : image.getFrames()){
+            for(Drawable frame : safeIterable(image.getFrames())){
                 if(frame != null){
                     drawables.add(frame);
                 }

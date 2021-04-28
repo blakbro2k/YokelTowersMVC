@@ -1,6 +1,6 @@
 package net.asg.games.controller.dialog;
 
-    import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Batch;
     import com.badlogic.gdx.scenes.scene2d.Actor;
     import com.badlogic.gdx.scenes.scene2d.Stage;
     import com.github.czyzby.autumn.annotation.Inject;

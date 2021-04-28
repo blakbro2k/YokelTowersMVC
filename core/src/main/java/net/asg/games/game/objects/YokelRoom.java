@@ -1,8 +1,10 @@
 package net.asg.games.game.objects;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.OrderedMap;
-import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
+
+import net.asg.games.utils.YokelUtilities;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -13,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 public class YokelRoom extends AbstractYokelObject {
     //private Chat chatRoom;
     private Array<YokelPlayer> players = new Array<>();
-    private OrderedMap<Integer, YokelTable> tables = new OrderedMap<>();
+    private ObjectMap<Integer, YokelTable> tables = new ObjectMap<>();
     private int curTableNum = 0;
 
     //Empty Constructor required for Json.Serializable
@@ -28,7 +30,7 @@ public class YokelRoom extends AbstractYokelObject {
     }
 
     public Array<YokelTable> getAllTables(){
-        return GdxArrays.newArray(tables.values());
+        return YokelUtilities.getMapValues(tables).toArray();
     }
 
     public Array<YokelPlayer> getAllPlayers(){
@@ -70,12 +72,7 @@ public class YokelRoom extends AbstractYokelObject {
     public boolean equals(Object o) {
         if(o == null) return false;
         if(!this.getClass().equals(o.getClass())) return false;
-        YokelRoom room = getRoom(o);
-        return isNameSame(room);
-    }
-
-    private YokelRoom getRoom(Object o){
-        return (YokelRoom) o;
+        return isNameSame((YokelRoom) o);
     }
 
     private boolean isNameSame(YokelRoom room){

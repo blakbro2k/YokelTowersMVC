@@ -20,8 +20,8 @@ public class ServerResponse implements Transferable<ServerResponse> {
     public ServerResponse(final int requestSequence,
                           final String sessionId,
                           final String message,
-                          final int serverId,
-                          final String[] payload){
+                          final String[] payload,
+                          final int serverId){
         this.requestSequence = requestSequence;
         this.sessionId = sessionId;
         this.message = message;
@@ -43,8 +43,8 @@ public class ServerResponse implements Transferable<ServerResponse> {
         return new ServerResponse(deserializer.deserializeInt(),
                 deserializer.deserializeString(),
                 deserializer.deserializeString(),
-                deserializer.deserializeInt(),
-                deserializer.deserializeStringArray());
+                deserializer.deserializeStringArray(),
+                deserializer.deserializeInt());
     }
 
     public String getMessage() {

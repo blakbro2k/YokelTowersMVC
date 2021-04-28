@@ -32,7 +32,6 @@ public class Log4LibGDXLogger extends DefaultLogger {
     public Log4LibGDXLogger(final LoggerService service, final Class<?> forClass) {
         super(service, forClass);
         formatter = service.getFormatter();
-        //System.err.println(this + ": " + ((Log4LibGDXLoggerService)service).INSTANCE.isProductionMode());
         //setError();
     }
 
@@ -66,7 +65,6 @@ public class Log4LibGDXLogger extends DefaultLogger {
     public int getLoggerLevel(){
         return Gdx.app.getLogLevel();
     }
-
 
     @Override
     public void debug(final String message, final Object... arguments) {

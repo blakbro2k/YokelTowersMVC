@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -34,38 +35,32 @@ import com.badlogic.gdx.utils.Align;
  * The preferred size of a window is the preferred size of the title text and the children as laid out by the table. After adding
  * children to the window, it can be convenient to call {@link #pack()} to size the window to the size of the children.
  * @author Nathan Sweet */
-public class GameJoinWidget extends Window {
+public class GameJoinWidget extends Table {
     static private final String WAITING_TEXT = "Waiting for\nMore\nPlayers";
     static private final String JOIN_TEXT = "Join";
     static private final String READY_TEXT = "Ready";
-    private ClickListener switchJoinText;
+    static private final String START_TEXT = "Start";
+    private ClickListener switchJoinText, readyPlayerOne;
 
     static private final Vector2 tmpPosition = new Vector2();
     static private final Vector2 tmpSize = new Vector2();
     static private final int MOVE = 1 << 5;
 
-    private GameWindowStyle style;
+    //private GameWindowStyle style;
     boolean isMovable = true;//, isModal, isResizable;
     int resizeBorder = 8;
-    boolean keepWithinStage = true;
-    boolean isSeated = false;
-    boolean preview = false;
-    boolean isGameReady = false;
+    private boolean keepWithinStage = true;
+    //isGameReady means there is more than one player in the room.
+    private boolean isSeated, preview, isGameReady, isPlayerReady  = false;
 
-    private TextButton joinButton;
-    private final TextButton spaceButton;
-    private final Label waitingLabel;
-    private final Label readyLabel;
+    private final TextButton joinButton, startButton, spaceButton;
+    private final Label waitingLabel, readyLabel;
 
     public GameJoinWidget(Skin skin) {
-        this(skin, new GameWindowStyle(skin.getDrawable("window-bg")));
-    }
-
-    public GameJoinWidget(Skin skin, GameWindowStyle style) {
-        super("", skin);
-        setSkin(skin);
-        setStyle(style);
-        setMovable(false);
+        super(skin);
+        //setSkin(skin);
+        //setStyle(style);
+        //setMovable(false);
 
         //setWidth(150);
         //setHeight(50);
@@ -74,11 +69,16 @@ public class GameJoinWidget extends Window {
 
         setTouchable(Touchable.enabled);
         setClip(true);
-        setUpClickListner();
+        setUpClickListener();
 
         joinButton = new TextButton(JOIN_TEXT, getSkin());
         joinButton.addListener(switchJoinText);
-        spaceButton = new TextButton("", getSkin());
+
+        startButton = new TextButton(START_TEXT, getSkin());
+        startButton.addListener(readyPlayerOne);
+
+        spaceButton = new TextButton(".    .", getSkin());
+        spaceButton.setVisible(false);
         spaceButton.setDisabled(true);
 
 
@@ -91,50 +91,71 @@ public class GameJoinWidget extends Window {
     }
 
     private void setUpJoinButton(){
-        //clearChildren();
+        clearChildren();
         if(isSeated){
-            if(!isGameReady){
-                add(waitingLabel).row();
+            setButtonsVisibility(false);
+            if(isPlayerReady){
+                if(!isGameReady){
+                    add(waitingLabel).row();
+                     //add(spaceButton).fillX();
+                } else {
+                    add(readyLabel).row();
+                    add(spaceButton).fillX();
+                }
             } else {
-                add(readyLabel).row();
+                add(spaceButton).fillX().row();
+                add(startButton);
             }
         } else {
+            setButtonsVisibility(true);
             add(joinButton).row();
             add(spaceButton).fillX();
         }
-
     }
 
-    private void setUpClickListner(){
+    private void setButtonsVisibility(boolean isVisible) {
+        joinButton.setVisible(isVisible);
+        spaceButton.setVisible(isVisible);
+    }
+
+    private void setUpClickListener(){
         switchJoinText = new ClickListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                handleButtonClick();
+                handleJoinButtonClick();
+                return true;
+            }
+        };
+
+        readyPlayerOne = new ClickListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                handleStartButtonClick();
                 return true;
             }
         };
     }
 
-    public void setSeated(boolean isSeated){
+    void setSeated(boolean isSeated){
         this.isSeated = isSeated;
+        setUpJoinButton();
     }
 
     public void setIsGameReady(boolean isGameReady){
         this.isGameReady = isGameReady;
+        setUpJoinButton();
     }
 
-    public void setStyle (GameWindowStyle style) {
-        if (style == null) throw new IllegalArgumentException("style cannot be null.");
-        this.style = style;
-        setBackground(style.background);
-        invalidateHierarchy();
+    public void setIsPlayerReady(boolean isPlayerReady){
+        this.isPlayerReady = isPlayerReady;
+        setUpJoinButton();
     }
 
-    public GameWindowStyle getStyle () {
-        return style;
-    }
-
-    public void handleButtonClick(){
+    private void handleJoinButtonClick(){
         setSeated(true);
+        setUpJoinButton();
+    }
+
+    private void handleStartButtonClick(){
+        setIsPlayerReady(!isPlayerReady);
         setUpJoinButton();
     }
 
@@ -142,26 +163,5 @@ public class GameJoinWidget extends Window {
         joinButton.clearListeners();
         joinButton.addListener(switchJoinText);
         joinButton.addListener(listener);
-    }
-
-    /** The style for a window, see {@link Window}.
-     * @author Nathan Sweet */
-    static public class GameWindowStyle extends WindowStyle{
-        public Drawable previewBackground;
-        /** Optional */
-        public Button.ButtonStyle buttonStyle;
-        public GameWindowStyle (Drawable background) {
-            this.background = background;
-        }
-
-        public GameWindowStyle (Drawable background, Button.ButtonStyle buttonStyle) {
-            this.background = background;
-            this.buttonStyle = buttonStyle;
-        }
-
-        public GameWindowStyle (GameWindowStyle style) {
-            this.background = style.background;
-            this.buttonStyle = style.buttonStyle;
-        }
     }
 }

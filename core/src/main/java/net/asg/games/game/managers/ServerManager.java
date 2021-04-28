@@ -140,7 +140,7 @@ public class ServerManager {
             if(!YokelUtilities.isStaticArrayEmpty(args)){
                 for(int i = 0; i < args.length; i++){
                     String param = args[i];
-                    String paramValue = validateArumentParameterValue(i, args) ? args[i + 1] : null;
+                    String paramValue = validateArgumentParameterValue(i, args) ? args[i + 1] : null;
 
                     if(StringUtils.equalsIgnoreCase(DEBUG_ATTR,args[i])){
                         setDebug(true);
@@ -172,14 +172,14 @@ public class ServerManager {
 
     //validate that the next value is not a parameter string
     //if it is something else, it will fail when we try to set it.
-    private boolean validateArumentParameterValue(int i, String... args) throws Exception {
-        Logger.trace("Enter validateArumentParameterValue()");
+    private boolean validateArgumentParameterValue(int i, String... args) throws Exception {
+        Logger.trace("Enter validateArgumentParameterValue()");
         if(YokelUtilities.isStaticArrayEmpty(args)){
             Logger.error("Arguments cannot be null or empty.");
             throw new Exception("Arguments cannot be null or empty.");
         }
         Logger.debug("validating index {} in parameter= {}",i,args[i]);
-        Logger.trace("Exit validateArumentParameterValue()");
+        Logger.trace("Exit validateArgumentParameterValue()");
         return i != args.length - 1 && !SERVER_ARGS.contains(args[i + 1], false);
     }
 
@@ -270,7 +270,7 @@ public class ServerManager {
             serverPayload = buildPayload(message, request.getPayload());
         }
         Logger.trace("Exit handleClientRequest()");
-        return new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
+        return new ServerResponse(requestSequence, sessionId, message, serverPayload, getServerId());
     }
 
     private ServerResponse handleAdminRequest(AdminClientRequest request) {
@@ -289,16 +289,16 @@ public class ServerManager {
             sessionId = request.getSessionId();
             requestSequence = request.getRequestSequence();
             //serverPayload = null; //buildPayload(message, request.getPayload());
-            response = new ServerResponse(requestSequence, sessionId, message, getServerId(), serverPayload);
+            response = new ServerResponse(requestSequence, sessionId, message, serverPayload, getServerId());
         }
         Logger.trace("Exit handleAdminRequest()");
         return response;
     }
 
-    public Array<String> testPlayersToJSON(){
+    private Array<String> testPlayersToJSON(){
         Array<String> jsonPlayers = new Array<>();
 
-        for(String playerName : testPlayers.orderedKeys()){
+        for(String playerName : YokelUtilities.getMapKeys(testPlayers)){
             if(!StringUtils.isEmpty(playerName)){
                 YokelPlayer player = testPlayers.get(playerName);
                 if(player != null){
@@ -388,6 +388,10 @@ public class ServerManager {
                     case REQUEST_TABLE_MOVE_STOP_DOWN:
                         responsePayload = handleGamePieceMove(clientPayload);
                         break;
+                    case REQUEST_TABLE_ATTACK_TARGET:
+                    case REQUEST_TABLE_ATTACK_RANDOM :
+                        responsePayload = handleGameAttack(clientPayload);
+                        break;
                     case REQUEST_TABLE_GAME_MANAGER:
                         responsePayload = getGameManager(clientPayload);
                         break;
@@ -449,7 +453,7 @@ public class ServerManager {
     }
 
 
-    public ObjectMap.Values<YokelPlayer> getAllRegisteredPlayer(){
+    private ObjectMap.Values<YokelPlayer> getAllRegisteredPlayer(){
         return storage.getAllRegisteredPlayers();
     }
 
@@ -460,8 +464,7 @@ public class ServerManager {
             OrderedMap<String, YokelRoom> roomsMap = lounge.getAllRooms();
 
             if(roomsMap != null){
-                //rooms = Util.getValuesArray(roomsMap.values());
-                rooms = roomsMap.values();
+                rooms = YokelUtilities.getMapValues(roomsMap);
             }
         }
         return rooms;
@@ -655,14 +658,26 @@ public class ServerManager {
                 case REQUEST_TABLE_MOVE_STOP_DOWN :
                     game.handleStopMoveDown(seatNumber);
                     break;
-                case REQUEST_TABLE_ATTACK_RANDOM :
-                    game.handleRandomAttack(seatNumber);
-                    break;
                 default:
                     Logger.error("Invalid Action give, ignoring.");
             }
         }
         Logger.trace("Exit handleGameMove()");
+        return true;
+    }
+
+    private boolean handleGameBoardAttack(String loungeName, String roomName, int tableNumber, int seatNumber, int target) throws Exception {
+        Logger.trace("Enter handleGameBoardAttack()");
+        GameManager game = getGameFromTableNumber(loungeName, roomName, tableNumber);
+
+        if(game != null){
+            if(target > 0 && target <= 8){
+                game.handleTargetAttack(seatNumber, target);
+            } else {
+                game.handleRandomAttack(seatNumber);
+            }
+        }
+        Logger.trace("Exit handleGameBoardAttack()");
         return true;
     }
 
@@ -936,7 +951,7 @@ public class ServerManager {
         Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
         String[] ret = new String[1];
 
-        if(YokelUtilities.isValidPayload(clientPayload, 4)){
+        if(YokelUtilities.isValidPayload(clientPayload, 5)){
             String loungeName = clientPayload[0];
             String roomName = clientPayload[1];
             int tableNumber = YokelUtilities.otoi(clientPayload[2]);
@@ -946,6 +961,33 @@ public class ServerManager {
             ret[0] = "" + handleGameMove(loungeName, roomName, tableNumber, seatNumber, action);
         }
         Logger.trace("Exit moveGamePieceRight()");
+        return ret;
+    }
+
+    //0 = GameLounge Name
+    //1 = Room Name
+    //2 = Table Number
+    //3 = Seat Number
+    //4 = target seat
+    private String[] handleGameAttack(String[] clientPayload) throws Exception {
+        Logger.trace("Enter handleGameAttack()");
+        Logger.trace("Received payloatd=" + Arrays.toString(clientPayload));
+        String[] ret = new String[1];
+
+        if(YokelUtilities.isValidPayload(clientPayload, 4) || YokelUtilities.isValidPayload(clientPayload, 5)){
+            String loungeName = clientPayload[0];
+            String roomName = clientPayload[1];
+            int tableNumber = YokelUtilities.otoi(clientPayload[2]);
+            int seatNumber = YokelUtilities.otoi(clientPayload[3]);
+            int targetSeat = -1;
+
+            if(clientPayload.length == 5){
+                targetSeat = YokelUtilities.otoi(clientPayload[4]);
+            }
+
+            ret[0] = "" + handleGameBoardAttack(loungeName, roomName, tableNumber, seatNumber, targetSeat);
+        }
+        Logger.trace("Exit handleGameAttack()");
         return ret;
     }
 

@@ -13,6 +13,7 @@ import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelRoom;
 import net.asg.games.game.objects.YokelSeat;
 import net.asg.games.game.objects.YokelTable;
+import net.asg.games.utils.YokelUtilities;
 
 public class YokelMemoryStorage extends MemoryStorage implements YokelStorageAdapter {
     //<"lounge name", room object>
@@ -68,7 +69,7 @@ public class YokelMemoryStorage extends MemoryStorage implements YokelStorageAda
 
     @Override
     public ObjectMap.Values<YokelPlayer> getAllRegisteredPlayers() {
-        return registeredPlayers.values();
+        return YokelUtilities.getMapValues(registeredPlayers);
     }
 
     private String getPlayerIdFromClient(String clientId){
@@ -153,7 +154,7 @@ public class YokelMemoryStorage extends MemoryStorage implements YokelStorageAda
 
     @Override
     public ObjectMap.Values<YokelLounge> getAllLounges() {
-        return lounges.values();
+        return YokelUtilities.getMapValues(lounges);
     }
 
     @Override
@@ -168,7 +169,7 @@ public class YokelMemoryStorage extends MemoryStorage implements YokelStorageAda
 
     @Override
     public ObjectMap.Values<GameManager> getAllGames() {
-        return games.values();
+        return YokelUtilities.getMapValues(games);
     }
 
     @Override
@@ -255,7 +256,7 @@ public class YokelMemoryStorage extends MemoryStorage implements YokelStorageAda
     private void removeFromAllSeats(String playerId){
         if(playerId != null){
             Array<String> seats = seat_idx.get(playerId);
-            for(String seatId : seats){
+            for(String seatId : YokelUtilities.safeIterable(seats)){
                 if(seatId != null){
                     YokelSeat seat = get(YokelSeat.class, seatId);
                     if(seat != null){

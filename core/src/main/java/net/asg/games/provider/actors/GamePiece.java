@@ -45,12 +45,9 @@ public class GamePiece extends Table implements GameObject {
         this.mid = middle;
         this.bot = bottom;
 
-        add(top);
-        row();
-        add(middle);
-        row();
-        add(bottom);
-        row();
+        add(top).row();
+        add(middle).row();
+        add(bottom).row();
     }
 
     public void setDebug(boolean enabled) {

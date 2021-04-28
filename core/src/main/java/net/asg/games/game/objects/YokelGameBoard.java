@@ -1,6 +1,5 @@
 package net.asg.games.game.objects;
 
-import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.utils.Queue;
 import com.github.czyzby.kiwi.log.Logger;
 import com.github.czyzby.kiwi.log.LoggerService;
@@ -24,7 +23,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     public static final int VERTICAL_HOO_TIME = 4;
     public static final int DIAGONAL_HOO_TIME = 3;
     public static final float FALL_RATE = 0.026f;
-    public static final float FAST_FALL_RATE = 0.266f;
+    public static final float FAST_FALL_RATE = 0.396f;
     private static final int MAX_FALL_VALUE = 1;
 
     private final YokelPiece MEDUSA_PIECE = new YokelPiece(0, YokelBlock.MEDUSA, YokelBlock.MEDUSA, YokelBlock.MEDUSA);
@@ -74,12 +73,12 @@ public class YokelGameBoard extends AbstractYokelObject {
     private Queue<Integer> powers;
     private int[] countOfBreaks = new int[MAX_COLS];
     private int[] powersKeep = new int[MAX_COLS];
-    private int yahooDuration = 0;
+    private int yahooDuration, brokenBlockCount = 0;
     private boolean hasGameStarted;
 
     private Queue<Integer> specialPieces;
     private boolean brokenCellsHandled = true;
-    private boolean isPieceSet = false;
+    private boolean isPieceSet, cellsDropping = false;
 
     //Empty Constructor required for Json.Serializable
     public YokelGameBoard(){}
@@ -521,6 +520,8 @@ public class YokelGameBoard extends AbstractYokelObject {
             }
         }
         updateBoard();
+        logger.debug("set broken cell handled");
+        setBrokenCellsHandled(true);
         logger.debug("Exit handleBrokenCellDrops()");
     }
 
@@ -1200,7 +1201,7 @@ public class YokelGameBoard extends AbstractYokelObject {
                     int cell = cells[i][j];
                     YokelBlock block = new YokelBlock(j, i, YokelBlockEval.getCellFlag(cell));
                     if(YokelBlockEval.hasPowerBlockFlag(cell)){
-                        block.setPower(YokelBlockEval.getPowerFlag(cell));
+                        block.setPowerIntensity(YokelBlockEval.getPowerFlag(cell));
                     }
                     vector.addElement(block);
                 }
@@ -1333,9 +1334,11 @@ public class YokelGameBoard extends AbstractYokelObject {
     public Vector<YokelBlockMove> getCellsToBeDropped() {
         Vector<YokelBlockMove> vector = new Vector<>();
 
-        for (int i = 0; i < targetRows.length; i++) {
+        /*
+         for (int i = 0; i < targetRows.length; i++) {
             targetRows[i] = 0;
-        }
+        }*/
+        Arrays.fill(targetRows, 0);
 
         for (int y = 0; y < MAX_ROWS; y++) {
             for (int x = 0; x < MAX_COLS; x++) {
@@ -1345,7 +1348,6 @@ public class YokelGameBoard extends AbstractYokelObject {
                     if (targetRows[x] != y && getPieceValue(x, y) != MAX_COLS) {
                         vector.addElement(new YokelBlockMove(x, y, targetRows[x]));
                     }
-
                     targetRows[x]++;
                 }
             }
@@ -1546,29 +1548,40 @@ public class YokelGameBoard extends AbstractYokelObject {
     public void update(float delta){
         logger.debug("Enter update()");
         if(!hasPlayerDied()){
-            this.pieceFallTimer -= getCurrentFallRate();
-            if(this.pieceFallTimer < 0){
-                movePieceDown();
-            }
-
             //If blocks are to be dropped, drop them when timer hits.
             if(!YokelUtilities.isEmpty(getCellsToBeDropped())){
                 logger.debug("start block Fall");
-                blockFallTimer -= FALL_RATE;
-                logger.debug("blockFallTimer=" + blockFallTimer);
-
+                //update fall timer
                 if(blockFallTimer < 0){
-                    logger.debug("end block fall");
-                    blockFallTimer = MAX_FALL_VALUE;
-                    handleBrokenCellDrops();
+                    //Move rows down if timer hits
+                    dropCellRows();
+                } else {
+                    logger.debug("blockFallTimer=" + blockFallTimer);
+                    blockFallTimer -= FALL_RATE;
+                    cellsDropping = true;
                 }
+                //setBrokenCellsHandled(true);
             } else {
                 logger.debug("set broken cell handled");
-                setBrokenCellsHandled(true);
+                if(this.pieceFallTimer < 0){
+                    movePieceDown();
+                } else {
+                    this.pieceFallTimer -= getCurrentFallRate();
+                }
             }
         }
+
+        //Flag pieces that may  have changed.
         updateBoard();
         logger.debug("Exit update()");
+    }
+
+    private void dropCellRows() {
+            logger.debug("blockFallTimer=" + blockFallTimer);
+            logger.debug("end block fall");
+            blockFallTimer = MAX_FALL_VALUE;
+            handleBrokenCellDrops();
+            cellsDropping = false;
     }
 
     private float getCurrentFallRate() {
@@ -1581,11 +1594,13 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     private void updateBoard(){
         flagBoardMatches();
+        brokenBlockCount += getBrokenCellCount();
     }
 
     private void movePieceDown(){
         logger.debug("Enter movePieceDown()");
         if(piece != null){
+            //Move piece down if free
             if(isDownCellFree(piece.column, piece.row)){
                 logger.debug("DownCell is Free");
                 this.pieceFallTimer = MAX_FALL_VALUE;
@@ -1597,11 +1612,13 @@ public class YokelGameBoard extends AbstractYokelObject {
                     setNextPiece();
                     isPieceSet = true;
                 }
-                if(brokenCellsHandled) {
+
+                if(brokenCellsHandled && blockFallTimer > 0) {
                     logger.debug("Broken Cells handled, getting New Next Piece");
                     getNewNextPiece();
                     isPieceSet = false;
                 }
+                logger.debug("DownCell is Not Free");
             }
         }
         logger.debug("Exit movePieceDown()");
@@ -1655,7 +1672,9 @@ public class YokelGameBoard extends AbstractYokelObject {
         logger.debug("Enter setNextPiece()");
         if(piece != null) {
             int block = YokelBlockEval.getCellFlag(piece.getBlock1());
-            logger.debug("Block 1 = {0}", block);
+
+            //If Yahoo is on when next piece is set, reduce count
+            if(yahooDuration > 0) --yahooDuration;
 
             if (block == YokelBlock.MEDUSA) {
                 logger.debug("is medusa");
@@ -1679,8 +1698,16 @@ public class YokelGameBoard extends AbstractYokelObject {
                 cells[piece.row + 1][piece.column] = YokelBlockEval.setIDFlag(YokelBlock.Oy_BLOCK, YokelBlockEval.getID(cells[piece.row + 1][piece.column]));
                 cells[piece.row + 2][piece.column] = YokelBlockEval.setIDFlag(YokelBlock.Oy_BLOCK, YokelBlockEval.getID(cells[piece.row + 2][piece.column]));
             }
-            //piece = null;
-            setBrokenCellsHandled(false);
+
+            checkForYahoos();
+            logger.error("Yahoo!={0}", yahooDuration);
+
+            //If a yahoo was flagged, handle break;
+            if(!YokelUtilities.isEmpty(getCellsToBeDropped())){
+                setBrokenCellsHandled(false);
+            } else {
+                handleBrokenCellDrops();
+            }
         }
         logger.debug("Exit setNextPiece()");
     }
@@ -1749,8 +1776,8 @@ public class YokelGameBoard extends AbstractYokelObject {
         logger.debug("Enter powerUpBlock(block=" + block + ")");
         logger.debug("countOfBreak=" + Arrays.toString(countOfBreaks));
         logger.debug("powersKeep=" + Arrays.toString(powersKeep));
-        if(countOfBreaks[block] > 3){
 
+        if(countOfBreaks[block] > 3){
             //powerUp
             countOfBreaks[block] -= 3;
             ++powersKeep[block];
@@ -1794,9 +1821,22 @@ public class YokelGameBoard extends AbstractYokelObject {
         logger.debug("Exit addPowerToQueue()");
     }
 
-    public int checkForYahoos(){
-        logger.debug("Enter checkForYahoos()=" + getYahooDuration());
-        return yahooDuration = getYahooDuration();
+    private void checkForYahoos(){
+        int tempDuration = getYahooDuration();
+        logger.error("###Yahoo={0}", tempDuration);
+        logger.error("###Current Yahoo={0}", yahooDuration);
+        if(tempDuration > 0){
+            if(yahooDuration > 0) {
+                yahooDuration += tempDuration;
+            } else {
+                yahooDuration = tempDuration - 1;
+            }
+        }
+    }
+
+    public int fetchYahooDuration(){
+        logger.debug("fetchYahooDuration()=" + yahooDuration);
+        return yahooDuration;
     }
 
     public boolean isPieceSet() {

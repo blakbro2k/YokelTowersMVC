@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.service.UserInterfaceService;
@@ -25,11 +26,11 @@ public class YokelObjectFactory implements Disposable {
     private Iterable<? extends Actor> createActors(Array<String> imageNames, Array<String> animatedImageNames) {
         Array<Actor> actors = new Array<>();
 
-        for(String imageName : imageNames){
+        for(String imageName : GdxArrays.newSnapshotArray(imageNames)){
             addActor(actors, userInterfaceService.getImage(imageName));
         }
 
-        for(String aniImageName : animatedImageNames){
+        for(String aniImageName : GdxArrays.newSnapshotArray(animatedImageNames)){
             addActor(actors, userInterfaceService.getAnimatedImage(aniImageName));
         }
         return actors;

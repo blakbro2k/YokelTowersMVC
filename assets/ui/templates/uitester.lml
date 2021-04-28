@@ -1,13 +1,13 @@
 <window width="800" height="600" title="Yahoo Towers! - Room: ">
-<table tablealign="bottomRight" fillparent="true" defaultfillx="true">
+<table tablealign="bottomRight"  defaultfillx="true">
     <image id="banner" style="banner" row="true" colspan="3"/>
     <table onecolumn="true" defaultfillx="true" tablealign="left">
         <!-- Side Panel -->
         <table onecolumn="true" defaultfillx="true">
-            <button>Start Game</button>
+            <button onClick="toggleGameStart">Start Game</button>
             <button>Change Keys</button>
             <button>Demo</button>
-            <button>Stand</button>
+            <button onClick="playerStandUpAction">Stand</button>
             <label row="true">Table Type</label>
             <button>Invite</button>
             <button>Boot</button>
@@ -29,7 +29,7 @@
     </table>
     <!-- End Side Panel -->
     <table align="top" tablealign="left">
-        <table defaultpad="16" tablealign="left">
+        <table tablealign="left">
             <table row="true">
                 <label row="true">Left\t:Left Arrow</label>
                 <label row="true">Right\t:Right Arrow</label>
@@ -38,18 +38,18 @@
                 <label row="true">Use Item\t:Space Bar</label>
                 <gameclock width="100" height="46" id="gameClock" row="true"/>
             </table>
-            <table>
+            <table defaultpad="0">
                 <gameboard id="3:area" areanumber="3"/>
                 <gameboard id="4:area" areanumber="4"/>
             </table>
         </table>
         <table>
             <table row="true">
-                <gameboard id="1:area" areanumber="1" preview="false"/>
+                <gameboard id="1:area" areanumber="1" preview="false" debug="true"/>
                 <gameboard id="2:area" areanumber="2" preview="false" left="false"/>
             </table>
             <table>
-                <label id="action_msg" row="true">blakbro dithered rmeyers</label>
+                <label id="action_msg" row="true"> </label>
             </table>
         </table>
         <table>

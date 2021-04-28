@@ -2,7 +2,7 @@ package net.asg.games.game.objects;
 
 import com.badlogic.gdx.Input;
 
-public class PlayerKeyMap {
+public class YokelKeyMap {
     private int[] keyMap = {Input.Keys.RIGHT,
             Input.Keys.LEFT,
             Input.Keys.UP,

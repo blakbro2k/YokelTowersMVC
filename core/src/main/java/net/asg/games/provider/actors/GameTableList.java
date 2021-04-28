@@ -27,8 +27,8 @@ public class GameTableList extends Table {
     private final static String JOIN_STR = "Join";
     private final static String WATCH_STR = "Watch";
 
-    public final static String TABLE_SEPARATOR = ":";
-    public final static String TABLE_LIST_ATTR = "tableList";
+    private final static String TABLE_SEPARATOR = ":";
+    private final static String TABLE_LIST_ATTR = "tableList";
 
     private Table header;
     private Table tableList;
@@ -122,12 +122,11 @@ public class GameTableList extends Table {
 
     public Array<Button> getRoomsButtons(){
         Array<Button> buttons = GdxArrays.newArray();
-
-            for(Cell cell : tableList.getCells()){
+            for(Cell cell : YokelUtilities.safeIterable(tableList.getCells())){
                 Table actor = YokelUtilities.getActorFromCell(Table.class, cell);
                 if(TABLE_LIST_ATTR.equalsIgnoreCase(YokelUtilities.getActorId(actor))){
                     Array<Cell> cells = actor.getCells();
-                    for(Cell cell2 : cells){
+                    for(Cell cell2 : YokelUtilities.safeIterable(cells)){
                         Button button = YokelUtilities.getActorFromCell(Button.class, cell2);
                         if(button != null){
                             buttons.add(button);

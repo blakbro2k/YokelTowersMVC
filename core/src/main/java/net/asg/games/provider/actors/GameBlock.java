@@ -173,7 +173,7 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
         if(image != null){
             return image.getWidth();
         } else {
-            return 16;
+            return 20;
         }
     }
 
@@ -183,7 +183,7 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
         if(image != null){
             return image.getHeight();
         } else {
-            return 16;
+            return 20;
         }
     }
 
@@ -250,8 +250,8 @@ public class GameBlock extends Table implements Pool.Poolable, GameObject, Clone
 
             if(c instanceof GameBlock){
                 GameBlock g = (GameBlock) c;
-                //GameBlock r = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK, g.isPreview);
-                GameBlock r = Pools.obtain(GameBlock.class);
+                GameBlock r = new GameBlock(getSkin(), YokelBlock.CLEAR_BLOCK, g.isPreview);
+                //GameBlock r = Pools.obtain(GameBlock.class);
                 //System.out.println("r=" + r);
                 r.setPreview(g.isPreview);
                 r.setImage(g.getImage());

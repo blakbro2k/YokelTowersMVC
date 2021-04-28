@@ -1,28 +1,35 @@
 package net.asg.games.provider.actors;
 
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.game.objects.YokelBlock;
-import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
+import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.game.objects.YokelSoundFXFactory;
+import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.YokelUtilities;
-
-import java.util.Vector;
 
 /**
  * Created by eboateng on 3/19/2018.
  */
 
-public class GameBoard extends Table {
-    private static float MAX_KEY_HOLD_TIME = 15;
+public class GameBoard extends Table implements GameObject {
+    private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(GameBoard.class);
+
+    private final static int COL_SPAN = 2;
+    private final static int TOP_PAD = 4;
+    private final static int BOTTOM_PAD = 6;
 
     private GameNameLabel nameLabel;
     private GamePiece next;
     private GamePowersQueue powers;
     private GameBlockArea area;
+    private GamePiece clearPiece;
 
     private float blockWidth;
     private float blockPrevWidth;
@@ -41,6 +48,8 @@ public class GameBoard extends Table {
         blockPrevWidth = previewBlock.getWidth();
         blockHeight = block.getHeight();
         blockPrevHeight = previewBlock.getHeight();
+
+        clearPiece = new GamePiece(getSkin());
     }
 
     private void initialize(Skin skin) {
@@ -53,7 +62,6 @@ public class GameBoard extends Table {
 
     private void setUpBoard(){
         clearChildren();
-
         Table right = new Table(getSkin());
         right.add(area);
 
@@ -62,11 +70,10 @@ public class GameBoard extends Table {
             add(right);
         } else {
             Table left = new Table(getSkin());
-            left.add(next).top().row();
-            left.add(new GamePiece(getSkin())).row();
+            left.add(next).top().padTop(TOP_PAD).padBottom(BOTTOM_PAD).row();
+            left.add(clearPiece).row();
             left.add(powers).bottom();
-
-            add(nameLabel).left().colspan(2);
+            add(nameLabel).left().colspan(COL_SPAN);
             row();
 
             if(isLeftBar){
@@ -89,6 +96,14 @@ public class GameBoard extends Table {
         setUpBoard();
     }
 
+    public boolean isPreview() {
+        return area.isPreview();
+    }
+
+    public boolean getPreview(){
+        return area.isPreview();
+    }
+
     public void update(YokelGameBoard board){
         if(board != null){
             area.updateData(board);
@@ -104,11 +119,38 @@ public class GameBoard extends Table {
         }
     }
 
-    public void setPlayerLabel(String data){
+    @Override
+    public void setData(String data) {
+        if(!YokelUtilities.isEmpty(data)){
+            YokelPlayer player = YokelUtilities.getObjectFromJsonString(YokelPlayer.class, data);
+            if(player != null){
+                sitPlayerDown(player);
+            } else {
+                standPlayerUp();
+            }
+        } else {
+            standPlayerUp();
+        }
+    }
+
+    public void sitPlayerDown(YokelPlayer player){
+        if(player != null){
+            area.sitPlayerDown(player);
+            setPlayerLabel(player.toString());
+        }
+        setUpBoard();
+    }
+
+    public void standPlayerUp(){
+        area.standPlayerUp();
+        nameLabel.removePlayer();
+        setUpBoard();
+    }
+
+    private void setPlayerLabel(String data){
         if(data != null){
             nameLabel.setData(data);
         }
-        setUpBoard();
     }
 
     public void setLeftBarOrientation(boolean isLeft){
@@ -158,6 +200,10 @@ public class GameBoard extends Table {
         area.setActive(b);
     }
 
+    public void setGameReady(boolean gameReady) {
+        area.setGameReady(gameReady);
+    }
+
     public void setPlayerView(boolean b) {
         area.setPlayerView(b);
     }
@@ -166,15 +212,23 @@ public class GameBoard extends Table {
         area.killPlayer();
     }
 
-    public void pushCellsToMove(Vector<YokelBlockMove> toDrop) {
-        area.pushCellsToMove(toDrop);
+    public void addButtonListener(InputListener listener) {
+        area.addButtonListener(listener);
     }
 
-    public void addBlocksToDrop(Vector<YokelBlockMove> cellsToDrop) {
-        area.pushCellsToMove(cellsToDrop);
+    public void hideJoinButton() {
+        area.hideJoinButton();
     }
 
-    public boolean isActionFinished(){
-        return area.isActionFinished();
+    public void showJoinButton() {
+        area.showJoinButton();
+    }
+
+    public void setIsPlayerReady(boolean isPlayerReady) {
+        area.setIsPlayerReady(isPlayerReady);
+    }
+
+    public void setYahooDuration(boolean isYahoo) {
+        nameLabel.setYahoo(isYahoo);
     }
 }

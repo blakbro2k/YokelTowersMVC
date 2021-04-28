@@ -113,11 +113,11 @@ public class YokelBlock extends AbstractYokelObject implements Pool.Poolable {
         reset();
     }
 
-    public void setPower(int intensity) {
+    public void setPowerIntensity(int intensity) {
         this.powerIntensity = intensity;
     }
 
-    public int getPower() {
+    public int getPowerIntensity() {
         if(powerIntensity == 1) {
             powerIntensity = 3;
         }

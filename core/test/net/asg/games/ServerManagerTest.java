@@ -372,7 +372,7 @@ public class ServerManagerTest {
         printInvocationResult(result);
         Assert.assertFalse(getInvocationBoolean(result));
 
-        //GameRunner testGame = new GameRunner(daemon, room);
+        //ServerGameRunner testGame = new ServerGameRunner(daemon, room);
         //testGame.start();
         //testGame.setRunning(false);
 

@@ -60,5 +60,6 @@
         <gameclock id="gameClock" colspan="6" row="true"/>
         <textButton onChange="toggleGameStart">Start</textButton>
         <textButton onChange="app:exit" row="true">@exit</textButton>
+        <textButton onChange="toggleYahoo" row="true">Yahoo!</textButton>
     </table>
 </window>

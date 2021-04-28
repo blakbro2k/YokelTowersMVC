@@ -7,9 +7,7 @@ public class YokelPiece extends AbstractYokelObject {
     public int column;
 
     //Empty Constructor required for Json.Serializable
-    public YokelPiece(){
-        this(0,0,0,0);
-    }
+    public YokelPiece(){}
 
     public YokelPiece(int index, int block1, int block2, int block3){
         init();

@@ -12,14 +12,11 @@ import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogShower;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewInitializer;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.ViewDialog;
-import com.github.czyzby.kiwi.log.Logger;
-import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.action.ActionContainer;
 
-import net.asg.games.controller.ControllerNames;
 import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPlayer;
@@ -187,7 +184,7 @@ public class GameController implements ViewRenderer, ViewInitializer, ActionCont
         if(area != null){
             YokelGameBoard board = game.getGameBoard(boardIndex);
             if(player != null){
-                area.setPlayerLabel(player.getNameLabel().toString());
+                //area.setPlayerLabel(player.toString());
                 area.setPlayerView(isPlayerView);
                 area.setActive(isActive);
             }

@@ -33,7 +33,7 @@ public class CreateGameController implements ActionContainer {
             interfaceService.destroyDialog(CreateGameController.class);
         } catch (Exception e){
             e.printStackTrace();
-            sessionService.showError(e);
+            sessionService.handleException(null, e);
         }
     }
 

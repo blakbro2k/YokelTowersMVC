@@ -20,9 +20,10 @@ import org.apache.commons.lang.StringUtils;
 
 public class GamePowersQueue extends Table implements GameObject{
     private Logger logger = LoggerService.forClass(GamePowersQueue.class);
+    private static final int MAX_VIEWABLE_BLOCKS = 4;
 
     private Queue<GameBlock> powers;
-    private VerticalGroup powersDisplay;
+    private Table powersDisplay;
 
     public GamePowersQueue(Skin skin){
         super(skin);
@@ -31,13 +32,21 @@ public class GamePowersQueue extends Table implements GameObject{
 
     private void initialize(){
         powers = new Queue<>();
-        powersDisplay = new VerticalGroup();
+        powersDisplay = new Table();
         powersDisplay.align(Align.bottom);
-        powersDisplay.columnAlign(Align.bottom);
+        //powersDisplay.columnAlign(Align.bottom);
         setSize(getPrefWidth(), getPrefHeight());
-        setClip(true);
         setCullingArea(new Rectangle(getX(), getY(), getWidth(), getHeight()));
+        setClip(true);
         add(powersDisplay).bottom();
+        powersDisplay.add(getClearBlock()).row();
+        powersDisplay.add(getClearBlock()).row();
+        powersDisplay.add(getClearBlock()).row();
+        powersDisplay.add(getClearBlock()).row();
+        powersDisplay.add(getClearBlock()).row();
+        powersDisplay.add(getClearBlock()).row();
+        powersDisplay.add(getClearBlock()).row();
+        powersDisplay.add(getClearBlock()).row();
     }
 
     public void updateQueue(Queue<GameBlock> powerUps){
@@ -74,6 +83,10 @@ public class GamePowersQueue extends Table implements GameObject{
         }
     }
 
+    private GameBlock getClearBlock(){
+        return YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK, false);
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
@@ -84,11 +97,10 @@ public class GamePowersQueue extends Table implements GameObject{
     }
 
     public float getPrefHeight() {
-        return YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK).getPrefHeight() * 8;
+        return YokelUtilities.getBlock(YokelBlock.CLEAR_BLOCK).getPrefHeight() * MAX_VIEWABLE_BLOCKS;
     }
 
     @Override
     public void setData(String data) {
-
     }
 }

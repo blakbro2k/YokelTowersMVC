@@ -3,19 +3,23 @@ package net.asg.games.controller;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.czyzby.autumn.annotation.Inject;
+import com.github.czyzby.autumn.mvc.component.sfx.MusicService;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewDialogController;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewInitializer;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
+import com.github.czyzby.autumn.mvc.stereotype.Asset;
 import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
@@ -43,6 +47,8 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     @Inject private UserInterfaceService uiService;
     @Inject private SessionService sessionService;
     @Inject private InterfaceService interfaceService;
+    @Inject private MusicService musicService;
+    @Inject private LoadingController assetController;
 
     @LmlActor("Y_block") private Image yBlockImage;
     @LmlActor("O_block") private Image oBlockImage;
@@ -99,9 +105,13 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     @LmlActor("joinReady") private GameJoinWidget joinReady;
     @LmlActor("timerLabel") private Label timerLabel;
 
+    //@Asset(GlobalConstants.MENACING_PATH) private Music menacing;
+
+
     private YokelGameBoard boardState;
-    private boolean nextGameDialog, attemptGameStart = false;
+    private boolean nextGameDialog, attemptGameStart, isGameReady = false;
     private long nextGame = 0;
+    private boolean yahoo = false;
 
     @Override
     public void render(Stage stage, float delta) {
@@ -128,6 +138,8 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
             if(!nextGameDialog) {
                 logger.debug("Showing next Game Dialog");
                 nextGameDialog = true;
+                //Dialog di = new Dialog();
+                //di.show()
                 interfaceService.showDialog(NextGameController.class);
                 nextGame = TimeUtils.millis();
             }
@@ -174,7 +186,7 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
         area1.setPreview(false);
         area1.update(boardState);
 
-        //joinReady.setIsGameReady(true);
+        joinReady.setIsGameReady(true);
             /*area = new GameBoard(uiService.getSkin());
             YokelPlayer player = new YokelPlayer("Test Player One",2000, 5);
             area.setPlayerLabel(player.getNameLabel().toString());
@@ -252,6 +264,7 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
         logger.debug("attemptGameStart={}", attemptGameStart);
         logger.exit("toggleGameStart");
     }
+
 
     @LmlAction("getTestBoard")
     private YokelGameBoard getTestBoard(){
@@ -429,5 +442,20 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     @Override
     public void destroy(ViewController viewController) {
         boardState.dispose();
+    }
+
+    @LmlAction("toggleYahoo")
+    private void toggleYahoo(){
+        if(yahoo){
+            yahoo = false;
+            musicService.clearCurrentTheme();
+        } else {
+            yahoo = true;
+
+            Music menacing = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.MENACING_PATH));
+            menacing.setLooping(true);
+            //musicService.playCurrentTheme(assetController.getMenacing());
+            musicService.playCurrentTheme(menacing);
+        }
     }
 }

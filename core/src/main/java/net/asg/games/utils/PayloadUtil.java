@@ -6,10 +6,10 @@ import net.asg.games.game.managers.GameManager;
 import net.asg.games.game.objects.YokelLounge;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelTable;
-import net.asg.games.utils.enums.ServerRequest;
 
 import org.pmw.tinylog.Logger;
 
+@SuppressWarnings("ConfusingArgumentToVarargsMethod")
 public class PayloadUtil {
     private static final String[] EMPTY_ARRAY = {""};
 
@@ -101,6 +101,20 @@ public class PayloadUtil {
     public static String[] createGameManagerRequest(String loungeName, String roomName, int tableNumber, int seatNumber){
         if(validatedInputs(loungeName, roomName)){
             return new String[]{loungeName, roomName, YokelUtilities.otos(tableNumber), YokelUtilities.otos(seatNumber)};
+        }
+        return EMPTY_ARRAY;
+    }
+
+    public static String[] createTargetAttackRequest(String loungeName, String roomName, int tableNumber, int seatNum, int targetSeat) {
+        if(validatedInputs(loungeName, roomName)){
+            return new String[]{loungeName, roomName, YokelUtilities.otos(tableNumber), YokelUtilities.otos(seatNum), YokelUtilities.otos(targetSeat)};
+        }
+        return EMPTY_ARRAY;
+    }
+
+    public static String[] createRandomAttackRequest(String loungeName, String roomName, int tableNumber, int seatNum) {
+        if(validatedInputs(loungeName, roomName)){
+            return new String[]{loungeName, roomName, YokelUtilities.otos(tableNumber), YokelUtilities.otos(seatNum)};
         }
         return EMPTY_ARRAY;
     }

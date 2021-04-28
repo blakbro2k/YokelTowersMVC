@@ -1,5 +1,7 @@
 package net.asg.games.game.objects;
 
+import net.asg.games.game.managers.UIManager;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -8,9 +10,9 @@ import org.apache.commons.lang.StringUtils;
 
 public class YokelPlayer extends AbstractYokelObject {
     private final static int DEFAULT_RATING_NUMBER = 1500;
+    public final static YokelPlayer BLANK_PLAYER = new YokelPlayer("", DEFAULT_RATING_NUMBER, 0);
     private int rating;
     private int icon;
-    private YokelNameLabel nameLabel;
 
     //Empty Constructor required for Json.Serializable
     public YokelPlayer(){}
@@ -27,7 +29,6 @@ public class YokelPlayer extends AbstractYokelObject {
         setName(name);
         setRating(rating);
         setIcon(icon);
-        nameLabel = new YokelNameLabel(name, icon);
     }
 
     public int getRating(){
@@ -43,7 +44,7 @@ public class YokelPlayer extends AbstractYokelObject {
     }
 
     public int getIcon(){
-        return icon;
+        return this.icon;
     }
 
     public void increaseRating(int inc){
@@ -58,20 +59,11 @@ public class YokelPlayer extends AbstractYokelObject {
         return getId();
     }
 
-    public YokelNameLabel getNameLabel(){
-        return nameLabel;
-    }
-
     @Override
     public boolean equals(Object o) {
         if(o == null) return false;
         if(!this.getClass().equals(o.getClass())) return false;
-        YokelPlayer player = getPlayer(o);
-        return isNameSame(player);
-    }
-
-    private YokelPlayer getPlayer(Object o){
-        return (YokelPlayer) o;
+        return isNameSame((YokelPlayer) o);
     }
 
     private boolean isNameSame(YokelPlayer player){
@@ -80,7 +72,5 @@ public class YokelPlayer extends AbstractYokelObject {
     }
 
     @Override
-    public void dispose() {
-        nameLabel.dispose();
-    }
+    public void dispose() {}
 }

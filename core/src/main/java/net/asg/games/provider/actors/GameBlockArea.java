@@ -1,13 +1,10 @@
 package net.asg.games.provider.actors;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -16,16 +13,13 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.game.objects.YokelBlock;
-import net.asg.games.game.objects.YokelBlockMove;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
-import net.asg.games.utils.Log4LibGDXLoggerService;
+import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.UIUtil;
 import net.asg.games.utils.YokelUtilities;
-
-import java.util.Iterator;
-import java.util.Vector;
 
 public class GameBlockArea extends Stack {
     private final Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(GameBlockArea.class);
@@ -37,10 +31,6 @@ public class GameBlockArea extends Stack {
     private static final String ALIVE_BACKGROUND = "area_alive_bg";
     private static final String DEAD_BACKGROUND = "area_dead_bg";
     private static final String PLAYER_BACKGROUND = "area_player_bg";
-
-    private static final float BLOCK_DROP_SPEED = .8f;
-    private static final float MAX_BLOCK_DROP_SPEED = 6f;
-    private static final float FALL_BLOCK_SPEED = 250f;
 
     private boolean isActive;
     private boolean isPreview;
@@ -61,20 +51,11 @@ public class GameBlockArea extends Stack {
     private ObjectMap<String, GameBlock> uiBlocks;
     private Queue<GameBlock> dropCells;
     private PieceDrawable pieceSprite;
-    private int globalTimer = 0;
 
     public GameBlockArea(Skin skin, boolean isPreview) {
         this.skin = skin;
         this.isPreview = isPreview;
         init();
-        joinWindow = new GameJoinWidget(skin);
-        //add(joinWindow);
-
-        //joinButton.clearChildren();
-        //joinDialog.button("Join").setDebug(false);
-        //joinDialog.set
-        //joinDialog.show(factory.getUserInterfaceService().getStage());
-        //System.out.println("Adding block " + this.getName() + "w: " + this.getWidth() + " h: " + this.getHeight());
     }
 
     public GameBlockArea(Skin skin) {
@@ -84,13 +65,19 @@ public class GameBlockArea extends Stack {
     private void init(){
         initializeBoard();
         initializeSize();
+
         setBoardNumber(0);
         bgColor.setBackground(skin.getDrawable(ALIVE_BACKGROUND));
         add(bgColor);
         bgNumber.add(tableNumber);
         bgNumber.add("");
         add(bgNumber);
+        joinWindow = new GameJoinWidget(skin);
+        joinWindow.setClip(true);
+        //joinWindow.setVisible(false);
+        //joinWindow.setSize(20,20);
         initializeGrid();
+        add(joinWindow);
     }
 
     private void initializeSize(){
@@ -117,6 +104,7 @@ public class GameBlockArea extends Stack {
     }
 
     private void initializeGrid(){
+        this.grid.clearChildren();
         this.grid.setName(GRID_NAME);
         for(int r = YokelGameBoard.MAX_PLAYABLE_ROWS - 1; r >= 0; r--){
             for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
@@ -180,11 +168,11 @@ public class GameBlockArea extends Stack {
         }
     }
 
-    public boolean isDownCellFree(int column, int row) {
+    private boolean isDownCellFree(int column, int row) {
         return row > 0 && row < YokelGameBoard.MAX_PLAYABLE_ROWS + 1 && getPieceValue(column, row - 1) == YokelBlock.CLEAR_BLOCK;
     }
 
-    public int getPieceValue(int c, int r){
+    private int getPieceValue(int c, int r){
         GameBlock uiCell = uiBlocks.get(getCellAttrName(r, c));
         int ret = YokelBlock.CLEAR_BLOCK;
         if(uiCell != null) ret = UIUtil.getInstance().getFactory().getBlockNumber(uiCell.getImage().getName());
@@ -196,28 +184,31 @@ public class GameBlockArea extends Stack {
     }
 
     public void setPreview(boolean isPreview){
-        logger.enter("setPreview");
         this.isPreview = isPreview;
+        redraw();
+    }
+
+    private void redraw(){
         setAreaBounds();
-        update();
-        logger.exit("setPreview");
+        initializeGrid();
     }
 
     @Override
     public void act(float delta){
         super.act(delta);
 
-        for(GameBlock uiblock : uiBlocks.values()) {
+        for(GameBlock uiblock : YokelUtilities.getMapValues(uiBlocks)) {
             if(uiblock != null){
                 uiblock.act(delta * YokelUtilities.otof(0.03));
             }
         }
-        //joinWindow.setPosition(getX(), getY());
     }
 
     @Override
     public void draw(Batch batch, float alpha){
         super.draw(batch, alpha);
+        //setAreaBounds();
+
         //this.drawChildren();
         //joinWindow.setPosition(getX(), getY() / 2);
         //joinWindow.draw(batch, alpha);
@@ -235,52 +226,31 @@ public class GameBlockArea extends Stack {
         return isActive;
     }
 
-    public void pushCellsToMove(Vector<YokelBlockMove> cellsToDrop) {
-        logger.enter("pushCellsToMove");
-        for(YokelBlockMove toMove : cellsToDrop){
-            if(toMove != null) {
-                logger.debug("[{}, {}] to row: {}", toMove.x, toMove.y, toMove.targetRow);
-                GameBlock uiCell = uiBlocks.get(getCellAttrName(toMove.y, toMove.x));
-                logger.debug("uiCell={}", uiCell);
-
-                if(uiCell != null) {
-                    float targetY = (toMove.targetRow) * uiCell.getHeight();
-                    logger.debug("[{},{}] to row: {}",  uiCell.getX() , uiCell.getX() , toMove.targetRow);
-                    logger.debug("[{}]", grid.getCell(uiCell).getActorX());
-                    logger.debug("targetY={}",  targetY);
-                    logger.debug("targetY={}", targetY);
-                    Action action = Actions.moveTo(uiCell.getX(), targetY, 0.2f, Interpolation.linear);
-                    uiCell.addAction(Actions.sequence(action, Actions.removeAction(action, uiCell)));
-                    //uiCell.addAction(Actions.moveTo(uiCell.getX() / 2, (uiCell.getX() - 16) / 2, 0.8f, Interpolation.linear));
-                    logger.debug("HAS ACTION!!" + uiCell.hasActions());
-                    logger.debug("HAS ACTION!!" + uiCell.getActions());
-                    dropCells.addLast(uiCell);
-                }
-            }
-        }
-        //isActionFinished();
-        if(++globalTimer > 5){
-            Gdx.app.exit();
-        }
-        logger.exit("pushCellsToMove");
+    public void addButtonListener(InputListener listener) {
+        joinWindow.setButtonListener(listener);
     }
 
-    public boolean isActionFinished(){
-        logger.debug("Enter isActionFinished()={}", dropCells.isEmpty());
-        Iterator<GameBlock> iterator = dropCells.iterator();
-        while(iterator.hasNext()){
-            GameBlock cell = iterator.next();
-            if(cell != null){
-                logger.debug(cell.getName() + " hasActions={}", cell.hasActions());
-                logger.debug(cell.getName() + " hasActions={}", cell.getActions().size);
-                logger.debug(cell.getName() + " hasActions={}", cell.getActions());
-                if(!cell.hasActions()){
-                    iterator.remove();
-                }
-            }
+    public void sitPlayerDown(YokelPlayer player) {
+        if(player != null){
+            setPlayerSeated(true);
+            joinWindow.setIsPlayerReady(true);
         }
-        logger.debug("Exiting isActionFinished()={}", dropCells.isEmpty());
-        return dropCells.isEmpty();
+    }
+
+    public void setIsPlayerReady(boolean isPlayerReady) {
+        joinWindow.setIsPlayerReady(isPlayerReady);
+    }
+
+    public void standPlayerUp() {
+        setPlayerSeated(false);
+    }
+
+    public void hideJoinButton() {
+        joinWindow.setVisible(false);
+    }
+
+    public void showJoinButton() {
+        joinWindow.setVisible(true);
     }
 
     private static class PieceDrawable extends Actor {
@@ -394,20 +364,6 @@ public class GameBlockArea extends Stack {
             this.board = gameBoard;
             update();
             setPieceSprite(gameBoard, board.fetchCurrentPieceFallTimer());
-            //setBrokenBlocks(gameBoard.getBrokenCells());
-            //dropCells(gameBoard.getCellsToBeDropped());
-        }
-    }
-
-    private void dropCells(Vector<YokelBlockMove> cellsToBeDropped) {
-        if(cellsToBeDropped != null && cellsToBeDropped.size() > 0) {
-            YokelBlockMove cell = cellsToBeDropped.remove(0);
-        }
-    }
-
-    private void setBrokenBlocks(Vector<YokelBlock> brokenCells) {
-        if(brokenCells != null && brokenCells.size() > 0){
-            YokelBlock block = brokenCells.remove(0);
         }
     }
 
@@ -415,23 +371,36 @@ public class GameBlockArea extends Stack {
         if(board != null){
             for(int r = 0; r < YokelGameBoard.MAX_PLAYABLE_ROWS; r++){
                 for(int c = 0; c < YokelGameBoard.MAX_COLS; c++){
-                    setBlock(board.getBlockValueAt(c, r), r, c);
+                    setBlock(updateGameBoard(board, r, c), r, c);
                 }
             }
         }
     }
 
+    private int updateGameBoard(YokelGameBoard board, int r, int c) {
+        if(board != null){
+            return board.getBlockValueAt(c, r);
+        }
+        return YokelBlock.CLEAR_BLOCK;
+    }
+
     void setActive(boolean b){
         this.isActive = b;
         if(isActive){
-            joinWindow.setIsGameReady(true);
-            joinWindow.setSeated(true);
             if(isPlayerView){
                 bgColor.setBackground(skin.getDrawable(PLAYER_BACKGROUND));
             } else {
                 bgColor.setBackground(skin.getDrawable(ALIVE_BACKGROUND));
             }
         }
+    }
+
+    void setGameReady(boolean gameReady) {
+        joinWindow.setIsGameReady(gameReady);
+    }
+
+    void setPlayerSeated(boolean b) {
+        joinWindow.setSeated(b);
     }
 
     void setPlayerView(boolean b){
@@ -443,10 +412,18 @@ public class GameBlockArea extends Stack {
     }
 
     void killPlayer(){
-        if(isActive && board.hasPlayerDied()){
+        if(isActive && hasBoardPlayerDied()){
             bgColor.setBackground(skin.getDrawable(DEAD_BACKGROUND));
         }
         setActive(false);
+    }
+
+    private boolean hasBoardPlayerDied(){
+        boolean bool = true;
+        if(board != null){
+            bool = board.hasPlayerDied();
+        }
+        return bool;
     }
 
     YokelGameBoard getBoard(){
