@@ -1,4 +1,4 @@
-package net.asg.games.game.objects;
+package net.asg.games.game.factories;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
+import net.asg.games.game.objects.YokelBlock;
+import net.asg.games.game.objects.YokelBlockEval;
 import net.asg.games.provider.actors.GameBlock;
 import net.asg.games.service.UserInterfaceService;
 

@@ -9,7 +9,6 @@ import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPiece;
 import net.asg.games.game.objects.YokelPlayer;
-import net.asg.games.game.objects.YokelSoundFXFactory;
 import net.asg.games.utils.Log4LibGDXLogger;
 import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.YokelUtilities;

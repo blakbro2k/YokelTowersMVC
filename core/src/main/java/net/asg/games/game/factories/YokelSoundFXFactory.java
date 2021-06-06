@@ -1,23 +1,13 @@
-package net.asg.games.game.objects;
+package net.asg.games.game.factories;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pools;
-import com.github.czyzby.autumn.annotation.Inject;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.github.czyzby.autumn.mvc.component.sfx.MusicService;
-import com.github.czyzby.autumn.mvc.stereotype.Asset;
-import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 
 import net.asg.games.controller.LoadingController;
-import net.asg.games.provider.actors.GameBlock;
-import net.asg.games.service.UserInterfaceService;
 import net.asg.games.utils.GlobalConstants;
 
 public class YokelSoundFXFactory implements Disposable {
@@ -39,24 +29,12 @@ public class YokelSoundFXFactory implements Disposable {
         musicService.play(assetLoader.getBlockDown());
     }
 
-    public void startMenacingMusic(){
-        //musicService.playCurrentTheme(assetLoader.getMenacing(), false);
-        Music yahoo = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.MENACING_PATH));
-        yahoo.setLooping(true);
-        musicService.playCurrentTheme(yahoo);
-    }
-
     public void playYahooSound(){
-        //Music yahoo = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.YAHOO_PATH));
-        //yahoo.setLooping(false);
-        //Music yahoo = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.YAHOO_PATH));
-
-        musicService.playCurrentTheme(assetLoader.getYahooMusic());
-        //musicService.playCurrentTheme(yahoo);
+        musicService.play(assetLoader.getYahooSound());
     }
 
-    public void stopMenacingMusic(){
-        musicService.clearCurrentTheme();
+    public void playMenacingSound(){
+        musicService.play(assetLoader.getMenacingSound());
     }
 
     public void playCycleClickSound() {

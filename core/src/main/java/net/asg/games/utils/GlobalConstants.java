@@ -96,11 +96,13 @@ public class GlobalConstants {
 
     //Sound Effects path
     public final static String CYCLE_CLICK_PATH = "music/sounds/cycleClick.ogg";
-    public final static String MENACING_PATH = "music/menacing.ogg";
+    public final static String MENACING_PATH = "music/sounds/menacing.ogg";
     public final static String BLOCK_SPEED_DOWN_PATH = "music/sounds/blockDown.ogg";
     public final static String GAME_START_PATH = "music/gameStart.ogg";
     public final static String BLOCK_BREAK_PATH = "music/sounds/blockBreak.ogg";
     public final static String YAHOO_YAH_PATH = "music/sounds/yah.ogg";
     public final static String YAHOO_PATH = "music/sounds/yahoo!.ogg";
-
+    public final static String BOARD_DEATH_PATH = "music/sounds/death.ogg";
+    public final static String GAME_OVER_PATH = "music/sounds/GameOver.ogg";
+    public final static String NO_THEME_PATH = "music/noTheme.ogg";
 }

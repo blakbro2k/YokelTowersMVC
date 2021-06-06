@@ -2,7 +2,7 @@ package net.asg.games.utils;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-import net.asg.games.game.objects.YokelObjectFactory;
+import net.asg.games.game.factories.YokelObjectFactory;
 import net.asg.games.provider.actors.GameBlock;
 
 public class UIUtil {

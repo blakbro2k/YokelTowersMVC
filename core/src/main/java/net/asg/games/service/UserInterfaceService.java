@@ -21,8 +21,8 @@ import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.lml.scene2d.ui.reflected.AnimatedImage;
 
 import net.asg.games.controller.LoadingController;
-import net.asg.games.game.objects.YokelObjectFactory;
-import net.asg.games.game.objects.YokelSoundFXFactory;
+import net.asg.games.game.factories.YokelObjectFactory;
+import net.asg.games.game.factories.YokelSoundFXFactory;
 import net.asg.games.utils.YokelUtilities;
 
 @Component

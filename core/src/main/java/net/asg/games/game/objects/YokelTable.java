@@ -59,7 +59,7 @@ public class YokelTable extends AbstractYokelObject {
 
     private void setUpArguments(OrderedMap<String, Object> arguments){
         if(arguments != null){
-            for(String key : arguments.keys()){
+            for(String key : YokelUtilities.getMapKeys(arguments)){
                 if(key != null){
                     Object o = arguments.get(key);
                     processArg(key, o);

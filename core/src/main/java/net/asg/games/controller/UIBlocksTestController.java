@@ -105,9 +105,6 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     @LmlActor("joinReady") private GameJoinWidget joinReady;
     @LmlActor("timerLabel") private Label timerLabel;
 
-    //@Asset(GlobalConstants.MENACING_PATH) private Music menacing;
-
-
     private YokelGameBoard boardState;
     private boolean nextGameDialog, attemptGameStart, isGameReady = false;
     private long nextGame = 0;
@@ -448,14 +445,14 @@ public class UIBlocksTestController extends ApplicationAdapter implements ViewRe
     private void toggleYahoo(){
         if(yahoo){
             yahoo = false;
-            musicService.clearCurrentTheme();
+            //musicService.clearCurrentTheme();
         } else {
             yahoo = true;
 
-            Music menacing = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.MENACING_PATH));
-            menacing.setLooping(true);
+            //Music menacing = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.MENACING_PATH));
+            //menacing.setLooping(true);
             //musicService.playCurrentTheme(assetController.getMenacing());
-            musicService.playCurrentTheme(menacing);
+            //musicService.play(assetController.getMenacingSound());
         }
     }
 }

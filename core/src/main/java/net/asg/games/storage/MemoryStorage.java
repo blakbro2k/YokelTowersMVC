@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
 
 import net.asg.games.game.objects.YokelObject;
+import net.asg.games.utils.YokelUtilities;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,6 +55,7 @@ public class MemoryStorage extends AbstractStorage {
     public void commitTransactions() {
         try {
             Iterator iterator = _transactions.iterator();
+
             while(iterator.hasNext()){
                 Object o = iterator.next();
                 putName(o);
