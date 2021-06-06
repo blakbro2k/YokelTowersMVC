@@ -26,11 +26,15 @@ public class Log4LibGDXLoggerService extends LoggerService {
     }
 
     public void addActiveLogger(Class<?> forClass){
-        active.put(forClass, !isProductionMode);
+        active.put(forClass, isProductionMode);
     }
 
     public boolean isActive(Class<?> forClass){
         return active.get(forClass);
+    }
+
+    public boolean isActive(){
+        return false;
     }
 
     public boolean isProductionMode(){

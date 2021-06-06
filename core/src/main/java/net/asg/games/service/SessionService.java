@@ -39,6 +39,7 @@ import org.apache.commons.lang.StringUtils;
 @Component
 public class SessionService {
     long lastBlockDown = 0;
+    private boolean downKeyPressed = false;
 
     // Getting a utility logger:
     private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(SessionService.class);
@@ -273,7 +274,7 @@ public class SessionService {
         return player;
     }
 
-    public void handleLocalPlayerInput(GameManager game){
+    public void handlePlayerSimulatedInput(GameManager game){
         logger.enter("handleLocalPlayerInput");
         int currentSeat = getCurrentSeat();
         logger.debug("currentSeat={}", currentSeat);
@@ -282,6 +283,19 @@ public class SessionService {
 
         //TODO: Remove, moves test player's key to the right
         game.handleMoveRight(7);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            game.testMedusa(currentSeat);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+            game.testMidas(currentSeat);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+            game.showGameBoard(currentSeat);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
+            game.testGameBoard(currentSeat);
+        }
+
 
         if (Gdx.input.isKeyJustPressed(keyMap.getRightKey())) {
             game.handleMoveRight(currentSeat);
@@ -298,30 +312,18 @@ public class SessionService {
             game.handleCycleUp(currentSeat);
         }
         if (Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-            if(TimeUtils.millis() - 1500 > lastBlockDown){
-                lastBlockDown = TimeUtils.millis();
+            if(!downKeyPressed){
                 userInterfaceService.getSoundFXFactory().playBlockDownSound();
+                downKeyPressed = true;
             }
             game.handleStartMoveDown(currentSeat);
         }
         if (!Gdx.input.isKeyPressed(keyMap.getDownKey())) {
-            lastBlockDown = TimeUtils.millis();
+            downKeyPressed = false;
             game.handleStopMoveDown(currentSeat);
         }
         if (Gdx.input.isKeyJustPressed(keyMap.getRandomAttackKey())) {
             game.handleRandomAttack(currentSeat);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-            game.testMedusa(currentSeat);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-            game.testMidas(currentSeat);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
-            game.showGameBoard(currentSeat);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
-            game.testGameBoard(currentSeat);
         }
         /*
         if (Gdx.input.isKeyJustPressed(keyMap.getTarget1())) {

@@ -23,7 +23,7 @@ import net.asg.games.utils.Log4LibGDXLoggerService;
  * will be available in the LML template. */
 @ViewDialog(id = GlobalConstants.NEXT_GAME_DIALOG, value = GlobalConstants.NEXT_GAME_PATH)
 public class NextGameController implements ActionContainer, ViewDialogShower {
-    public static final int NEXT_GAME_SECONDS = 1;
+    public static final int NEXT_GAME_SECONDS = 15;
     private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(NextGameController.class);
     @Inject private UserInterfaceService uiService;
     @LmlActor("timerLabel") private Label timerLabel;

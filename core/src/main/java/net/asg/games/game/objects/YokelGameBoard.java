@@ -1,10 +1,11 @@
 package net.asg.games.game.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Queue;
-import com.github.czyzby.kiwi.log.Logger;
-import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.util.gdx.asset.Disposables;
 
+import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.RandomUtil;
 import net.asg.games.utils.YokelUtilities;
 
@@ -13,7 +14,7 @@ import java.util.Stack;
 import java.util.Vector;
 
 public class YokelGameBoard extends AbstractYokelObject {
-    private final Logger logger = LoggerService.forClass(YokelGameBoard.class);
+    private final Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(YokelGameBoard.class);
 
     public static final int MAX_RANDOM_BLOCK_NUMBER = 2048;
     public static final int MAX_COLS = 6;
@@ -84,9 +85,10 @@ public class YokelGameBoard extends AbstractYokelObject {
     public YokelGameBoard(){}
 
     public YokelGameBoard(long seed){
+        //Log4LibGDXLoggerService.INSTANCE.setActiveLogger(YokelGameBoard.class, true);
+
         cells = new int[MAX_ROWS][MAX_COLS];
         ids = new boolean[128];
-        piece = null;
         pieceFallTimer = MAX_FALL_VALUE;
         blockFallTimer = MAX_FALL_VALUE;
         powers = new Queue<>();
@@ -119,7 +121,14 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void end(){
+        yahooDuration = 0;
+        brokenBlockCount = 0;
+        currentBlockPointer = -1;
+        brokenCellsHandled = true;
+        isPieceSet = false;
+        cellsDropping = false;
         hasGameStarted = false;
+        piece = null;
     }
 
     public YokelPiece getNextPiece(){
@@ -520,7 +529,6 @@ public class YokelGameBoard extends AbstractYokelObject {
             }
         }
         updateBoard();
-        logger.debug("set broken cell handled");
         setBrokenCellsHandled(true);
         logger.debug("Exit handleBrokenCellDrops()");
     }
@@ -1546,42 +1554,58 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void update(float delta){
-        logger.debug("Enter update()");
+        logger.enter("update");
+        logger.debug("updating board");
+        //Flag pieces that may  have changed.
+        updateBoard();
+
+        //If the player is alive
         if(!hasPlayerDied()){
-            //If blocks are to be dropped, drop them when timer hits.
-            if(!YokelUtilities.isEmpty(getCellsToBeDropped())){
-                logger.debug("start block Fall");
-                //update fall timer
+            logger.debug("Player is not dead");
+
+            //.System.out.println(toString());
+            //If there are no blocks to drop, drop piece
+            if(YokelUtilities.isEmpty(getCellsToBeDropped())) {
+                logger.debug("## There are no cells to be dropped");
+                logger.debug("Piece Fall timer={}", pieceFallTimer);
+
+                if(this.pieceFallTimer < 0){
+                    //move piece down if timer hits
+                    movePieceDown();
+                } else {
+                    //update piece fall timer
+                    this.pieceFallTimer -= getCurrentFallRate();
+                }
+            } else {
+                logger.debug("## There are cells to be dropped");
+
+                //drop rows
+                logger.debug("Block Fall timer={}", blockFallTimer);
                 if(blockFallTimer < 0){
                     //Move rows down if timer hits
                     dropCellRows();
+                    checkForYahoos();
+
+                    //If a yahoo occured during drop, handle again
+                    if(yahooDuration > 0){
+                        dropCellRows();
+                    }
                 } else {
-                    logger.debug("blockFallTimer=" + blockFallTimer);
+                    //update fall timer
                     blockFallTimer -= FALL_RATE;
                     cellsDropping = true;
                 }
-                //setBrokenCellsHandled(true);
-            } else {
-                logger.debug("set broken cell handled");
-                if(this.pieceFallTimer < 0){
-                    movePieceDown();
-                } else {
-                    this.pieceFallTimer -= getCurrentFallRate();
-                }
             }
         }
-
-        //Flag pieces that may  have changed.
-        updateBoard();
-        logger.debug("Exit update()");
+        logger.exit("update");
     }
 
     private void dropCellRows() {
-            logger.debug("blockFallTimer=" + blockFallTimer);
-            logger.debug("end block fall");
-            blockFallTimer = MAX_FALL_VALUE;
-            handleBrokenCellDrops();
-            cellsDropping = false;
+        logger.debug("blockFallTimer=" + blockFallTimer);
+        logger.debug("end block fall");
+        blockFallTimer = MAX_FALL_VALUE;
+        handleBrokenCellDrops();
+        cellsDropping = false;
     }
 
     private float getCurrentFallRate() {
@@ -1594,11 +1618,12 @@ public class YokelGameBoard extends AbstractYokelObject {
 
     private void updateBoard(){
         flagBoardMatches();
+        //Special block count
         brokenBlockCount += getBrokenCellCount();
     }
 
     private void movePieceDown(){
-        logger.debug("Enter movePieceDown()");
+        logger.error("Enter movePieceDown()");
         if(piece != null){
             //Move piece down if free
             if(isDownCellFree(piece.column, piece.row)){
@@ -1606,10 +1631,12 @@ public class YokelGameBoard extends AbstractYokelObject {
                 this.pieceFallTimer = MAX_FALL_VALUE;
                 piece.setPosition(piece.row - 1, piece.column);
             } else {
-                logger.debug("DownCell is Not Free");
+                logger.error("DownCell is Not Free");
                 if(!isPieceSet){
-                    logger.debug("Piece is not Set: Setting");
+                    logger.error("Piece is not Set: Setting");
+                    logger.error("##PRE SET:\n{}", toString());
                     setNextPiece();
+                    logger.error("##POST SET:\n{}", toString());
                     isPieceSet = true;
                 }
 
@@ -1621,7 +1648,7 @@ public class YokelGameBoard extends AbstractYokelObject {
                 logger.debug("DownCell is Not Free");
             }
         }
-        logger.debug("Exit movePieceDown()");
+        logger.error("Exit movePieceDown()");
     }
 
     public void movePieceRight(){
@@ -1700,8 +1727,6 @@ public class YokelGameBoard extends AbstractYokelObject {
             }
 
             checkForYahoos();
-            logger.error("Yahoo!={0}", yahooDuration);
-
             //If a yahoo was flagged, handle break;
             if(!YokelUtilities.isEmpty(getCellsToBeDropped())){
                 setBrokenCellsHandled(false);

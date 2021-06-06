@@ -58,16 +58,7 @@ public class ServerGameRunner implements ApplicationListener, Disposable {
             //For each game, lets perform our state actions
             for(GameManager game : games){
                 if(game != null){
-                    //Check if game is ready to start
-                    //checkIsGameReady(game);
-
-                    //Check if Count down is starting
-                    //checkGameStart(game);
-
-                    //Handle Player input From Network
-                    //daemon.handleServerMessages(game);
-
-                    //Update game state per
+                    //Update game state per time step
                     game.update(Gdx.app.getGraphics().getDeltaTime());
                 }
             }

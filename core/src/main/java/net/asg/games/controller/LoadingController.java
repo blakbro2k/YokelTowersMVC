@@ -47,11 +47,12 @@ public class LoadingController implements ViewRenderer {
     @Asset(GlobalConstants.GAME_ATLAS_PATH) private TextureAtlas gameAtlas;
     @Asset(GlobalConstants.CYCLE_CLICK_PATH) private Sound cycleClickSound;
     @Asset(GlobalConstants.BLOCK_SPEED_DOWN_PATH) private Sound blockDown;
-    @Asset(GlobalConstants.MENACING_PATH) private Music menacing;
     @Asset(GlobalConstants.GAME_START_PATH) private Sound gameStartSound;
     @Asset(GlobalConstants.BLOCK_BREAK_PATH) private Sound blockBreakSound;
     @Asset(GlobalConstants.YAHOO_YAH_PATH) private Sound yahooYahSound;
-    @Asset(GlobalConstants.YAHOO_PATH) private Sound yahooSound;
+    //@Asset(GlobalConstants.YAHOO_PATH) private Sound yahooSound;
+    @Asset(GlobalConstants.MENACING_PATH) private Music menacing;
+    @Asset(GlobalConstants.YAHOO_PATH) private Music yahoo;
 
     private boolean regionsAssigned;
     private boolean dtdSaved = true;
@@ -149,8 +150,16 @@ public class LoadingController implements ViewRenderer {
         return gameStartSound;
     }
 
-    public Sound getYahooSound() {
-        return yahooSound;
+    //public Sound getYahooSound() {
+    //    return yahooSound;
+    //}
+
+    public Music getYahooMusic() {
+        if(yahoo == null){
+            yahoo = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.YAHOO_PATH));
+            yahoo.setLooping(false);
+        }
+        return yahoo;
     }
 }
 

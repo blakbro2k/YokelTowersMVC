@@ -29,7 +29,6 @@ import com.github.czyzby.lml.parser.action.ActionContainer;
 
 import net.asg.games.controller.dialog.NextGameController;
 import net.asg.games.game.managers.GameManager;
-import net.asg.games.game.managers.UIManager;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelSeat;
@@ -44,7 +43,6 @@ import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.Log4LibGDXLogger;
 import net.asg.games.utils.YokelUtilities;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 @View(id = GlobalConstants.UI_TEST_VIEW, value = GlobalConstants.UI_TEST_VIEW_PATH)
@@ -74,12 +72,15 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private GameBoard[] uiAreas;
     private YokelSeat[] order = new YokelSeat[8];
     private GameManager simulatedGame;
+    private boolean yahooPlayed;
 
     public UITestController() {
     }
 
     @Override
     public void initialize(Stage stage, ObjectMap<String, Actor> actorMappedByIds) {
+        Log4LibGDXLoggerService.INSTANCE.setActiveLogger(this.getClass(), true);
+
         /*
         try {
             sessionService.asyncGameManagerFromServerRequest();
@@ -196,7 +197,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         if(isYahooActive && !isMenacingPlaying){
             isMenacingPlaying = true;
             //uiService.getSoundFXFactory().startMenacingMusic();
-            musicService.play(assetLoader.getYahooSound());
+            //musicService.play(assetLoader.getYahooSound());
             Music yahoo = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.MENACING_PATH));
             yahoo.setLooping(true);
             musicService.playCurrentTheme(yahoo);
@@ -309,12 +310,24 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             uiArea.update(gameBoard);
             int yahooDuration = gameBoard.fetchYahooDuration();
 
+            /*
             if("0".equalsIgnoreCase(gameBoard.getName())){
                 logger.error("yahooDuration={}", yahooDuration);
-            }
+            }*/
 
             isYahooActive = yahooDuration > 0;
             uiArea.setYahooDuration(isYahooActive);
+
+            if(isYahooActive && !yahooPlayed){
+                uiService.getSoundFXFactory().playYahooSound();
+                yahooPlayed = true;
+                //musicService.play(assetLoader.getYahooSound());
+                //Music yahoo = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.MENACING_PATH));
+                //yahoo.setLooping(true);
+                //musicService.playCurrentTheme(yahoo);
+            } else {
+                yahooPlayed = false;
+            }
             //logger.error("isYahooActive={}", isYahooActive);
             //interfaceService.getCurrentController().show(Actions.run(CommonActionRunnables.getMusicThemeSetterRunnable(musicService, assetLoader.getMenacing())));
         }
@@ -494,8 +507,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private void handlePlayerInput() throws InterruptedException {
         logger.enter("handlePlayerInput");
         if(!isGameOver) {
-            //sessionService.handleLocalPlayerInput(uiManager.getSimulatedGameManager());
-            sessionService.handleLocalPlayerInput(simulatedGame);
+            sessionService.handlePlayerSimulatedInput(simulatedGame);
             if(isUsingServer){
                 sessionService.handlePlayerInputToServer();
             }

@@ -190,7 +190,7 @@ public class GameBoard extends Table implements GameObject {
 
     private Queue<GameBlock> blockToGameBlocks(Queue<Integer> blocks){
         Queue<GameBlock> gameBlocks = new Queue<>();
-        for(int block : blocks){
+        for(int block : YokelUtilities.safeIterable(blocks)){
             gameBlocks.addFirst(YokelUtilities.getBlock(block, area.isPreview()));
         }
         return gameBlocks;

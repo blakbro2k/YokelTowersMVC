@@ -206,7 +206,7 @@ public class GameController implements ViewRenderer, ViewInitializer, ActionCont
     private void handlePlayerInput(GameManager game){
         logger.debug("Enter handlePlayerInput()");
         if(!isGameOver) {
-            sessionService.handleLocalPlayerInput(game);
+            sessionService.handlePlayerSimulatedInput(game);
         }
         logger.debug("Exit handlePlayerInput()");
     }

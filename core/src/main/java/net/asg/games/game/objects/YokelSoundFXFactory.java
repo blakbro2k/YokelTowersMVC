@@ -36,6 +36,7 @@ public class YokelSoundFXFactory implements Disposable {
     }
 
     public void playBlockDownSound() {
+        musicService.play(assetLoader.getBlockDown());
     }
 
     public void startMenacingMusic(){
@@ -43,6 +44,15 @@ public class YokelSoundFXFactory implements Disposable {
         Music yahoo = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.MENACING_PATH));
         yahoo.setLooping(true);
         musicService.playCurrentTheme(yahoo);
+    }
+
+    public void playYahooSound(){
+        //Music yahoo = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.YAHOO_PATH));
+        //yahoo.setLooping(false);
+        //Music yahoo = Gdx.audio.newMusic(Gdx.files.internal(GlobalConstants.YAHOO_PATH));
+
+        musicService.playCurrentTheme(assetLoader.getYahooMusic());
+        //musicService.playCurrentTheme(yahoo);
     }
 
     public void stopMenacingMusic(){

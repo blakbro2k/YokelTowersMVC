@@ -106,6 +106,7 @@ public class YokelBlock extends AbstractYokelObject implements Pool.Poolable {
         this.x = 0;
         this.y = 0;
         this.blockType = CLEAR_BLOCK;
+        this.powerIntensity = 0;
     }
 
     @Override

@@ -7,17 +7,19 @@ import com.github.czyzby.kiwi.log.Logger;
 import com.github.czyzby.kiwi.log.LoggerFactory;
 import com.github.czyzby.kiwi.log.LoggerService;
 import com.github.czyzby.kiwi.log.formatter.TextFormatter;
-import com.github.czyzby.kiwi.log.impl.DebugLogger;
 import com.github.czyzby.kiwi.log.impl.DefaultLogger;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Implements a toggleable per class logger.
+ * Implements a logger with the following features
+ *  Logger is toggleable per class.
+ *  Logger has enter and exit methods that print standard enter/exit messages
+ *  Logger allows '{}' to be used for replacement instead of manually entering in each index
  *
  * @author Blakbro2k
- * @see DebugLogger */
+ */
 public class Log4LibGDXLogger extends DefaultLogger {
     private final TextFormatter formatter;
     private final String TOKEN_PATTERN_STR = "\\{([^{}]*)}";
@@ -28,26 +30,32 @@ public class Log4LibGDXLogger extends DefaultLogger {
     private final String METHOD_CLOSE_TAG = ")";
     private final String METHOD_EQUALS_TAG = "=";
     private final String METHOD_COMMA_TAG = ", ";
+    private Class<?> forClass;
 
     public Log4LibGDXLogger(final LoggerService service, final Class<?> forClass) {
         super(service, forClass);
         formatter = service.getFormatter();
+        this.forClass = forClass;
         //setError();
+    }
+
+    private boolean isClassOn(){
+        return Log4LibGDXLoggerService.INSTANCE.isActive(forClass);
     }
 
     @Override
     public boolean isDebugOn() {
-        return Gdx.app.getLogLevel() >= Application.LOG_DEBUG;
+        return Gdx.app.getLogLevel() >= Application.LOG_DEBUG && isClassOn();
     }
 
     @Override
     public boolean isInfoOn() {
-        return Gdx.app.getLogLevel() >= Application.LOG_INFO;
+        return Gdx.app.getLogLevel() >= Application.LOG_INFO && isClassOn();
     }
 
     @Override
     public boolean isErrorOn() {
-        return Gdx.app.getLogLevel() >= Application.LOG_ERROR;
+        return Gdx.app.getLogLevel() >= Application.LOG_ERROR && isClassOn();
     }
 
     public void setError(){
@@ -125,7 +133,7 @@ public class Log4LibGDXLogger extends DefaultLogger {
             if(arguments != null){
                 StringBuilder sb = new StringBuilder();
 
-                for(String key : arguments.keys()){
+                for(String key : YokelUtilities.getMapKeys(arguments)){
                    sb.append(key).append(METHOD_EQUALS_TAG).append(arguments.get(key)).append(METHOD_COMMA_TAG);
                 }
                 sb.deleteCharAt(sb.length() - 1);
@@ -164,7 +172,7 @@ public class Log4LibGDXLogger extends DefaultLogger {
 
         if(splitMessage.length == 1) {
             sb.append("{").append(0).append("}");
-        } else {
+        } else if(splitMessage.length > 2){
             for(int i = 1; i < splitMessage.length; i++){
                 sb.append("{").append(i - 1).append("}").append(splitMessage[i]);
             }
