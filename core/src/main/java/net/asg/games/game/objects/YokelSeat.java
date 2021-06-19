@@ -56,17 +56,13 @@ public class YokelSeat extends AbstractYokelObject {
     public boolean equals(Object o) {
         if(o == null) return false;
         if(!this.getClass().equals(o.getClass())) return false;
-        YokelSeat seat = getSeat(o);
+        YokelSeat seat = (YokelSeat) o;
         return seatNumber == seat.getSeatNumber() && isSeatedSame(seat.getSeatedPlayer());
     }
 
     private boolean isSeatedSame(YokelPlayer player){
         if(player == null) return seatedPlayer == null;
         return player.equals(seatedPlayer);
-    }
-
-    private YokelSeat getSeat(Object o){
-        return (YokelSeat) o;
     }
 
     @Override

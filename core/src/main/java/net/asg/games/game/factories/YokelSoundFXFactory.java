@@ -1,14 +1,11 @@
 package net.asg.games.game.factories;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.github.czyzby.autumn.mvc.component.sfx.MusicService;
 
 import net.asg.games.controller.LoadingController;
-import net.asg.games.utils.GlobalConstants;
 
 public class YokelSoundFXFactory implements Disposable {
     private MusicService musicService;
@@ -26,7 +23,7 @@ public class YokelSoundFXFactory implements Disposable {
     }
 
     public void playBlockDownSound() {
-        musicService.play(assetLoader.getBlockDown());
+        musicService.play(assetLoader.getBlockDownSound());
     }
 
     public void playYahooSound(){
@@ -34,7 +31,14 @@ public class YokelSoundFXFactory implements Disposable {
     }
 
     public void playMenacingSound(){
-        musicService.play(assetLoader.getMenacingSound());
+        Sound menacingSound = assetLoader.getMenacingSound();
+        menacingSound.loop();
+        musicService.play(menacingSound);
+    }
+
+    public void stopMenacingSound(){
+        //TODO: Add fade
+        assetLoader.getMenacingSound().stop();
     }
 
     public void playCycleClickSound() {
@@ -42,6 +46,18 @@ public class YokelSoundFXFactory implements Disposable {
     }
 
     public void playGameStartSound(){
-        musicService.play(assetLoader.getGameStart());
+        musicService.play(assetLoader.getGameStartSound());
     }
+
+    public void playBrokenCell() {
+        musicService.play(assetLoader.getBrokenCellSound());
+    }
+
+    public void playBoardDeathSound() {
+        musicService.play(assetLoader.getBBoardDeathSound());
+    }
+    public void playYahooBrokenCell() {
+        musicService.play(assetLoader.getYahooBreakSound());
+    }
+    public void playGameOverSound() { musicService.play(assetLoader.getGameOverSound());}
 }

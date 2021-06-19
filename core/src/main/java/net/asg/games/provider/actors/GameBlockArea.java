@@ -49,7 +49,6 @@ public class GameBlockArea extends Stack {
     private GameJoinWidget joinWindow;
 
     private ObjectMap<String, GameBlock> uiBlocks;
-    private Queue<GameBlock> dropCells;
     private PieceDrawable pieceSprite;
 
     public GameBlockArea(Skin skin, boolean isPreview) {
@@ -96,7 +95,6 @@ public class GameBlockArea extends Stack {
         this.bgColor = new Table(skin);
         this.bgNumber = new Table(skin);
         this.pieceSprite = new PieceDrawable();
-        this.dropCells = new Queue<>();
     }
 
     public void setDebug (boolean enabled) {
@@ -412,18 +410,8 @@ public class GameBlockArea extends Stack {
     }
 
     void killPlayer(){
-        if(isActive && hasBoardPlayerDied()){
-            bgColor.setBackground(skin.getDrawable(DEAD_BACKGROUND));
-        }
+        bgColor.setBackground(skin.getDrawable(DEAD_BACKGROUND));
         setActive(false);
-    }
-
-    private boolean hasBoardPlayerDied(){
-        boolean bool = true;
-        if(board != null){
-            bool = board.hasPlayerDied();
-        }
-        return bool;
     }
 
     YokelGameBoard getBoard(){

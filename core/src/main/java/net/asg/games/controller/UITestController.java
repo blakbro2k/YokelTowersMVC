@@ -1,8 +1,8 @@
 package net.asg.games.controller;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,16 +11,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.czyzby.autumn.annotation.Inject;
 import com.github.czyzby.autumn.mvc.component.sfx.MusicService;
 import com.github.czyzby.autumn.mvc.component.ui.InterfaceService;
-import com.github.czyzby.autumn.mvc.component.ui.action.CommonActionRunnables;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewController;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewInitializer;
 import com.github.czyzby.autumn.mvc.component.ui.controller.ViewRenderer;
 import com.github.czyzby.autumn.mvc.stereotype.View;
 import com.github.czyzby.kiwi.log.LoggerService;
+import com.github.czyzby.kiwi.util.gdx.asset.Disposables;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import com.github.czyzby.kiwi.util.gdx.collection.GdxMaps;
 import com.github.czyzby.lml.annotation.LmlAction;
@@ -29,6 +30,7 @@ import com.github.czyzby.lml.parser.action.ActionContainer;
 
 import net.asg.games.controller.dialog.NextGameController;
 import net.asg.games.game.managers.GameManager;
+import net.asg.games.game.objects.YokelBlock;
 import net.asg.games.game.objects.YokelGameBoard;
 import net.asg.games.game.objects.YokelPlayer;
 import net.asg.games.game.objects.YokelSeat;
@@ -43,7 +45,9 @@ import net.asg.games.utils.Log4LibGDXLoggerService;
 import net.asg.games.utils.Log4LibGDXLogger;
 import net.asg.games.utils.YokelUtilities;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Vector;
 
 @View(id = GlobalConstants.UI_TEST_VIEW, value = GlobalConstants.UI_TEST_VIEW_PATH)
 public class UITestController extends ApplicationAdapter implements ViewRenderer, ViewInitializer, ActionContainer {
@@ -71,16 +75,19 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     private long nextGame = 0;
     private GameBoard[] uiAreas;
     private YokelSeat[] order = new YokelSeat[8];
+    private boolean[] isYahooPlaying = new boolean[8];
+    private boolean[] isAlive = new boolean[8];
     private GameManager simulatedGame;
     private boolean yahooPlayed;
+    private boolean isBrokenPlaying;
+    private float yahTimer, brokenCellTimer;
 
     public UITestController() {
     }
 
     @Override
     public void initialize(Stage stage, ObjectMap<String, Actor> actorMappedByIds) {
-        Log4LibGDXLoggerService.INSTANCE.setActiveLogger(this.getClass(), true);
-
+        Log4LibGDXLoggerService.INSTANCE.setActiveLogger(this.getClass(), false);
         /*
         try {
             sessionService.asyncGameManagerFromServerRequest();
@@ -149,8 +156,14 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     @Override
     public void destroy(ViewController viewController) {
         logger.debug("destroying viewID: {}", GlobalConstants.UI_TEST_VIEW);
-        simulatedGame.dispose();
-        logger.debug("files={}", YokelUtilities.getFiles("U:\\YokelTowersMVC\\assets\\music"));
+        Disposables.disposeOf(simulatedGame);
+
+        for(YokelSeat seat : order){
+            if(seat != null){
+                seat.dispose();
+            }
+        }
+        //logger.debug("files={}", YokelUtilities.getFiles("U:\\YokelTowersMVC\\assets\\music"));
     }
 
     @Override
@@ -175,10 +188,10 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             }
 
             //Update GameState
-            updateGameState(game, delta);
+            updateGameState(game, delta, stage);
 
-            //Play any game sounds
-            //handleGameSounds(game);
+            //Update game timers
+            updateTimers();
 
             //If Game Over, show it
             showGameOver(stage, game);
@@ -189,6 +202,18 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
             sessionService.handleException(logger, e);
         }
         //logger.exit("render");
+    }
+
+    private void updateTimers() {
+        if(yahTimer > -1){
+            --yahTimer;
+        }
+
+        if(brokenCellTimer > -1){
+            --brokenCellTimer;
+        }
+        logger.error("###yahTimer={}", yahTimer);
+        logger.error("###brokenCellTimer={}", brokenCellTimer);
     }
 
     private void setUpDefaultSeats(YokelTable table){
@@ -235,7 +260,17 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
                 YokelSeat seat = order[i];
                 if(seat != null){
                     YokelPlayer player = seat.getSeatedPlayer();
-                    String jsonObj = player == null ? null : player.toString();
+                    String jsonObj = null;
+
+                    int seatNumber = seat.getSeatNumber();
+
+                    if(player != null){
+                        jsonObj = player.toString();
+                        isAlive[seatNumber] = true;
+                    } else {
+                        isAlive[seatNumber] = false;
+                    }
+
                     GameBoard area = uiAreas[i];
 
                     if(area != null){
@@ -257,7 +292,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
     }
 
     //Needs to update the simulated game with the server state.
-    private void updateGameState(GameManager game, float delta) throws GdxRuntimeException {
+    private void updateGameState(GameManager game, float delta, Stage stage) throws GdxRuntimeException {
         if(logger.isDebugOn()){
             ObjectMap<String, Object> map = GdxMaps.newObjectMap();
             map.put("game", game);
@@ -274,7 +309,9 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
                 int gameSeat = order[board].getSeatNumber();
                 boolean isPlayerDead = game.isPlayerDead(gameSeat);
 
-                if(isPlayerDead){
+                if(isPlayerDead && isAlive[gameSeat]){
+                    uiService.getSoundFXFactory().playBoardDeathSound();
+                    isAlive[gameSeat] = false;
                     killPlayer(uiAreas[board]);
                 } else {
                     updateUiBoard(uiAreas[board], game.getGameBoard(gameSeat));
@@ -288,26 +325,133 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
         if(uiArea != null){
             uiArea.update(gameBoard);
             int yahooDuration = gameBoard.fetchYahooDuration();
+            int gameBoardSeat = Integer.parseInt(gameBoard.getName());
 
-            /*
-            if("0".equalsIgnoreCase(gameBoard.getName())){
-                logger.error("yahooDuration={}", yahooDuration);
-            }*/
-
-            //TODO: implement Player yahoo
-            //TODO: implement others yahoo
+            if(isPlayerBoard(gameBoardSeat)){
+                Vector<YokelBlock> brokenCells = gameBoard.getBrokenCells();
+                if(!YokelUtilities.isEmpty(brokenCells)){
+                    if(brokenCellTimer < 0 && !isYahooPlaying[gameBoardSeat]){
+                        brokenCellTimer = 60 * YokelUtilities.getSoundDuration(assetLoader.getBrokenCellSound());
+                        logger.error("brokenCellTimer={}", brokenCellTimer);
+                        uiService.getSoundFXFactory().playBrokenCell();
+                    }
+                    if(isYahooPlaying[gameBoardSeat] && yahTimer < 0){
+                        uiService.getSoundFXFactory().playYahooBrokenCell();
+                    }
+                }
+            }
 
             isYahooActive = yahooDuration > 0;
             uiArea.setYahooDuration(isYahooActive);
+            isYahooPlaying[gameBoardSeat] = isYahooActive;
 
-            if(isYahooActive){
-                uiService.getSoundFXFactory().playYahooSound();
+            if(isYahooAction()){
+                if(!yahooPlayed) {
+                    yahooPlayed = true;
+                    uiService.getSoundFXFactory().playMenacingSound();
+                    if(isPlayerBoard(gameBoardSeat)){
+                        uiService.getSoundFXFactory().playYahooSound();
+                        yahTimer = 150 * YokelUtilities.getSoundDuration(assetLoader.getYahooSound());
+                    }
+                }
+            } else {
+                yahooPlayed = false;
+                uiService.getSoundFXFactory().stopMenacingSound();
             }
-
-            //logger.error("isYahooActive={}", isYahooActive);
-            //interfaceService.act
-            //interfaceService.getCurrentController().show(Actions.run(CommonActionRunnables.getMusicThemeSetterRunnable(musicService, assetLoader.getMenacing())));
         }
+    }
+
+    private boolean isYahooAction() {
+        for(boolean isYahoo : isYahooPlaying){
+            if(isYahoo) return true;
+        }
+        return false;
+    }
+
+    private boolean isPlayerBreakingBlocks(int gameBoardSeat) {
+        if(isPlayerBoard(gameBoardSeat)){
+            for(boolean isYahoo : isYahooPlaying){
+                if(isYahoo) return true;
+            }
+        }
+        return false;
+    }
+
+    private static class PlaySoundAction extends Action {
+        private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(PlaySoundAction.class);
+        Sound sound;
+        float duration;
+        private long start;
+        private float end;
+        private boolean began, complete;
+
+        public void setSound(Sound sound){
+            this.sound = sound;
+            this.duration = YokelUtilities.getSoundDuration(sound);
+        }
+
+        /** Called the first time {@link #act(float)} is called. This is a good place to query the {@link #actor actor's} starting
+         * state. */
+        void begin() {
+            if(sound != null){
+                sound.play();
+                start = TimeUtils.millis();
+                end = duration * 1000;
+            }
+        }
+
+        /** Called the last time {@link #act(float)} is called. */
+        protected void end () {
+            if(sound != null){
+                sound.stop();
+                //end = TimeUtils.millis();
+            }
+        }
+
+        int getElapsedSeconds(){
+            return (int) ((TimeUtils.millis() - start) / 1000);
+        }
+
+        public void restart () {
+            start = -1;
+            end = -1;
+            began = false;
+            complete = false;
+        }
+
+        public void reset () {
+            super.reset();
+            restart();
+        }
+
+        @Override
+        public boolean act (float delta) {
+            if (complete) return true;
+            Pool pool = getPool();
+            setPool(null); // Ensure this action can't be returned to the pool while executing.
+            try {
+                if (!began) {
+                    begin();
+                    began = true;
+                }
+                int elapsed = getElapsedSeconds();
+                complete = elapsed >= end;
+                if (complete) end();
+                return complete;
+            } finally {
+                setPool(pool);
+            }
+        }
+    }
+
+    private static PlaySoundAction playSoundAction(Sound sound) {
+        PlaySoundAction action = Actions.action(PlaySoundAction.class);
+        action.setSound(sound);
+        return action;
+    }
+
+    private boolean isPlayerBoard(int gameBoardInt) {
+        return sessionService.getCurrentSeat() == gameBoardInt;
     }
 
     private void killPlayer(GameBoard uiArea) {
@@ -395,6 +539,9 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
 
         if(game != null && stage != null){
             if(game.showGameOver()){
+                uiService.getSoundFXFactory().playGameOverSound();
+                yahooPlayed = false;
+                uiService.getSoundFXFactory().stopMenacingSound();
                 toggleGameStart();
                 stage.addActor(getGameOverActor(game));
             }

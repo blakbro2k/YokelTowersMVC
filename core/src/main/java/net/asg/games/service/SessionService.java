@@ -282,7 +282,7 @@ public class SessionService {
         if(game == null || currentSeat < 0) return;
 
         //TODO: Remove, moves test player's key to the right
-        game.handleMoveRight(7);
+        //game.handleMoveRight(7);
         if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
             game.testMedusa(currentSeat);
         }

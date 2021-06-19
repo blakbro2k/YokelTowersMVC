@@ -8,9 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import net.asg.games.controller.UITestController;
 import net.asg.games.game.objects.YokelPlayer;
+import net.asg.games.utils.Log4LibGDXLogger;
+import net.asg.games.utils.Log4LibGDXLoggerService;
 
 public class GameOverText extends Table {
+    private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(GameOverText.class);
+
     private final static String GAME_OVER_LABEL = "Game Over";
     private static final String YOU_WIN_LABEL = "You Win!";
     private static final String YOU_LOSE_LABEL = "You Lose!";
@@ -49,6 +54,8 @@ public class GameOverText extends Table {
     }
 
     private void init(){
+        Log4LibGDXLoggerService.INSTANCE.setActiveLogger(this.getClass(), true);
+
         Table container = new Table();
 
         Label gameOver = getGameOverLabel();
@@ -58,21 +65,24 @@ public class GameOverText extends Table {
         container.add(gameOver).row();
         container.add(winLoss).row();
         container.add(congrats).row();
+        Label player1NameLabel = getPlayerNameLabel(player1Name);
 
         if(player1Name != null && player2Name != null){
-            container.add(getPlayerNameLabel(player1Name)).row();
+            container.add(player1NameLabel).row();
             container.add(getPlayerNameLabel(AND_LABEL + " " + player2Name));
         } else {
             container.add(getPlayerNameLabel(player1Name == null ? player2Name : player1Name));
         }
         add(container);
 
-        Label charTest = new Label("G", getSkin());
-        charTest.addAction(Actions.sequence(Actions.moveTo(0, 0, 2)));
+        Label charTest = getGameOverLabel();
+        charTest.setX(gameOver.getX());
+        logger.error("player label ([{}], ({}, {}))", player1NameLabel.screenToLocalCoordinates(new Vector2(0,0)), player1NameLabel.getX(), player1NameLabel.getY());
+        charTest.addAction(Actions.sequence(Actions.moveTo(0, 0, 3)));
         charTest.setPosition(container.getX(), 0);
         charTest.setFontScale(H1Scale);
         charTest.setColor(new Color(0.87f, 0, 0, 1));
-        add(charTest);
+        //add(charTest);
         //Vector2 startPos = container.localToParentCoordinates(new Vector2(0,0));
         //gameOver.setPosition(startPos.x / 2, 200);
         //gameOver.addAction(Actions.moveTo(startPos.x / 2, 200, 0.1f, Interpolation.bounceOut));
@@ -97,7 +107,7 @@ public class GameOverText extends Table {
             pos.x += charLabel.getWidth();
         }*/
 
-        Label gameOver = new Label(GAME_OVER_LABEL, getSkin());
+        Label gameOver = new GameLabel(GAME_OVER_LABEL, getSkin());
         gameOver.setFontScale(H1Scale);
         gameOver.setColor(PINK);
         //gameOver.setPosition(pos.x / 2, 0);

@@ -1,5 +1,8 @@
 package net.asg.games.utils;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.backends.lwjgl.audio.Ogg;
+import com.badlogic.gdx.backends.lwjgl.audio.OpenALSound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -179,6 +182,14 @@ public class YokelUtilities {
 
     public static <Type> Iterator<Type> getArrayIterator(Array<Type> array) {
         return new ArrayIterator<>(array);
+    }
+
+    public static float getSoundDuration(Sound soundFile) {
+        if(soundFile instanceof OpenALSound){
+            return ((OpenALSound) soundFile).duration();
+        } else {
+            return -1;
+        }
     }
 
     public static class IDGenerator {
@@ -510,44 +521,5 @@ public class YokelUtilities {
         return drawables;
     }
 
-    //Logging Utils
-    private static Log4LibGDXLogger validateLogger(Logger logger){
-        if(logger instanceof Log4LibGDXLogger){
-            return (Log4LibGDXLogger) logger;
-        }
 
-        System.out.println("logger logger: " + logger);
-        System.out.println("logger logger Class: " + logger.getClass());
-        System.out.println("logger factory: " + LoggerService.INSTANCE.getFactory());
-
-        Log4LibGDXLogger.Log4LibGDXLoggerFactory logFactory = new Log4LibGDXLogger.Log4LibGDXLoggerFactory();
-
-        //LoggerService
-        LoggerService.INSTANCE.clearLoggersCache();
-        LoggerService.INSTANCE.setFactory(logFactory);
-        //logFactory.newLogger()
-        System.out.println("logger factory2: " + LoggerService.INSTANCE.getFactory());
-        //Only turn log on error
-        LoggerService.disable();
-        LoggerService.error(true);
-
-        //return logFactory.newLogger();
-        throw new GdxRuntimeException("Cannot use Utils on non Log4LibGDXLogger logger.");
-    }
-
-    public static void setError(Logger logger){
-        validateLogger(logger).setError();
-    }
-
-    public static void setDebug(Logger logger){
-        validateLogger(logger).setDebug();
-    }
-
-    public static void setInfo(Logger logger){
-        validateLogger(logger).setInfo();
-    }
-
-    public static int getLoggerLevel(Logger logger){
-        return validateLogger(logger).getLoggerLevel();
-    }
 }

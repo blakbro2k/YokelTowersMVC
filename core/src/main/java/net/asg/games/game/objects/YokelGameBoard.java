@@ -23,7 +23,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     public static final int HORIZONTAL_HOO_TIME = 2;
     public static final int VERTICAL_HOO_TIME = 4;
     public static final int DIAGONAL_HOO_TIME = 3;
-    public static final float FALL_RATE = 0.026f;
+    public static final float FALL_RATE = 0.06f;
     public static final float FAST_FALL_RATE = 0.396f;
     private static final int MAX_FALL_VALUE = 1;
 
@@ -99,6 +99,7 @@ public class YokelGameBoard extends AbstractYokelObject {
     public void reset(long seed){
         nextBlocks = new RandomUtil.RandomNumberArray(MAX_RANDOM_BLOCK_NUMBER, seed, MAX_COLS);
         clearBoard();
+        powers.clear();
         end();
     }
 
@@ -121,6 +122,8 @@ public class YokelGameBoard extends AbstractYokelObject {
     }
 
     public void end(){
+        //private int[] countOfBreaks = new int[MAX_COLS];
+        //private int[] powersKeep = new int[MAX_COLS];
         yahooDuration = 0;
         brokenBlockCount = 0;
         currentBlockPointer = -1;

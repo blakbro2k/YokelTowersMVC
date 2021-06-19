@@ -26,15 +26,18 @@ public class Log4LibGDXLoggerService extends LoggerService {
     }
 
     public void addActiveLogger(Class<?> forClass){
+        System.out.println("active:" + forClass);
+        System.out.println("isActive:" + isProductionMode);
+        System.out.println("active(s):" + active);
         active.put(forClass, isProductionMode);
+    }
+
+    public ObjectMap<Class<?>, Boolean> getActives(){
+        return active;
     }
 
     public boolean isActive(Class<?> forClass){
         return active.get(forClass);
-    }
-
-    public boolean isActive(){
-        return false;
     }
 
     public boolean isProductionMode(){

@@ -325,6 +325,7 @@ public class GameManager implements Disposable {
                 showGameOver = true;
             }
         }
+        table.makeTableUnready();
         return isGameRunning = hasGameStarted = false;
     }
 

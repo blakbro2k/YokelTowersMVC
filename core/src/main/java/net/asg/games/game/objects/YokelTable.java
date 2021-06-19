@@ -157,6 +157,14 @@ public class YokelTable extends AbstractYokelObject {
         }
     }
 
+    public void makeTableUnready(){
+        for(YokelSeat seat : YokelUtilities.safeIterable(seats)){
+            if(seat != null){
+                seat.setSeatReady(false);
+            }
+        }
+    }
+
     public boolean isStartable(){
         boolean startable = false;
         int count = 0;

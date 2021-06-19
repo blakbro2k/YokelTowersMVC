@@ -144,6 +144,13 @@ public class Configuration {
 
     private void setUpLogger() {
         Log4LibGDXLoggerService.INSTANCE.setProductionMode(false);
+        Class c = null;
+        try {
+            c=Class.forName("net.asg.games.provider.actors.GameLabel");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log4LibGDXLoggerService.INSTANCE.setActiveLogger(c, true);
     }
 
     @Destroy

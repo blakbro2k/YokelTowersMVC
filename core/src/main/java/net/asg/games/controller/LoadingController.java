@@ -62,6 +62,7 @@ public class LoadingController implements ViewRenderer {
     // stage, this views also updates assets manager and reads its progress.
     @Override
     public void render(final Stage stage, final float delta) {
+        //System.err.println(assetService.getAssetManager().getQueuedAssets());
         assetService.update();
         loadingBar.setValue(assetService.getLoadingProgress());
         stage.act(delta);
@@ -135,20 +136,36 @@ public class LoadingController implements ViewRenderer {
         return cycleClickSound;
     }
 
-    public Sound getBlockDown(){
+    public Sound getBlockDownSound(){
         return blockDown;
     }
 
     public Sound getMenacingSound() {
-        return null; //menacingSound;
+        return menacingSound;
     }
 
-    public Sound getGameStart() {
+    public Sound getGameStartSound() {
         return gameStartSound;
+    }
+
+    public Sound getGameOverSound() {
+        return gameOverSound;
     }
 
     public Sound getYahooSound() {
         return yahooSound;
+    }
+
+    public Sound getBrokenCellSound() {
+        return blockBreakSound;
+    }
+
+    public Sound getBBoardDeathSound() {
+        return boardDeathSound;
+    }
+
+    public Sound getYahooBreakSound() {
+        return yahooYahSound;
     }
 }
 
