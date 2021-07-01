@@ -205,15 +205,6 @@ public class GameBlockArea extends Stack {
     @Override
     public void draw(Batch batch, float alpha){
         super.draw(batch, alpha);
-        //setAreaBounds();
-
-        //this.drawChildren();
-        //joinWindow.setPosition(getX(), getY() / 2);
-        //joinWindow.draw(batch, alpha);
-        //if(!isActive) return;
-        //System.err.println("s=" + super.getX());
-        //drawGamePiece(batch, alpha);
-        //drawSprites(batch, alpha);
     }
 
     private boolean validatePiece(){

@@ -26,8 +26,7 @@ public class Log4LibGDXLoggerService extends LoggerService {
     }
 
     public void addActiveLogger(Class<?> forClass){
-        System.out.println("active:" + forClass);
-        System.out.println("isActive:" + isProductionMode);
+        System.out.println("ADD: active:" + this.getClass());
         System.out.println("active(s):" + active);
         active.put(forClass, isProductionMode);
     }

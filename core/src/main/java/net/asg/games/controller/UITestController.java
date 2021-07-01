@@ -260,12 +260,12 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
                 YokelSeat seat = order[i];
                 if(seat != null){
                     YokelPlayer player = seat.getSeatedPlayer();
-                    String jsonObj = null;
+                    String playerJsonObj = null;
 
                     int seatNumber = seat.getSeatNumber();
 
                     if(player != null){
-                        jsonObj = player.toString();
+                        playerJsonObj = player.toString();
                         isAlive[seatNumber] = true;
                     } else {
                         isAlive[seatNumber] = false;
@@ -274,7 +274,7 @@ public class UITestController extends ApplicationAdapter implements ViewRenderer
                     GameBoard area = uiAreas[i];
 
                     if(area != null){
-                        area.setData(jsonObj);
+                        area.setData(playerJsonObj);
                         area.setPlayerView(sessionService.isCurrentPlayer(player));
                         area.setActive(sessionService.isCurrentPlayer(player));
                     }

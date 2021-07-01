@@ -14,7 +14,7 @@ import net.asg.games.utils.Log4LibGDXLoggerService;
 public class GameLabel extends Label {
     private final Direction direction;
     private Log4LibGDXLogger logger = Log4LibGDXLoggerService.forClass(GameLabel.class);
-    private float velocity = 300;
+    private float velocity = 500;
 
     public enum Direction {LEFT, RIGHT, UP, DOWN}
     static private final Color tempColor = new Color(1, 1, 1, 1);
@@ -36,6 +36,7 @@ public class GameLabel extends Label {
 
         isAnimationFinished = false;
         isAnimationEnabled = isEnabled;
+
     }
 
     public GameLabel(CharSequence text, Skin skin) {
@@ -113,5 +114,7 @@ public class GameLabel extends Label {
         cache.tint(color);
         cache.setPosition(getX(), getY());
         cache.draw(batch);
+        logger.error("[]["+cache.getFont().getRegions());
+
     }
 }
